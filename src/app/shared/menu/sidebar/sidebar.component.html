@@ -1,0 +1,66 @@
+<nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark">
+	<div class="d-flex align-items-center">
+		<a class="navbar-brand" [routerLink]="['/dashboard/admin']">
+			<!-- <img class="navbar-brand-item" src="assets/images/examify_logo.svg" alt=""> -->
+		</a>
+	</div>
+	<div class="offcanvas offcanvas-start flex-row custom-scrollbar h-100" data-bs-backdrop="true" tabindex="-1" id="offcanvasSidebar">
+		<div class="offcanvas-body sidebar-content d-flex flex-column bg-dark">
+			<ul class="navbar-nav flex-column" id="navbar-sidebar" *ngIf="login_role == 'admin'">
+								<li class="nav-item"><a [routerLink]="['/dashboard/admin']" class="nav-link"
+									[class.active]="routeURL === '/dashboard/admin'"
+									><i class="bi bi-house fa-fw me-2"></i>Dashboard</a></li>
+				<li class="nav-item ms-2 my-2">Content Management</li>
+			
+				<li class="nav-item">
+					<a class="nav-link" data-bs-toggle="collapse" href="#collapsequest" role="button" aria-expanded="false" aria-controls="collapsequest">
+						<i class="fas fa-user-tie fa-fw me-2"></i>Quests
+					</a>
+					<ul class="nav collapse flex-column" id="collapsequest" data-bs-parent="#navbar-sidebar">
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']">All Quests</a></li>
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']">Create Quest</a></li>
+					</ul>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-bs-toggle="collapse" href="#collapsemissions" role="button" aria-expanded="false" aria-controls="collapsemissions">
+						<i class="fas fa-user-tie fa-fw me-2"></i>Missions
+					</a>
+					<ul class="nav collapse flex-column" id="collapsemissions" data-bs-parent="#navbar-sidebar">
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/mission/list-mission'" [routerLink]="['/mission/list-mission']">All Mission</a></li>
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/mission/create-mission'" [routerLink]="['/mission/create-mission']">Create Mission</a></li>
+					</ul>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-bs-toggle="collapse" href="#collapsehunts" role="button" aria-expanded="false" aria-controls="collapsehunts">
+						<i class="fas fa-user-tie fa-fw me-2"></i>Treasure Hunts
+					</a>
+					<ul class="nav collapse flex-column" id="collapsehunts" data-bs-parent="#navbar-sidebar">
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/hunt/list-hunt'" [routerLink]="['/hunt/list-hunt']">All Treasure Hunt</a></li>
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/hunt/create-hunt'" [routerLink]="['/hunt/create-hunt']">Create Treasure Hunt</a></li>
+					</ul>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-bs-toggle="collapse" href="#collapseskill" role="button" aria-expanded="false" aria-controls="collapseskill">
+						<i class="fas fa-user-tie fa-fw me-2"></i>Skills
+					</a>
+					<ul class="nav collapse flex-column" id="collapseskill" data-bs-parent="#navbar-sidebar">
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/skills/list-skill'" [routerLink]="['/skills/list-skill']">List Skill</a></li>
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/skills/create-skill'" [routerLink]="['/skills/create-skill']">Add Skill</a></li>
+					</ul>
+				</li>
+
+				<li class="nav-item ms-2 my-2">Management</li>
+			
+				<li class="nav-item">
+					<a class="nav-link" data-bs-toggle="collapse" href="#collapsemanagement" role="button" aria-expanded="false" aria-controls="collapsemanagement">
+						<i class="fas fa-user-tie fa-fw me-2"></i>Users
+					</a>
+					<ul class="nav collapse flex-column" id="collapsemanagement" data-bs-parent="#navbar-sidebar">
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']">All Users</a></li>
+					</ul>
+				</li>
+		
+			</ul>		
+		</div>
+	</div>
+</nav>

@@ -1,0 +1,119 @@
+/* You can add global styles to this file, and also import other style files */
+.is-invalid {
+    border: 1px solid red !important;
+}
+.dt-length label {
+    color: black !important;
+    margin-left: 10px !important;
+}
+.dt-input {
+    color: black !important;
+    border: 1px solid black !important
+}
+.dt-search label {
+    color: black !important;
+}
+.dt-paging-button.current {
+    background: #066ac9 !important;
+    color: black !important;
+}
+div.dt-container .dt-paging .dt-paging-button.current {
+    color: black !important;
+}
+.dt-paging-button {
+    background: #e8f0fa !important;
+    color: black !important;
+    border-radius: 8px !important;
+}
+
+div.dt-container .dt-paging .dt-paging-button:hover {
+    color: black !important;
+}
+.dt-paging-button:hover {
+    color: black !important;
+}
+.first {
+    color: black !important;
+}
+
+.disabled {
+    color: black !important;
+}
+.table.table-dark-gray thead {
+    height: 50px !important;
+}
+.paging_numbers {
+    color: black !important;
+}
+.options-check-input {
+    padding: 11px !important;
+    margin-right: 10px !important;
+}
+.form-label {
+    color: black !important;
+}
+table.dataTable th.dt-type-numeric {
+    text-align: inherit !important;
+}
+.dt-type-numeric {
+    text-align: inherit !important;
+}
+.accordion-header {
+    background: aliceblue !important;
+    color: black !important
+}
+.accordion-button {
+    background: aliceblue !important;
+    color: black !important
+}
+.ck-editor__editable {
+    height: 200px !important;
+}
+.ck-powered-by-balloon {
+    display: none !important;
+}
+.item1 .multiselect-item-checkbox {
+    display: none !important;
+}
+.multiselect-item-checkbox[_ngcontent-ng-c1411523848] input[type=checkbox][_ngcontent-ng-c1411523848] + div[_ngcontent-ng-c1411523848]:before {
+    border-radius: 5px !important;
+}
+.form-check-label {
+    color: black !important;
+}
+@media screen and (min-resolution:.001dpcm) { 
+    .sidebar.navbar-expand-xl {
+      width: 260px !important;
+    }
+  }
+  .hide-accordion-icon:after {
+    display: none !important;
+  }
+  .chart-container {
+    position:relative;
+    min-height:100%;
+    width:100%;
+    display: flex;
+    flex-grow:1;
+  }
+  .error-message {
+    color: red !important;
+  }
+
+/* Customize tooltip content */
+.custom-tooltip {
+    /* Add your custom styles here */
+    background-color: #333; /* Background color */
+    color: #fff; /* Text color */
+    border: 1px solid #fff; /* Border color */
+    border-radius: 4px; /* Border radius */
+    padding: 8px 12px; /* Padding */
+    font-size: 14px; /* Font size */
+    /* You can add more styles as needed */
+}
+
+/* Increase font size for tooltip content */
+.custom-tooltip .tooltip-content {
+    font-size: 16px; /* Adjust font size as needed */
+}
+

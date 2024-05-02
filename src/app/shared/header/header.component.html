@@ -1,0 +1,39 @@
+<nav class="navbar top-bar navbar-light border-bottom py-0 py-xl-3">
+    <div class="container-fluid p-0">
+        <div class="d-flex align-items-center w-100">
+            <div class="d-flex align-items-center d-xl-none">
+                <a class="navbar-brand" [routerLink]="['/dashboard/admin']">
+                    <img class="light-mode-item navbar-brand-item h-30px" src="assets/images/examify_logo.svg" alt="">
+                    <img class="dark-mode-item navbar-brand-item h-30px" src="assets/images/examify_logo.svg" alt="">
+                </a>
+            </div>
+            <div class="navbar-expand-xl sidebar-offcanvas-menu">
+                <button class="navbar-toggler me-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar" aria-expanded="false" aria-label="Toggle navigation" data-bs-auto-close="outside">
+                    <i class="bi bi-text-right fa-fw h2 lh-0 mb-0 rtl-flip" data-bs-target="#offcanvasMenu"> </i>
+                </button>
+            </div>
+            <div class="navbar-expand-lg ms-auto ms-xl-0">
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopContent" aria-controls="navbarTopContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-animation">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+            </div>
+            <div class="ms-xl-auto">
+                <ul class="navbar-nav flex-row align-items-center">
+                    <li class="nav-item ms-2 ms-md-3 dropdown">
+                        <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
+                        </a>
+                        <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" [routerLink]="['/management/profile']"><i class="bi bi-person fa-fw me-2"></i>Edit Profile</a></li>
+                            <li><a class="dropdown-item bg-danger-soft-hover" href="javascript:;" (click)="auth.logout()"><i class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
