@@ -66,8 +66,7 @@ export class ListHuntComponent implements OnInit {
     $("#no_of_xp").html(quest.no_of_xp)
     $("#no_of_crypes").html(quest.no_of_crypes)
     $("#level_increase").html(quest.level_increase)
-    this.mythicaURL = quest.mythica;
-    this.mythicaModel = quest.mythica_ar_model;
+    this.mythicaURL = quest.mythica_ID;
     this.quiz = [];
     this.quiz = quest.quiz;
     this.options = [];

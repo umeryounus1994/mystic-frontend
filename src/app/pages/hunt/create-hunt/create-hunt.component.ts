@@ -29,8 +29,7 @@ export class CreateHuntComponent implements OnInit {
       no_of_xp: ['', Validators.required],
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
-      mythica: ['', Validators.required],
-      mythica_ar_model: ['', Validators.required],
+      mythica_ID: ['', Validators.required],
       treasure_hunt_start_date: ['', Validators.required],
       treasure_hunt_end_date: ['', Validators.required],
       questions: this.fb.array([])

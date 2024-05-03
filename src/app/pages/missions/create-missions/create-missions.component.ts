@@ -29,8 +29,7 @@ export class CreateMissionsComponent implements OnInit {
       no_of_xp: ['', Validators.required],
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
-      mythica: ['', Validators.required],
-      mythica_ar_model: ['', Validators.required],
+      mythica_ID: ['', Validators.required],
       mission_start_date: ['', Validators.required],
       mission_end_date: ['', Validators.required],
       questions: this.fb.array([])

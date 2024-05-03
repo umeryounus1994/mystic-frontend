@@ -37,17 +37,12 @@
                                     [ngClass]="{ 'is-invalid': submitted && f['level_increase']?.errors }">
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica (URL)</label>
-                                <input type="text" class="form-control" placeholder="e.g. https://www.google.com"
-                                    formControlName="mythica"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
+                                <label class="form-label">Mythica ID</label>
+                                <input type="text" class="form-control" placeholder="Mythica ID"
+                                    formControlName="mythica_ID"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
                             </div>
-                            <div class="col-lg-3">
-                                <label class="form-label">Mythica Model (URL)</label>
-                                <input type="text" class="form-control" placeholder="e.g. https://www.google.com"
-                                    formControlName="mythica_ar_model"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ar_model']?.errors }">
-                            </div>
+
                             <div class="col-lg-3">
                                 <label class="form-label">Start Date</label>
                                 <input type="date" class="form-control" placeholder="e.g. https://www.google.com"
