@@ -38,9 +38,11 @@
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Mythica ID</label>
-                                <input type="text" class="form-control" placeholder="Mythica ID"
-                                    formControlName="mythica_ID"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                <select class="form-control" formControlName="mythica_ID"
+                                [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                    <option value="">Select Mythica</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                </select>
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Start Date</label>
@@ -54,6 +56,29 @@
                                     formControlName="treasure_hunt_end_date"
                                     [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_end_date']?.errors }">
                             </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Hunt Longitude</label>
+                                <input type="text" class="form-control" placeholder="Hunt Longitude"
+                                    formControlName="hunt_longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['hunt_longitude']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Hunt Latitude</label>
+                                <input type="text" class="form-control" placeholder="Hunt Latitude"
+                                    formControlName="hunt_latitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['hunt_latitude']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Premium Hunt?</label>
+                                <select class="form-select js-choice z-index-9" 
+                                formControlName="premium_hunt" aria-label=".form-select-sm"
+                                [ngClass]="{ 'is-invalid': submitted && f['premium_hunt']?.errors }">
+                                    <option value="" selected disabled>Select Premium?</option>
+                                    <option value='true'>Yes</option>
+                                    <option value='false'>No</option>
+                                </select>
+                            </div>
+
                             <hr />
                            <h3>Create Quiz Options</h3>
                            <hr />
@@ -67,12 +92,7 @@
                                     formControlName="treasure_hunt_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
                                     </div>
-                                    <div class="col-3 mb-2">
-                                        <label class="form-label">Creature</label>
-                                        <input type="text" class="form-control" placeholder="e.g. https://www.google.com"
-                                        formControlName="creature"
-                                        [ngClass]="{ 'is-invalid': submitted && f['creature']?.errors }">
-                                    </div>
+                              
                                     <div class="col-3 mb-2">
                                         <label class="form-label">Latitude</label>
                                         <input type="text" class="form-control" placeholder=""
@@ -87,12 +107,14 @@
                                     </div>
                                     <div class="col-3 mb-2">
                                         <label class="form-label">Mythica</label>
-                                        <input type="text" class="form-control" placeholder=""
-                                    formControlName="mythica"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
+                                        <select class="form-control" formControlName="mythica"
+                                [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
+                                    <option value="">Select Mythica</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                </select>
                                     </div>
                           
-                                  
+<!--                                   
                                     <div class="col-2" style="margin-top: 30px;">
 
                                         <a href="javascript:;" *ngIf="i == questions.controls.length -1"  (click)="addQuestion()"
@@ -105,7 +127,7 @@
                                             (click)="removeQuestion(i)">
                                             <i class="bi bi-trash"></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         

@@ -18,7 +18,8 @@
 
                             <div class="col-12 mb-2">
                                 <label class="form-label">Mission Title</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="mission_title"
+                                <input type="text" class="form-control" placeholder="Title"
+                                    formControlName="mission_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['mission_title']?.errors }">
                             </div>
                             <div class="col-lg-3">
@@ -38,9 +39,23 @@
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Mythica ID</label>
-                                <input type="text" class="form-control" placeholder="Mythica ID"
-                                    formControlName="mythica_ID"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                <select class="form-control" formControlName="mythica_ID"
+                                [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                    <option value="">Select Mythica</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Mission Longitude</label>
+                                <input type="text" class="form-control" placeholder="Mission Longitude"
+                                    formControlName="mission_longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mission_longitude']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Mission Latitude</label>
+                                <input type="text" class="form-control" placeholder="Mission Latitude"
+                                    formControlName="mission_latitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mission_latitude']?.errors }">
                             </div>
 
                             <div class="col-lg-3">
@@ -56,60 +71,60 @@
                                     [ngClass]="{ 'is-invalid': submitted && f['mission_end_date']?.errors }">
                             </div>
                             <hr />
-                           <h3>Create Quiz Options</h3>
-                           <hr />
+                            <h3>Quiz Options</h3>
+                            <hr />
                             <div formArrayName="questions">
-                                <div class="row mb-3" *ngFor="let questionGroup of questForm.get('questions').controls; let i=index"
+                                <div class="row mb-3"
+                                    *ngFor="let questionGroup of questForm.get('questions').controls; let i=index"
                                     [formGroupName]="i">
 
                                     <div class="col-3 mb-2">
                                         <label class="form-label">Quiz Title</label>
                                         <input type="text" class="form-control" placeholder="Quiz Title"
-                                    formControlName="quiz_title"
-                                    [ngClass]="{ 'is-invalid': submitted && f['quiz_title']?.errors }">
+                                            formControlName="quiz_title"
+                                            [ngClass]="{ 'is-invalid': submitted && f['quiz_title']?.errors }">
                                     </div>
-                                    <div class="col-3 mb-2">
-                                        <label class="form-label">Creature</label>
-                                        <input type="text" class="form-control" placeholder="e.g. https://www.google.com"
-                                        formControlName="creature"
-                                        [ngClass]="{ 'is-invalid': submitted && f['creature']?.errors }">
-                                    </div>
+                                    
                                     <div class="col-3 mb-2">
                                         <label class="form-label">Latitude</label>
                                         <input type="text" class="form-control" placeholder=""
-                                    formControlName="latitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
+                                            formControlName="latitude"
+                                            [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
                                     </div>
                                     <div class="col-3 mb-2">
                                         <label class="form-label">Longitude</label>
                                         <input type="text" class="form-control" placeholder=""
-                                    formControlName="longitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['longitude']?.errors }">
+                                            formControlName="longitude"
+                                            [ngClass]="{ 'is-invalid': submitted && f['longitude']?.errors }">
                                     </div>
                                     <div class="col-3 mb-2">
                                         <label class="form-label">Mythica</label>
-                                        <input type="text" class="form-control" placeholder=""
-                                    formControlName="mythica"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
+                                        <select class="form-control" formControlName="mythica"
+                                [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
+                                    <option value="">Select Mythica</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                </select>
+                                       
                                     </div>
-                          
-                                  
+
+
                                     <div class="col-2" style="margin-top: 30px;">
 
-                                        <a href="javascript:;" *ngIf="i == questions.controls.length -1"  (click)="addQuestion()"
+                                        <!-- <a href="javascript:;" *ngIf="i == questions.controls.length -1"
+                                            (click)="addQuestion()"
                                             class="btn btn-success-soft btn-round me-1 mb-1 mb-md-0"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title=""
                                             data-bs-original-title="Edit">
                                             <i class="bi bi-plus"></i>
-                                        </a>
-                                        <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                                        </a> -->
+                                        <!-- <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
                                             (click)="removeQuestion(i)">
                                             <i class="bi bi-trash"></i>
-                                        </button>
+                                        </button> -->
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="d-sm-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary mb-0">Create</button>
                             </div>

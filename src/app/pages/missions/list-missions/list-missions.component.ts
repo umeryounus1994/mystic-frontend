@@ -108,4 +108,14 @@ export class ListMissionsComponent implements OnInit {
         this.sp.hide();
       });
   }
+  toggleOptions(quizId: string): void {
+    const quizOptionsId = 'quizOptions' + quizId;
+    const quizOptionsElement = document.getElementById(quizOptionsId);
+
+    if (quizOptionsElement?.classList.contains('show')) {
+      quizOptionsElement.classList.remove('show');
+    } else {
+      quizOptionsElement?.classList.add('show');
+    }
+  }
 }

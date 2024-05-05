@@ -29,6 +29,8 @@
                         <td>{{q.no_of_crypes}}</td>
 
                         <td>
+                            <div *ngIf="q.status == 'draft'" class="badge bg-info bg-opacity-10 text-info">Draft
+                            </div>
                             <div *ngIf="q.status == 'active'" class="badge bg-success bg-opacity-10 text-success">Active
                             </div>
                             <div *ngIf="q.status == 'blocked'" class="badge bg-danger bg-opacity-10 text-danger">Blocked
@@ -111,8 +113,12 @@
                         <p id="level_increase"></p>
                     </div>
                     <div class="col-md-5">
-                        <label class="form-label">Mythica ID</label>
+                        <label class="form-label">Mythica</label>
                         <p>{{mythicaURL}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Premium?</label>
+                        <p id="premium_hunt"></p>
                     </div>
                 </div>
 
@@ -122,20 +128,50 @@
                             <thead>
                                 <tr>
                                     <th>Quiz Title</th>
-                                    <th>Action</th>
+                                    <th>No of Options</th>
+                                    <th>Mythica</th>
+                                    <th>Add Options</th>
+                                    <th>View Options</th>
                                 </tr>
 
                             </thead>
                             <tbody>
-                                <tr *ngFor="let q of quiz">
-                                    <td>{{q?.treasure_hunt_title}}</td>
-                                    <td>
-                                        <button class="btn btn-primary-soft me-1 mb-1 mb-md-0"
-                                            (click)="openModalQuizOption(q._id)">
-                                            Add Options
-                                        </button>
-                                    </td>
-                                </tr>
+                                <ng-container *ngFor="let q of quiz">
+                                    <tr>
+                                        <td>{{q?.treasure_hunt_title}}</td>
+                                        <td>{{q?.options.length}}</td>
+                                        <td>{{q?.mythica?.creature_name}}</td>
+                                        <td>
+                                            <button class="btn btn-primary-soft btn-round me-1 mb-1 mb-md-0"
+                                                (click)="openModalQuizOption(q._id)">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary-soft btn-round me-1 mb-1 mb-md-0"
+                                                (click)="toggleOptions(q._id)">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td [attr.colspan]="5">
+                                          <div id="quizOptions{{q._id}}" class="collapse">
+                                            <!-- Content for quiz options goes here -->
+                                            <div class="quiz-options">
+                                              <!-- Add your quiz options content here -->
+                                              <!-- For example, you can use another ngFor loop to display quiz options -->
+                                              <div *ngFor="let qz of q?.options">
+                                                <p>
+                                                    <i *ngIf="qz.correct_option == true" style="color:green; font-size: 20px; margin-top: -2px;" class="bi bi-check2-circle fa-fw me-2"></i>
+                                                    <i *ngIf="qz.correct_option == false" style="color:red; font-size: 20px; margin-top: -2px;" class="bi bi-x-circle fa-fw me-2"></i> 
+                                                    {{qz.answer}}</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                </ng-container>
                             </tbody>
                         </table>
                     </div>

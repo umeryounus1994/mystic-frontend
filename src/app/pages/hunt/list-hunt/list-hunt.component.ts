@@ -66,6 +66,7 @@ export class ListHuntComponent implements OnInit {
     $("#no_of_xp").html(quest.no_of_xp)
     $("#no_of_crypes").html(quest.no_of_crypes)
     $("#level_increase").html(quest.level_increase)
+    $("#premium_hunt").html(quest?.premium_hunt == true ? "Yes": "No")
     this.mythicaURL = quest.mythica_ID;
     this.quiz = [];
     this.quiz = quest.quiz;
@@ -106,5 +107,15 @@ export class ListHuntComponent implements OnInit {
         this.helper.failureToast(err?.error?.message);
         this.sp.hide();
       });
+  }
+  toggleOptions(quizId: string): void {
+    const quizOptionsId = 'quizOptions' + quizId;
+    const quizOptionsElement = document.getElementById(quizOptionsId);
+
+    if (quizOptionsElement?.classList.contains('show')) {
+      quizOptionsElement.classList.remove('show');
+    } else {
+      quizOptionsElement?.classList.add('show');
+    }
   }
 }

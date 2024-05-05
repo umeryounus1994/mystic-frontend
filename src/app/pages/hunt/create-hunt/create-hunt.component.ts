@@ -15,12 +15,10 @@ import Swal from 'sweetalert2';
 export class CreateHuntComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
-  public QrCode: string = "";
-  public qrCodeDownloadLink: SafeUrl = "";
+  allCreatures: any = [];
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
-      this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
   }
 
   ngOnInit() {
@@ -30,25 +28,42 @@ export class CreateHuntComponent implements OnInit {
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
       mythica_ID: ['', Validators.required],
+      hunt_latitude: ['', Validators.required],
+      hunt_longitude: ['', Validators.required],
+      premium_hunt: [false, Validators.required],
       treasure_hunt_start_date: ['', Validators.required],
       treasure_hunt_end_date: ['', Validators.required],
       questions: this.fb.array([])
     });
     this.addQuestion();
+    this.addQuestion();
+    this.addQuestion();
+    this.addQuestion();
+    this.addQuestion();
+    this.getAllCreatures()
   }
   get f() { return this.questForm?.controls; }
   get questions() : FormArray {  
     return this.questForm.get("questions") as FormArray  
   }  
+  async getAllCreatures() {
+    this.allCreatures = [];
+    this.api.get('creature/get_all')
+    .then((response: any) => {
+        this.sp.hide();
+        this.allCreatures = response?.data;
+    }).catch((error: any) => {
+      this.sp.hide();
+    });
+  }
      
   newQuestion(): FormGroup {  
     return this.fb.group({  
       treasure_hunt_title: '',  
-      creature: '',
       latitude: '',
       longitude: '',
       mythica: '',
-      treasure_hunt_id: ''
+      treasure_hunt_id: '1'
     })  
    
   }  
@@ -68,9 +83,15 @@ export class CreateHuntComponent implements OnInit {
     }
   }
   _sendSaveRequest(formData: any) {
-    this.sp.show();
+   
     let questions = formData.questions;
+    let checkFields = this.checkFields(questions);
+    if (checkFields.fields > 0) {
+      Swal.fire("Mission!", checkFields?.msg, "error");
+      return;
+    }
     delete formData.questions;
+    this.sp.show();
     this.api.postData('hunt/createTreasureHunt', formData)
       .then((response: any) => {
           this.sp.hide();
@@ -91,5 +112,31 @@ export class CreateHuntComponent implements OnInit {
         this.sp.hide();
         Swal.fire("Treasure Hunt!", "There is an error, please try again", "error");
       });
+  }
+  checkFields(dataArray: any[]): any {
+    for (let i = 0; i < dataArray.length; i++) {
+      const obj = dataArray[i];
+      const emptyFields = [];
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          if (obj[key] === "") {
+            emptyFields.push(key); // Store the empty field name
+          }
+        }
+      }
+      if (emptyFields.length > 0) {
+        let obj = {
+          fields: emptyFields.length,
+          msg: `For Quiz ${i + 1}, the following fields are empty: ${emptyFields.join(", ")}`
+        }
+        return obj;
+      } else {
+        let obj = {
+          fields: 0,
+          msg: `For Quiz ${i + 1}, the following fields are empty: ${emptyFields.join(", ")}`
+        }
+        return obj;
+      }
+    }
   }
 }
