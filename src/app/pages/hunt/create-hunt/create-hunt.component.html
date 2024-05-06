@@ -78,6 +78,12 @@
                                     <option value='false'>No</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Price</label>
+                                <input type="text" class="form-control" placeholder="Price"
+                                    formControlName="hunt_price"
+                                    [ngClass]="{ 'is-invalid': submitted && f['hunt_price']?.errors }">
+                            </div>
 
                             <hr />
                            <h3>Create Quiz Options</h3>

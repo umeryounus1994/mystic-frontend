@@ -31,6 +31,7 @@ export class CreateHuntComponent implements OnInit {
       hunt_latitude: ['', Validators.required],
       hunt_longitude: ['', Validators.required],
       premium_hunt: [false, Validators.required],
+      hunt_price: [0],
       treasure_hunt_start_date: ['', Validators.required],
       treasure_hunt_end_date: ['', Validators.required],
       questions: this.fb.array([])

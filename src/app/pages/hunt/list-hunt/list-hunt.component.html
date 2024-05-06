@@ -15,8 +15,10 @@
                     <tr>
 
                         <th scope="col" class="border-0 rounded-start">Title</th>
-                        <th scope="col" class="border-0"># of XP</th>
-                        <th scope="col" class="border-0"># of Cryps</th>
+                        <th scope="col" class="border-0">No of XP</th>
+                        <th scope="col" class="border-0">No of Cryps</th>
+                        <th scope="col" class="border-0">Price</th>
+                        <th scope="col" class="border-0">No of Quiz</th>
                         <th scope="col" class="border-0">Status</th>
                         <th scope="col" class="border-0 rounded-end">Action</th>
                     </tr>
@@ -27,6 +29,8 @@
                         <td>{{q.treasure_hunt_title.toString().substring(0,60)}}...</td>
                         <td>{{q.no_of_xp}}</td>
                         <td>{{q.no_of_crypes}}</td>
+                        <td>${{q.hunt_price}}</td>
+                        <td>{{q.quiz?.length}}</td>
 
                         <td>
                             <div *ngIf="q.status == 'draft'" class="badge bg-info bg-opacity-10 text-info">Draft
@@ -119,6 +123,10 @@
                     <div class="col-md-3">
                         <label class="form-label">Premium?</label>
                         <p id="premium_hunt"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Price</label>
+                        <p id="hunt_price"></p>
                     </div>
                 </div>
 
