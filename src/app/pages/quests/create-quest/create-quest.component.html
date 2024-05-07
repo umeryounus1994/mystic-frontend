@@ -43,17 +43,14 @@
                                     [ngClass]="{ 'is-invalid': submitted && f['level_increase'].errors }">
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica (URL)</label>
-                                <input type="text" class="form-control" placeholder="e.g. https://www.google.com"
-                                    formControlName="mythica"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica'].errors }">
+                                <label class="form-label">Mythica</label>
+                                <select class="form-control" formControlName="mythica_ID"
+                                [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                    <option value="">Select Mythica</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                </select>
                             </div>
-                            <div class="col-lg-3">
-                                <label class="form-label">Mythica Model (URL)</label>
-                                <input type="text" class="form-control" placeholder="e.g. https://www.google.com"
-                                    formControlName="mythica_model"
-                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_model'].errors }">
-                            </div>
+                
                             <label class="form-label">Answers</label>
                             <div formArrayName="questions">
                                 <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index"

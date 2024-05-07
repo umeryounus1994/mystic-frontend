@@ -17,6 +17,7 @@ export class CreateQuestComponent implements OnInit {
   submitted = false;
   public QrCode: string = "";
   public qrCodeDownloadLink: SafeUrl = "";
+  allCreatures: any = [];
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -32,17 +33,27 @@ export class CreateQuestComponent implements OnInit {
       no_of_xp: ['', Validators.required],
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
-      mythica: ['', Validators.required],
-      mythica_model: ['', Validators.required],
+      mythica_ID: ['', Validators.required],
       qr_code: [this.QrCode],
       questions: this.fb.array([])
     });
     this.addQuestion();
+    this.getAllCreatures()
   }
   get f() { return this.questForm?.controls; }
   questions() : FormArray {  
     return this.questForm.get("questions") as FormArray  
   }  
+  async getAllCreatures() {
+    this.allCreatures = [];
+    this.api.get('creature/get_all')
+    .then((response: any) => {
+        this.sp.hide();
+        this.allCreatures = response?.data;
+    }).catch((error: any) => {
+      this.sp.hide();
+    });
+  }
      
   newQuestion(): FormGroup {  
     return this.fb.group({  
