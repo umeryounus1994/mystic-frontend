@@ -92,30 +92,30 @@
                                 <div class="row mb-3" *ngFor="let questionGroup of questForm.get('questions').controls; let i=index"
                                     [formGroupName]="i">
 
-                                    <div class="col-3 mb-2">
+                                    <div class="col-lg-3 mb-2">
                                         <label class="form-label">Quiz Title</label>
                                         <input type="text" class="form-control" placeholder="Quiz Title"
                                     formControlName="treasure_hunt_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
                                     </div>
                               
-                                    <div class="col-3 mb-2">
+                                    <div class="col-lg-3 mb-2">
                                         <label class="form-label">Latitude</label>
                                         <input type="text" class="form-control" placeholder=""
                                     formControlName="latitude"
                                     [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
                                     </div>
-                                    <div class="col-3 mb-2">
+                                    <div class="col-lg-3 mb-2">
                                         <label class="form-label">Longitude</label>
                                         <input type="text" class="form-control" placeholder=""
                                     formControlName="longitude"
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude']?.errors }">
                                     </div>
-                                    <div class="col-3 mb-2">
+                                    <div class="col-lg-3 mb-2">
                                         <label class="form-label">Mythica</label>
                                         <select class="form-control" formControlName="mythica"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
-                                    <option value="">Select Mythica</option>
+                                    <option value="" selected disabled>Select Mythica</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                                     </div>

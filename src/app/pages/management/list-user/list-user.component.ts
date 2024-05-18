@@ -17,11 +17,9 @@ export class ListUserComponent implements OnInit {
     ordering: false
   };
   counters = {
-    allExams: 0,
-    publishedExams: 0,
-    draftExams: 0,
-    closedExams: 0,
-    reviewExams: 0
+    users: 0,
+    active: 0,
+    inactive: 0
   }
 
   allUsers : any = [];
@@ -37,6 +35,7 @@ export class ListUserComponent implements OnInit {
   async ngOnInit() {
     this.sp.show()
     await this.getAllUsers();
+    await this.getAllAnalytics()
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
@@ -52,23 +51,24 @@ export class ListUserComponent implements OnInit {
       this.sp.hide();
     });
   }
+
+  async getAllAnalytics() {
+    this.allUsers = [];
+    this.api.get('user/user_analytics')
+    .then((response: any) => {
+        this.sp.hide();
+        this.counters = response?.data;
+    }).catch((error: any) => {
+      this.sp.hide();
+    });
+  }
   getFormatedDate(date: any) {
     return this.helper.getReportFormatedDateYMD(date);
   }
-  editExam(examId: any){
-    this.router.navigate(['/exam/edit-exam'], { queryParams: { examId: examId} });
-  }
-  deleteExam(){
-    if($('#reason').val() == '' || $('#reason').val() == undefined) {
-      this.helper.infoToast('Reason is required');
-      return;
-    }
-    if($('#reason').val().length < 6) {
-      this.helper.infoToast('Reason Length should be minimum 6 characters');
-      return;
-    }
+
+  deleteExamModal(userId: any) {
     Swal.fire({
-      title: "Are you sure You want to delete this Exam?",
+      title: "Are you sure You want to delete this User?",
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonText: "Delete",
@@ -76,24 +76,14 @@ export class ListUserComponent implements OnInit {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        let deleteData = null;
-        if($("#description").val() === ''){
-          deleteData = {
-            reason: $("#reason").val()
-          };
-        } else {
-          deleteData = {
-            reason: $("#reason").val(),
-            description: $("#description").val()
-          };
-        }
+
       this.sp.show();
-        this.api.deleteWithData('Exam/'+this.examId, deleteData)
+        this.api.delete('User/'+userId)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("Exam!", "Deleted Successfully", "success");
+          Swal.fire("User!", "Deleted Successfully", "success");
          this.getAllUsers()
-         $("#deleteExam").modal("hide");
+         this.getAllAnalytics()
         }, err => {
           this.helper.failureToast(err?.error?.message);
           this.sp.hide();
@@ -103,8 +93,40 @@ export class ListUserComponent implements OnInit {
       }
     });
   }
-  deleteExamModal(examId: any) {
-    this.examId = examId;
-    $("#deleteExam").modal("show");
+  blockUser(userId: any, status: any){
+    Swal.fire({
+      title: `Are you sure You want to ${status} this User?`,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Yes",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        let d :any;
+        if(status == 'block'){
+          d = {
+            status: 'blocked'
+          }
+        } else {
+          d = {
+            status: 'active'
+          }
+        }
+      this.sp.show();
+        this.api.patch('User/'+userId, d)
+        .then((response: any) => {
+          this.sp.hide();
+          Swal.fire("User!", "Updated Successfully", "success");
+         this.getAllUsers()
+         this.getAllAnalytics()
+        }, err => {
+          this.helper.failureToast(err?.error?.message);
+          this.sp.hide();
+        });
+      } else if (result.isDenied) {
+       // Swal.fire("Exam not deleted", "", "info");
+      }
+    });
   }
 }

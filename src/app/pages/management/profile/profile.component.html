@@ -1,0 +1,52 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">{{spinnerTitle}}</p>
+</ngx-spinner>
+
+<div class="row g-4">
+
+    <div class="col-xl-12">
+
+        <!-- Tab Content START -->
+        <div class="tab-content">
+
+            <!-- Personal Information content START -->
+            <div class="tab-pane show active" id="tab-1">
+                <div class="card shadow">
+
+                    <!-- Card header -->
+                    <div class="card-header border-bottom">
+                        <h5 class="card-header-title">User Settings</h5>
+                    </div>
+
+                    <!-- Card body START -->
+                    <div class="card-body">
+                        <form class="row g-4 align-items-center">
+
+                            <!-- Input item -->
+                            <div class="col-lg-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                            </div>
+
+                            <!-- Input item -->
+                            <div class="col-lg-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                            </div>
+
+                            <!-- Save button -->
+                            <div class="d-sm-flex justify-content-end">
+                                <button type="button" class="btn btn-primary mb-0" (click)="onSubmitUserUpdate()">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Card body END -->
+
+                </div>			
+            </div>
+  
+        </div>
+        <!-- Tab Content END -->
+    </div>
+    <!-- Right side END -->
+</div> <!-- Row END -->	

@@ -6,10 +6,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListUserComponent } from './list-user/list-user.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
-  declarations: [ListUserComponent],
+  declarations: [ListUserComponent, ProfileComponent],
   imports: [
     CommonModule,
     ManagementRoutingModule,

@@ -210,11 +210,10 @@ setHeaderWithToken() {
     });
   }
 
-  patch(path: any, unique: any, data: any) {
+  patch(path: any, data: any) {
     return new Promise((resolve, reject) => {
       const httpOptions = this.setHeaderWithToken()
-      this.http.patch(environment.apiURL + '/' + path + unique, data, httpOptions)
-      .subscribe({
+      this.http.patch(environment.apiURL + '/' + path, data, httpOptions).subscribe({
         next: (data) => {
           resolve(data)
         },

@@ -6,7 +6,7 @@
   type="ball-scale-multiple"
   [fullScreen] = "true"
 >
-  <p style="font-size: 20px; color: white">Logging in...</p>
+  <p style="font-size: 20px; color: white">{{text}}</p>
 </ngx-spinner>
     <!-- left -->
     <div class="col-12 col-lg-6 d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 vh-lg-100">
@@ -45,6 +45,7 @@
                             <input type="email" formControlName="email"
                                 class="form-control border-0 bg-light rounded-end ps-1" placeholder="E-mail"
                                 id="exampleInputEmail1">
+                               
                         </div>
                     </div>
                     <!-- Password -->
@@ -54,9 +55,13 @@
                             [ngClass]="{ 'is-invalid': isSubmitted && submissionForm.get('password').errors }">
                             <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i
                                     class="fas fa-lock"></i></span>
-                            <input type="password" formControlName="password"
+                            <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password"
                                 class="form-control border-0 bg-light rounded-end ps-1" placeholder="password"
-                                id="inputPassword5">
+                                id="inputPassword">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3" (click)="showPassword()">
+                                    <i *ngIf="fieldTextType" class="fas fa-eye-slash"></i>
+                                    <i *ngIf="!fieldTextType" class="fas fa-eye"></i>
+                                   </span>
                         </div>
                     </div>
                     <!-- Check box -->
@@ -66,7 +71,7 @@
                             <label class="form-check-label" for="exampleCheck1">Remember me</label>
                         </div>
                         <div class="text-primary-hover">
-                            <a href="forgot-password.html" class="text-secondary">
+                            <a href="javascript:;" (click)="showResetPasswordModal()" class="text-secondary">
                                 <u>Forgot password?</u>
                             </a>
                         </div>
@@ -78,8 +83,31 @@
                         </div>
                     </div>
                 </form>
+                <div class="modal fade" id="forgetPassword" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-md">
+                        <div class="modal-content">
+                            <div class="modal-header bg-dark">
+                                <h5 class="modal-title text-white" id="appDetaillabel">Forgot Password? </h5>
+                                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
+                                        class="bi bi-x-lg"></i></button>
+                            </div>
+                            <div class="modal-body p-5">
+                                <span class="small">Enter Email</span>
+                                <input type="email" class="form-control" id="forgotemail" placeholder="Email" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary-soft my-0" (click)="resetPassword()">Reset Password</button>
+                                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Form END -->
             </div>
+        
         </div> <!-- Row END -->
+        
     </div>
+    
 </div> <!-- Row END -->
+

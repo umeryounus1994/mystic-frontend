@@ -9,14 +9,14 @@
 <div class="card bg-transparent border">
     <div class="card-body mt-2">
         <div class="table-responsive border-0 rounded-3" *ngIf="allMissions.length > 0">
-            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
+            <table datatable [dtOptions]="dtOptions" class="table table-responsive table-dark-gray align-middle p-4 mb-0 table-hover"
                 id="dtable">
                 <thead>
                     <tr>
 
                         <th scope="col" class="border-0 rounded-start">Title</th>
-                        <th scope="col" class="border-0"># of XP</th>
-                        <th scope="col" class="border-0"># of Cryps</th>
+                        <th scope="col" class="border-0">No of XP</th>
+                        <th scope="col" class="border-0">No of Crypes</th>
                         <th scope="col" class="border-0">Status</th>
                         <th scope="col" class="border-0 rounded-end">Action</th>
                     </tr>
