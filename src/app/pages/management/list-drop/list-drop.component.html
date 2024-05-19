@@ -1,0 +1,79 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Fetching Data....</p>
+</ngx-spinner>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Drops</h1>
+    </div>
+</div>
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allUsers.length > 0">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
+                id="dtable">
+                <thead>
+                    <tr>
+                        <th scope="col" class="border-0">Drop Name</th>
+                        <th scope="col" class="border-0">Mythica (Reward)</th>
+                        <th scope="col" class="border-0">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let q of allUsers; let i = index">
+
+                        <td>{{q.drop_name}}</td>
+                        <td>{{q.mythica_reward?.creature_name}}</td>
+                        <td>
+                            <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0"
+                            (click)="showDetails(q)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="viewQuest" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="appDetaillabel">Drop Details</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body p-5">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Name</label>
+                        <p id="drop_name"></p>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Description</label>
+                        <p id="drop_description"></p>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Mythica</label>
+                        <br/>
+                        <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6" id="mythica_ID"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Reward Mythica</label>
+                        <br/>
+                        <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6" id="mythica_reward"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

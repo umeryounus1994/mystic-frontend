@@ -8,10 +8,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListUserComponent } from './list-user/list-user.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MythicasComponent } from './mythicas/mythicas.component';
+import { AddDropComponent } from './add-drop/add-drop.component';
+import { ListDropComponent } from './list-drop/list-drop.component';
 
 
 @NgModule({
-  declarations: [ListUserComponent, ProfileComponent, MythicasComponent],
+  declarations: [ListUserComponent, ProfileComponent, MythicasComponent,AddDropComponent,ListDropComponent],
   imports: [
     CommonModule,
     ManagementRoutingModule,

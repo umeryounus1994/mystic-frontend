@@ -51,6 +51,15 @@
 						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']">All Users</a></li>
 					</ul>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-bs-toggle="collapse" href="#collapsedrops" role="button" aria-expanded="false" aria-controls="collapsedrops">
+						<i class="fas fa-user-tie fa-fw me-2"></i>Drops
+					</a>
+					<ul class="nav collapse flex-column" id="collapsedrops" data-bs-parent="#navbar-sidebar">
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/management/list-drop'" [routerLink]="['/management/list-drop']">All Drops</a></li>
+						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/management/add-drop'" [routerLink]="['/management/add-drop']">Add Drop</a></li>
+					</ul>
+				</li>
 				<li class="nav-item"><a [routerLink]="['/management/mythicas']" class="nav-link"
 					[class.active]="routeURL === '/management/mythicas'"
 					><i class="bi bi-house fa-fw me-2"></i>Mythicas</a></li>
