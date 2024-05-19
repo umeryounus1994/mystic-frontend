@@ -1,0 +1,85 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">{{spinnerTitle}}</p>
+</ngx-spinner>
+
+<h4>Mythicas</h4>
+<div class="row g-4">
+    <!-- Card item START -->
+    <div class="col-sm-6 col-lg-4 col-xl-3" *ngFor="let m of mythicas" (click)="showDetails(m)" style="cursor: pointer;">
+        <div class="card p-2 shadow h-100">
+            <div class="card-image-scale rounded-3 position-relative">
+                <!-- Card Image -->
+                <img src="https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg" class="card-img" alt="">
+            </div> 
+            
+            <!-- Card body -->
+            <div class="card-body px-2">
+                <!-- Title -->
+                <h5 class="card-title">{{m?.creature_name}}</h5>
+                <h6 class="mb-0 fw-normal">{{m?.creature_description.substring(0,80)}}...</h6>
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+<div class="modal fade" id="viewQuest" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="appDetaillabel">Mythica Details</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body p-5">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Name</label>
+                        <p id="creature_name"></p>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Description</label>
+                        <p id="creature_description"></p>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Gender</label>
+                        <p id="creature_gender"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Element</label>
+                        <p id="creature_element"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Rarity</label>
+                        <p id="creature_rarity"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Height</label>
+                        <p id="creature_height"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Weight</label>
+                        <p id="creature_weight"></p>
+                    </div>
+                </div>
+                <h4>Skills</h4>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6">{{skill1}}</div>
+                        <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6">{{skill2}}</div>
+                        <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6">{{skill3}}</div>
+                        <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6">{{skill4}}</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

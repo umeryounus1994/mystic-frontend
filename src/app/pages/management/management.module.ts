@@ -7,10 +7,11 @@ import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListUserComponent } from './list-user/list-user.component';
 import { ProfileComponent } from './profile/profile.component';
+import { MythicasComponent } from './mythicas/mythicas.component';
 
 
 @NgModule({
-  declarations: [ListUserComponent, ProfileComponent],
+  declarations: [ListUserComponent, ProfileComponent, MythicasComponent],
   imports: [
     CommonModule,
     ManagementRoutingModule,
