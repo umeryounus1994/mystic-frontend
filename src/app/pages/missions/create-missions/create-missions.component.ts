@@ -60,9 +60,19 @@ export class CreateMissionsComponent implements OnInit {
       latitude: '',
       longitude: '',
       mythica: '',
-      mission_id: '1'
+      mission_id: '1',
+      options: this.fb.array([this.createOption(), this.createOption(), this.createOption(), this.createOption()])
     })
 
+  }
+  getOptions(questionIndex: number): FormArray {
+    return this.questions.at(questionIndex).get('options') as FormArray;
+  }
+  createOption(): FormGroup {
+    return this.fb.group({
+      option: ['', Validators.required],
+      correct: [false, Validators.required]
+    });
   }
 
   addQuestion() {
@@ -75,36 +85,31 @@ export class CreateMissionsComponent implements OnInit {
   }
   onSubmit() {
     this.submitted = true;
+    const result = this.findEmptyFields(this.questForm?.value?.questions);
+    if(result.length > 0){
+      if(result[0]?.emptyFields.length > 0 || result[1]?.emptyFields.length > 0 || result[2]?.emptyFields.length > 0) {
+        let message = result.map((question:any) => 
+        `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
+        Swal.fire("Mission!", message, "error");
+        return;
+      }
+    }
+    
     if (this.questForm?.valid) {
       this._sendSaveRequest(this.questForm.value);
     }
   }
   _sendSaveRequest(formData: any) {
-
-    let questions = formData.questions;
-    
-    let checkFields = this.checkFields(questions);
-    if (checkFields.fields > 0) {
-      Swal.fire("Mission!", checkFields?.msg, "error");
-      return;
-    }
-    delete formData.questions;
     this.sp.show();
-    this.api.postData('mission/createMission', formData)
+    this.api.postData('mission/createMissionAdmin', formData)
       .then((response: any) => {
         this.sp.hide();
-        questions.forEach((element: any) => {
-          element.mission_id = response?.data?._id;
-        });
-        this.api.postData('mission/createQuiz', questions)
-          .then((responseQ: any) => {
-            setTimeout(() => {
-              this.helper.successToast("Mission Created Successfully");
-            }, 1000);
-            setTimeout(() => {
-              this.router.navigate(['mission/list-mission']);
-            }, 2000);
-          });
+        setTimeout(() => {
+          this.helper.successToast("Mission Created Successfully");
+        }, 1000);
+        setTimeout(() => {
+          this.router.navigate(['mission/list-mission']);
+        }, 2000);
       })
       .catch((error) => {
         this.sp.hide();
@@ -112,30 +117,39 @@ export class CreateMissionsComponent implements OnInit {
       });
   }
 
-  checkFields(dataArray: any[]): any {
-    for (let i = 0; i < dataArray.length; i++) {
-      const obj = dataArray[i];
-      const emptyFields = [];
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          if (obj[key] === "") {
-            emptyFields.push(key); // Store the empty field name
-          }
+  findEmptyFields(quizData:any) {
+    let emptyFieldsQuestions:any = [];
+
+    quizData.forEach((question:any, index:any) => {
+        let emptyFields = [];
+
+        if (question.quiz_title === '') {
+            emptyFields.push('quiz_title');
         }
-      }
-      if (emptyFields.length > 0) {
-        let obj = {
-          fields: emptyFields.length,
-          msg: `For Quiz ${i + 1}, the following fields are empty: ${emptyFields.join(", ")}`
+        if (question.latitude === '') {
+          emptyFields.push('latitude');
         }
-        return obj;
-      } else {
-        let obj = {
-          fields: 0,
-          msg: `For Quiz ${i + 1}, the following fields are empty: ${emptyFields.join(", ")}`
+         if (question.longitude === '') {
+          emptyFields.push('longitude');
         }
-        return obj;
-      }
-    }
-  }
+        if (question.mythica === '') {
+            emptyFields.push('mythica');
+        }
+
+        question.options.forEach((option:any, optIndex:any) => {
+            if (option.option === '') {
+                emptyFields.push(`option ${optIndex + 1}`);
+            }
+        });
+
+        if (emptyFields.length > 0) {
+            emptyFieldsQuestions.push({
+                questionNumber: index + 1,
+                emptyFields: emptyFields
+            });
+        }
+    });
+
+    return emptyFieldsQuestions;
+}
 }

@@ -73,41 +73,6 @@ export class ListMissionsComponent implements OnInit {
     this.options = quest?.quiz?.options;
     this.missionId = quest?.id;
   }
-  openModalQuizOption(id: any){
-    $("#viewQuest").modal("hide");
-    $("#addQuizOption").modal("show");
-    this.missionQuizId = id;
-  }
-  addQuizOption() {
-    if ($('#answer').val() == '' || $('#answer').val() == undefined) {
-      this.helper.infoToast('Answer is required');
-      return;
-    }
-    if ($('#correct_option').val() == '' || $('#correct_option').val() == undefined) {
-      this.helper.infoToast('Correct Option is required');
-      return;
-    }
-    const data = {
-      answer: $('#answer').val(),
-      correct_option: $('#correct_option').val(),
-      mission_id: this.missionId,
-      mission_quiz_id: this.missionQuizId
-    };
-    this.sp.show()
-    this.api.post('mission/createOptions', data)
-      .then(async (response: any) => {
-        this.sp.hide()
-        $('#addQuizOption').modal('hide');
-        this.helper.successToast('Option Added Successfully');
-       
-        this.getAllUsers();
-        $('#answer').val('')
-        $('#correct_option').val('')
-      }, err => {
-        this.helper.failureToast(err?.error?.message);
-        this.sp.hide();
-      });
-  }
   toggleOptions(quizId: string): void {
     const quizOptionsId = 'quizOptions' + quizId;
     const quizOptionsElement = document.getElementById(quizOptionsId);

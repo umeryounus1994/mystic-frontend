@@ -40,9 +40,10 @@
                             <div class="col-lg-3">
                                 <label class="form-label">Mythica ID</label>
                                 <select class="form-control" formControlName="mythica_ID"
-                                [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
                                     <option value="">Select Mythica</option>
-                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-lg-3">
@@ -79,12 +80,12 @@
                                     [formGroupName]="i">
 
                                     <div class="col-lg-3 mb-2">
-                                        <label class="form-label">Quiz Title</label>
+                                        <label class="form-label">Quiz {{i+1}} Title</label>
                                         <input type="text" class="form-control" placeholder="Quiz Title"
                                             formControlName="quiz_title"
                                             [ngClass]="{ 'is-invalid': submitted && f['quiz_title']?.errors }">
                                     </div>
-                                    
+
                                     <div class="col-lg-3 mb-2">
                                         <label class="form-label">Latitude</label>
                                         <input type="text" class="form-control" placeholder=""
@@ -100,30 +101,40 @@
                                     <div class="col-lg-3 mb-2">
                                         <label class="form-label">Mythica</label>
                                         <select class="form-control" formControlName="mythica"
-                                [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
-                                    <option value="" selected disabled>Select Mythica</option>
-                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
-                                </select>
-                                       
+                                            [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
+                                            <option value="" selected disabled>Select Mythica</option>
+                                            <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}
+                                            </option>
+                                        </select>
                                     </div>
-
-
                                     <div class="col-lg-2" style="margin-top: 30px;">
-
-                                        <!-- <a href="javascript:;" *ngIf="i == questions.controls.length -1"
-                                            (click)="addQuestion()"
-                                            class="btn btn-success-soft btn-round me-1 mb-1 mb-md-0"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                            data-bs-original-title="Edit">
-                                            <i class="bi bi-plus"></i>
-                                        </a> -->
-                                        <!-- <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                            (click)="removeQuestion(i)">
-                                            <i class="bi bi-trash"></i>
-                                        </button> -->
                                     </div>
+                                    <div formArrayName="options">
+                                        <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j">
+                                          <div class="row mb-4">
+                                            <div class="col-lg-3 mb-2">
+                                              <label class="form-label">Option</label>
+                                              <input type="text" class="form-control" formControlName="option">
+                                            </div>
+                                            <div class="col-lg-3 mb-2">
+                                              <label class="form-label">Correct Option</label>
+                                              <select class="form-select js-choice z-index-9" formControlName="correct" aria-label=".form-select-sm">
+                                                <option value="" selected disabled>Select Correct Option</option>
+                                                <option [value]="true">Yes</option>
+                                                <option [value]="false">No</option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    <br />
+                                    <br />
+                                    <hr />  
                                 </div>
+                             
+                             
                             </div>
+                                  
+                        </div>
 
                             <div class="d-sm-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary mb-0">Create</button>
