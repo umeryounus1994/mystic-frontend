@@ -5,17 +5,21 @@
 <h4>Mythicas</h4>
 <div class="row g-4">
     <!-- Card item START -->
-    <div class="col-sm-6 col-lg-4 col-xl-3" *ngFor="let m of mythicas" (click)="showDetails(m)" style="cursor: pointer;">
+    <div class="col-sm-6 col-lg-4 col-xl-3" *ngFor="let m of mythicas">
         <div class="card p-2 shadow h-100">
-            <div class="card-image-scale rounded-3 position-relative">
+            <div class="card-image-scale rounded-3 position-relative" (click)="showDetails(m)" style="cursor: pointer;">
                 <!-- Card Image -->
                 <img src="https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg" class="card-img" alt="">
             </div> 
             
             <!-- Card body -->
-            <div class="card-body px-2">
+            <div class="card-body px-2" >
                 <!-- Title -->
-                <h5 class="card-title">{{m?.creature_name}}</h5>
+                <h5 class="card-title">{{m?.creature_name}} <span style="float: right;">
+                    <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0" (click)="editMythicaModal(m)">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </span></h5>
                 <h6 class="mb-0 fw-normal">{{m?.creature_description.substring(0,80)}}...</h6>
             </div>
         </div>
@@ -78,6 +82,99 @@
 
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editMythica" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="appDetaillabel">Edit Mythica</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body p-5">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" id="creature_name1">
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" id="creature_description1">
+                    </div>
+
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Gender</label>
+                        <select class="form-control" id="creature_gender1">
+                            <option value="" selected disabled>Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Element</label>
+                        <input type="text" class="form-control" id="creature_element1">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Rarity</label>
+                        <input type="text" class="form-control" id="creature_rarity1">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Height</label>
+                        <input type="text" class="form-control" id="creature_height1">
+                    </div>
+ 
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Weight</label>
+                        <input type="text" class="form-control" id="creature_weight1">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Skill1</label>
+                        <select class="form-control" id="creature_skill1">
+                            <option value="" selected disabled>Select</option>
+                            <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Skill2</label>
+                        <select class="form-control" id="creature_skill2">
+                            <option value="" selected disabled>Select</option>
+                            <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Skill3</label>
+                        <select class="form-control" id="creature_skill3">
+                            <option value="" selected disabled>Select</option>
+                            <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mt-1">
+                        <label class="form-label">Skill4</label>
+                        <select class="form-control" id="creature_skill4">
+                            <option value="" selected disabled>Select</option>
+                            <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info my-0" (click)="updateMythica()">Update</button>
                 <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
