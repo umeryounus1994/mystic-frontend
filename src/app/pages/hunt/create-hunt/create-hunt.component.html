@@ -18,7 +18,7 @@
 
                             <div class="col-12 mb-2">
                                 <label class="form-label">Treasure Hunt Title</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="treasure_hunt_title"
+                                <input type="text" class="form-control" placeholder="Title" formControlName="treasure_hunt_title"
                                 [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
                             </div>
                             <div class="col-lg-3">
@@ -93,7 +93,7 @@
                                     [formGroupName]="i">
 
                                     <div class="col-lg-3 mb-2">
-                                        <label class="form-label">Quiz Title</label>
+                                        <label class="form-label">Quiz {{i+1}} Title</label>
                                         <input type="text" class="form-control" placeholder="Quiz Title"
                                     formControlName="treasure_hunt_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
@@ -119,21 +119,27 @@
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                                     </div>
-                          
-<!--                                   
-                                    <div class="col-2" style="margin-top: 30px;">
-
-                                        <a href="javascript:;" *ngIf="i == questions.controls.length -1"  (click)="addQuestion()"
-                                            class="btn btn-success-soft btn-round me-1 mb-1 mb-md-0"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                            data-bs-original-title="Edit">
-                                            <i class="bi bi-plus"></i>
-                                        </a>
-                                        <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                            (click)="removeQuestion(i)">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div> -->
+                                    <div formArrayName="options">
+                                        <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j">
+                                          <div class="row mb-4">
+                                            <div class="col-lg-3 mb-2">
+                                              <label class="form-label">Option</label>
+                                              <input type="text" class="form-control" formControlName="option">
+                                            </div>
+                                            <div class="col-lg-3 mb-2">
+                                              <label class="form-label">Correct Option</label>
+                                              <select class="form-select js-choice z-index-9" formControlName="correct" aria-label=".form-select-sm">
+                                                <option value="" selected disabled>Select Correct Option</option>
+                                                <option [value]="true">Yes</option>
+                                                <option [value]="false">No</option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    <br />
+                                    <br />
+                                    <hr />  
+                                </div>
                                 </div>
                             </div>
                         
