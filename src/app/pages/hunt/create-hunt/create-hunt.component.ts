@@ -30,8 +30,8 @@ export class CreateHuntComponent implements OnInit {
       mythica_ID: ['', Validators.required],
       hunt_latitude: ['', Validators.required],
       hunt_longitude: ['', Validators.required],
-      premium_hunt: [false, Validators.required],
-      hunt_price: [0],
+      premium_hunt: [false],
+      hunt_package: [],
       treasure_hunt_start_date: ['', Validators.required],
       treasure_hunt_end_date: ['', Validators.required],
       questions: this.fb.array([])
