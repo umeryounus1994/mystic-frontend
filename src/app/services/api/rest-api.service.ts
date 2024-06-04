@@ -48,6 +48,25 @@ setHeaderWithToken() {
 }
 }
 
+setHeaderWithTokenWithoutContentType() {
+  const jsonString = localStorage?.getItem('mystic9834!@');
+
+  if (jsonString !== null) {
+    try {
+        const data = JSON.parse(jsonString);
+        return {
+          headers: new HttpHeaders({
+            'Authorization': 'Bearer ' + data?.access_token
+          })
+        };
+    } catch (error) {
+      return {}; // Return empty headers
+    }
+} else {
+  return {}; // Return empty headers
+}
+}
+
   get(path: any) {
     return new Promise((resolve, reject) => {
       const httpOptions = this.setHeaderWithToken()
@@ -168,7 +187,7 @@ setHeaderWithToken() {
   }
   postImageData(end_point: any, data: any) {
     return new Promise((resolve, reject) => {
-      const httpOptions = this.setHeaderWithToken()
+      const httpOptions = this.setHeaderWithTokenWithoutContentType()
       this.http
       .post(environment.apiURL + '/' + end_point, data, httpOptions)
       .subscribe({

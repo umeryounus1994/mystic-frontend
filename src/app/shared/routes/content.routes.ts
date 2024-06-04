@@ -19,6 +19,10 @@ export const content: Routes = [
     loadChildren: () => import("../../pages/hunt/hunt.module").then(module => module.HuntModule)
   },
   {
+    path: 'mystery',
+    loadChildren: () => import("../../pages/mysteries/mysteries.module").then(module => module.MysteriesModule)
+  },
+  {
     path: 'management',
     loadChildren: () => import("../../pages/management/management.module").then(module => module.ManagementModule)
   }
