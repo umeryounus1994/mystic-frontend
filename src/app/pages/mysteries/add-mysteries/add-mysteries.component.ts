@@ -21,7 +21,7 @@ export class AddMysteriesComponent implements OnInit {
   option2: File | undefined = undefined;
   option3: File | undefined = undefined;
   option4: File | undefined = undefined;
-
+  correctOption = '';
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
   }
@@ -33,7 +33,9 @@ export class AddMysteriesComponent implements OnInit {
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
       mythica_ID: ['', Validators.required],
-      questions: this.fb.array([])
+      questions: this.fb.array([]),
+      latitude: ['', Validators.required],
+      longitude: ['', Validators.required],
     });
     this.addQuestion();
     this.getAllCreatures()
@@ -82,6 +84,8 @@ export class AddMysteriesComponent implements OnInit {
     fD.append('no_of_crypes', formData?.no_of_crypes);
     fD.append('level_increase', formData?.level_increase);
     fD.append('mythica_ID', formData?.mythica_ID);
+    fD.append('latitude', formData?.latitude);
+    fD.append('longitude', formData?.longitude);
     if(this.questionPicture){
       fD.append('picture_mystery_question_url', this.questionPicture!, this.questionPicture?.name);
     }
@@ -97,6 +101,7 @@ export class AddMysteriesComponent implements OnInit {
     if(this.option4){
       fD.append('option4', this.option4!, this.option4?.name);
     }
+    fD.append('correct', this.correctOption);
     this.api.postImageData('pictureMystery/createPictureMystery', fD)
       .then((response: any) => {
           this.sp.hide();
@@ -129,5 +134,10 @@ export class AddMysteriesComponent implements OnInit {
     if(type == 'option4'){
       this.option4 = event.target.files[0];
     } 
+  }
+  onOptionSelected($event: any, option:any){
+   if($event.target.value) {
+    this.correctOption = option;
+   }
   }
 }

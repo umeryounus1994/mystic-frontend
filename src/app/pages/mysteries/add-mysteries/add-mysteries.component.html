@@ -44,6 +44,16 @@
                                     [ngClass]="{ 'is-invalid': submitted && f['level_increase'].errors }">
                             </div>
                             <div class="col-lg-3">
+                                <label class="form-label">Latitude</label>
+                                <input type="text" class="form-control" placeholder="10.10" formControlName="latitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Longitude</label>
+                                <input type="text" class="form-control" placeholder="10.10" formControlName="longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
+                            </div>
+                            <div class="col-lg-3">
                                 <label class="form-label">Mythica</label>
                                 <select class="form-control" formControlName="mythica_ID"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
@@ -65,6 +75,7 @@
                                     <div class="col-lg-2 mb-1">
                                         <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
                                             formControlName="correct_option"
+                                            (change)="onOptionSelected($event,'option'+(i+1))"
                                             [ngClass]="{ 'is-invalid': submitted && f['correct_option']?.errors }">
                                             <option value="" selected disabled>Select Correct Option</option>
                                             <option value='true'>Yes</option>

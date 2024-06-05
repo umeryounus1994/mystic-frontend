@@ -1,1 +1,116 @@
-<p>list-mysteries works!</p>
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Fetching Data....</p>
+</ngx-spinner>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Mysteries</h1>
+    </div>
+</div>
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allQuests.length > 0">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
+                id="dtable">
+                <thead>
+                    <tr>
+
+                        <th scope="col" class="border-0 rounded-start">Picture Question</th>
+                        <th scope="col" class="border-0">No of XP</th>
+                        <th scope="col" class="border-0">No of Crypes</th>
+                        <th scope="col" class="border-0">Status</th>
+                        <th scope="col" class="border-0 rounded-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let q of allQuests; let i = index">
+
+                        <td>{{q.picture_mystery_question.toString().substring(0,20)}}...</td>
+                        <td>{{q.no_of_xp}}</td>
+                        <td>{{q.no_of_crypes}}</td>
+                        
+                        <td>
+                            <div *ngIf="q.status == 'active'"
+                                class="badge bg-success bg-opacity-10 text-success">Active</div>
+                            <div *ngIf="q.status == 'deleted'"
+                                class="badge bg-danger bg-opacity-10 text-danger">Deleted</div>
+                        </td>
+                        <td>
+                            <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0" (click)="viewQuest(q)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button *ngIf="q.status == 'active'" class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                                (click)="deleteExamModal(q.id, 'block')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <button *ngIf="q.status == 'deleted'" class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0"
+                                (click)="deleteExamModal(q.id, 'activate')">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="viewQuest" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="appDetaillabel">Mystery Details</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body p-5">
+               <div class="row">
+                <div class="col-md-10">
+                    <label class="form-label">Mystery Summary/Question</label>
+                    <p id="question"></p>
+                </div>
+               </div>
+               <div class="row">
+                <div class="col-md-10">
+                    <label class="form-label">Mystery Question URL</label>
+                    <br />
+                    <a href="{{mysteryImage}}">View Image</a>
+                </div>
+               </div>
+               <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">No of XP</label>
+                    <p id="no_of_xp"></p>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">No of Crypes</label>
+                    <p id="no_of_crypes"></p>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Level Points</label>
+                    <p id="level_increase"></p>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Mythica</label>
+                   <p>{{mythicaURL}}</p>
+                </div>
+
+               </div>
+               <label class="form-label">Answers</label>
+               <div class="row">
+                <div class="col-md-12" *ngFor="let q of questions; let i=index;">
+                    <p>
+                        <i *ngIf="q.correct_option == true" style="color:green; font-size: 20px; margin-top: -2px;" class="bi bi-check2-circle fa-fw me-2"></i>
+                        <i *ngIf="q.correct_option == false" style="color:red; font-size: 20px; margin-top: -2px;" class="bi bi-x-circle fa-fw me-2"></i> 
+                    <img src="{{q?.answer_url}}" />   
+                    </p>
+                </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
