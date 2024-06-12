@@ -16,6 +16,9 @@ export class CreateMissionsComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
   allCreatures: any = [];
+  option1: File | undefined = undefined;
+  option2: File | undefined = undefined;
+  option3: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -61,6 +64,7 @@ export class CreateMissionsComponent implements OnInit {
       longitude: '',
       mythica: '',
       mission_id: '1',
+      quiz_file: 'a',
       options: this.fb.array([this.createOption(), this.createOption(), this.createOption(), this.createOption()])
     })
 
@@ -100,8 +104,29 @@ export class CreateMissionsComponent implements OnInit {
     }
   }
   _sendSaveRequest(formData: any) {
+    const fD = new FormData();
+    fD.append('mission_title', formData?.mission_title);
+    fD.append('no_of_xp', formData?.no_of_xp);
+    fD.append('no_of_crypes', formData?.no_of_crypes);
+    fD.append('level_increase', formData?.level_increase);
+    fD.append('mythica_ID', formData?.mythica_ID);
+    fD.append('mission_latitude', formData?.mission_latitude);
+    fD.append('mission_longitude', formData?.mission_longitude);
+    fD.append('mission_start_date', formData?.mission_start_date);
+    fD.append('mission_end_date', formData?.mission_end_date);
+    fD.append('questions', JSON.stringify(formData?.questions));
+    if(this.option1){
+      fD.append('option1', this.option1!, this.option1?.name);
+    }
+    if(this.option2){
+      fD.append('option2', this.option2!, this.option2?.name);
+    }
+    if(this.option3){
+      fD.append('option3', this.option3!, this.option3?.name);
+    }
+
     this.sp.show();
-    this.api.postData('mission/createMissionAdmin', formData)
+    this.api.postImageData('mission/createMissionAdmin', fD)
       .then((response: any) => {
         this.sp.hide();
         setTimeout(() => {
@@ -115,6 +140,17 @@ export class CreateMissionsComponent implements OnInit {
         this.sp.hide();
         Swal.fire("Mission!", "There is an error, please try again", "error");
       });
+  }
+  onFileSelected(event: any, type: string) {
+    if(type == 'option1'){
+      this.option1 = event.target.files[0];
+    }
+    if(type == 'option2'){
+      this.option2 = event.target.files[0];
+    }
+    if(type == 'option3'){
+      this.option3 = event.target.files[0];
+    }
   }
 
   findEmptyFields(quizData:any) {

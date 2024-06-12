@@ -118,7 +118,6 @@ export class AddMysteriesComponent implements OnInit {
       });
   }
   onFileSelected(event: any, type: string) {
-    console.log(type, event.target.files)
     if(type == 'questionPicture'){
       this.questionPicture = event.target.files[0];
     }

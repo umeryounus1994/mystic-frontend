@@ -86,13 +86,13 @@
                                             [ngClass]="{ 'is-invalid': submitted && f['quiz_title']?.errors }">
                                     </div>
 
-                                    <div class="col-lg-3 mb-2">
+                                    <div class="col-lg-2 mb-2">
                                         <label class="form-label">Latitude</label>
                                         <input type="text" class="form-control" placeholder=""
                                             formControlName="latitude"
                                             [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
                                     </div>
-                                    <div class="col-lg-3 mb-2">
+                                    <div class="col-lg-2 mb-2">
                                         <label class="form-label">Longitude</label>
                                         <input type="text" class="form-control" placeholder=""
                                             formControlName="longitude"
@@ -107,7 +107,10 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-lg-2" style="margin-top: 30px;">
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Attach File</label>
+                                        <input type="file" class="form-control" placeholder=""
+                                            (change)="onFileSelected($event, 'option'+(i+1))">
                                     </div>
                                     <div formArrayName="options">
                                         <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j">

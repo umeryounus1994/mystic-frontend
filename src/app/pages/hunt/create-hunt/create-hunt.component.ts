@@ -16,6 +16,11 @@ export class CreateHuntComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
   allCreatures: any = [];
+  option1: File | undefined = undefined;
+  option2: File | undefined = undefined;
+  option3: File | undefined = undefined;
+  option4: File | undefined = undefined;
+  option5: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -81,7 +86,6 @@ export class CreateHuntComponent implements OnInit {
      
   addQuestion() {  
     this.questions.push(this.newQuestion());  
-
   }  
      
   removeQuestion(i:number) {  
@@ -103,8 +107,36 @@ export class CreateHuntComponent implements OnInit {
     }
   }
   _sendSaveRequest(formData: any) {
+    const fD = new FormData();
+    fD.append('treasure_hunt_title', formData?.treasure_hunt_title);
+    fD.append('no_of_xp', formData?.no_of_xp);
+    fD.append('no_of_crypes', formData?.no_of_crypes);
+    fD.append('level_increase', formData?.level_increase);
+    fD.append('mythica_ID', formData?.mythica_ID);
+    fD.append('hunt_latitude', formData?.hunt_latitude);
+    fD.append('hunt_longitude', formData?.hunt_longitude);
+    fD.append('premium_hunt', formData?.premium_hunt);
+    fD.append('hunt_package', formData?.hunt_package);
+    fD.append('treasure_hunt_start_date', formData?.treasure_hunt_start_date);
+    fD.append('treasure_hunt_end_date', formData?.treasure_hunt_end_date);
+    fD.append('questions', JSON.stringify(formData?.questions));
+    if(this.option1){
+      fD.append('option1', this.option1!, this.option1?.name);
+    }
+    if(this.option2){
+      fD.append('option2', this.option2!, this.option2?.name);
+    }
+    if(this.option3){
+      fD.append('option3', this.option3!, this.option3?.name);
+    }
+    if(this.option4){
+      fD.append('option4', this.option4!, this.option4?.name);
+    }
+    if(this.option5){
+      fD.append('option5', this.option5!, this.option5?.name);
+    }
     this.sp.show();
-    this.api.postData('hunt/createTreasureHuntAdmin', formData)
+    this.api.postImageData('hunt/createTreasureHuntAdmin', formData)
       .then((response: any) => {
         this.sp.hide();
         setTimeout(() => {
@@ -153,5 +185,22 @@ export class CreateHuntComponent implements OnInit {
     });
 
     return emptyFieldsQuestions;
+}
+onFileSelected(event: any, type: string) {
+  if(type == 'option1'){
+    this.option1 = event.target.files[0];
+  }
+  if(type == 'option2'){
+    this.option2 = event.target.files[0];
+  }
+  if(type == 'option3'){
+    this.option3 = event.target.files[0];
+  }
+  if(type == 'option4'){
+    this.option4 = event.target.files[0];
+  }
+  if(type == 'option5'){
+    this.option5 = event.target.files[0];
+  }
 }
 }

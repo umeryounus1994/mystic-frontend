@@ -89,6 +89,7 @@
                                     <option value='Silver'>Silver</option>
                                 </select>
                             </div>
+                          
 
                             <hr />
                            <h3>Create Quiz Options</h3>
@@ -104,13 +105,13 @@
                                     [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
                                     </div>
                               
-                                    <div class="col-lg-3 mb-2">
+                                    <div class="col-lg-2 mb-2">
                                         <label class="form-label">Latitude</label>
                                         <input type="text" class="form-control" placeholder=""
                                     formControlName="latitude"
                                     [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
                                     </div>
-                                    <div class="col-lg-3 mb-2">
+                                    <div class="col-lg-2 mb-2">
                                         <label class="form-label">Longitude</label>
                                         <input type="text" class="form-control" placeholder=""
                                     formControlName="longitude"
@@ -123,6 +124,11 @@
                                     <option value="" selected disabled>Select Mythica</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Attach File</label>
+                                        <input type="file" class="form-control" placeholder=""
+                                            (change)="onFileSelected($event, 'option'+(i+1))">
                                     </div>
                                     <div formArrayName="options">
                                         <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j">
