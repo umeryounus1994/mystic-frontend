@@ -136,7 +136,7 @@ export class CreateHuntComponent implements OnInit {
       fD.append('option5', this.option5!, this.option5?.name);
     }
     this.sp.show();
-    this.api.postImageData('hunt/createTreasureHuntAdmin', formData)
+    this.api.postImageData('hunt/createTreasureHuntAdmin', fD)
       .then((response: any) => {
         this.sp.hide();
         setTimeout(() => {
