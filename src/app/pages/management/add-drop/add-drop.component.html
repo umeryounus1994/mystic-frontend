@@ -50,11 +50,17 @@
                                 <input type="text" class="form-control" placeholder="" formControlName="longitude"
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
                             </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Reward PDF</label>
+                                <input type="file" class="form-control" placeholder=""
+                                (change)="onFileSelected($event, 'reward')">
+                            </div>
                             <div class="col-lg-12">
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control" rows="3" formControlName="drop_description"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_description'].errors }"></textarea>
                             </div>
+                          
                            
                
                             <div class="d-sm-flex justify-content-end">

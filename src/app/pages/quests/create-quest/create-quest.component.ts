@@ -18,6 +18,7 @@ export class CreateQuestComponent implements OnInit {
   public QrCode: string = "";
   public qrCodeDownloadLink: SafeUrl = "";
   allCreatures: any = [];
+  reward: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -61,12 +62,10 @@ export class CreateQuestComponent implements OnInit {
       correct_option: false,  
       quest_id: ''
     })  
-  }  
-     
+  }     
   addQuestion() {  
     this.questions().push(this.newQuestion());  
   }  
-     
   removeQuestion(i:number) {  
     this.questions().removeAt(i);  
   } 
@@ -79,8 +78,19 @@ export class CreateQuestComponent implements OnInit {
   _sendSaveRequest(formData: any) {
     this.sp.show();
     let questions = formData.questions;
+    const fD = new FormData();
+    fD.append('quest_question', formData?.quest_question);
+    fD.append('quest_title', formData?.quest_title);
+    fD.append('no_of_xp', formData?.no_of_xp);
+    fD.append('no_of_crypes', formData?.no_of_crypes);
+    fD.append('level_increase', formData?.level_increase);
+    fD.append('mythica_ID', formData?.mythica_ID);
+    fD.append('qr_code', formData?.qr_code);
+    if(this.reward){
+      fD.append('reward', this.reward!, this.reward?.name);
+    }
     delete formData.questions;
-    this.api.postData('quest/createQuest', formData)
+    this.api.postImageData('quest/createQuest', fD)
       .then((response: any) => {
           this.sp.hide();
           questions.forEach((element: any) => {
@@ -100,5 +110,10 @@ export class CreateQuestComponent implements OnInit {
         this.sp.hide();
         Swal.fire("Quest!", "There is an error, please try again", "error");
       });
+  }
+  onFileSelected(event: any, type: string) {
+    if(type == 'reward'){
+      this.reward = event.target.files[0];
+    }
   }
 }

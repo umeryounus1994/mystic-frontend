@@ -19,6 +19,7 @@ export class CreateMissionsComponent implements OnInit {
   option1: File | undefined = undefined;
   option2: File | undefined = undefined;
   option3: File | undefined = undefined;
+  reward: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -124,6 +125,9 @@ export class CreateMissionsComponent implements OnInit {
     if(this.option3){
       fD.append('option3', this.option3!, this.option3?.name);
     }
+    if(this.reward){
+      fD.append('reward', this.reward!, this.reward?.name);
+    }
 
     this.sp.show();
     this.api.postImageData('mission/createMissionAdmin', fD)
@@ -150,6 +154,9 @@ export class CreateMissionsComponent implements OnInit {
     }
     if(type == 'option3'){
       this.option3 = event.target.files[0];
+    }
+    if(type == 'reward'){
+      this.reward = event.target.files[0];
     }
   }
 

@@ -16,6 +16,7 @@ export class AddDropComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
   allCreatures: any = [];
+  reward: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -55,8 +56,19 @@ export class AddDropComponent implements OnInit {
     }
   }
   _sendSaveRequest(formData: any) {
+    const fD = new FormData();
+    fD.append('drop_name', formData?.drop_name);
+    fD.append('drop_description', formData?.drop_description);
+    fD.append('mythica_reward', formData?.mythica_reward);
+    fD.append('latitude', formData?.latitude);
+    fD.append('longitude', formData?.longitude);
+    fD.append('mythica_ID', formData?.mythica_ID);
+
+    if(this.reward){
+      fD.append('reward', this.reward!, this.reward?.name);
+    }
     this.sp.show();
-    this.api.postData('drop/createDrop', formData)
+    this.api.postImageData('drop/createDrop', fD)
       .then((response: any) => {
           this.sp.hide();
           setTimeout(() => {
@@ -67,5 +79,10 @@ export class AddDropComponent implements OnInit {
         this.sp.hide();
         Swal.fire("Drop!", "There is an error, please try again", "error");
       });
+  }
+  onFileSelected(event: any, type: string) {
+    if(type == 'reward'){
+      this.reward = event.target.files[0];
+    }
   }
 }

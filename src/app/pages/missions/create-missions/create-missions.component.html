@@ -47,6 +47,12 @@
                                 </select>
                             </div>
                             <div class="col-lg-3">
+                                <label class="form-label">Reward PDF</label>
+                                <input type="file" class="form-control" placeholder=""
+                                (change)="onFileSelected($event, 'reward')">
+                            </div>
+                           
+                            <div class="col-lg-3">
                                 <label class="form-label">Mission Longitude</label>
                                 <input type="text" class="form-control" placeholder="Mission Longitude"
                                     formControlName="mission_longitude"

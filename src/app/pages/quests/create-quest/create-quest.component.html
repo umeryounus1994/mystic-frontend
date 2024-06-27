@@ -50,6 +50,11 @@
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Reward PDF</label>
+                                <input type="file" class="form-control" placeholder=""
+                                (change)="onFileSelected($event, 'reward')">
+                            </div>
                 
                             <label class="form-label">Answers</label>
                             <div formArrayName="questions">

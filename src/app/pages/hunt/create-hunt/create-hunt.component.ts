@@ -21,6 +21,7 @@ export class CreateHuntComponent implements OnInit {
   option3: File | undefined = undefined;
   option4: File | undefined = undefined;
   option5: File | undefined = undefined;
+  reward: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -135,6 +136,9 @@ export class CreateHuntComponent implements OnInit {
     if(this.option5){
       fD.append('option5', this.option5!, this.option5?.name);
     }
+    if(this.reward){
+      fD.append('reward', this.reward!, this.reward?.name);
+    }
     this.sp.show();
     this.api.postImageData('hunt/createTreasureHuntAdmin', fD)
       .then((response: any) => {
@@ -201,6 +205,9 @@ onFileSelected(event: any, type: string) {
   }
   if(type == 'option5'){
     this.option5 = event.target.files[0];
+  }
+  if(type == 'reward'){
+    this.reward = event.target.files[0];
   }
 }
 }
