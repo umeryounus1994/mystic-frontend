@@ -31,6 +31,7 @@ export class AddDropComponent implements OnInit {
       mythica_reward: ['', Validators.required],
       latitude: ['', Validators.required],
       longitude: ['', Validators.required],
+      no_of_xp: ['', Validators.required],
       mythica_ID: ['', Validators.required],
       questions: this.fb.array([])
     });
@@ -79,6 +80,7 @@ export class AddDropComponent implements OnInit {
     fD.append('latitude', formData?.latitude);
     fD.append('longitude', formData?.longitude);
     fD.append('mythica_ID', formData?.mythica_ID);
+    fD.append('no_of_xp', formData?.no_of_xp);
 
     if(this.reward){
       fD.append('reward', this.reward!, this.reward?.name);

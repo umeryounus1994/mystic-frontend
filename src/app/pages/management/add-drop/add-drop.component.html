@@ -51,6 +51,11 @@
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
                             </div>
                             <div class="col-lg-3">
+                                <label class="form-label">No of XP</label>
+                                <input type="text" class="form-control" placeholder="No of XP" formControlName="no_of_xp"
+                                    [ngClass]="{ 'is-invalid': submitted && f['no_of_xp'].errors }">
+                            </div>
+                            <div class="col-lg-3">
                                 <label class="form-label">Reward PDF</label>
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
                                 (change)="onFileSelected($event, 'reward')">
