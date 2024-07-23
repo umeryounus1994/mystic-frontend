@@ -26,7 +26,8 @@
                 <tbody>
                     <tr *ngFor="let q of allMissions; let i = index">
 
-                        <td>{{q.treasure_hunt_title.toString().substring(0,60)}}...</td>
+                        <td *ngIf="q?.treasure_hunt_title">{{q.treasure_hunt_title.toString().substring(0,60)}}...</td>
+                        <td *ngIf="!q?.treasure_hunt_title">N/A</td>
                         <td>{{q.no_of_xp}}</td>
                         <td>{{q.no_of_crypes}}</td>
                         <td>{{q.hunt_package}}</td>

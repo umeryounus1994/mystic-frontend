@@ -24,6 +24,7 @@
                             <div class="col-lg-5">
                                 <label class="form-label">Picture</label>
                                 <input type="file" class="form-control" placeholder="Title"
+                                accept="image/*"
                                     formControlName="picture_mystery_question_url"
                                     (change)="onFileSelected($event, 'questionPicture')"
                                     [ngClass]="{ 'is-invalid': submitted && f['picture_mystery_question_url'].errors }">
@@ -69,6 +70,7 @@
 
                                     <div class="col-lg-7 mb-1">
                                         <input type="file" class="form-control" formControlName="answer"
+                                        accept="image/*, video/mp4,video/x-m4v,video/*"
                                         (change)="onFileSelected($event, 'option'+(i+1))"
                                             placeholder="Answer">
                                     </div>

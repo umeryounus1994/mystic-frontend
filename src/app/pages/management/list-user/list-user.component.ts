@@ -43,7 +43,7 @@ export class ListUserComponent implements OnInit {
 
   async getAllUsers() {
     this.allUsers = [];
-    this.api.get('user/get_all')
+    this.api.get('user/get_all_admin')
     .then((response: any) => {
         this.sp.hide();
         this.allUsers = response?.data;
