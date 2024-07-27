@@ -8,10 +8,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateQuestComponent } from './create-quest/create-quest.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { ListQuestComponent } from './list-quest/list-quest.component';
+import { EditQuestComponent } from './edit-quest/edit-quest.component';
 
 
 @NgModule({
-  declarations: [CreateQuestComponent, ListQuestComponent],
+  declarations: [CreateQuestComponent, ListQuestComponent, EditQuestComponent],
   imports: [
     CommonModule,
     QuestsRoutingModule,

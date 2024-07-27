@@ -58,13 +58,12 @@
                             <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0" (click)="viewQuest(q)">
                                 <i class="bi bi-eye"></i>
                             </button>
-                            <button *ngIf="q.status == 'active'" class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                (click)="deleteExamModal(q.id, 'block')">
-                                <i class="bi bi-trash"></i>
+                            <button class="btn btn-primary-soft btn-round me-1 mb-1 mb-md-0" (click)="edit(q.id)">
+                                <i class="bi bi-pencil"></i>
                             </button>
-                            <button *ngIf="q.status == 'deleted'" class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0"
-                                (click)="deleteExamModal(q.id, 'activate')">
-                                <i class="bi bi-arrow-counterclockwise"></i>
+                            <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                                (click)="deleteExamModal(q.id)">
+                                <i class="bi bi-trash"></i>
                             </button>
                         </td>
                     </tr>

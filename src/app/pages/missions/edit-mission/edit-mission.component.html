@@ -1,0 +1,160 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Updating Mission.....</p>
+</ngx-spinner>
+<div class="row">
+    <div class="col-12 mb-3">
+        <h1 class="h3 mb-2 mb-sm-0">Update Mission</h1>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-12">
+        <div class="tab-content">
+            <div class="tab-pane show active" id="tab-1">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form class="row g-4 align-items-center" [formGroup]="questForm" *ngIf="questForm"
+                            (ngSubmit)="onSubmit()">
+
+                            <div class="col-12 mb-2">
+                                <label class="form-label">Mission Title</label>
+                                <input type="text" class="form-control" placeholder="Title"
+                                    formControlName="mission_title"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mission_title']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">No of XP</label>
+                                <input type="text" class="form-control" placeholder="0" formControlName="no_of_xp"
+                                    [ngClass]="{ 'is-invalid': submitted && f['no_of_xp']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">No of Crypes</label>
+                                <input type="text" class="form-control" placeholder="0" formControlName="no_of_crypes"
+                                    [ngClass]="{ 'is-invalid': submitted && f['no_of_crypes']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Level Increase Points</label>
+                                <input type="text" class="form-control" placeholder="0" formControlName="level_increase"
+                                    [ngClass]="{ 'is-invalid': submitted && f['level_increase']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Mythica ID</label>
+                                <select class="form-control" formControlName="mythica_ID"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                    <option value="">Select Mythica</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Reward PDF</label>
+                                <input type="file" class="form-control" accept="application/pdf" placeholder=""
+                                (change)="onFileSelected($event, 'reward')">
+                            </div>
+                           
+                            <div class="col-lg-3">
+                                <label class="form-label">Mission Longitude</label>
+                                <input type="text" class="form-control" placeholder="Mission Longitude"
+                                    formControlName="mission_longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mission_longitude']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Mission Latitude</label>
+                                <input type="text" class="form-control" placeholder="Mission Latitude"
+                                    formControlName="mission_latitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mission_latitude']?.errors }">
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" placeholder="e.g. https://www.google.com"
+                                    formControlName="mission_start_date"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mission_start_date']?.errors }">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" placeholder="e.g. https://www.google.com"
+                                    formControlName="mission_end_date"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mission_end_date']?.errors }">
+                            </div>
+                            <hr />
+                            <h3>Quiz Options</h3>
+                            <hr />
+                            <div formArrayName="questions">
+                                <div class="row mb-3"
+                                    *ngFor="let questionGroup of questForm.get('questions').controls; let i=index"
+                                    [formGroupName]="i">
+
+                                    <div class="col-lg-3 mb-2">
+                                        <label class="form-label">Quiz {{i+1}} Title</label>
+                                        <input type="text" class="form-control" placeholder="Quiz Title"
+                                            formControlName="quiz_title"
+                                            [ngClass]="{ 'is-invalid': submitted && f['quiz_title']?.errors }">
+                                    </div>
+
+                                    <div class="col-lg-2 mb-2">
+                                        <label class="form-label">Latitude</label>
+                                        <input type="text" class="form-control" placeholder=""
+                                            formControlName="latitude"
+                                            [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
+                                    </div>
+                                    <div class="col-lg-2 mb-2">
+                                        <label class="form-label">Longitude</label>
+                                        <input type="text" class="form-control" placeholder=""
+                                            formControlName="longitude"
+                                            [ngClass]="{ 'is-invalid': submitted && f['longitude']?.errors }">
+                                    </div>
+                                    <div class="col-lg-3 mb-2">
+                                        <label class="form-label">Mythica</label>
+                                        <select class="form-control" formControlName="mythica"
+                                            [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
+                                            <option value="" selected disabled>Select Mythica</option>
+                                            <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Attach File</label>
+                                        <input type="file" class="form-control" placeholder=""
+                                        accept="image/*, video/mp4,video/x-m4v,video/*"
+                                            (change)="onFileSelected($event, 'option'+(i+1))">
+                                    </div>
+                                    <div formArrayName="options">
+                                        <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j">
+                                          <div class="row mb-4">
+                                            <div class="col-lg-3 mb-2">
+                                              <label class="form-label">Option</label>
+                                              <input type="text" class="form-control" formControlName="option">
+                                            </div>
+                                            <div class="col-lg-3 mb-2">
+                                              <label class="form-label">Correct Option</label>
+                                              <select class="form-select js-choice z-index-9" formControlName="correct" aria-label=".form-select-sm">
+                                                <option value="" selected disabled>Select Correct Option</option>
+                                                <option [value]="true">Yes</option>
+                                                <option [value]="false">No</option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    <br />
+                                    <br />
+                                    <hr />  
+                                </div>
+                             
+                             
+                            </div>
+                                  
+                        </div>
+
+                            <div class="d-sm-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mb-0">Update</button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListQuestComponent } from './list-quest/list-quest.component';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { CreateQuestComponent } from './create-quest/create-quest.component';
+import { EditQuestComponent } from './edit-quest/edit-quest.component';
 
 const routes: Routes = [{
   path: '',
@@ -15,6 +16,11 @@ const routes: Routes = [{
     {
       path: 'create-quest',
       component: CreateQuestComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'edit-quest',
+      component: EditQuestComponent,
       canActivate: [AuthGuard]
     }
   ]

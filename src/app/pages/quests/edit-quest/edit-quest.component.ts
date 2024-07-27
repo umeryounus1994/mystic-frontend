@@ -8,24 +8,26 @@ import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-create-quest',
-  templateUrl: './create-quest.component.html',
-  styleUrl: './create-quest.component.scss'
+  selector: 'app-edit-quest',
+  templateUrl: './edit-quest.component.html',
+  styleUrl: './edit-quest.component.scss'
 })
-export class CreateQuestComponent implements OnInit {
+export class EditQuestComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
   public QrCode: string = "";
   public qrCodeDownloadLink: SafeUrl = "";
   allCreatures: any = [];
   reward: File | undefined = undefined;
-
+  Id = '';
+  rewardFile = '';
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
-      this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
-  }
-  onChangeURL(url: SafeUrl) {
-    this.qrCodeDownloadLink = url;
+      this.route.queryParams.subscribe(params => {
+        if (params && Object.keys(params).length > 0) {
+          this.Id = params['Id'];
+        }
+      });
   }
   ngOnInit() {
     this.questForm = this.fb.group({
@@ -35,12 +37,36 @@ export class CreateQuestComponent implements OnInit {
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
       mythica_ID: ['', Validators.required],
-      qr_code: [this.QrCode],
       questions: this.fb.array([])
     });
-    this.addQuestion();
+   
     this.getAllCreatures()
+    this.getProductDetails()
   }
+  getProductDetails() {
+    
+    this.api.get('quest/get_quest_by_id/' + this.Id)
+      .then((response: any) => {
+        this.sp.hide();
+        if(response?.data?.questQuiz && response?.data?.questQuiz.length < 1){
+          this.addQuestion();
+        }
+       this.questForm.controls['quest_question'].setValue(response?.data?.quest?.quest_question);
+        this.questForm.controls['quest_title'].setValue(response?.data?.quest?.quest_title);
+        this.questForm.controls['no_of_xp'].setValue(response?.data?.quest?.no_of_xp);
+        this.questForm.controls['level_increase'].setValue(response?.data?.quest?.level_increase);
+        this.questForm.controls['no_of_crypes'].setValue(response?.data?.quest?.no_of_crypes);
+        this.questForm.controls['mythica_ID'].setValue(response?.data?.quest?.mythica_ID?._id);
+        this.rewardFile = response?.data?.quest?.reward_file
+        response?.data?.questQuiz?.forEach((question: any) => {
+          this.questions().push(this.fb.group({
+            answer: question.answer,
+            correct_option: question.correct_option,
+          }));
+        });
+
+
+      })};
   get f() { return this.questForm?.controls; }
   questions() : FormArray {  
     return this.questForm.get("questions") as FormArray  
@@ -85,21 +111,20 @@ export class CreateQuestComponent implements OnInit {
     fD.append('no_of_crypes', formData?.no_of_crypes);
     fD.append('level_increase', formData?.level_increase);
     fD.append('mythica_ID', formData?.mythica_ID);
-    fD.append('qr_code', formData?.qr_code);
     if(this.reward){
       fD.append('reward', this.reward!, this.reward?.name);
     }
     delete formData.questions;
-    this.api.postImageData('quest/createQuest', fD)
+    this.api.postImageData('quest/updateQuest/'+this.Id, fD)
       .then((response: any) => {
           this.sp.hide();
           questions.forEach((element: any) => {
-            element.quest_id = response?.data?._id;
+            element.quest_id = this.Id;
           });
-          this.api.postData('quest/createQuestQuiz', questions)
+          this.api.postData('quest/updateQuestQuiz/'+this.Id, questions)
           .then((responseQ: any) => {
               setTimeout(() => {
-                this.helper.successToast("Quest Created Successfully");
+                this.helper.successToast("Quest Updated Successfully");
               }, 1000);
               setTimeout(() => {
                 this.router.navigate(['quest/list-quest']);

@@ -62,9 +62,9 @@ export class ListQuestComponent implements OnInit {
     this.router.navigate(['/exam/edit-exam'], { queryParams: { examId: examId} });
   }
   
-  deleteExamModal(userId: any, status: any) {
+  deleteExamModal(userId: any) {
     Swal.fire({
-      title: `Are you sure You want to ${status} this Quest?`,
+      title: `Are you sure You want to delete this Quest?`,
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonText: "Delete",
@@ -74,16 +74,9 @@ export class ListQuestComponent implements OnInit {
       if (result.isConfirmed) {
 
       this.sp.show();
-      let data : any;
-      if(status == 'block'){
-        data= {
-          status: 'blocked'
-        }
-      } else {
-        data = {
-          status: 'active'
-        }
-      }
+      let data = {
+        status: 'deleted'
+      };
         this.api.patch('Quest/'+userId, data)
         .then((response: any) => {
           this.sp.hide();
@@ -98,6 +91,9 @@ export class ListQuestComponent implements OnInit {
        // Swal.fire("Exam not deleted", "", "info");
       }
     });
+  }
+  edit(Id: any) {
+    this.router.navigate(['/quest/edit-quest'], { queryParams: { Id: Id} });
   }
   viewQuest(quest: any){
     $("#viewQuest").modal("show");

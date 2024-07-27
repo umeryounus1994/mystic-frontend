@@ -6,13 +6,14 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 @Component({
-  selector: 'app-create-missions',
-  templateUrl: './create-missions.component.html',
-  styleUrl: './create-missions.component.scss'
+  selector: 'app-edit-mission',
+  templateUrl: './edit-mission.component.html',
+  styleUrl: './edit-mission.component.scss'
 })
-export class CreateMissionsComponent implements OnInit {
+export class EditMissionComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
   allCreatures: any = [];
@@ -20,9 +21,16 @@ export class CreateMissionsComponent implements OnInit {
   option2: File | undefined = undefined;
   option3: File | undefined = undefined;
   reward: File | undefined = undefined;
+  Id="";
+  rewardFile ='';
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+      this.route.queryParams.subscribe(params => {
+        if (params && Object.keys(params).length > 0) {
+          this.Id = params['Id'];
+        }
+      });
   }
 
   ngOnInit() {
@@ -38,12 +46,52 @@ export class CreateMissionsComponent implements OnInit {
       mission_end_date: ['', Validators.required],
       questions: this.fb.array([])
     });
-    this.addQuestion(1);
-    this.addQuestion(2);
-    this.addQuestion(3);
+    // this.addQuestion();
+    // this.addQuestion();
+    // this.addQuestion();
     this.getAllCreatures()
+    this.getProductDetails();
   }
-  async getAllCreatures() {
+  getProductDetails() {
+    
+    this.api.get('mission/get_mission_by_id/' + this.Id)
+      .then((response: any) => {
+        this.sp.hide();
+       this.questForm.controls['mission_title'].setValue(response?.data?.mission_title);
+        this.questForm.controls['no_of_xp'].setValue(response?.data?.no_of_xp);
+        this.questForm.controls['no_of_crypes'].setValue(response?.data?.no_of_crypes);
+        this.questForm.controls['level_increase'].setValue(response?.data?.level_increase);
+        this.questForm.controls['mythica_ID'].setValue(response?.data?.mythicaID);
+        this.questForm.controls['mission_latitude'].setValue(response?.data?.location?.coordinates[0]);
+        this.questForm.controls['mission_longitude'].setValue(response?.data?.location?.coordinates[1]);
+        this.questForm.controls['mission_start_date'].setValue(moment(response?.data?.mission_start_date).format("dd/mm/yyyy"));
+        this.questForm.controls['mission_end_date'].setValue(moment(response?.data?.mission_end_date).format("dd/mm/yyyy"));
+        this.rewardFile = response?.data?.reward_file;
+        let sorted = response?.data?.quiz.sort((a:any, b:any) => a.quiz_sort - b.quiz_sort);
+        sorted.forEach((quiz:any) => {
+          const questionGroup = this.newQuestion(quiz?.quiz_sort);
+          questionGroup.patchValue({
+            quiz_title: quiz.quiz_title,
+            latitude: quiz.location.coordinates[0],
+            longitude: quiz.location.coordinates[1],
+            mythica: quiz.mythica._id,
+            mission_id: quiz.mission_id,
+            quiz_file: quiz.quiz_file
+          });
+  
+          const options = questionGroup.get('options') as FormArray;
+          options.clear();
+          quiz.options.forEach((option:any) => {
+            options.push(this.fb.group({
+              option: [option.answer, Validators.required],
+              correct: [option.correct_option, Validators.required]
+            }));
+          });
+  
+          this.questions.push(questionGroup);
+        });
+      })};
+  getAllCreatures() {
     this.allCreatures = [];
     this.api.get('creature/get_all')
     .then((response: any) => {
@@ -81,7 +129,7 @@ export class CreateMissionsComponent implements OnInit {
     });
   }
 
-  addQuestion(sort:any) {
+  addQuestion(sort: any) {
     this.questions.push(this.newQuestion(sort));
 
   }
@@ -116,6 +164,7 @@ export class CreateMissionsComponent implements OnInit {
     fD.append('mission_longitude', formData?.mission_longitude);
     fD.append('mission_start_date', formData?.mission_start_date);
     fD.append('mission_end_date', formData?.mission_end_date);
+    fD.append('rewardFile', this.rewardFile);
     fD.append('questions', JSON.stringify(formData?.questions));
     if(this.option1){
       fD.append('option1', this.option1!, this.option1?.name);
@@ -131,11 +180,11 @@ export class CreateMissionsComponent implements OnInit {
     }
 
     this.sp.show();
-    this.api.postImageData('mission/createMissionAdmin', fD)
+    this.api.postImageData('mission/updateMissionAdmin/'+this.Id, fD)
       .then((response: any) => {
         this.sp.hide();
         setTimeout(() => {
-          this.helper.successToast("Mission Created Successfully");
+          this.helper.successToast("Mission Updated Successfully");
         }, 1000);
         setTimeout(() => {
           this.router.navigate(['mission/list-mission']);

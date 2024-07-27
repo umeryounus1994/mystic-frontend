@@ -7,10 +7,11 @@ import { ListMissionsComponent } from './list-missions/list-missions.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditMissionComponent } from './edit-mission/edit-mission.component';
 
 
 @NgModule({
-  declarations: [CreateMissionsComponent, ListMissionsComponent],
+  declarations: [CreateMissionsComponent, ListMissionsComponent, EditMissionComponent],
   imports: [
     CommonModule,
     MissionsRoutingModule,

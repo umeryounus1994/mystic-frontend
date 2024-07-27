@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { ListMissionsComponent } from './list-missions/list-missions.component';
 import { CreateMissionsComponent } from './create-missions/create-missions.component';
+import { EditMissionComponent } from './edit-mission/edit-mission.component';
 
 const routes: Routes = [{
   path: '',
@@ -15,6 +16,11 @@ const routes: Routes = [{
     {
       path: 'create-mission',
       component: CreateMissionsComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'edit-mission',
+      component: EditMissionComponent,
       canActivate: [AuthGuard]
     }
   ]

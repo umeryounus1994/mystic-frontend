@@ -83,4 +83,36 @@ export class ListMissionsComponent implements OnInit {
       quizOptionsElement?.classList.add('show');
     }
   }
+  deletee(userId: any) {
+    Swal.fire({
+      title: `Are you sure You want to delete this Mission?`,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Delete",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+
+      this.sp.show();
+      let data = {
+        status: 'deleted'
+      };
+        this.api.patch('mission/'+userId, data)
+        .then((response: any) => {
+          this.sp.hide();
+          Swal.fire("Mission!", "Deleted Successfully", "success");
+         this.getAllUsers()
+        }, err => {
+          this.helper.failureToast(err?.error?.message);
+          this.sp.hide();
+        });
+      } else if (result.isDenied) {
+       // Swal.fire("Exam not deleted", "", "info");
+      }
+    });
+  }
+  edit(Id: any) {
+    this.router.navigate(['/mission/edit-mission'], { queryParams: { Id: Id} });
+  }
 }
