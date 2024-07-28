@@ -61,4 +61,33 @@ export class ListDropComponent implements OnInit {
     $("#mythica_reward").html(m?.mythica_reward?.creature_name)
     $("#mythica_ID").html(m?.mythica_ID?.creature_name)
   }
+  deletee(userId: any) {
+    Swal.fire({
+      title: `Are you sure You want to delete this Drop?`,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Delete",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+
+      this.sp.show();
+      let data = {
+        status: 'deleted'
+      };
+        this.api.patch('drop/'+userId, data)
+        .then((response: any) => {
+          this.sp.hide();
+          Swal.fire("Drop!", "Deleted Successfully", "success");
+         this.getAllUsers()
+        }, err => {
+          this.helper.failureToast(err?.error?.message);
+          this.sp.hide();
+        });
+      } else if (result.isDenied) {
+       // Swal.fire("Exam not deleted", "", "info");
+      }
+    });
+  }
 }
