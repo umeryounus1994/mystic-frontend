@@ -7,10 +7,11 @@ import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateHuntComponent } from './create-hunt/create-hunt.component';
 import { ListHuntComponent } from './list-hunt/list-hunt.component';
+import { EditHuntComponent } from './edit-hunt/edit-hunt.component';
 
 
 @NgModule({
-  declarations: [CreateHuntComponent, ListHuntComponent],
+  declarations: [CreateHuntComponent, ListHuntComponent, EditHuntComponent],
   imports: [
     CommonModule,
     HuntRoutingModule,

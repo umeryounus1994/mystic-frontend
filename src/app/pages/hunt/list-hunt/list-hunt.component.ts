@@ -35,15 +35,15 @@ export class ListHuntComponent implements OnInit {
       $('#dtable').removeClass('dataTable');
   }, 1000);
   }
-  async ngOnInit() {
+  ngOnInit() {
     this.sp.show()
-    await this.getAllUsers();
+    this.getAllUsers();
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
   }
 
-  async getAllUsers() {
+  getAllUsers() {
     this.allMissions = [];
     this.api.get('hunt/get_all_admin')
     .then((response: any) => {
@@ -84,5 +84,37 @@ export class ListHuntComponent implements OnInit {
     } else {
       quizOptionsElement?.classList.add('show');
     }
+  }
+  deletee(userId: any) {
+    Swal.fire({
+      title: `Are you sure You want to delete this Hunt?`,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Delete",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+
+      this.sp.show();
+      let data = {
+        status: 'deleted'
+      };
+        this.api.patch('hunt/'+userId, data)
+        .then((response: any) => {
+          this.sp.hide();
+          Swal.fire("Hunt!", "Deleted Successfully", "success");
+         this.getAllUsers()
+        }, err => {
+          this.helper.failureToast(err?.error?.message);
+          this.sp.hide();
+        });
+      } else if (result.isDenied) {
+       // Swal.fire("Exam not deleted", "", "info");
+      }
+    });
+  }
+  edit(Id: any) {
+    this.router.navigate(['/hunt/edit-hunt'], { queryParams: { Id: Id} });
   }
 }

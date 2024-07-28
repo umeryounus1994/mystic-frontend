@@ -42,11 +42,11 @@ export class CreateHuntComponent implements OnInit {
       treasure_hunt_end_date: ['', Validators.required],
       questions: this.fb.array([])
     });
-    this.addQuestion();
-    this.addQuestion();
-    this.addQuestion();
-    this.addQuestion();
-    this.addQuestion();
+    this.addQuestion(1);
+    this.addQuestion(2);
+    this.addQuestion(3);
+    this.addQuestion(4);
+    this.addQuestion(5);
     this.getAllCreatures()
   }
   get f() { return this.questForm?.controls; }
@@ -64,13 +64,14 @@ export class CreateHuntComponent implements OnInit {
     });
   }
      
-  newQuestion(): FormGroup {  
+  newQuestion(sort:any): FormGroup {  
     return this.fb.group({  
       treasure_hunt_title: '',  
       latitude: '',
       longitude: '',
       mythica: '',
       treasure_hunt_id: '1',
+      sort,
       options: this.fb.array([this.createOption(), this.createOption(), this.createOption(), this.createOption()])
     })  
    
@@ -85,8 +86,8 @@ export class CreateHuntComponent implements OnInit {
     });
   }
      
-  addQuestion() {  
-    this.questions.push(this.newQuestion());  
+  addQuestion(sort:any) {  
+    this.questions.push(this.newQuestion(sort));  
   }  
      
   removeQuestion(i:number) {  

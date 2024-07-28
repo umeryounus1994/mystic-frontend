@@ -30,7 +30,7 @@
                         <td *ngIf="!q?.treasure_hunt_title">N/A</td>
                         <td>{{q.no_of_xp}}</td>
                         <td>{{q.no_of_crypes}}</td>
-                        <td>{{q.hunt_package}}</td>
+                        <td>{{q.hunt_package == 'undefined' ? 'N/A' : q.hunt_package}}</td>
                         <td>{{q.quiz?.length}}</td>
 
                         <td>
@@ -45,13 +45,13 @@
                             <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0" (click)="viewQuest(q)">
                                 <i class="bi bi-eye"></i>
                             </button>
-                            <!-- <button class="btn btn-primary-soft btn-round me-1 mb-1 mb-md-0" (click)="editExam(q._id)">
+                            <button class="btn btn-primary-soft btn-round me-1 mb-1 mb-md-0" (click)="edit(q.id)">
                                 <i class="bi bi-pencil"></i>
-                            </button> -->
-                            <!-- <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                (click)="deleteExamModal(q._id)">
+                            </button>
+                             <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                                (click)="deletee(q.id)">
                                 <i class="bi bi-trash"></i>
-                            </button> -->
+                            </button>
                         </td>
                     </tr>
                 </tbody>
