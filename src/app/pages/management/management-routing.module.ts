@@ -6,6 +6,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { MythicasComponent } from './mythicas/mythicas.component';
 import { AddDropComponent } from './add-drop/add-drop.component';
 import { ListDropComponent } from './list-drop/list-drop.component';
+import { RewardsComponent } from './rewards/rewards.component';
 
 const routes: Routes = [{
   path: '',
@@ -33,6 +34,11 @@ const routes: Routes = [{
     {
       path: 'list-drop',
       component: ListDropComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'list-rewards',
+      component: RewardsComponent,
       canActivate: [AuthGuard]
     }
   ]

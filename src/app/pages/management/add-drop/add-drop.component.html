@@ -65,7 +65,7 @@
                                 <textarea class="form-control" rows="3" formControlName="drop_description"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_description'].errors }"></textarea>
                             </div>
-                            <label class="form-label">Answers</label>
+                            <label class="form-label">Answers (Optional)</label>
                             <div formArrayName="questions">
                                 <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index"
                                     [formGroupName]="i">
@@ -93,7 +93,7 @@
                                             data-bs-original-title="Edit">
                                             <i class="bi bi-plus"></i>
                                         </a>
-                                        <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                                        <button type="button" class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
                                             (click)="removeQuestion(i)">
                                             <i class="bi bi-trash"></i>
                                         </button>

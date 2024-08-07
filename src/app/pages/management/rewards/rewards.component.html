@@ -1,0 +1,64 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Fetching Data....</p>
+</ngx-spinner>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Rewards</h1>
+        <button class="btn btn-primary" (click)="showRewardDialog()">Add Reward</button>
+    </div>
+</div>
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allUsers.length > 0">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
+                id="dtable">
+                <thead>
+                    <tr>
+                        <th scope="col" class="border-0">Reward Limit</th>
+                        <th scope="col" class="border-0">Reward File</th>
+                        <th scope="col" class="border-0">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let q of allUsers; let i = index">
+
+                        <td>{{q.reward_name}}</td>
+                        <td><a href="{{q.reward_file}}" target="_blank">View File</a></td>
+                        <td>
+    
+                        <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                        (click)="deletee(q._id)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="addProfession" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="appDetaillabel">Add Reward</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body p-5">
+                <span class="small">Limit <span class="error-message"></span></span>
+                <input type="text" class="form-control" id="reward_limit" placeholder="Limit" required>
+                <br />
+                <span class="small">Reward File <span class="error-message"></span></span>
+                <input type="file" class="form-control" id="reward_limit" placeholder="Limit" 
+                (change)="onFileSelected($event, 'reward')" accept="application/pdf">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary-soft my-0" (click)="_SaveRequest()">Save</button>
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>  

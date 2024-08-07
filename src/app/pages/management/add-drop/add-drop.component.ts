@@ -53,9 +53,12 @@ export class AddDropComponent implements OnInit {
     this.questions().push(this.newQuestion());  
   }  
   removeQuestion(i:number) {  
-    this.questions().removeAt(i);  
+    if(i > 0){
+      this.questions().removeAt(i);  
+    }
+
   } 
-  async getAllCreatures() {
+   getAllCreatures() {
     this.allCreatures = [];
     this.api.get('creature/get_all')
     .then((response: any) => {
@@ -74,6 +77,7 @@ export class AddDropComponent implements OnInit {
   _sendSaveRequest(formData: any) {
     const fD = new FormData();
     let questions = formData.questions;
+
     fD.append('drop_name', formData?.drop_name);
     fD.append('drop_description', formData?.drop_description);
     fD.append('mythica_reward', formData?.mythica_reward);
@@ -90,18 +94,29 @@ export class AddDropComponent implements OnInit {
     this.api.postImageData('drop/createDrop', fD)
       .then((response: any) => {
           this.sp.hide();
-          questions.forEach((element: any) => {
-            element.drop_id = response?.data?._id;
-          });
-          this.api.postData('drop/createDropQuiz', questions)
-          .then((responseQ: any) => {
-              setTimeout(() => {
-                this.helper.successToast("Drop Created Successfully");
-              }, 1000);
-              setTimeout(() => {
-                this.router.navigate(['drop/list-drop']);
-              }, 2000);
-          });
+          if(questions[0]?.answer == ''){
+            questions.forEach((element: any) => {
+              element.drop_id = response?.data?._id;
+            });
+            this.api.postData('drop/createDropQuiz', questions)
+            .then((responseQ: any) => {
+                setTimeout(() => {
+                  this.helper.successToast("Drop Created Successfully");
+                }, 1000);
+                setTimeout(() => {
+                  this.router.navigate(['drop/list-drop']);
+                }, 2000);
+            });
+          } else {
+            setTimeout(() => {
+              this.helper.successToast("Drop Created Successfully");
+            }, 1000);
+            setTimeout(() => {
+              this.router.navigate(['drop/list-drop']);
+            }, 2000);
+          }
+ 
+
       })
       .catch((error) => {
         this.sp.hide();
