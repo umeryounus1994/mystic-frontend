@@ -94,7 +94,7 @@ export class AddDropComponent implements OnInit {
     this.api.postImageData('drop/createDrop', fD)
       .then((response: any) => {
           this.sp.hide();
-          if(questions[0]?.answer == ''){
+          if(questions[0]?.answer != ''){
             questions.forEach((element: any) => {
               element.drop_id = response?.data?._id;
             });
