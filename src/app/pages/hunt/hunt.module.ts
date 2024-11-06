@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateHuntComponent } from './create-hunt/create-hunt.component';
 import { ListHuntComponent } from './list-hunt/list-hunt.component';
 import { EditHuntComponent } from './edit-hunt/edit-hunt.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { EditHuntComponent } from './edit-hunt/edit-hunt.component';
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    QRCodeModule
   ]
 })
 export class HuntModule { }

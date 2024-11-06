@@ -22,9 +22,15 @@ export class CreateHuntComponent implements OnInit {
   option4: File | undefined = undefined;
   option5: File | undefined = undefined;
   reward: File | undefined = undefined;
+  public QrCode: string = "";
+  public qrCodeDownloadLink: SafeUrl = "";
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+      this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
+  }
+  onChangeURL(url: SafeUrl) {
+    this.qrCodeDownloadLink = url;
   }
 
   ngOnInit() {
@@ -38,6 +44,7 @@ export class CreateHuntComponent implements OnInit {
       hunt_longitude: ['', Validators.required],
       premium_hunt: [false],
       hunt_package: [],
+      qr_code: [this.QrCode],
       treasure_hunt_start_date: ['', Validators.required],
       treasure_hunt_end_date: ['', Validators.required],
       questions: this.fb.array([])
@@ -121,6 +128,7 @@ export class CreateHuntComponent implements OnInit {
     fD.append('hunt_package', formData?.hunt_package);
     fD.append('treasure_hunt_start_date', formData?.treasure_hunt_start_date);
     fD.append('treasure_hunt_end_date', formData?.treasure_hunt_end_date);
+    fD.append('qr_code', formData?.qr_code);
     fD.append('questions', JSON.stringify(formData?.questions));
     if(this.option1){
       fD.append('option1', this.option1!, this.option1?.name);

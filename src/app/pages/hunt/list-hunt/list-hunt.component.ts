@@ -27,6 +27,7 @@ export class ListHuntComponent implements OnInit {
   mythicaModel = '';
   missionId='';
   missionQuizId='';
+  qrCode: any = 'Hello';
 
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
@@ -69,6 +70,7 @@ export class ListHuntComponent implements OnInit {
     $("#premium_hunt").html(quest?.premium_hunt == true ? "Yes": "No")
     $("#hunt_package").html(quest?.hunt_package);
     this.mythicaURL = quest.mythica_ID;
+    this.qrCode = quest.qr_code;
     this.quiz = [];
     this.quiz = quest.quiz;
     this.options = [];

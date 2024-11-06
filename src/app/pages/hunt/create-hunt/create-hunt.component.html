@@ -159,6 +159,11 @@
                                 </div>
                                 </div>
                             </div>
+                            <div>
+                                <qrcode (qrCodeURL)="onChangeURL($event)" [qrdata]="QrCode" [width]="256"
+                                    [errorCorrectionLevel]="'M'"></qrcode>
+                                <a [href]="qrCodeDownloadLink" download="qrcode">Download</a>
+                            </div>
                         
                             <div class="d-sm-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary mb-0">Create</button>
