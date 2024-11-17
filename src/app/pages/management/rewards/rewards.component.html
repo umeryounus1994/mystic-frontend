@@ -16,6 +16,7 @@
                     <tr>
                         <th scope="col" class="border-0">Reward Limit</th>
                         <th scope="col" class="border-0">Reward File</th>
+                        <th scope="col" class="border-0">Crypes</th>
                         <th scope="col" class="border-0">Action</th>
                     </tr>
                 </thead>
@@ -23,7 +24,9 @@
                     <tr *ngFor="let q of allUsers; let i = index">
 
                         <td>{{q.reward_name}}</td>
+                        
                         <td><a href="{{q.reward_file}}" target="_blank">View File</a></td>
+                        <td>{{q.reward_crypes}}</td>
                         <td>
     
                         <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
@@ -50,6 +53,9 @@
             <div class="modal-body p-5">
                 <span class="small">Limit <span class="error-message"></span></span>
                 <input type="text" class="form-control" id="reward_limit" placeholder="Limit" required>
+                <br />
+                <span class="small">Crypes <span class="error-message"></span></span>
+                <input type="text" class="form-control" id="reward_crypes" placeholder="Crypes" required>
                 <br />
                 <span class="small">Reward File <span class="error-message"></span></span>
                 <input type="file" class="form-control" id="reward_limit" placeholder="Limit" 

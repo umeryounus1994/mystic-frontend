@@ -86,11 +86,13 @@ export class RewardsComponent implements OnInit {
   showRewardDialog(){
     $("#addProfession").modal("show");
     $('#reward_limit').val('')
+    $('#reward_crypes').val('')
   }
     _SaveRequest() {
     this.sp.show();
     let fd= new FormData();
     fd.append('reward_limit', $('#reward_limit').val())
+    fd.append('reward_crypes', $('#reward_crypes').val())
     if(this.reward){
       fd.append('reward_file', this.reward!, this.reward?.name);
     }
@@ -102,6 +104,7 @@ export class RewardsComponent implements OnInit {
             this.helper.successToast("Reward Added Successfully");
             $("#addProfession").modal("hide");
             $('#reward_limit').val('')
+            $('#reward_crypes').val('')
             this.getAllUsers();
           }, 1000);
       })

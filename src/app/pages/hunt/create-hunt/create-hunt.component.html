@@ -78,6 +78,7 @@
                                     <option value='false'>No</option>
                                 </select>
                             </div>
+                            
                             <div class="col-lg-3">
                                 <label class="form-label">Price</label>
                                 <select class="form-select js-choice z-index-9" 
@@ -94,7 +95,16 @@
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
                                 (change)="onFileSelected($event, 'reward')">
                             </div>
-                          
+                            <div class="col-lg-3">
+                                <label class="form-label">Have QR?</label>
+                                <select class="form-select js-choice z-index-9" 
+                                formControlName="have_qr" aria-label=".form-select-sm"
+                                [ngClass]="{ 'is-invalid': submitted && f['have_qr']?.errors }">
+                                    <option value="" selected disabled>Select Value?</option>
+                                    <option value='true'>Yes</option>
+                                    <option value='false'>No</option>
+                                </select>
+                            </div>
 
                             <hr />
                            <h3>Create Quiz Options</h3>

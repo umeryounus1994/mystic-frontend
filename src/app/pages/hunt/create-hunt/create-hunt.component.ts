@@ -43,6 +43,7 @@ export class CreateHuntComponent implements OnInit {
       hunt_latitude: ['', Validators.required],
       hunt_longitude: ['', Validators.required],
       premium_hunt: [false],
+      have_qr: [false],
       hunt_package: [],
       qr_code: [this.QrCode],
       treasure_hunt_start_date: ['', Validators.required],
@@ -128,7 +129,10 @@ export class CreateHuntComponent implements OnInit {
     fD.append('hunt_package', formData?.hunt_package);
     fD.append('treasure_hunt_start_date', formData?.treasure_hunt_start_date);
     fD.append('treasure_hunt_end_date', formData?.treasure_hunt_end_date);
-    fD.append('qr_code', formData?.qr_code);
+    fD.append('have_qr', formData?.have_qr);
+    if(formData?.have_qr === 'true'){
+      fD.append('qr_code', formData?.qr_code);
+    }
     fD.append('questions', JSON.stringify(formData?.questions));
     if(this.option1){
       fD.append('option1', this.option1!, this.option1?.name);

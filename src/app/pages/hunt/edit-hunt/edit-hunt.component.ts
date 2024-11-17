@@ -25,6 +25,8 @@ export class EditHuntComponent implements OnInit {
   reward: File | undefined = undefined;
   Id = "";
   rewardFile="";
+  public QrCode: string = "";
+  public qrCodeDownloadLink: SafeUrl = "";
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
       this.route.queryParams.subscribe(params => {
@@ -32,6 +34,9 @@ export class EditHuntComponent implements OnInit {
           this.Id = params['Id'];
         }
       });
+  }
+  onChangeURL(url: SafeUrl) {
+    this.qrCodeDownloadLink = url;
   }
 
   ngOnInit() {
@@ -47,7 +52,9 @@ export class EditHuntComponent implements OnInit {
       hunt_package: [],
       treasure_hunt_start_date: ['', Validators.required],
       treasure_hunt_end_date: ['', Validators.required],
-      questions: this.fb.array([])
+      questions: this.fb.array([]),
+      qr_code: [''],
+      have_qr: [false],
     });
     // this.addQuestion();
     // this.addQuestion();
@@ -67,6 +74,7 @@ export class EditHuntComponent implements OnInit {
         this.questForm.controls['no_of_crypes'].setValue(response?.data?.no_of_crypes);
         this.questForm.controls['level_increase'].setValue(response?.data?.level_increase);
         this.questForm.controls['premium_hunt'].setValue(response?.data?.premium_hunt);
+        this.questForm.controls['have_qr'].setValue(response?.data?.have_qr);
         this.questForm.controls['hunt_package'].setValue(response?.data?.hunt_package);
         this.questForm.controls['mythica_ID'].setValue(response?.data?.mythicaID);
         this.questForm.controls['hunt_latitude'].setValue(response?.data?.location?.coordinates[0]);
@@ -74,6 +82,7 @@ export class EditHuntComponent implements OnInit {
         this.questForm.controls['treasure_hunt_start_date'].setValue(moment(response?.data?.mission_start_date).format("DD/mm/yyyy"));
         this.questForm.controls['treasure_hunt_end_date'].setValue(moment(response?.data?.mission_end_date).format("DD/mm/yyyy"));
         this.rewardFile = response?.data?.reward_file;
+        this.QrCode = response?.data?.qr_code != "" ? response?.data?.qr_code : Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
         let sorted = response?.data?.quiz.sort((a:any, b:any) => a.quiz_sort - b.quiz_sort);
         sorted.forEach((quiz:any) => {
           const questionGroup = this.newQuestion(quiz?.quiz_sort);
@@ -159,6 +168,7 @@ export class EditHuntComponent implements OnInit {
   }
   _sendSaveRequest(formData: any) {
     const fD = new FormData();
+
     fD.append('treasure_hunt_title', formData?.treasure_hunt_title);
     fD.append('no_of_xp', formData?.no_of_xp);
     fD.append('no_of_crypes', formData?.no_of_crypes);
@@ -170,7 +180,12 @@ export class EditHuntComponent implements OnInit {
     fD.append('hunt_package', formData?.hunt_package);
     fD.append('treasure_hunt_start_date', formData?.treasure_hunt_start_date);
     fD.append('treasure_hunt_end_date', formData?.treasure_hunt_end_date);
+    fD.append('have_qr', formData?.have_qr);
+    if(formData?.have_qr === 'true'){
+      fD.append('qr_code', this.QrCode);
+    }
     fD.append('questions', JSON.stringify(formData?.questions));
+    
     if(this.option1){
       fD.append('option1', this.option1!, this.option1?.name);
     }

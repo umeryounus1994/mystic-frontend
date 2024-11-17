@@ -90,6 +90,16 @@
                                 </select>
                             </div>
                             <div class="col-lg-3">
+                                <label class="form-label">Have QR?</label>
+                                <select class="form-select js-choice z-index-9" 
+                                formControlName="have_qr" aria-label=".form-select-sm"
+                                [ngClass]="{ 'is-invalid': submitted && f['have_qr']?.errors }">
+                                    <option value="" selected disabled>Select Value?</option>
+                                    <option value='true'>Yes</option>
+                                    <option value='false'>No</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
                                 <label class="form-label">Reward PDF</label>
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
                                 (change)="onFileSelected($event, 'reward')">
@@ -158,6 +168,11 @@
                                     <hr />  
                                 </div>
                                 </div>
+                            </div>
+                            <div>
+                                <qrcode (qrCodeURL)="onChangeURL($event)" [qrdata]="QrCode" [width]="256"
+                                    [errorCorrectionLevel]="'M'"></qrcode>
+                                <a [href]="qrCodeDownloadLink" download="qrcode">Download</a>
                             </div>
                         
                             <div class="d-sm-flex justify-content-end">
