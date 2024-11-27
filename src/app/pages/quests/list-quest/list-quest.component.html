@@ -6,7 +6,7 @@
         <h1 class="h3 mb-2 mb-sm-0">Quests</h1>
     </div>
 </div>
-<div class="row g-4 mb-4">
+<div class="row g-4 mb-4" *ngIf="auth.isAdmin">
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4 bg-primary bg-opacity-10 border border-primary rounded-3">
             <h6>Total Quests</h6>

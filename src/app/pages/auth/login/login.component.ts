@@ -43,6 +43,9 @@ export class LoginComponent implements OnInit {
           if (this.auth.isAdmin === true) {
             this.router.navigateByUrl('dashboard/admin');
           }
+          if (this.auth.isSubAdmin === true) {
+            this.router.navigateByUrl('quest/list-quest');
+          }
         }
       }).catch((error: any) => {
         if(error.status === 400) {

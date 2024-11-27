@@ -4,6 +4,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth/auth.service';
 declare var $: any;
 
 @Component({
@@ -31,14 +32,18 @@ export class ListHuntComponent implements OnInit {
 
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router) {
+    private router: Router, public auth: AuthService) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
   }
   ngOnInit() {
     this.sp.show()
-    this.getAllUsers();
+    if(this.auth.isAdmin){
+      this.getAllUsers();
+    }else {
+      this.getAllUsersSubAdmin();
+    }
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
@@ -47,6 +52,16 @@ export class ListHuntComponent implements OnInit {
   getAllUsers() {
     this.allMissions = [];
     this.api.get('hunt/get_all_admin')
+    .then((response: any) => {
+        this.sp.hide();
+        this.allMissions = response?.data;
+    }).catch((error: any) => {
+      this.sp.hide();
+    });
+  }
+  getAllUsersSubAdmin() {
+    this.allMissions = [];
+    this.api.get('hunt/get_all_subadmin')
     .then((response: any) => {
         this.sp.hide();
         this.allMissions = response?.data;

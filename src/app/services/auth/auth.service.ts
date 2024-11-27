@@ -12,7 +12,7 @@ export class AuthService {
   user : any;
 
   isAdmin = false;
-  isCustomer = false;
+  isSubAdmin = false;
   isSurveyor = false;
   isSupplier = false;
   isTechnician = false;
@@ -31,12 +31,22 @@ export class AuthService {
       .then((response: any) => {
        
         if (response.data) {
-          localStorage.setItem('mystic9834!@', JSON.stringify(response.data.user));
-          this.storage.saveUserDetails(response.data.user);
-          this.isLoggedIn = true;
-          this.user = response.data.user;
-          this.isAdmin = true;
-            resolve('open');
+          if(response?.data?.user){
+            localStorage.setItem('mystic9834!@', JSON.stringify(response.data.user));
+            this.storage.saveUserDetails(response.data.user);
+            this.isLoggedIn = true;
+            this.user = response.data.user;
+            this.isAdmin = true;
+              resolve('open');
+          }
+          if(response.data.user_sub){
+            localStorage.setItem('mystic9834!@', JSON.stringify(response.data.user_sub));
+            this.storage.saveUserDetails(response.data.user_sub);
+            this.isLoggedIn = true;
+            this.user = response.data.user_sub;
+            this.isSubAdmin = true;
+              resolve('open');
+          }
         } else {
             resolve('false');
         }
@@ -51,7 +61,7 @@ export class AuthService {
     // Reset:
     this.isLoggedIn = false;
     this.isAdmin = false;
-    this.isCustomer = false;
+    this.isSubAdmin = false;
     this.user = undefined;
     localStorage.clear();
     this.storage.removeUserDetails();
@@ -63,11 +73,11 @@ export class AuthService {
   roleCheck() {
     if (this.user.role === 'admin') {
       this.isAdmin = true;
-      this.isCustomer = false;
+      this.isSubAdmin = false;
     }
-    if (this.user.role === 'client')  {
+    if (this.user.role === 'subadmin')  {
       this.isAdmin = false;
-      this.isCustomer = true;
+      this.isSubAdmin = true;
     }
   }
 }

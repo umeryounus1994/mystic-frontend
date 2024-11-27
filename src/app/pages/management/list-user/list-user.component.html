@@ -4,8 +4,10 @@
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
         <h1 class="h3 mb-2 mb-sm-0">Users</h1>
+        <button class="btn btn-primary" (click)="showRewardDialog()">Add Sub Admin</button>
     </div>
 </div>
+
 <div class="row g-4 mb-4">
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4 bg-primary bg-opacity-10 border border-primary rounded-3">
@@ -35,6 +37,7 @@
                     <tr>
                         <th scope="col" class="border-0">Username</th>
                         <th scope="col" class="border-0">Status</th>
+                        <th scope="col" class="border-0">Type</th>
                         <th scope="col" class="border-0">Action</th>
                         <th scope="col" class="border-0 rounded-end">Lock/Unlock</th>
                     </tr>
@@ -49,6 +52,11 @@
                                 class="badge bg-success bg-opacity-10 text-success">Active</div>
                             <div *ngIf="q.status == 'blocked'"
                                 class="badge bg-danger bg-opacity-10 text-danger">Blocked</div>
+                        </td>
+                        <td>
+                            <div
+                                class="badge bg-info bg-opacity-10 text-info">{{q?.type}}</div>
+                           
                         </td>
                         <td>
                             <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
@@ -71,5 +79,53 @@
             </table>
         </div>
     </div>
-
 </div>
+
+<div class="modal fade" id="addProfession" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="appDetaillabel">Add SubAdmin</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body p-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" placeholder="Email" id="email">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" placeholder="Password" id="password">
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" placeholder="Username" id="username">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Image</label>
+                        <input type="text" class="form-control" placeholder="Image" id="image">
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Allowed Quests?</label>
+                        <input type="number" class="form-control" placeholder="Allowed Quests?" id="allowed_quest" value="0">
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Allowed Hunts?</label>
+                        <input type="number" class="form-control" placeholder="Allowed Hunts?" id="allowed_hunt" value="0">
+                        <br />
+                    </div>
+                    
+                </div>
+                <br />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary-soft my-0" (click)="saveRequest()">Save</button>
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>  

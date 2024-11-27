@@ -129,4 +129,56 @@ export class ListUserComponent implements OnInit {
       }
     });
   }
+  saveRequest(){
+    if($('#email').val() == '' || $('#email').val() == undefined){
+      Swal.fire("Email!", "Email is required", "error");
+      return;
+    }
+    if($('#password').val() == '' || $('#password').val() == undefined){
+      Swal.fire("Password!", "Password is required", "error");
+      return;
+    }
+    if($('#username').val() == '' || $('#username').val() == undefined){
+      Swal.fire("Username!", "Username is required", "error");
+      return;
+    }
+    if($('#image').val() == '' || $('#image').val() == undefined){}
+    if($('#allowed_quest').val() == '' || $('#allowed_quest').val() == undefined){}
+    if($('#allowed_hunt').val() == '' || $('#allowed_hunt').val() == undefined){}
+   let data = {
+    email: $('#email').val(),
+    password: $('#password').val(),
+    username: $('#username').val(),
+    image: $('#image').val(),
+    allowed_quest: $('#allowed_quest').val(),
+    allowed_hunt: $('#allowed_hunt').val(),
+    user_type: "subadmin",
+   }
+    this.sp.show();
+    this.api.post('user/signup_subadmin', data)
+      .then((response: any) => {
+          this.sp.hide();
+          
+          setTimeout(() => {
+            $("#addProfession").modal("hide");
+            this.getAllUsers()
+            this.getAllAnalytics()
+            this.helper.successToast("Sub Admin Created Successfully");
+          }, 1000);
+          
+      })
+      .catch((error) => {
+        this.sp.hide();
+        Swal.fire("Sub Admin!", "There is an error, please try again", "error");
+      });
+  }
+  showRewardDialog(){
+    $("#addProfession").modal("show");
+    $('#email').val('')
+    $('#password').val('')
+    $('#username').val('')
+    $('#image').val('')
+    $('#allowed_quest').val('')
+    $('#allowed_hunt').val('')
+  }
 }
