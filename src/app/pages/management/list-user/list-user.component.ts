@@ -142,14 +142,19 @@ export class ListUserComponent implements OnInit {
       Swal.fire("Username!", "Username is required", "error");
       return;
     }
-    if($('#image').val() == '' || $('#image').val() == undefined){}
-    if($('#allowed_quest').val() == '' || $('#allowed_quest').val() == undefined){}
-    if($('#allowed_hunt').val() == '' || $('#allowed_hunt').val() == undefined){}
+    if($('#allowed_quest').val() == '' || $('#allowed_quest').val() == undefined){
+      Swal.fire("Quest!", "No of Quest is required", "error");
+      return;
+    }
+    if($('#allowed_hunt').val() == '' || $('#allowed_hunt').val() == undefined){
+      Swal.fire("Hunt!", "No of Hunt is required", "error");
+      return;
+    }
    let data = {
     email: $('#email').val(),
     password: $('#password').val(),
     username: $('#username').val(),
-    image: $('#image').val(),
+    image: " ",
     allowed_quest: $('#allowed_quest').val(),
     allowed_hunt: $('#allowed_hunt').val(),
     user_type: "subadmin",
