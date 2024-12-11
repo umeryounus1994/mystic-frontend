@@ -31,20 +31,22 @@ export class AuthService {
       .then((response: any) => {
        
         if (response.data) {
-          if(response?.data?.user){
+          if(response?.data?.user && !response?.data?.user_sub){
             localStorage.setItem('mystic9834!@', JSON.stringify(response.data.user));
             this.storage.saveUserDetails(response.data.user);
             this.isLoggedIn = true;
             this.user = response.data.user;
             this.isAdmin = true;
+            this.isSubAdmin = false;
               resolve('open');
           }
-          if(response.data.user_sub){
+          if(response.data.user_sub && !response?.data?.user){
             localStorage.setItem('mystic9834!@', JSON.stringify(response.data.user_sub));
             this.storage.saveUserDetails(response.data.user_sub);
             this.isLoggedIn = true;
             this.user = response.data.user_sub;
             this.isSubAdmin = true;
+            this.isAdmin = false;
               resolve('open');
           }
         } else {
@@ -71,13 +73,14 @@ export class AuthService {
   }
 
   roleCheck() {
-    if (this.user.role === 'admin') {
+    if (this.user.user_type == 'admin') {
       this.isAdmin = true;
       this.isSubAdmin = false;
     }
-    if (this.user.role === 'subadmin')  {
+    if (this.user.user_type == 'subadmin')  {
       this.isAdmin = false;
       this.isSubAdmin = true;
     }
+   
   }
 }

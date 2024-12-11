@@ -26,10 +26,11 @@ export class ListQuestComponent implements OnInit {
   allQuests : any = [];
   examId = null;
   questions : any = [];
+  allQuestsGroups: any = [];
   qrCode: any = 'Hello';
   mythicaURL = '';
   mythicaModel = '';
-
+  questId = '';
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
     private router: Router, public auth:AuthService) {
@@ -42,6 +43,7 @@ export class ListQuestComponent implements OnInit {
     if(this.auth.isAdmin){
       this.getAllUsers();
       this.getAllAnalytics();
+      this.getAllGroups();
     }else {
       this.getAllUsersSubAdmin();
     }
@@ -66,6 +68,16 @@ export class ListQuestComponent implements OnInit {
     .then((response: any) => {
         this.sp.hide();
         this.allQuests = response?.data;
+    }).catch((error: any) => {
+      this.sp.hide();
+    });
+  }
+  getAllGroups() {
+    this.allQuestsGroups = [];
+    this.api.get('quest/get_all_quest_groups')
+    .then((response: any) => {
+        this.sp.hide();
+        this.allQuestsGroups = response?.data;
     }).catch((error: any) => {
       this.sp.hide();
     });
@@ -109,6 +121,27 @@ export class ListQuestComponent implements OnInit {
   }
   edit(Id: any) {
     this.router.navigate(['/quest/edit-quest'], { queryParams: { Id: Id} });
+  }
+  assignGroup(id:any){
+    this.questId = id;
+    $("#assignGroup").modal("show");
+  }
+  assignGroupBtn(){
+    const data = {
+      quest_group_id: $("#groupId").val(),
+      quest_id: this.questId
+    }
+    this.api.post('Quest/addQuestToGroup', data)
+    .then((response: any) => {
+      this.sp.hide();
+      Swal.fire("Quest Group!", "Group Assigned Successfully", "success");
+     this.getAllUsers()
+     this.getAllAnalytics()
+     $("#assignGroup").modal("hide");
+    }, err => {
+      this.helper.failureToast(err?.error?.message);
+      this.sp.hide();
+    });
   }
   viewQuest(quest: any){
     $("#viewQuest").modal("show");

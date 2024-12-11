@@ -14,7 +14,6 @@ export class SidebarComponent implements OnInit {
   routeURL = "dashboard/admin";
   constructor(private router: Router,
     private route: ActivatedRoute, public auth: AuthService) {
-      if(this.auth.isAdmin){this.login_role = "admin"}
       if(this.auth.isSubAdmin){this.login_role = "subadmin"}
 
   }
@@ -25,5 +24,7 @@ export class SidebarComponent implements OnInit {
     ).subscribe(() => {
       this.routeURL = this.router.url;
     });
+    if(this.auth.isSubAdmin){this.login_role = "subadmin"}
   }
+  
 }

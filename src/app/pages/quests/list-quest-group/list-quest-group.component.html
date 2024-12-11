@@ -1,0 +1,44 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Fetching Data....</p>
+</ngx-spinner>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Quest Group</h1>
+    </div>
+</div>
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allQuests.length > 0">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
+                id="dtable">
+                <thead>
+                    <tr>
+
+                        <th scope="col" class="border-0 rounded-start">Group Name</th>
+                        <th scope="col" class="border-0">Package</th>
+                        <th scope="col" class="border-0">Crypes</th>
+                        <th scope="col" class="border-0 rounded-end">Status</th>
+                        <!-- <th scope="col" class="border-0 rounded-end">Action</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let q of allQuests; let i = index">
+
+                        <td>{{q.quest_group_name.toString().substring(0,30)}}...</td>
+                        <td>{{q.package}}</td>
+                        <td>{{q.no_of_crypes}}</td>
+                        
+                        <td>
+                            <div *ngIf="q.status == 'active'"
+                                class="badge bg-success bg-opacity-10 text-success">Active</div>
+                            <div *ngIf="q.status == 'deleted'"
+                                class="badge bg-danger bg-opacity-10 text-danger">Deleted</div>
+                        </td>
+                  
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
