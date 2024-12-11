@@ -27,12 +27,12 @@
                                     formControlName="quest_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_title'].errors }">
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">No of XP</label>
                                 <input type="text" class="form-control" placeholder="0" formControlName="no_of_xp"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_xp'].errors }">
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">No of Crypes</label>
                                 <input type="text" class="form-control" placeholder="0" formControlName="no_of_crypes"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_crypes'].errors }">

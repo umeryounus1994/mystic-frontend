@@ -6,6 +6,7 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-create-quest',
@@ -21,23 +22,37 @@ export class CreateQuestComponent implements OnInit {
   reward: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+    private router: Router, private fb: FormBuilder, public auth: AuthService) {
       this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
   }
   onChangeURL(url: SafeUrl) {
     this.qrCodeDownloadLink = url;
   }
   ngOnInit() {
-    this.questForm = this.fb.group({
-      quest_question: ['', [Validators.required, Validators.minLength(5)]],
-      quest_title: ['', [Validators.required, Validators.minLength(5)]],
-      no_of_xp: ['', Validators.required],
-      no_of_crypes: ['', Validators.required],
-      level_increase: ['', Validators.required],
-      mythica_ID: ['', Validators.required],
-      qr_code: [this.QrCode],
-      questions: this.fb.array([])
-    });
+    if(this.auth.isAdmin){
+      this.questForm = this.fb.group({
+        quest_question: ['', [Validators.required, Validators.minLength(5)]],
+        quest_title: ['', [Validators.required, Validators.minLength(5)]],
+        no_of_xp: [0, Validators.required],
+        no_of_crypes: [0, Validators.required],
+        level_increase: ['', Validators.required],
+        mythica_ID: ['', Validators.required],
+        qr_code: [this.QrCode],
+        questions: this.fb.array([])
+      });
+    } else {
+      this.questForm = this.fb.group({
+        quest_question: ['', [Validators.required, Validators.minLength(5)]],
+        quest_title: ['', [Validators.required, Validators.minLength(5)]],
+        no_of_xp: [0],
+        no_of_crypes: [0],
+        level_increase: ['', Validators.required],
+        mythica_ID: ['', Validators.required],
+        qr_code: [this.QrCode],
+        questions: this.fb.array([])
+      });
+    }
+ 
     this.addQuestion();
     this.getAllCreatures()
   }
