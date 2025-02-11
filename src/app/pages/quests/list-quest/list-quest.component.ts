@@ -31,6 +31,7 @@ export class ListQuestComponent implements OnInit {
   mythicaURL = '';
   mythicaModel = '';
   questId = '';
+  quest_image = '';
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
     private router: Router, public auth:AuthService) {
@@ -154,6 +155,7 @@ export class ListQuestComponent implements OnInit {
     this.mythicaModel = quest.mythica_model;
     this.questions = quest.options;
     this.qrCode = quest.qr_code;
+    this.quest_image = quest.quest_image
   }
   async getAllAnalytics() {
     this.api.get('quest/quest_analytics')

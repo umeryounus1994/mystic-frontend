@@ -21,17 +21,35 @@
                                 <textarea class="form-control" rows="3" formControlName="quest_question"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_question'].errors }"></textarea>
                             </div>
-                            <div class="col-lg-5">
-                                <label class="form-label">Quest Title</label>
-                                <input type="text" class="form-control" placeholder="Title"
-                                    formControlName="quest_title"
-                                    [ngClass]="{ 'is-invalid': submitted && f['quest_title'].errors }">
+                            <div class="col-lg-2">
+                                <label class="form-label">Quest Type</label>
+                                <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
+                                formControlName="quest_type"
+                                [ngClass]="{ 'is-invalid': submitted && f['quest_type']?.errors }">
+                                    <option value="" selected disabled>Select Quest Type</option>
+                                    <option value='simple'>Simple</option>
+                                    <option value='image'>Picture Based</option>
+                            </select>
+                            </div>
+                            <div class="col-lg-7 mb-1">
+                                <label class="form-label">Quest File</label>
+                                <input type="file" class="form-control"
+                                accept="image/*"
+                                (change)="onFileSelectedQuest($event)"
+                                    placeholder="Answer">
                             </div>
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">No of XP</label>
                                 <input type="text" class="form-control" placeholder="0" formControlName="no_of_xp"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_xp'].errors }">
                             </div>
+                            <div class="col-lg-5">
+                                <label class="form-label">Quest Title</label>
+                                <input type="text" class="form-control" placeholder="Title"
+                                    formControlName="quest_title"
+                                    [ngClass]="{ 'is-invalid': submitted && f['quest_title'].errors }">
+                            </div>
+                           
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">No of Crypes</label>
                                 <input type="text" class="form-control" placeholder="0" formControlName="no_of_crypes"
@@ -61,8 +79,14 @@
                                 <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index"
                                     [formGroupName]="i">
 
-                                    <div class="col-lg-7 mb-1">
+                                    <div class="col-lg-4 mb-1">
                                         <input type="text" class="form-control" formControlName="answer"
+                                            placeholder="Answer">
+                                    </div>
+                                    <div class="col-lg-3 mb-1">
+                                        <input type="file" class="form-control" formControlName="answer_image"
+                                        accept="image/*, video/mp4"
+                                        (change)="onFileSelectedOptions($event, 'option'+(i+1))"
                                             placeholder="Answer">
                                     </div>
                                     <div class="col-lg-2 mb-1">

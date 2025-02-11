@@ -20,7 +20,12 @@ export class CreateQuestComponent implements OnInit {
   public qrCodeDownloadLink: SafeUrl = "";
   allCreatures: any = [];
   reward: File | undefined = undefined;
-
+  quest_file: File | undefined = undefined;
+  option1: File | undefined = undefined;
+  option2: File | undefined = undefined;
+  option3: File | undefined = undefined;
+  option4: File | undefined = undefined;
+  option5: File | undefined = undefined;
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, public auth: AuthService) {
       this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
@@ -37,6 +42,7 @@ export class CreateQuestComponent implements OnInit {
         no_of_crypes: [0, Validators.required],
         level_increase: ['', Validators.required],
         mythica_ID: ['', Validators.required],
+        quest_type: ['', Validators.required],
         qr_code: [this.QrCode],
         questions: this.fb.array([])
       });
@@ -49,6 +55,7 @@ export class CreateQuestComponent implements OnInit {
         level_increase: ['', Validators.required],
         mythica_ID: ['', Validators.required],
         qr_code: [this.QrCode],
+        quest_type: ['', Validators.required],
         questions: this.fb.array([])
       });
     }
@@ -101,25 +108,51 @@ export class CreateQuestComponent implements OnInit {
     fD.append('level_increase', formData?.level_increase);
     fD.append('mythica_ID', formData?.mythica_ID);
     fD.append('qr_code', formData?.qr_code);
+    fD.append('quest_type', formData?.quest_type);
     if(this.reward){
       fD.append('reward', this.reward!, this.reward?.name);
     }
-    delete formData.questions;
+    if(this.option1){
+      fD.append('option1', this.option1!, this.option1?.name);
+    }
+    if(this.option2){
+      fD.append('option2', this.option2!, this.option2?.name);
+    }
+    if(this.option3){
+      fD.append('option3', this.option3!, this.option3?.name);
+    }
+    if(this.option4){
+      fD.append('option4', this.option4!, this.option4?.name);
+    }
+    if(this.option5){
+      fD.append('option5', this.option5!, this.option5?.name);
+    }
+    if(this.quest_file){
+      fD.append('quest_file', this.quest_file!, this.quest_file?.name);
+    }
+    fD.append('questions', JSON.stringify(formData.questions));
+   // delete formData.questions;
     this.api.postImageData('quest/createQuest', fD)
       .then((response: any) => {
           this.sp.hide();
-          questions.forEach((element: any) => {
-            element.quest_id = response?.data?._id;
-          });
-          this.api.postData('quest/createQuestQuiz', questions)
-          .then((responseQ: any) => {
-              setTimeout(() => {
-                this.helper.successToast("Quest Created Successfully");
-              }, 1000);
-              setTimeout(() => {
-                this.router.navigate(['quest/list-quest']);
-              }, 2000);
-          });
+          setTimeout(() => {
+            this.helper.successToast("Quest Created Successfully");
+          }, 1000);
+          setTimeout(() => {
+            this.router.navigate(['quest/list-quest']);
+          }, 2000);
+          // questions.forEach((element: any) => {
+          //   element.quest_id = response?.data?._id;
+          // });
+          // this.api.postData('quest/createQuestQuiz', questions)
+          // .then((responseQ: any) => {
+          //     setTimeout(() => {
+          //       this.helper.successToast("Quest Created Successfully");
+          //     }, 1000);
+          //     setTimeout(() => {
+          //       this.router.navigate(['quest/list-quest']);
+          //     }, 2000);
+          // });
       })
       .catch((error) => {
         this.sp.hide();
@@ -130,5 +163,25 @@ export class CreateQuestComponent implements OnInit {
     if(type == 'reward'){
       this.reward = event.target.files[0];
     }
+  }
+  onFileSelectedQuest(event: any) {
+      this.quest_file = event.target.files[0];
+  }
+  onFileSelectedOptions(event: any, type: string) {
+    if(type == 'option1'){
+      this.option1 = event.target.files[0];
+    }
+    if(type == 'option2'){
+      this.option2 = event.target.files[0];
+    }
+    if(type == 'option3'){
+      this.option3 = event.target.files[0];
+    }
+    if(type == 'option4'){
+      this.option4 = event.target.files[0];
+    } 
+    if(type == 'option5'){
+      this.option5 = event.target.files[0];
+    } 
   }
 }

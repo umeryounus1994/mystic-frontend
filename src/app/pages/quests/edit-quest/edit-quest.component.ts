@@ -21,6 +21,13 @@ export class EditQuestComponent implements OnInit {
   reward: File | undefined = undefined;
   Id = '';
   rewardFile = '';
+  quest_file: File | undefined = undefined;
+  option1: File | undefined = undefined;
+  option2: File | undefined = undefined;
+  option3: File | undefined = undefined;
+  option4: File | undefined = undefined;
+  option5: File | undefined = undefined;
+  questimg = '';
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
       this.route.queryParams.subscribe(params => {
@@ -37,6 +44,7 @@ export class EditQuestComponent implements OnInit {
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
       mythica_ID: ['', Validators.required],
+      quest_type: ['', Validators.required],
       questions: this.fb.array([])
     });
    
@@ -57,7 +65,9 @@ export class EditQuestComponent implements OnInit {
         this.questForm.controls['level_increase'].setValue(response?.data?.quest?.level_increase);
         this.questForm.controls['no_of_crypes'].setValue(response?.data?.quest?.no_of_crypes);
         this.questForm.controls['mythica_ID'].setValue(response?.data?.quest?.mythica_ID?._id);
+        this.questForm.controls['quest_type'].setValue(response?.data?.quest?.quest_type || "simple");
         this.rewardFile = response?.data?.quest?.reward_file
+        this.questimg = response?.data?.quest?.quest_image
         response?.data?.questQuiz?.forEach((question: any) => {
           this.questions().push(this.fb.group({
             answer: question.answer,
@@ -111,25 +121,38 @@ export class EditQuestComponent implements OnInit {
     fD.append('no_of_crypes', formData?.no_of_crypes);
     fD.append('level_increase', formData?.level_increase);
     fD.append('mythica_ID', formData?.mythica_ID);
+    fD.append('quest_type', formData?.quest_type);
     if(this.reward){
       fD.append('reward', this.reward!, this.reward?.name);
     }
-    delete formData.questions;
+    if(this.option1){
+      fD.append('option1', this.option1!, this.option1?.name);
+    }
+    if(this.option2){
+      fD.append('option2', this.option2!, this.option2?.name);
+    }
+    if(this.option3){
+      fD.append('option3', this.option3!, this.option3?.name);
+    }
+    if(this.option4){
+      fD.append('option4', this.option4!, this.option4?.name);
+    }
+    if(this.option5){
+      fD.append('option5', this.option5!, this.option5?.name);
+    }
+    if(this.quest_file){
+      fD.append('quest_file', this.quest_file!, this.quest_file?.name);
+    }
+    fD.append('questions', JSON.stringify(formData.questions));
     this.api.postImageData('quest/updateQuest/'+this.Id, fD)
       .then((response: any) => {
           this.sp.hide();
-          questions.forEach((element: any) => {
-            element.quest_id = this.Id;
-          });
-          this.api.postData('quest/updateQuestQuiz/'+this.Id, questions)
-          .then((responseQ: any) => {
-              setTimeout(() => {
-                this.helper.successToast("Quest Updated Successfully");
-              }, 1000);
-              setTimeout(() => {
-                this.router.navigate(['quest/list-quest']);
-              }, 2000);
-          });
+          setTimeout(() => {
+            this.helper.successToast("Quest Updated Successfully");
+          }, 1000);
+          setTimeout(() => {
+            this.router.navigate(['quest/list-quest']);
+          }, 2000);
       })
       .catch((error) => {
         this.sp.hide();
@@ -141,4 +164,24 @@ export class EditQuestComponent implements OnInit {
       this.reward = event.target.files[0];
     }
   }
+  onFileSelectedQuest(event: any) {
+    this.quest_file = event.target.files[0];
+}
+onFileSelectedOptions(event: any, type: string) {
+  if(type == 'option1'){
+    this.option1 = event.target.files[0];
+  }
+  if(type == 'option2'){
+    this.option2 = event.target.files[0];
+  }
+  if(type == 'option3'){
+    this.option3 = event.target.files[0];
+  }
+  if(type == 'option4'){
+    this.option4 = event.target.files[0];
+  } 
+  if(type == 'option5'){
+    this.option5 = event.target.files[0];
+  } 
+}
 }

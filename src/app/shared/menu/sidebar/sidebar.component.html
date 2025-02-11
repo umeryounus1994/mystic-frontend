@@ -41,7 +41,7 @@
 						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/hunt/create-hunt'" [routerLink]="['/hunt/create-hunt']">Create Treasure Hunt</a></li>
 					</ul>
 				</li>
-				<!-- <li class="nav-item">
+				<li class="nav-item">
 					<a class="nav-link" data-bs-toggle="collapse" href="#collapsemysteries" role="button" aria-expanded="false" aria-controls="collapsemysteries">
 						<i class="fas fa-user-tie fa-fw me-2"></i>Picture Mysteries
 					</a>
@@ -49,7 +49,7 @@
 						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/mystery/list-mystery'" [routerLink]="['/mystery/list-mystery']">All Picture Mysteries</a></li>
 						<li class="nav-item"> <a class="nav-link" [class.active]="routeURL === '/mystery/add-mystery'" [routerLink]="['/mystery/add-mystery']">Add Mystery</a></li>
 					</ul>
-				</li> -->
+				</li>
 
 				<li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin">Management</li>
 			
