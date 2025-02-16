@@ -28,7 +28,8 @@
                                 [ngClass]="{ 'is-invalid': submitted && f['quest_type']?.errors }">
                                     <option value="" selected disabled>Select Quest Type</option>
                                     <option value='simple'>Simple</option>
-                                    <option value='image'>Picture Based</option>
+                                    <option value='image'>Picture</option>
+                                    <option value='video'>Video</option>
                             </select>
                             </div>
                             <div class="col-lg-7 mb-1">
@@ -86,7 +87,7 @@
                                     </div>
                                     <div class="col-lg-3 mb-1">
                                         <input type="file" class="form-control" formControlName="answer_image"
-                                        accept="image/*"
+                                        accept="image/*, video/mp4"
                                         (change)="onFileSelectedOptions($event, 'option'+(i+1))"
                                             placeholder="Answer">
                                     </div>

@@ -72,6 +72,7 @@ export class EditQuestComponent implements OnInit {
           this.questions().push(this.fb.group({
             answer: question.answer,
             correct_option: question.correct_option,
+            answer_image: question.answer_image || ""
           }));
         });
 
@@ -95,6 +96,7 @@ export class EditQuestComponent implements OnInit {
   newQuestion(): FormGroup {  
     return this.fb.group({  
       answer: '',  
+      answer_image: '',
       correct_option: false,  
       quest_id: ''
     })  
