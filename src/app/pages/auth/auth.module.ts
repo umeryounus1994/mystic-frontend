@@ -6,12 +6,14 @@ import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ResetUserPasswordComponent } from './reset-user-password/reset-user-password.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ResetUserPasswordComponent
   ],
   imports: [
     CommonModule,
