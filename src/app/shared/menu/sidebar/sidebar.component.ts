@@ -14,11 +14,13 @@ export class SidebarComponent implements OnInit {
   routeURL = "dashboard/admin";
   constructor(private router: Router,
     private route: ActivatedRoute, public auth: AuthService) {
+     
       if(this.auth.isSubAdmin){this.login_role = "subadmin"}
 
   }
 
   ngOnInit() {
+    
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {

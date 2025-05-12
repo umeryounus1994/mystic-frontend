@@ -24,6 +24,17 @@ export class ListUserComponent implements OnInit {
 
   allUsers : any = [];
   examId = null;
+  permissions: string[] = [];
+
+  // Your available permissions
+  permissionList = [
+    { id: 'perm1', label: 'Quest' },
+    { id: 'perm2', label: 'Missions' },
+    { id: 'perm3', label: 'Hunts' },
+    { id: 'perm4', label: 'Picture Mysteries' },
+    { id: 'perm5', label: 'Drops' },
+    { id: 'perm6', label: 'All' }
+  ];
 
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
@@ -150,6 +161,10 @@ export class ListUserComponent implements OnInit {
       Swal.fire("Hunt!", "No of Hunt is required", "error");
       return;
     }
+    if(this.permissions.length < 1){
+      Swal.fire("Hunt!", "Permissions is required", "error");
+      return;
+    }
    let data = {
     email: $('#email').val(),
     password: $('#password').val(),
@@ -158,6 +173,7 @@ export class ListUserComponent implements OnInit {
     allowed_quest: $('#allowed_quest').val(),
     allowed_hunt: $('#allowed_hunt').val(),
     user_type: "subadmin",
+    permissions: this.permissions
    }
     this.sp.show();
     this.api.post('user/signup_subadmin', data)
@@ -168,6 +184,7 @@ export class ListUserComponent implements OnInit {
             $("#addProfession").modal("hide");
             this.getAllUsers()
             this.getAllAnalytics()
+            this.resetPermissionForm();
             this.helper.successToast("Sub Admin Created Successfully");
           }, 1000);
           
@@ -186,4 +203,55 @@ export class ListUserComponent implements OnInit {
     $('#allowed_quest').val('')
     $('#allowed_hunt').val('')
   }
+  onPermissionChange(event: Event) {
+   
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+  
+    if (value === 'All') {
+      if (input.checked) {
+        // If 'All' is selected, clear other permissions and keep only 'All'
+        this.permissions = ['All'];
+  
+        // Uncheck other checkboxes in the DOM manually
+        this.permissionList.forEach(p => {
+          if (p.label !== 'All') {
+            const el = document.getElementById(p.id) as HTMLInputElement;
+            if (el) el.checked = false;
+          }
+        });
+      } else {
+        // If 'All' is deselected, clear permissions
+        this.permissions = [];
+      }
+    } else {
+      if (input.checked) {
+        // Remove 'All' if it's currently selected
+        this.permissions = this.permissions.filter(p => p !== 'All');
+  
+        // Add the new permission if not already present
+        if (!this.permissions.includes(value)) {
+          this.permissions.push(value);
+        }
+  
+        // Uncheck 'All' checkbox if needed
+        const allCheckbox = document.getElementById('perm6') as HTMLInputElement;
+        if (allCheckbox) allCheckbox.checked = false;
+      } else {
+        // Remove permission on uncheck
+        this.permissions = this.permissions.filter(p => p !== value);
+      }
+    }
+  }
+  resetPermissionForm() {
+    // Clear selected permissions
+    this.permissions = [];
+  
+    // Uncheck all checkboxes in the DOM
+    this.permissionList.forEach(p => {
+      const checkbox = document.getElementById(p.id) as HTMLInputElement;
+      if (checkbox) checkbox.checked = false;
+    });
+  }
+  
 }

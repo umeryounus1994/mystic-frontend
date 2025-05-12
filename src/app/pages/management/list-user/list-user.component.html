@@ -60,17 +60,17 @@
                         </td>
                         <td>
                             <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                (click)="deleteExamModal(q._id)">
+                                (click)="deleteExamModal(q.id)">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
                         <td>
                             <button *ngIf="q.status == 'active'" class="btn btn-danger-soft me-1 mb-1 mb-md-0"
-                                (click)="blockUser(q._id, 'block')">
+                                (click)="blockUser(q.id, 'block')">
                                Block
                             </button>
                             <button *ngIf="q.status == 'blocked'" class="btn btn-info-soft me-1 mb-1 mb-md-0"
-                                (click)="blockUser(q._id, 'unblock')">
+                                (click)="blockUser(q.id, 'unblock')">
                                Activate
                             </button>
                         </td>
@@ -112,6 +112,22 @@
                     <div class="col-md-6">
                         <label class="form-label">Allowed Hunts?</label>
                         <input type="number" class="form-control" placeholder="Allowed Hunts?" id="allowed_hunt" value="0">
+                        <br />
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Permissions</label>
+                        <div class="d-sm-flex">
+                            <div class="form-check radio-bg-light me-4" *ngFor="let perm of permissionList">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       [id]="perm.id"
+                                       [value]="perm.label"
+                                       (change)="onPermissionChange($event)">
+                                <label class="form-check-label" [for]="perm.id">
+                                  {{ perm.label }}
+                                </label>
+                              </div>
+                        </div>
                         <br />
                     </div>
                     

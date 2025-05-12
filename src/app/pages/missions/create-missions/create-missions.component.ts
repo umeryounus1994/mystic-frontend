@@ -67,7 +67,7 @@ export class CreateMissionsComponent implements OnInit {
       mission_id: '1',
       quiz_file: 'a',
       sort,
-      options: this.fb.array([this.createOption(), this.createOption(), this.createOption(), this.createOption()])
+      options: this.fb.array([this.createOption(), this.createOption(), this.createOption()])
     })
 
   }
@@ -76,8 +76,8 @@ export class CreateMissionsComponent implements OnInit {
   }
   createOption(): FormGroup {
     return this.fb.group({
-      option: ['', Validators.required],
-      correct: [false, Validators.required]
+      option: [''],
+      correct: [false]
     });
   }
 
@@ -89,18 +89,27 @@ export class CreateMissionsComponent implements OnInit {
   removeQuestion(i: number) {
     this.questions.removeAt(i);
   }
+  clearQuestionValidators() {
+    const questionsArray = this.questForm.get('questions') as FormArray;
+    questionsArray.controls.forEach(control => {
+      control.clearValidators();
+      control.updateValueAndValidity();
+    });
+    questionsArray.clearValidators(); // Also clear on the array itself
+    questionsArray.updateValueAndValidity();
+  }
   onSubmit() {
     this.submitted = true;
     const result = this.findEmptyFields(this.questForm?.value?.questions);
     if(result.length > 0){
       if(result[0]?.emptyFields.length > 0 || result[1]?.emptyFields.length > 0 || result[2]?.emptyFields.length > 0) {
-        let message = result.map((question:any) => 
-        `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
-        Swal.fire("Mission!", message, "error");
-        return;
+       this.clearQuestionValidators();
+        // let message = result.map((question:any) => 
+        // `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
+        //Swal.fire("Mission!", message, "error");
+        //return;
       }
     }
-    
     if (this.questForm?.valid) {
       this._sendSaveRequest(this.questForm.value);
     }

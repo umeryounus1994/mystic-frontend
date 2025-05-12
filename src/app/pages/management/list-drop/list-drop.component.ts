@@ -4,6 +4,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth/auth.service';
 declare var $: any;
 
 @Component({
@@ -27,14 +28,18 @@ export class ListDropComponent implements OnInit {
 
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router) {
+    private router: Router, private auth: AuthService) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
   }
   async ngOnInit() {
     this.sp.show()
-    await this.getAllUsers();
+    if(this.auth.isAdmin){
+      this.getAllUsers();
+    }else {
+      this.getAllSubAdminDrops();
+    }
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
@@ -43,6 +48,16 @@ export class ListDropComponent implements OnInit {
   async getAllUsers() {
     this.allUsers = [];
     this.api.get('drop/get_all')
+    .then((response: any) => {
+        this.sp.hide();
+        this.allUsers = response?.data;
+    }).catch((error: any) => {
+      this.sp.hide();
+    });
+  }
+  async getAllSubAdminDrops() {
+    this.allUsers = [];
+    this.api.get('drop/get_all_subadmin')
     .then((response: any) => {
         this.sp.hide();
         this.allUsers = response?.data;

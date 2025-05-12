@@ -53,9 +53,9 @@ export class AddDropComponent implements OnInit {
     this.questions().push(this.newQuestion());  
   }  
   removeQuestion(i:number) {  
-    if(i > 0){
+   // if(i > 0){
       this.questions().removeAt(i);  
-    }
+   // }
 
   } 
    getAllCreatures() {
@@ -94,7 +94,8 @@ export class AddDropComponent implements OnInit {
     this.api.postImageData('drop/createDrop', fD)
       .then((response: any) => {
           this.sp.hide();
-          if(questions[0]?.answer != ''){
+          console.log(questions)
+          if(questions.length > 0 && questions[0]?.answer != ''){
             questions.forEach((element: any) => {
               element.drop_id = response?.data?._id;
             });
@@ -104,7 +105,7 @@ export class AddDropComponent implements OnInit {
                   this.helper.successToast("Drop Created Successfully");
                 }, 1000);
                 setTimeout(() => {
-                  this.router.navigate(['drop/list-drop']);
+                  this.router.navigate(['management/list-drop']);
                 }, 2000);
             });
           } else {
@@ -112,7 +113,7 @@ export class AddDropComponent implements OnInit {
               this.helper.successToast("Drop Created Successfully");
             }, 1000);
             setTimeout(() => {
-              this.router.navigate(['drop/list-drop']);
+              this.router.navigate(['management/list-drop']);
             }, 2000);
           }
  
