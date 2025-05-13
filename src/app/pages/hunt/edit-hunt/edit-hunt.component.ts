@@ -56,11 +56,7 @@ export class EditHuntComponent implements OnInit {
       qr_code: [''],
       have_qr: [false],
     });
-    // this.addQuestion();
-    // this.addQuestion();
-    // this.addQuestion();
-    // this.addQuestion();
-    // this.addQuestion();
+
     this.getAllCreatures()
     this.getProductDetails()
   }
@@ -83,29 +79,38 @@ export class EditHuntComponent implements OnInit {
         this.questForm.controls['treasure_hunt_end_date'].setValue(moment(response?.data?.mission_end_date).format("DD/mm/yyyy"));
         this.rewardFile = response?.data?.reward_file;
         this.QrCode = response?.data?.qr_code != "" ? response?.data?.qr_code : Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
-        let sorted = response?.data?.quiz.sort((a:any, b:any) => a.quiz_sort - b.quiz_sort);
-        sorted.forEach((quiz:any) => {
-          const questionGroup = this.newQuestion(quiz?.quiz_sort);
-          questionGroup.patchValue({
-            treasure_hunt_title: quiz.treasure_hunt_title,
-            latitude: quiz.location.coordinates[0],
-            longitude: quiz.location.coordinates[1],
-            mythica: quiz.mythica._id,
-            treasure_hunt_id: quiz.treasure_hunt_id,
-            quiz_file: quiz.quiz_file
+        if(response?.data?.quiz && response?.data?.quiz.length > 0){
+          let sorted = response?.data?.quiz.sort((a:any, b:any) => a.quiz_sort - b.quiz_sort);
+          sorted.forEach((quiz:any) => {
+            const questionGroup = this.newQuestion(quiz?.quiz_sort);
+            questionGroup.patchValue({
+              treasure_hunt_title: quiz.treasure_hunt_title,
+              latitude: quiz.location.coordinates[0],
+              longitude: quiz.location.coordinates[1],
+              mythica: quiz.mythica._id,
+              treasure_hunt_id: quiz.treasure_hunt_id,
+              quiz_file: quiz.quiz_file
+            });
+    
+            const options = questionGroup.get('options') as FormArray;
+            options.clear();
+            quiz.options.forEach((option:any) => {
+              options.push(this.fb.group({
+                option: [option.answer, Validators.required],
+                correct: [option.correct_option, Validators.required]
+              }));
+            });
+    
+            this.questions.push(questionGroup);
           });
-  
-          const options = questionGroup.get('options') as FormArray;
-          options.clear();
-          quiz.options.forEach((option:any) => {
-            options.push(this.fb.group({
-              option: [option.answer, Validators.required],
-              correct: [option.correct_option, Validators.required]
-            }));
-          });
-  
-          this.questions.push(questionGroup);
-        });
+        } else {
+              this.addQuestion(1);
+              this.addQuestion(2);
+              this.addQuestion(3);
+              this.addQuestion(4);
+              this.addQuestion(5);
+        }
+
       })};
   get f() { return this.questForm?.controls; }
   get questions() : FormArray {  
@@ -139,8 +144,8 @@ export class EditHuntComponent implements OnInit {
   }
   createOption(): FormGroup {
     return this.fb.group({
-      option: ['', Validators.required],
-      correct: [false, Validators.required]
+      option: [''],
+      correct: [false]
     });
   }
      
@@ -151,15 +156,25 @@ export class EditHuntComponent implements OnInit {
   removeQuestion(i:number) {  
     this.questions.removeAt(i);  
   } 
+  clearQuestionValidators() {
+    const questionsArray = this.questForm.get('questions') as FormArray;
+    questionsArray.controls.forEach(control => {
+      control.clearValidators();
+      control.updateValueAndValidity();
+    });
+    questionsArray.clearValidators(); // Also clear on the array itself
+    questionsArray.updateValueAndValidity();
+  }
   onSubmit(){
     this.submitted = true;
     const result = this.findEmptyFields(this.questForm?.value?.questions);
     if(result.length > 0){
       if(result[0]?.emptyFields.length > 0 || result[1]?.emptyFields.length > 0 || result[2]?.emptyFields.length > 0) {
-        let message = result.map((question:any) => 
-        `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
-        Swal.fire("Treasure HUNT!", message, "error");
-        return;
+        this.clearQuestionValidators();
+        // let message = result.map((question:any) => 
+        // `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
+        // Swal.fire("Treasure HUNT!", message, "error");
+        // return;
       }
     }
     if (this.questForm?.valid) {

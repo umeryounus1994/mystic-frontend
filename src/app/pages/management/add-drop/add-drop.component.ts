@@ -17,6 +17,12 @@ export class AddDropComponent implements OnInit {
   submitted = false;
   allCreatures: any = [];
   reward: File | undefined = undefined;
+  option1: File | undefined = undefined;
+  option2: File | undefined = undefined;
+  option3: File | undefined = undefined;
+  option4: File | undefined = undefined;
+  option5: File | undefined = undefined;
+  option6: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -33,6 +39,7 @@ export class AddDropComponent implements OnInit {
       longitude: ['', Validators.required],
       no_of_xp: ['', Validators.required],
       mythica_ID: ['', Validators.required],
+      drop_type: ['', Validators.required],
       questions: this.fb.array([])
     });
     this.addQuestion();
@@ -85,39 +92,62 @@ export class AddDropComponent implements OnInit {
     fD.append('longitude', formData?.longitude);
     fD.append('mythica_ID', formData?.mythica_ID);
     fD.append('no_of_xp', formData?.no_of_xp);
+    fD.append('drop_type', formData.drop_type);
 
     if(this.reward){
       fD.append('reward', this.reward!, this.reward?.name);
     }
-    delete formData.questions;
+    if(this.option1){
+      fD.append('option1', this.option1!, this.option1?.name);
+    }
+    if(this.option2){
+      fD.append('option2', this.option2!, this.option2?.name);
+    }
+    if(this.option3){
+      fD.append('option3', this.option3!, this.option3?.name);
+    }
+    if(this.option4){
+      fD.append('option4', this.option4!, this.option4?.name);
+    }
+    if(this.option5){
+      fD.append('option5', this.option5!, this.option5?.name);
+    }
+    if(this.option6){
+      fD.append('option6', this.option6!, this.option6?.name);
+    }
+    fD.append('questions', JSON.stringify(formData.questions));
+    //delete formData.questions;
     this.sp.show();
     this.api.postImageData('drop/createDrop', fD)
       .then((response: any) => {
           this.sp.hide();
-          console.log(questions)
-          if(questions.length > 0 && questions[0]?.answer != ''){
-            questions.forEach((element: any) => {
-              element.drop_id = response?.data?._id;
-            });
-            this.api.postData('drop/createDropQuiz', questions)
-            .then((responseQ: any) => {
-                setTimeout(() => {
-                  this.helper.successToast("Drop Created Successfully");
-                }, 1000);
-                setTimeout(() => {
-                  this.router.navigate(['management/list-drop']);
-                }, 2000);
-            });
-          } else {
-            setTimeout(() => {
-              this.helper.successToast("Drop Created Successfully");
-            }, 1000);
-            setTimeout(() => {
-              this.router.navigate(['management/list-drop']);
-            }, 2000);
-          }
- 
-
+          setTimeout(() => {
+            this.helper.successToast("Drop Created Successfully");
+          }, 1000);
+          setTimeout(() => {
+            this.router.navigate(['management/list-drop']);
+          }, 2000);
+          // if(questions.length > 0 && questions[0]?.answer != ''){
+          //   questions.forEach((element: any) => {
+          //     element.drop_id = response?.data?._id;
+          //   });
+          //   this.api.postData('drop/createDropQuiz', questions)
+          //   .then((responseQ: any) => {
+          //       setTimeout(() => {
+          //         this.helper.successToast("Drop Created Successfully");
+          //       }, 1000);
+          //       setTimeout(() => {
+          //         this.router.navigate(['management/list-drop']);
+          //       }, 2000);
+          //   });
+          // } else {
+          //   setTimeout(() => {
+          //     this.helper.successToast("Drop Created Successfully");
+          //   }, 1000);
+          //   setTimeout(() => {
+          //     this.router.navigate(['management/list-drop']);
+          //   }, 2000);
+          // }
       })
       .catch((error) => {
         this.sp.hide();
@@ -128,5 +158,25 @@ export class AddDropComponent implements OnInit {
     if(type == 'reward'){
       this.reward = event.target.files[0];
     }
+  }
+  onFileSelectedOptions(event: any, type: string) {
+    if(type == 'option1'){
+      this.option1 = event.target.files[0];
+    }
+    if(type == 'option2'){
+      this.option2 = event.target.files[0];
+    }
+    if(type == 'option3'){
+      this.option3 = event.target.files[0];
+    }
+    if(type == 'option4'){
+      this.option4 = event.target.files[0];
+    } 
+    if(type == 'option5'){
+      this.option5 = event.target.files[0];
+    } 
+    if(type == 'option6'){
+      this.option6 = event.target.files[0];
+    } 
   }
 }

@@ -67,29 +67,36 @@ export class EditMissionComponent implements OnInit {
         this.questForm.controls['mission_start_date'].setValue(moment(response?.data?.mission_start_date).format("dd/mm/yyyy"));
         this.questForm.controls['mission_end_date'].setValue(moment(response?.data?.mission_end_date).format("dd/mm/yyyy"));
         this.rewardFile = response?.data?.reward_file;
-        let sorted = response?.data?.quiz.sort((a:any, b:any) => a.quiz_sort - b.quiz_sort);
-        sorted.forEach((quiz:any) => {
-          const questionGroup = this.newQuestion(quiz?.quiz_sort);
-          questionGroup.patchValue({
-            quiz_title: quiz.quiz_title,
-            latitude: quiz.location.coordinates[0],
-            longitude: quiz.location.coordinates[1],
-            mythica: quiz.mythica._id,
-            mission_id: quiz.mission_id,
-            quiz_file: quiz.quiz_file
+        if(response?.data?.quiz && response?.data?.quiz.length > 0){
+          let sorted = response?.data?.quiz.sort((a:any, b:any) => a.quiz_sort - b.quiz_sort);
+          sorted.forEach((quiz:any) => {
+            const questionGroup = this.newQuestion(quiz?.quiz_sort);
+            questionGroup.patchValue({
+              quiz_title: quiz.quiz_title,
+              latitude: quiz.location.coordinates[0],
+              longitude: quiz.location.coordinates[1],
+              mythica: quiz.mythica._id,
+              mission_id: quiz.mission_id,
+              quiz_file: quiz.quiz_file
+            });
+    
+            const options = questionGroup.get('options') as FormArray;
+            options.clear();
+            quiz.options.forEach((option:any) => {
+              options.push(this.fb.group({
+                option: [option.answer, Validators.required],
+                correct: [option.correct_option, Validators.required]
+              }));
+            });
+    
+            this.questions.push(questionGroup);
           });
-  
-          const options = questionGroup.get('options') as FormArray;
-          options.clear();
-          quiz.options.forEach((option:any) => {
-            options.push(this.fb.group({
-              option: [option.answer, Validators.required],
-              correct: [option.correct_option, Validators.required]
-            }));
-          });
-  
-          this.questions.push(questionGroup);
-        });
+        } else {
+          this.addQuestion(1);
+          this.addQuestion(2);
+          this.addQuestion(3);
+        }
+
       })};
   getAllCreatures() {
     this.allCreatures = [];
@@ -115,7 +122,7 @@ export class EditMissionComponent implements OnInit {
       mission_id: '1',
       quiz_file: 'a',
       sort,
-      options: this.fb.array([this.createOption(), this.createOption(), this.createOption(), this.createOption()])
+      options: this.fb.array([this.createOption(), this.createOption(), this.createOption()])
     })
 
   }
@@ -124,8 +131,8 @@ export class EditMissionComponent implements OnInit {
   }
   createOption(): FormGroup {
     return this.fb.group({
-      option: ['', Validators.required],
-      correct: [false, Validators.required]
+      option: [''],
+      correct: [false]
     });
   }
 
@@ -137,15 +144,25 @@ export class EditMissionComponent implements OnInit {
   removeQuestion(i: number) {
     this.questions.removeAt(i);
   }
+  clearQuestionValidators() {
+    const questionsArray = this.questForm.get('questions') as FormArray;
+    questionsArray.controls.forEach(control => {
+      control.clearValidators();
+      control.updateValueAndValidity();
+    });
+    questionsArray.clearValidators(); // Also clear on the array itself
+    questionsArray.updateValueAndValidity();
+  }
   onSubmit() {
     this.submitted = true;
     const result = this.findEmptyFields(this.questForm?.value?.questions);
     if(result.length > 0){
       if(result[0]?.emptyFields.length > 0 || result[1]?.emptyFields.length > 0 || result[2]?.emptyFields.length > 0) {
-        let message = result.map((question:any) => 
-        `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
-        Swal.fire("Mission!", message, "error");
-        return;
+        this.clearQuestionValidators();
+        // let message = result.map((question:any) => 
+        // `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
+        // Swal.fire("Mission!", message, "error");
+        // return;
       }
     }
     

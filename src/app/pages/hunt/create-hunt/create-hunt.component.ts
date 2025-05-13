@@ -89,8 +89,8 @@ export class CreateHuntComponent implements OnInit {
   }
   createOption(): FormGroup {
     return this.fb.group({
-      option: ['', Validators.required],
-      correct: [false, Validators.required]
+      option: [''],
+      correct: [false]
     });
   }
      
@@ -101,15 +101,25 @@ export class CreateHuntComponent implements OnInit {
   removeQuestion(i:number) {  
     this.questions.removeAt(i);  
   } 
+  clearQuestionValidators() {
+    const questionsArray = this.questForm.get('questions') as FormArray;
+    questionsArray.controls.forEach(control => {
+      control.clearValidators();
+      control.updateValueAndValidity();
+    });
+    questionsArray.clearValidators(); // Also clear on the array itself
+    questionsArray.updateValueAndValidity();
+  }
   onSubmit(){
     this.submitted = true;
     const result = this.findEmptyFields(this.questForm?.value?.questions);
     if(result.length > 0){
       if(result[0]?.emptyFields.length > 0 || result[1]?.emptyFields.length > 0 || result[2]?.emptyFields.length > 0) {
-        let message = result.map((question:any) => 
-        `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
-        Swal.fire("Treasure HUNT!", message, "error");
-        return;
+        this.clearQuestionValidators();
+        // let message = result.map((question:any) => 
+        // `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
+        // Swal.fire("Treasure HUNT!", message, "error");
+        // return;
       }
     }
     if (this.questForm?.valid) {

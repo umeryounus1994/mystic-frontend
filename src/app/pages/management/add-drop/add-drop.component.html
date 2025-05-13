@@ -38,7 +38,17 @@
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                             </div>
-                         
+                            <div class="col-lg-3">
+                                <label class="form-label">Drop Type</label>
+                                <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
+                                formControlName="drop_type"
+                                [ngClass]="{ 'is-invalid': submitted && f['drop_type']?.errors }">
+                                    <option value="" selected disabled>Select Drop Type</option>
+                                    <option value='simple'>Simple</option>
+                                    <option value='image'>Picture</option>
+                                    <option value='video'>Video</option>
+                            </select>
+                            </div>
                           
                             <div class="col-lg-3">
                                 <label class="form-label">Latitude</label>
@@ -70,8 +80,14 @@
                                 <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index"
                                     [formGroupName]="i">
 
-                                    <div class="col-lg-7 mb-1">
+                                    <div class="col-lg-4 mb-1">
                                         <input type="text" class="form-control" formControlName="answer"
+                                            placeholder="Answer">
+                                    </div>
+                                    <div class="col-lg-3 mb-1">
+                                        <input type="file" class="form-control" formControlName="answer_image"
+                                        accept="image/*, video/*"
+                                        (change)="onFileSelectedOptions($event, 'option'+(i+1))"
                                             placeholder="Answer">
                                     </div>
                                     <div class="col-lg-2 mb-1">

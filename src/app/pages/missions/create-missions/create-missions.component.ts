@@ -106,8 +106,8 @@ export class CreateMissionsComponent implements OnInit {
        this.clearQuestionValidators();
         // let message = result.map((question:any) => 
         // `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
-        //Swal.fire("Mission!", message, "error");
-        //return;
+        // Swal.fire("Mission!", message, "error");
+        // return;
       }
     }
     if (this.questForm?.valid) {
