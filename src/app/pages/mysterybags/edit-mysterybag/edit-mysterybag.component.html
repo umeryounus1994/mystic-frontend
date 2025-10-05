@@ -1,0 +1,94 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Updating Mystery Bag.....</p>
+</ngx-spinner>
+<div class="row">
+    <div class="col-12 mb-3">
+        <h1 class="h3 mb-2 mb-sm-0">Update Mystery Bag</h1>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-12">
+        <div class="tab-content">
+            <div class="tab-pane show active" id="tab-1">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form class="row g-4 align-items-center" [formGroup]="mysteryBagForm" *ngIf="mysteryBagForm"
+                            (ngSubmit)="onSubmit()">
+
+                            <div class="col-12 mb-2">
+                                <label class="form-label">Bag Title</label>
+                                <input type="text" class="form-control" placeholder="Mystery Bag Title"
+                                    formControlName="bag_title"
+                                    [ngClass]="{ 'is-invalid': submitted && f['bag_title'].errors }">
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Bag Type</label>
+                                <select class="form-control" formControlName="bag_type"
+                                    [ngClass]="{ 'is-invalid': submitted && f['bag_type'].errors }">
+                                    <option value="collectible">Collectible</option>
+                                    <option value="view-only">View Only</option> 
+                                </select>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Visibility Radius (km)</label>
+                                <input type="number" class="form-control" placeholder="70" 
+                                    formControlName="visibility_radius"
+                                    [ngClass]="{ 'is-invalid': submitted && f['visibility_radius'].errors }">
+                            </div>
+
+                            <div class="col-12 mb-2">
+                                <label class="form-label">Bag Description</label>
+                                <textarea class="form-control" rows="3" placeholder="Description of the mystery bag"
+                                    formControlName="bag_description"></textarea>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Clue Text</label>
+                                <textarea class="form-control" rows="2" placeholder="Clue for finding the bag"
+                                    formControlName="clue_text"></textarea>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Reward Text</label>
+                                <textarea class="form-control" rows="2" placeholder="Description of the reward"
+                                    formControlName="reward_text"></textarea>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Latitude</label>
+                                <input type="number" step="any" class="form-control" placeholder="10.10"
+                                    formControlName="latitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Longitude</label>
+                                <input type="number" step="any" class="form-control" placeholder="10.10"
+                                    formControlName="longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Reward File</label>
+                                <input type="file" class="form-control" placeholder=""
+                                    (change)="onRewardFileSelected($event)">
+                                <small class="text-muted" *ngIf="existingRewardFile">
+                                    Current file: {{existingRewardFile}}
+                                </small>
+                            </div>
+
+                            <div class="d-sm-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mb-0">Update</button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

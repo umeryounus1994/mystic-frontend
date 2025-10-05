@@ -61,6 +61,17 @@
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mystery/add-mystery'" [routerLink]="['/mystery/add-mystery']">Add Mystery</a></li>
 			</ul>
 		  </li>
+		    
+		  <!-- Picture Mysteries -->
+		  <!-- <li class="nav-item" *ngIf="auth.isAdmin">
+			<a class="nav-link" data-bs-toggle="collapse" href="#collapsemysterybag" role="button" aria-expanded="false" aria-controls="collapsemysterybag">
+			  <i class="fas fa-user-tie fa-fw me-2"></i>Mystery Bags
+			</a>
+			<ul class="nav collapse flex-column" id="collapsemysterybag" data-bs-parent="#navbar-sidebar">
+			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mysterybag/list-mysterybag'" [routerLink]="['/mysterybag/list-mysterybag']">All Mystery Bags</a></li>
+			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mysterybag/add-mysterybag'" [routerLink]="['/mysterybag/add-mysterybag']">Add Mystery Bag</a></li>
+			</ul>
+		  </li> -->
   
 		  <!-- Section: Management -->
 		  <li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin">Management</li>
