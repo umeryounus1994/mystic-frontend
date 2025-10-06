@@ -98,6 +98,16 @@
 			</ul>
 		  </li>
   
+		  		  <!-- Drops -->
+		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
+			<a class="nav-link" data-bs-toggle="collapse" href="#collapseskygifts" role="button" aria-expanded="false" aria-controls="collapseskygifts">
+			  <i class="fas fa-user-tie fa-fw me-2"></i>Sky Dropped Gifts
+			</a>
+			<ul class="nav collapse flex-column" id="collapseskygifts" data-bs-parent="#navbar-sidebar">
+			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/skygifts/list-skygifts'" [routerLink]="['/skygifts/list-skygifts']">All Gifts</a></li>
+			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/skygifts/add-skygifts'" [routerLink]="['/skygifts/add-skygifts']">Add Gifts</a></li>
+			</ul>
+		  </li>
 		  <!-- Mythicas (Admin Only) -->
 		  <li class="nav-item" *ngIf="auth.isAdmin">
 			<a [routerLink]="['/management/mythicas']" class="nav-link" [class.active]="routeURL === '/management/mythicas'">

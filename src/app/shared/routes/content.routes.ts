@@ -27,6 +27,10 @@ export const content: Routes = [
     loadChildren: () => import("../../pages/mysterybags/mysterybags.module").then(module => module.MysterybagsModule)
   },
   {
+    path: 'skygifts',
+    loadChildren: () => import("../../pages/skygifts/skygifts.module").then(module => module.SkygiftsModule)
+  },
+  {
     path: 'management',
     loadChildren: () => import("../../pages/management/management.module").then(module => module.ManagementModule)
   }
