@@ -1,0 +1,284 @@
+<div class="row min-vh-100">
+    <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+        <p style="font-size: 20px; color: white">{{text}}</p>
+    </ngx-spinner>
+
+    <!-- left -->
+    <div
+        class="col-12 col-lg-4 d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 min-vh-100">
+        <div class="p-3 p-lg-4">
+            <!-- Title -->
+            <div class="text-center">
+                <h4 class="fw-bold">Welcome to our largest community</h4>
+                <p class="mb-0 h6 fw-light">Let's learn something new today!</p>
+            </div>
+            <!-- SVG Image -->
+            <img src="assets/images/element/02.svg" class="mt-4 w-100" alt="" style="max-width: 250px;">
+        </div>
+    </div>
+
+    <!-- Right -->
+    <div class="col-12 col-lg-8 min-vh-100">
+        <div class="row my-4">
+            <div class="col-sm-11 col-xl-9 mx-auto">
+                <!-- Title -->
+                <span class="mb-0 fs-1">🚀</span>
+                <h1 class="fs-2">Partner Registration</h1>
+                <p class="lead mb-4">Join our platform and start offering amazing activities!</p>
+
+                <!-- Form START -->
+                <form [formGroup]="partnerForm" (ngSubmit)="onSubmit()">
+                    <!-- Basic Information -->
+                    <div class="mb-3">
+                        <h6 class="text-muted fw-bold">Basic Information</h6>
+                    </div>
+
+                    <!-- Username and Email -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-group input-group-lg"
+                                [ngClass]="{ 'is-invalid': isFieldInvalid('username') }">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                    <i class="bi bi-person-fill"></i>
+                                </span>
+                                <input type="text" formControlName="username"
+                                    class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter username"
+                                    id="username">
+                            </div>
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('username')">
+                                Username is required and must be at least 3 characters
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label for="email" class="form-label">Email address</label>
+                            <div class="input-group input-group-lg"
+                                [ngClass]="{ 'is-invalid': isFieldInvalid('email') }">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </span>
+                                <input type="email" formControlName="email"
+                                    class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter email"
+                                    id="email">
+                            </div>
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                                Please enter a valid email address
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password and Confirm Password -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group input-group-lg"
+                                [ngClass]="{ 'is-invalid': isFieldInvalid('password') }">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password"
+                                    class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter password"
+                                    id="password">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
+                                    (click)="showPassword()">
+                                    <i *ngIf="fieldTextType" class="fas fa-eye-slash"></i>
+                                    <i *ngIf="!fieldTextType" class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
+                                Password must be at least 6 characters
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div class="input-group input-group-lg"
+                                [ngClass]="{ 'is-invalid': isFieldInvalid('confirm_password') || partnerForm.hasError('passwordMismatch') }">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input [type]="fieldTextTypeConfirm ? 'text' : 'password'"
+                                    formControlName="confirm_password"
+                                    class="form-control border-0 bg-light rounded-end ps-1"
+                                    placeholder="Confirm password" id="confirmPassword">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
+                                    (click)="showPasswordConfirm()">
+                                    <i *ngIf="fieldTextTypeConfirm" class="fas fa-eye-slash"></i>
+                                    <i *ngIf="!fieldTextTypeConfirm" class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('confirm_password')">
+                                Please confirm your password
+                            </div>
+                            <div class="invalid-feedback" *ngIf="partnerForm.hasError('passwordMismatch')">
+                                Passwords do not match
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Business Information -->
+                    <div class="mb-3 mt-4">
+                        <h6 class="text-muted fw-bold">Business Information</h6>
+                    </div>
+
+                    <div formGroupName="partner_profile">
+                        <!-- Business Name and Profile Image -->
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="businessName" class="form-label">Business Name</label>
+                                <div class="input-group input-group-lg"
+                                    [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('business_name') }">
+                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                        <i class="bi bi-building"></i>
+                                    </span>
+                                    <input type="text" formControlName="business_name"
+                                        class="form-control border-0 bg-light rounded-end ps-1"
+                                        placeholder="Enter business name" id="businessName">
+                                </div>
+                                <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('business_name')">
+                                    Business name is required
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="image" class="form-label">Profile Image (Optional)</label>
+                                <input type="file" class="form-control form-control-lg" id="image"
+                                    (change)="onImageSelect($event)" accept="image/*">
+                            </div>
+                        </div>
+
+                        <!-- Business Documents and Phone Number -->
+                        <div class="row">
+
+
+                            <div class="col-md-6 mb-4">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <div class="input-group input-group-lg"
+                                    [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('phone') }">
+                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                        <i class="bi bi-telephone-fill"></i>
+                                    </span>
+                                    <input type="tel" formControlName="phone"
+                                        class="form-control border-0 bg-light rounded-end ps-1"
+                                        placeholder="Enter phone number" id="phone">
+                                </div>
+                                <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('phone')">
+                                    Phone number is required
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="routingNumber" class="form-label">Routing Number</label>
+                                <div class="input-group input-group-lg"
+                                    [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('routing_number') }">
+                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                        <i class="bi bi-bank"></i>
+                                    </span>
+                                    <input type="text" formControlName="routing_number"
+                                        class="form-control border-0 bg-light rounded-end ps-1"
+                                        placeholder="Enter routing number" id="routingNumber">
+                                </div>
+                                <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('routing_number')">
+                                    Routing number is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Business Description -->
+                        <div class="mb-4">
+                            <label for="businessDescription" class="form-label">Business Description</label>
+                            <textarea class="form-control form-control-lg bg-light border-0"
+                                formControlName="business_description" rows="3"
+                                placeholder="Describe your business and services" id="businessDescription"
+                                [class.is-invalid]="isPartnerFieldInvalid('business_description')"></textarea>
+                            <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('business_description')">
+                                Business description is required
+                            </div>
+                        </div>
+
+                        <!-- Bank Details -->
+                        <div class="mb-3 mt-4">
+                            <h6 class="text-muted fw-bold">Bank Details</h6>
+                        </div>
+
+                        <div formGroupName="bank_details">
+                            <!-- Account Holder and Account Number -->
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="accountHolder" class="form-label">Account Holder Name</label>
+                                    <div class="input-group input-group-lg"
+                                        [ngClass]="{ 'is-invalid': isBankFieldInvalid('account_holder') }">
+                                        <span
+                                            class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                            <i class="bi bi-person-badge"></i>
+                                        </span>
+                                        <input type="text" formControlName="account_holder"
+                                            class="form-control border-0 bg-light rounded-end ps-1"
+                                            placeholder="Enter account holder name" id="accountHolder">
+                                    </div>
+                                    <div class="invalid-feedback" *ngIf="isBankFieldInvalid('account_holder')">
+                                        Account holder name is required
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label for="accountNumber" class="form-label">Account Number</label>
+                                    <div class="input-group input-group-lg"
+                                        [ngClass]="{ 'is-invalid': isBankFieldInvalid('account_number') }">
+                                        <span
+                                            class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
+                                            <i class="bi bi-credit-card"></i>
+                                        </span>
+                                        <input type="text" formControlName="account_number"
+                                            class="form-control border-0 bg-light rounded-end ps-1"
+                                            placeholder="Enter account number" id="accountNumber">
+                                    </div>
+                                    <div class="invalid-feedback" *ngIf="isBankFieldInvalid('account_number')">
+                                        Account number is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Routing Number -->
+
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" formControlName="agreeTerms"
+                                [class.is-invalid]="isFieldInvalid('agreeTerms')">
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the <a href="javascript:void(0);">Terms & Conditions</a> and
+                                <a href="javascript:void(0);">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('agreeTerms')">
+                            You must agree to the terms and conditions
+                        </div>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="align-items-center mt-0">
+                        <div class="d-grid">
+                            <button class="btn btn-primary mb-0" type="submit"
+                                [disabled]="partnerForm.invalid || isSubmitting">
+                                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+                                {{ isSubmitting ? 'Registering...' : 'Register as Partner' }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <p class="text-center mt-2">
+                    <span>Already have an account?</span>
+                    <a routerLink="/auth/login">
+                        <span>&nbsp;Sign in instead</span>
+                    </a>
+                </p>
+                <!-- Form END -->
+            </div>
+        </div> <!-- Row END -->
+    </div>
+</div> <!-- Row END -->

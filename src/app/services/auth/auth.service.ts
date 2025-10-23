@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { RestApiService } from '../api/rest-api.service';
 import { Router } from '@angular/router';
 import { StorageService } from '../storage/storage.service';
+import { Observable, from } from 'rxjs';
+import { PartnerRegistrationRequest } from '../../models/PartnerRegistrationRequest.model';
 
 @Injectable({
   providedIn: 'root'
@@ -82,5 +84,52 @@ export class AuthService {
       this.isSubAdmin = true;
     }
    
+  }
+
+  registerPartner(partnerData: PartnerRegistrationRequest): Observable<any> {
+    const formData = new FormData();
+    
+    // Append basic fields
+    formData.append('username', partnerData.username);
+    formData.append('email', partnerData.email);
+    formData.append('password', partnerData.password);
+    formData.append('confirm_password', partnerData.confirm_password);
+    formData.append('user_type', partnerData.user_type);
+    
+    // Append image if provided
+    if (partnerData.image) {
+      formData.append('image', partnerData.image);
+    }
+    
+    // Append partner profile as JSON
+    formData.append('partner_profile', JSON.stringify({
+      business_name: partnerData.partner_profile.business_name,
+      business_description: partnerData.partner_profile.business_description,
+      phone: partnerData.partner_profile.phone,
+      commission_rate: partnerData.partner_profile.commission_rate,
+      bank_details: partnerData.partner_profile.bank_details,
+      approval_status: partnerData.partner_profile.approval_status
+    }));
+    
+
+    return from(this.api.postData('user/partner-signup', formData));
+  }
+
+  registerFamily(familyData: any): Observable<any> {
+    const formData = new FormData();
+    
+    // Append basic fields
+    formData.append('username', familyData.username);
+    formData.append('email', familyData.email);
+    formData.append('password', familyData.password);
+    formData.append('confirm_password', familyData.confirm_password);
+    formData.append('user_type', familyData.user_type);
+    
+    // Append image if provided
+    if (familyData.image) {
+      formData.append('image', familyData.image);
+    }
+    
+    return from(this.api.postData('user/family-signup', formData));
   }
 }

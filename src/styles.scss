@@ -117,3 +117,45 @@ table.dataTable th.dt-type-numeric {
     font-size: 16px; /* Adjust font size as needed */
 }
 
+// Enhanced badge styles for user types
+.badge.bg-primary.bg-opacity-15 {
+    background-color: rgba(13, 110, 253, 0.1) !important;
+    border: 1px solid rgba(13, 110, 253, 0.2);
+}
+
+.badge.bg-secondary.bg-opacity-15 {
+    background-color: rgba(108, 117, 125, 0.1) !important;
+    border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+.badge.bg-success.bg-opacity-15 {
+    background-color: rgba(25, 135, 84, 0.1) !important;
+    border: 1px solid rgba(25, 135, 84, 0.2);
+}
+
+.badge.bg-danger.bg-opacity-15 {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.badge.bg-warning.bg-opacity-15 {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.badge.bg-info.bg-opacity-15 {
+    background-color: rgba(13, 202, 240, 0.1) !important;
+    border: 1px solid rgba(13, 202, 240, 0.2);
+}
+
+// Type badge specific styling
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+    
+    i {
+        font-size: 0.7rem;
+    }
+}
+

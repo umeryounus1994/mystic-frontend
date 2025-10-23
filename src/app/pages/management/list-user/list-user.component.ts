@@ -23,8 +23,20 @@ export class ListUserComponent implements OnInit {
   }
 
   allUsers : any = [];
+  filteredUsers : any = [];
+  selectedFilter = 'all';
   examId = null;
   permissions: string[] = [];
+
+  // Filter options
+  filterOptions = [
+    { value: 'all', label: 'All Users' },
+    { value: 'admin', label: 'Admin' },
+    { value: 'subadmin', label: 'Sub Admin' },
+    { value: 'user', label: 'Users' },
+    { value: 'family', label: 'Family' },
+    { value: 'partner', label: 'Partner' }
+  ];
 
   // Your available permissions
   permissionList = [
@@ -58,9 +70,35 @@ export class ListUserComponent implements OnInit {
     .then((response: any) => {
         this.sp.hide();
         this.allUsers = response?.data;
+        this.applyFilter();
     }).catch((error: any) => {
       this.sp.hide();
     });
+  }
+
+  applyFilter() {
+    if (this.selectedFilter === 'all') {
+      this.filteredUsers = this.allUsers;
+    } else if (this.selectedFilter === 'user') {
+      this.filteredUsers = this.allUsers.filter((user: any) => user.type === 'user');
+    } else if (this.selectedFilter === 'family') {
+      this.filteredUsers = this.allUsers.filter((user: any) => 
+        user.type === 'family' || (user.type === 'user' && user.type === 'family')
+      );
+    } else if (this.selectedFilter === 'partner') {
+      this.filteredUsers = this.allUsers.filter((user: any) => 
+        user.type === 'partner' || (user.type === 'user' && user.type === 'partner')
+      );
+    } else {
+      this.filteredUsers = this.allUsers.filter((user: any) => 
+        user.type === this.selectedFilter || user.user_type === this.selectedFilter
+      );
+    }
+  }
+
+  onFilterChange(filter: string) {
+    this.selectedFilter = filter;
+    this.applyFilter();
   }
 
   async getAllAnalytics() {
@@ -252,6 +290,52 @@ export class ListUserComponent implements OnInit {
       const checkbox = document.getElementById(p.id) as HTMLInputElement;
       if (checkbox) checkbox.checked = false;
     });
+  }
+
+  approveUser(userId: any) {
+    Swal.fire({
+      title: "Are you sure you want to approve this user?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Approve",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.updateApprovalStatus(userId, 'approved');
+      }
+    });
+  }
+
+  rejectUser(userId: any) {
+    Swal.fire({
+      title: "Are you sure you want to reject this user?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Reject",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.updateApprovalStatus(userId, 'rejected');
+      }
+    });
+  }
+
+  updateApprovalStatus(userId: any, status: string) {
+    this.sp.show();
+    const data = {
+      approval_status: status
+    };
+    this.api.post(`user/partner/${userId}/approval-status`, data)
+      .then((response: any) => {
+        this.sp.hide();
+        const statusText = status === 'approved' ? 'Approved' : 'Rejected';
+        Swal.fire("User!", `${statusText} Successfully`, "success");
+        this.getAllUsers();
+        this.getAllAnalytics();
+      }, err => {
+        this.helper.failureToast(err?.error?.message);
+        this.sp.hide();
+      });
   }
   
 }

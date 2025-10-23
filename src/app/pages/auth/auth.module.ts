@@ -7,13 +7,17 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResetUserPasswordComponent } from './reset-user-password/reset-user-password.component';
+import { PartnerRegistrationComponent } from './partner-registration/partner-registration.component';
+import { FamilyRegistrationComponent } from './family-registration/family-registration.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     ResetPasswordComponent,
-    ResetUserPasswordComponent
+    ResetUserPasswordComponent,
+    PartnerRegistrationComponent,
+    FamilyRegistrationComponent
   ],
   imports: [
     CommonModule,

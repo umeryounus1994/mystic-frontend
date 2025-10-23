@@ -1,0 +1,35 @@
+
+
+.auth-wrapper {
+  .card {
+    box-shadow: 0 4px 24px 0 rgba(34, 41, 47, 0.1);
+  }
+
+  .form-check-input:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+  }
+
+  .btn-primary {
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .text-muted {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #ebe9f1;
+    padding-bottom: 0.25rem;
+  }
+
+  .invalid-feedback {
+    display: block;
+  }
+
+  .spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+  }
+}
