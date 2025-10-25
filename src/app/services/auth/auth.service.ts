@@ -15,9 +15,8 @@ export class AuthService {
 
   isAdmin = false;
   isSubAdmin = false;
-  isSurveyor = false;
-  isSupplier = false;
-  isTechnician = false;
+  isFamily = false;
+  isPartner = false;
   constructor(private api: RestApiService, private router: Router, private storage: StorageService) {
 
     if(!(Object.keys(this.storage.userDetails).length === 0 && this.storage.userDetails.constructor === Object)) {
@@ -34,22 +33,32 @@ export class AuthService {
        
         if (response.data) {
           if(response?.data?.user && !response?.data?.user_sub){
+            // Check if user type is 'user' - block login
+            if(response.data.user.user_type === 'user') {
+              reject({ error: { message: 'You should login through the mobile app' } });
+              return;
+            }
+            
             localStorage.setItem('mystic9834!@', JSON.stringify(response.data.user));
             this.storage.saveUserDetails(response.data.user);
             this.isLoggedIn = true;
             this.user = response.data.user;
-            this.isAdmin = true;
-            this.isSubAdmin = false;
-              resolve('open');
+            this.roleCheck();
+            resolve('open');
           }
           if(response.data.user_sub && !response?.data?.user){
+            // Check if user_sub type is 'user' - block login
+            if(response.data.user_sub.user_type === 'user') {
+              reject({ error: { message: 'You should login through the mobile app' } });
+              return;
+            }
+            
             localStorage.setItem('mystic9834!@', JSON.stringify(response.data.user_sub));
             this.storage.saveUserDetails(response.data.user_sub);
             this.isLoggedIn = true;
             this.user = response.data.user_sub;
-            this.isSubAdmin = true;
-            this.isAdmin = false;
-              resolve('open');
+            this.roleCheck();
+            resolve('open');
           }
         } else {
             resolve('false');
@@ -66,6 +75,8 @@ export class AuthService {
     this.isLoggedIn = false;
     this.isAdmin = false;
     this.isSubAdmin = false;
+    this.isPartner = false;
+    this.isFamily = false;
     this.user = undefined;
     localStorage.clear();
     this.storage.removeUserDetails();
@@ -78,12 +89,27 @@ export class AuthService {
     if (this.user.user_type == 'admin') {
       this.isAdmin = true;
       this.isSubAdmin = false;
+      this.isPartner = false;
+      this.isFamily = false;
     }
     if (this.user.user_type == 'subadmin')  {
       this.isAdmin = false;
       this.isSubAdmin = true;
+      this.isPartner = false;
+      this.isFamily = false;
     }
-   
+    if (this.user.user_type == 'family') {
+      this.isAdmin = false;
+      this.isSubAdmin = false;
+      this.isPartner = false;
+      this.isFamily = true;
+    }
+    if (this.user.user_type == 'partner') {
+      this.isAdmin = false;
+      this.isSubAdmin = false;
+      this.isPartner = true;
+      this.isFamily = false;
+    }
   }
 
   registerPartner(partnerData: PartnerRegistrationRequest): Observable<any> {

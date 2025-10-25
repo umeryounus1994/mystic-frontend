@@ -159,3 +159,38 @@ table.dataTable th.dt-type-numeric {
     }
 }
 
+// Enhanced sidebar styles
+.sidebar.navbar-expand-xl {
+  width: 280px !important;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+// Page content adjustment for sidebar
+.page-content {
+  margin-left: 280px;
+  transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 1199.98px) {
+  .sidebar.navbar-expand-xl {
+    width: 260px !important;
+  }
+  
+  .page-content {
+    margin-left: 0;
+  }
+}
+
+// Offcanvas enhancements
+.offcanvas-start {
+  border-right: none !important;
+}
+
+.offcanvas-body {
+  padding: 0 !important;
+}
+

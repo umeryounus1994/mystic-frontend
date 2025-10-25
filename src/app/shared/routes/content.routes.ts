@@ -33,5 +33,9 @@ export const content: Routes = [
   {
     path: 'management',
     loadChildren: () => import("../../pages/management/management.module").then(module => module.ManagementModule)
-  }
+  },
+  {
+    path: 'partner',
+    loadChildren: () => import("../../pages/partner/partner.module").then(module => module.PartnerModule)
+  },
 ];

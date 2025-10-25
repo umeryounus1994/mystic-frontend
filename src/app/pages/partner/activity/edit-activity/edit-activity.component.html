@@ -1,0 +1,217 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Updating Activity.....</p>
+</ngx-spinner>
+
+<!-- Header -->
+<div class="row mb-4">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="goBack()">
+                <i class="bi bi-arrow-left me-2"></i>Back to Activity
+            </button>
+            <h1 class="h3 mb-0">Edit Activity</h1>
+        </div>
+    </div>
+</div>
+
+<!-- Main Form -->
+<div class="row g-4">
+    <div class="col-xl-12">
+        <div class="card shadow">
+            <div class="card-body">
+                <form class="row g-4" [formGroup]="activityForm" *ngIf="activityForm" (ngSubmit)="onSubmit()">
+                    
+                    <!-- Basic Information -->
+                    <div class="col-12">
+                        <h5 class="mb-3">Basic Information</h5>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <label class="form-label">Activity Title *</label>
+                        <input type="text" class="form-control" placeholder="Enter activity title" 
+                               formControlName="title"
+                               [ngClass]="{ 'is-invalid': submitted && f['title'].errors }">
+                        <div *ngIf="submitted && f['title'].errors" class="invalid-feedback">
+                            <div *ngIf="f['title'].errors?.['required']">Title is required</div>
+                            <div *ngIf="f['title'].errors?.['minlength']">Title must be at least 3 characters</div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <label class="form-label">Category *</label>
+                        <select class="form-select" formControlName="category"
+                                [ngClass]="{ 'is-invalid': submitted && f['category'].errors }">
+                            <option value="" disabled>Select Category</option>
+                            <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label}}</option>
+                        </select>
+                        <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
+                            <div *ngIf="f['category'].errors?.['required']">Category is required</div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Description *</label>
+                        <textarea class="form-control" rows="4" placeholder="Enter activity description" 
+                                  formControlName="description"
+                                  [ngClass]="{ 'is-invalid': submitted && f['description'].errors }"></textarea>
+                        <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+                            <div *ngIf="f['description'].errors?.['required']">Description is required</div>
+                            <div *ngIf="f['description'].errors?.['minlength']">Description must be at least 10 characters</div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing & Duration -->
+                    <div class="col-12 mt-4">
+                        <h5 class="mb-3">Pricing & Duration</h5>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="form-label">Price ($) *</label>
+                        <input type="number" class="form-control" placeholder="0.00" 
+                               formControlName="price" min="0" step="0.01"
+                               [ngClass]="{ 'is-invalid': submitted && f['price'].errors }">
+                        <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+                            <div *ngIf="f['price'].errors?.['required']">Price is required</div>
+                            <div *ngIf="f['price'].errors?.['min']">Price must be 0 or greater</div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="form-label">Duration (minutes) *</label>
+                        <input type="number" class="form-control" placeholder="60" 
+                               formControlName="duration" min="15"
+                               [ngClass]="{ 'is-invalid': submitted && f['duration'].errors }">
+                        <div *ngIf="submitted && f['duration'].errors" class="invalid-feedback">
+                            <div *ngIf="f['duration'].errors?.['required']">Duration is required</div>
+                            <div *ngIf="f['duration'].errors?.['min']">Duration must be at least 15 minutes</div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="form-label">Max Participants *</label>
+                        <input type="number" class="form-control" placeholder="10" 
+                               formControlName="max_participants" min="1"
+                               [ngClass]="{ 'is-invalid': submitted && f['max_participants'].errors }">
+                        <div *ngIf="submitted && f['max_participants'].errors" class="invalid-feedback">
+                            <div *ngIf="f['max_participants'].errors?.['required']">Max participants is required</div>
+                            <div *ngIf="f['max_participants'].errors?.['min']">Must be at least 1 participant</div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-12 mt-4">
+                        <h5 class="mb-3">Location</h5>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Address *</label>
+                        <input type="text" class="form-control" placeholder="Enter full address" 
+                               formControlName="address"
+                               [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
+                        <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
+                            <div *ngIf="f['address'].errors?.['required']">Address is required</div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <label class="form-label">Latitude *</label>
+                        <input type="number" class="form-control" placeholder="40.7128" 
+                               formControlName="latitude" step="any"
+                               [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
+                        <div *ngIf="submitted && f['latitude'].errors" class="invalid-feedback">
+                            <div *ngIf="f['latitude'].errors?.['required']">Latitude is required</div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <label class="form-label">Longitude *</label>
+                        <input type="number" class="form-control" placeholder="-74.0060" 
+                               formControlName="longitude" step="any"
+                               [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
+                        <div *ngIf="submitted && f['longitude'].errors" class="invalid-feedback">
+                            <div *ngIf="f['longitude'].errors?.['required']">Longitude is required</div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Images -->
+                    <div class="col-12 mt-4" *ngIf="existingImages.length > 0">
+                        <h5 class="mb-3">Current Images</h5>
+                        <div class="row g-3">
+                            <div *ngFor="let image of existingImages; let i = index" class="col-md-3">
+                                <div class="position-relative">
+                                    <img [src]="image" class="img-fluid rounded shadow-sm" alt="Activity Image">
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
+                                            (click)="removeExistingImage(i)">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Images -->
+                    <div class="col-12 mt-4">
+                        <h5 class="mb-3">Add New Images</h5>
+                        <input type="file" class="form-control" multiple accept="image/*" 
+                               (change)="onImageSelected($event)">
+                        <small class="text-muted">Select multiple images for your activity</small>
+                    </div>
+
+                    <!-- Time Slots -->
+                    <div class="col-12 mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Time Slots</h5>
+                            <button type="button" class="btn btn-primary btn-sm" (click)="addSlot()">
+                                <i class="bi bi-plus me-1"></i>Add Slot
+                            </button>
+                        </div>
+                    </div>
+
+                    <div formArrayName="slots">
+                        <div *ngFor="let slot of slots.controls; let i = index" [formGroupName]="i" 
+                             class="col-12 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0">Slot {{i + 1}}</h6>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                (click)="removeSlot(i)" [disabled]="slots.length === 1">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Start Time *</label>
+                                            <input type="datetime-local" class="form-control" 
+                                                   formControlName="start_time">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">End Time *</label>
+                                            <input type="datetime-local" class="form-control" 
+                                                   formControlName="end_time">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Available Spots *</label>
+                                            <input type="number" class="form-control" placeholder="10" 
+                                                   formControlName="available_spots" min="1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-12">
+                        <div class="d-sm-flex justify-content-end">
+                            <button type="button" class="btn btn-light me-2" (click)="goBack()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Activity</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

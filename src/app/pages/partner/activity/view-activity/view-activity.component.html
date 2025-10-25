@@ -1,0 +1,187 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Loading Activity Details....</p>
+</ngx-spinner>
+
+<!-- Header -->
+<div class="row mb-4">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="goBack()">
+                <i class="bi bi-arrow-left me-2"></i>Back to Activities
+            </button>
+            <h1 class="h3 mb-0 d-inline">{{activity.title}}</h1>
+        </div>
+        <div class="mt-2 mt-sm-0">
+            <button class="btn btn-outline-primary me-2" (click)="editActivity()">
+                <i class="bi bi-pencil me-2"></i>Edit
+            </button>
+            <button class="btn btn-outline-danger" (click)="deleteActivity()">
+                <i class="bi bi-trash me-2"></i>Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Activity Images -->
+<div class="row mb-4" *ngIf="activity.images && activity.images.length > 0">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Images</h5>
+                <div class="row g-3">
+                    <div *ngFor="let image of activity.images" class="col-md-4 col-lg-3">
+                        <img [src]="image" class="img-fluid rounded shadow-sm" alt="Activity Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="row g-4">
+    <!-- Basic Information -->
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title">Activity Details</h5>
+                    <span class="badge" [ngClass]="getStatusBadgeClass(activity.status)">
+                        {{activity.status | titlecase}}
+                    </span>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-12">
+                        <h6>Description</h6>
+                        <p class="text-muted">{{activity.description}}</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Category</h6>
+                        <span class="badge bg-light text-dark">
+                            <i [class]="getCategoryIcon(activity.category)" class="me-1"></i>
+                            {{activity.category | titlecase}}
+                        </span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Price</h6>
+                        <p class="mb-0">${{activity.price}}</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Duration</h6>
+                        <p class="mb-0">{{activity.duration}} minutes</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Max Participants</h6>
+                        <p class="mb-0">{{activity.max_participants}} people</p>
+                    </div>
+                    
+                    <div class="col-12">
+                        <h6>Location</h6>
+                        <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{activity.address}}</p>
+                        <small class="text-muted" *ngIf="activity.location?.coordinates">
+                            Coordinates: {{activity.location.coordinates[1]}}, {{activity.location.coordinates[0]}}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Information -->
+    <div class="col-lg-4">
+        <!-- Partner Information -->
+        <div class="card mb-4" *ngIf="activity.partner_id">
+            <div class="card-body">
+                <h5 class="card-title">Partner Information</h5>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar avatar-lg me-3">
+                        <div class="avatar-img rounded-circle bg-primary d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person text-white fs-4"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{activity.partner_id.first_name}} {{activity.partner_id.last_name}}</h6>
+                        <small class="text-muted">{{activity.partner_id.partner_profile?.business_name || 'Partner'}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activity Stats -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Activity Information</h5>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="text-center">
+                            <h4 class="text-primary mb-0">{{activity.slots?.length || 0}}</h4>
+                            <small class="text-muted">Time Slots</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <h4 class="text-success mb-0">${{activity.price}}</h4>
+                            <small class="text-muted">Price</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                        <small class="text-muted">
+                            <strong>Created:</strong> {{getFormatedDate(activity.created_at)}}<br>
+                            <strong>Last Updated:</strong> {{getFormatedDate(activity.updated_at)}}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Time Slots -->
+<div class="row mt-4" *ngIf="activity.slots && activity.slots.length > 0">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Available Time Slots</h5>
+                <div class="row g-3">
+                    <div *ngFor="let slot of activity.slots; let i = index" class="col-md-6 col-lg-4">
+                        <div class="border rounded p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0">Slot {{i + 1}}</h6>
+                                <span class="badge" [ngClass]="getSlotStatusBadgeClass(slot.status)">
+                                    {{slot.status | titlecase}}
+                                </span>
+                            </div>
+                            <p class="mb-1">
+                                <i class="bi bi-clock me-2"></i>
+                                <strong>Start:</strong> {{slot.start_time | date:'medium'}}
+                            </p>
+                            <p class="mb-1">
+                                <i class="bi bi-clock-history me-2"></i>
+                                <strong>End:</strong> {{slot.end_time | date:'medium'}}
+                            </p>
+                            <p class="mb-1">
+                                <i class="bi bi-people me-2"></i>
+                                <strong>Available:</strong> {{slot.available_spots}}
+                            </p>
+                            <p class="mb-0">
+                                <i class="bi bi-person-check me-2"></i>
+                                <strong>Booked:</strong> {{slot.booked_spots}}
+                            </p>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <strong>Remaining:</strong> {{slot.available_spots - slot.booked_spots}} spots
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

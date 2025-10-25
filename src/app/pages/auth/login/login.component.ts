@@ -46,14 +46,20 @@ export class LoginComponent implements OnInit {
           if (this.auth.isSubAdmin === true) {
             this.router.navigateByUrl('quest/list-quest');
           }
+          if (this.auth.isFamily === true) {
+            this.router.navigateByUrl('dashboard/family');
+          }
+          if (this.auth.isPartner === true) {
+            this.router.navigateByUrl('dashboard/partner');
+          }
         }
       }).catch((error: any) => {
+        this.isSubmitted = false;
+        this.sp.hide();
         if(error.status === 400) {
-          this.sp.hide()
           this.helper.failureToast(error?.error.message)
         }
         if(error.status === 404) {
-          this.sp.hide()
           this.helper.failureToast(error?.error.message)
         }
       });

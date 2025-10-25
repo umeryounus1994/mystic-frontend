@@ -1,4 +1,5 @@
-<nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark">
+<!-- Admin/SubAdmin Sidebar -->
+<nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark" *ngIf="auth.isAdmin || auth.isSubAdmin || auth.isPartner || auth.isFamily">
 	<div class="d-flex align-items-center">
 	  <a class="navbar-brand" [routerLink]="['/dashboard/admin']"></a>
 	</div>
@@ -13,6 +14,11 @@
 			  <i class="bi bi-house fa-fw me-2"></i>Admin Dashboard
 			</a>
 		  </li>
+		  <li class="nav-item" *ngIf="auth.isPartner">
+			<a [routerLink]="['/dashboard/partner']" class="nav-link" [class.active]="routeURL === '/dashboard/partner'">
+			  <i class="bi bi-house fa-fw me-2"></i>Partner Dashboard
+			</a>
+		  </li>
   
 		  <li class="nav-item ms-2 my-2">Content Management</li>
   
@@ -24,8 +30,6 @@
 			<ul class="nav collapse flex-column" id="collapsequest" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']">All Quests</a></li>
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']">Create Quest</a></li>
-			  <li class="nav-item" *ngIf="auth.isAdmin"><a class="nav-link" [class.active]="routeURL === '/quest/list-quest-group'" [routerLink]="['/quest/list-quest-group']">All Quest Groups</a></li>
-			  <li class="nav-item" *ngIf="auth.isAdmin"><a class="nav-link" [class.active]="routeURL === '/quest/create-quest-group'" [routerLink]="['/quest/create-quest-group']">Create Quest Group</a></li>
 			</ul>
 		  </li>
   
@@ -52,7 +56,7 @@
 		  </li>
   
 		  <!-- Picture Mysteries -->
-		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Picture Mysteries') || auth.isAdmin">
+		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Picture Mysteries')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapsemysteries" role="button" aria-expanded="false" aria-controls="collapsemysteries">
 			  <i class="fas fa-user-tie fa-fw me-2"></i>Picture Mysteries
 			</a>
@@ -61,17 +65,16 @@
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mystery/add-mystery'" [routerLink]="['/mystery/add-mystery']">Add Mystery</a></li>
 			</ul>
 		  </li>
-		    
-		  <!-- Picture Mysteries -->
-		  <!-- <li class="nav-item" *ngIf="auth.isAdmin">
-			<a class="nav-link" data-bs-toggle="collapse" href="#collapsemysterybag" role="button" aria-expanded="false" aria-controls="collapsemysterybag">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Mystery Bags
+
+		  <li class="nav-item" *ngIf="auth.isPartner">
+			<a class="nav-link" data-bs-toggle="collapse" href="#collapseactivity" role="button" aria-expanded="false" aria-controls="collapseactivity">
+			  <i class="fas fa-user-tie fa-fw me-2"></i>Activities
 			</a>
-			<ul class="nav collapse flex-column" id="collapsemysterybag" data-bs-parent="#navbar-sidebar">
-			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mysterybag/list-mysterybag'" [routerLink]="['/mysterybag/list-mysterybag']">All Mystery Bags</a></li>
-			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mysterybag/add-mysterybag'" [routerLink]="['/mysterybag/add-mysterybag']">Add Mystery Bag</a></li>
+			<ul class="nav collapse flex-column" id="collapseactivity" data-bs-parent="#navbar-sidebar">
+			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/partner/list-activities'" [routerLink]="['/partner/list-activities']">All Activities</a></li>
+			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/partner/create-activity'" [routerLink]="['/partner/create-activity']">Create Activity</a></li>
 			</ul>
-		  </li> -->
+		  </li>
   
 		  <!-- Section: Management -->
 		  <li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin">Management</li>
@@ -98,7 +101,7 @@
 			</ul>
 		  </li>
   
-		  		  <!-- Drops -->
+		  <!-- Sky Dropped Gifts -->
 		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapseskygifts" role="button" aria-expanded="false" aria-controls="collapseskygifts">
 			  <i class="fas fa-user-tie fa-fw me-2"></i>Sky Dropped Gifts
@@ -108,6 +111,7 @@
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/skygifts/add-skygifts'" [routerLink]="['/skygifts/add-skygifts']">Add Gifts</a></li>
 			</ul>
 		  </li>
+  
 		  <!-- Mythicas (Admin Only) -->
 		  <li class="nav-item" *ngIf="auth.isAdmin">
 			<a [routerLink]="['/management/mythicas']" class="nav-link" [class.active]="routeURL === '/management/mythicas'">
@@ -119,4 +123,9 @@
 	  </div>
 	</div>
   </nav>
+
+  <!-- Family/Partner - No Sidebar, Hide Everything -->
+  <div *ngIf="auth.isFamily || auth.isPartner" class="d-none">
+    <!-- Hidden content for family/partner users -->
+  </div>
   

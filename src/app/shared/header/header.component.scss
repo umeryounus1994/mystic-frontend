@@ -1,0 +1,339 @@
+
+.navbar.top-bar {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+
+  &.navbar-sticky-on {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+  }
+}
+
+// Sidebar toggle button
+.navbar-toggler {
+  border: none !important;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 195, 247, 0.4);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.3);
+  }
+
+  i {
+    color: #fff !important;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover i {
+    transform: scale(1.1);
+  }
+}
+
+// Profile dropdown
+.avatar {
+  position: relative;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  background: linear-gradient(135deg, #4fc3f7, #29b6f6) padding-box,
+              linear-gradient(135deg, #4fc3f7, #29b6f6) border-box;
+  border-radius: 50%;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(79, 195, 247, 0.3);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  .avatar-img {
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .avatar-img {
+    transform: scale(1.05);
+  }
+}
+
+// Dropdown menu
+.dropdown-menu {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  background: #fff;
+  backdrop-filter: blur(10px);
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  min-width: 200px;
+  animation: dropdownSlideIn 0.3s ease;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+  }
+
+  .dropdown-item {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin: 0.25rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.1), transparent);
+      transition: left 0.5s;
+      z-index: 0;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      transform: translateX(3px);
+      color: #4fc3f7;
+
+      &::before {
+        left: 100%;
+      }
+
+      i {
+        transform: scale(1.1);
+        color: #4fc3f7;
+      }
+    }
+
+    &.bg-danger-soft-hover:hover {
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+      color: #dc3545;
+      transform: translateX(3px);
+
+      i {
+        color: #dc3545;
+      }
+    }
+
+    i {
+      transition: all 0.3s ease;
+      width: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    // Ensure text stays above the animation
+    span, text {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  // User info section
+  .border-bottom {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .dropdown-divider {
+    margin: 0.5rem 0.25rem;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Breadcrumb area (if you want to add one)
+.breadcrumb-area {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  .breadcrumb {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+
+    .breadcrumb-item {
+      color: #6c757d;
+      font-weight: 500;
+
+      &.active {
+        color: #4fc3f7;
+        font-weight: 600;
+      }
+
+      a {
+        color: #6c757d;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #4fc3f7;
+        }
+      }
+    }
+  }
+}
+
+// Welcome message
+.welcome-message {
+  background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-right: 1rem;
+  box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
+  animation: pulse 2s infinite;
+
+  @keyframes pulse {
+    0% { box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3); }
+    50% { box-shadow: 0 6px 20px rgba(79, 195, 247, 0.5); }
+    100% { box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3); }
+  }
+}
+
+// Notification badge
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  animation: bounce 1s infinite;
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-5px); }
+    60% { transform: translateY(-3px); }
+  }
+}
+
+// Search bar (if you want to add one)
+.search-bar {
+  position: relative;
+  max-width: 400px;
+
+  .form-control {
+    border: 2px solid transparent;
+    border-radius: 2rem;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: #4fc3f7;
+      box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.1);
+      background: #fff;
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    transition: color 0.3s ease;
+  }
+
+  &:focus-within .search-icon {
+    color: #4fc3f7;
+  }
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .navbar.top-bar {
+    padding: 0.5rem 0;
+  }
+
+  .welcome-message {
+    display: none;
+  }
+
+  .search-bar {
+    max-width: 200px;
+  }
+}
+

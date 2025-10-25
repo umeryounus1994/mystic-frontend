@@ -1,38 +1,57 @@
 <nav class="navbar top-bar navbar-light border-bottom py-0 py-xl-3">
     <div class="container-fluid p-0">
         <div class="d-flex align-items-center w-100">
+            <!-- Mobile sidebar toggle -->
             <div class="d-flex align-items-center d-xl-none">
-                <!-- <a class="navbar-brand" [routerLink]="['/dashboard/admin']">
-                    <img class="light-mode-item navbar-brand-item h-30px" src="assets/images/examify_logo.svg" alt="">
-                    <img class="dark-mode-item navbar-brand-item h-30px" src="assets/images/examify_logo.svg" alt="">
-                </a> -->
-            </div>
-            <div class="navbar-expand-xl sidebar-offcanvas-menu">
-                <button class="navbar-toggler me-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar" aria-expanded="false" aria-label="Toggle navigation" data-bs-auto-close="outside">
-                    <i class="bi bi-text-right fa-fw h2 lh-0 mb-0 rtl-flip" data-bs-target="#offcanvasMenu"> </i>
+                <button class="navbar-toggler me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar" aria-expanded="false" aria-label="Toggle navigation" data-bs-auto-close="outside">
+                    <i class="bi bi-list"></i>
                 </button>
             </div>
-            <div class="navbar-expand-lg ms-auto ms-xl-0">
-                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopContent" aria-controls="navbarTopContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-animation">
-                        <!-- <span></span>
-                        <span></span>
-                        <span></span> -->
+
+            <!-- Desktop sidebar toggle -->
+            <div class="navbar-expand-xl sidebar-offcanvas-menu d-none d-xl-block">
+                <button class="navbar-toggler me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar" aria-expanded="false" aria-label="Toggle navigation" data-bs-auto-close="outside">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+
+            <!-- Welcome message -->
+            <div class="welcome-message d-none d-md-block" *ngIf="auth.user">
+                Welcome back, {{ auth.user.username }}!
+            </div>
+
+
+            <!-- Right side content -->
+            <div class="ms-auto d-flex align-items-center">
+  
+
+                <!-- User role badge -->
+                <div class="me-3 d-none d-sm-block" *ngIf="auth.user">
+                    <span class="badge bg-primary bg-opacity-15 text-primary px-3 py-2">
+                        <i class="bi bi-person-badge me-1"></i>
+                        {{ auth.user.user_type | titlecase }}
                     </span>
-                </button>
-            </div>
-            <div class="ms-xl-auto">
-                <ul class="navbar-nav flex-row align-items-center">
-                    <li class="nav-item ms-2 ms-md-3 dropdown">
-                        <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
-                        </a>
-                        <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" [routerLink]="['/management/profile']"><i class="bi bi-person fa-fw me-2"></i>Edit Profile</a></li>
-                            <li><a class="dropdown-item bg-danger-soft-hover" href="javascript:;" (click)="auth.logout()"><i class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                </div>
+
+                <!-- Profile dropdown -->
+                <div class="dropdown">
+                    <a class="avatar avatar-sm p-0 position-relative" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle d-none d-md-block">
+                            <span class="visually-hidden">Online</span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow" aria-labelledby="profileDropdown">
+              
+                        <li><a class="dropdown-item" [routerLink]="['/management/profile']">
+                            <i class="bi bi-person fa-fw me-2"></i>Edit Profile
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item bg-danger-soft-hover" href="javascript:;" (click)="auth.logout()">
+                            <i class="bi bi-power fa-fw me-2"></i>Sign Out
+                        </a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,219 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Creating Activity.....</p>
+</ngx-spinner>
+
+<div class="row">
+    <div class="col-12 mb-3">
+        <h1 class="h3 mb-2 mb-sm-0">Create Activity</h1>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-12">
+        <div class="tab-content">
+            <div class="tab-pane show active" id="tab-1">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form class="row g-4" [formGroup]="activityForm" *ngIf="activityForm"
+                            (ngSubmit)="onSubmit()">
+
+                            <!-- Basic Information -->
+                            <div class="col-12">
+                                <h5 class="mb-3">Basic Information</h5>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Activity Title *</label>
+                                <input type="text" class="form-control" placeholder="Enter activity title"
+                                    formControlName="title"
+                                    [ngClass]="{ 'is-invalid': submitted && f['title'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['title'].errors">
+                                    <div *ngIf="f['title'].errors['required']">Title is required</div>
+                                    <div *ngIf="f['title'].errors['minlength']">Title must be at least 3 characters</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Category *</label>
+                                <select class="form-select" formControlName="category"
+                                    [ngClass]="{ 'is-invalid': submitted && f['category'].errors }">
+                                    <option value="" disabled>Select Category</option>
+                                    <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label}}</option>
+                                </select>
+                                <div class="invalid-feedback" *ngIf="submitted && f['category'].errors">
+                                    Category is required
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Description *</label>
+                                <textarea class="form-control" rows="4" placeholder="Enter activity description"
+                                    formControlName="description"
+                                    [ngClass]="{ 'is-invalid': submitted && f['description'].errors }"></textarea>
+                                <div class="invalid-feedback" *ngIf="submitted && f['description'].errors">
+                                    <div *ngIf="f['description'].errors['required']">Description is required</div>
+                                    <div *ngIf="f['description'].errors['minlength']">Description must be at least 10 characters</div>
+                                </div>
+                            </div>
+
+                            <!-- Pricing & Duration -->
+                            <div class="col-12">
+                                <h5 class="mb-3 mt-4">Pricing & Duration</h5>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label class="form-label">Price ($) *</label>
+                                <input type="number" class="form-control" placeholder="0.00" min="0" step="0.01"
+                                    formControlName="price"
+                                    [ngClass]="{ 'is-invalid': submitted && f['price'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['price'].errors">
+                                    <div *ngIf="f['price'].errors['required']">Price is required</div>
+                                    <div *ngIf="f['price'].errors['min']">Price must be 0 or greater</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label class="form-label">Duration (minutes) *</label>
+                                <input type="number" class="form-control" placeholder="60" min="15"
+                                    formControlName="duration"
+                                    [ngClass]="{ 'is-invalid': submitted && f['duration'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['duration'].errors">
+                                    <div *ngIf="f['duration'].errors['required']">Duration is required</div>
+                                    <div *ngIf="f['duration'].errors['min']">Duration must be at least 15 minutes</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label class="form-label">Max Participants *</label>
+                                <input type="number" class="form-control" placeholder="10" min="1"
+                                    formControlName="max_participants"
+                                    [ngClass]="{ 'is-invalid': submitted && f['max_participants'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['max_participants'].errors">
+                                    <div *ngIf="f['max_participants'].errors['required']">Max participants is required</div>
+                                    <div *ngIf="f['max_participants'].errors['min']">Must allow at least 1 participant</div>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="col-12">
+                                <h5 class="mb-3 mt-4">Location</h5>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Address *</label>
+                                <input type="text" class="form-control" placeholder="Enter full address"
+                                    formControlName="address"
+                                    [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['address'].errors">
+                                    Address is required
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Latitude *</label>
+                                <input type="number" class="form-control" placeholder="40.7128" step="any"
+                                    formControlName="latitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['latitude'].errors">
+                                    Latitude is required
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label class="form-label">Longitude *</label>
+                                <input type="number" class="form-control" placeholder="-74.0060" step="any"
+                                    formControlName="longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['longitude'].errors">
+                                    Longitude is required
+                                </div>
+                            </div>
+
+                            <!-- Images -->
+                            <div class="col-12">
+                                <h5 class="mb-3 mt-4">Images</h5>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Activity Images</label>
+                                <input type="file" class="form-control" multiple accept="image/*"
+                                    (change)="onImageSelected($event)">
+                                <small class="text-muted">You can select multiple images</small>
+                            </div>
+
+                            <!-- Time Slots -->
+                            <div class="col-12">
+                                <h5 class="mb-3 mt-4">Available Time Slots</h5>
+                            </div>
+
+                            <div formArrayName="slots" class="col-12">
+                                <div *ngFor="let slot of slots.controls; let i = index" [formGroupName]="i" 
+                                     class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Slot {{i + 1}}</h6>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                (click)="removeSlot(i)" [disabled]="slots.length === 1">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-lg-4">
+                                                <label class="form-label">Start Time *</label>
+                                                <input type="datetime-local" class="form-control"
+                                                    formControlName="start_time"
+                                                    [ngClass]="{ 'is-invalid': submitted && slot.get('start_time')?.errors }">
+                                                <div class="invalid-feedback" *ngIf="submitted && slot.get('start_time')?.errors">
+                                                    Start time is required
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <label class="form-label">End Time *</label>
+                                                <input type="datetime-local" class="form-control"
+                                                    formControlName="end_time"
+                                                    [ngClass]="{ 'is-invalid': submitted && slot.get('end_time')?.errors }">
+                                                <div class="invalid-feedback" *ngIf="submitted && slot.get('end_time')?.errors">
+                                                    End time is required
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <label class="form-label">Available Spots *</label>
+                                                <input type="number" class="form-control" placeholder="10" min="1"
+                                                    formControlName="available_spots"
+                                                    [ngClass]="{ 'is-invalid': submitted && slot.get('available_spots')?.errors }">
+                                                <div class="invalid-feedback" *ngIf="submitted && slot.get('available_spots')?.errors">
+                                                    <div *ngIf="slot.get('available_spots')?.errors?.['required']">Available spots is required</div>
+                                                    <div *ngIf="slot.get('available_spots')?.errors?.['min']">Must have at least 1 spot</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="button" class="btn btn-outline-primary" (click)="addSlot()">
+                                    <i class="bi bi-plus-circle me-2"></i>Add Another Slot
+                                </button>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-12">
+                                <hr class="my-4">
+                                <div class="d-sm-flex justify-content-end">
+                                    <button type="button" class="btn btn-secondary me-2" 
+                                            (click)="router.navigate(['partner/activity/list'])">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>Create Activity
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

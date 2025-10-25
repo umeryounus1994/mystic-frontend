@@ -1,0 +1,243 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Fetching Activities....</p>
+</ngx-spinner>
+
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Activities</h1>
+        <button class="btn btn-primary" (click)="router.navigate(['/partner/activity/create'])">
+            <i class="bi bi-plus-circle me-2"></i>Create Activity
+        </button>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card bg-transparent border mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Category</label>
+                <select class="form-select" [(ngModel)]="filters.category" (change)="onFilterChange()">
+                    <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Status</label>
+                <select class="form-select" [(ngModel)]="filters.status" (change)="onFilterChange()">
+                    <option *ngFor="let status of statuses" [value]="status.value">{{status.label}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Items per page</label>
+                <select class="form-select" [(ngModel)]="filters.limit" (change)="onFilterChange()">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activities Table -->
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allActivities.length > 0">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover" id="dtable">
+                <thead>
+                    <tr>
+                        <th scope="col" class="border-0 rounded-start">Activity</th>
+                        <th scope="col" class="border-0">Category</th>
+                        <th scope="col" class="border-0">Price</th>
+                        <th scope="col" class="border-0">Duration</th>
+                        <th scope="col" class="border-0">Max Participants</th>
+                        <th scope="col" class="border-0">Status</th>
+                        <th scope="col" class="border-0">Created Date</th>
+                        <th scope="col" class="border-0 rounded-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let activity of allActivities; let i = index">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-sm flex-shrink-0 me-2">
+                                    <img *ngIf="activity.images && activity.images.length > 0" 
+                                         [src]="activity.images[0]" 
+                                         class="avatar-img rounded" 
+                                         alt="Activity Image">
+                                    <div *ngIf="!activity.images || activity.images.length === 0" 
+                                         class="avatar-img rounded bg-primary d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-image text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">{{activity.title}}</h6>
+                                    <small class="text-muted">{{activity.description?.substring(0, 50)}}...</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark">
+                                <i [class]="getCategoryIcon(activity.category)" class="me-1"></i>
+                                {{activity.category | titlecase}}
+                            </span>
+                        </td>
+                        <td>${{activity.price}}</td>
+                        <td>{{activity.duration}} min</td>
+                        <td>{{activity.max_participants}}</td>
+                        <td>
+                            <span class="badge" [ngClass]="getStatusBadgeClass(activity.status)">
+                                {{activity.status | titlecase}}
+                            </span>
+                        </td>
+                        <td>{{getFormatedDate(activity.created_at)}}</td>
+                        <td>
+                            <div class="dropdown dropup">
+                                <button class="btn btn-light btn-round btn-sm" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button class="dropdown-item" (click)="viewActivity(activity)">
+                                            <i class="bi bi-eye me-2"></i>View Details
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" (click)="editActivity(activity._id)">
+                                            <i class="bi bi-pencil me-2"></i>Edit
+                                        </button>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <button class="dropdown-item text-danger" (click)="deleteActivity(activity._id)">
+                                            <i class="bi bi-trash me-2"></i>Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- No Data Message -->
+        <div *ngIf="allActivities.length === 0" class="text-center py-5">
+            <i class="bi bi-calendar-x display-1 text-muted"></i>
+            <h4 class="mt-3">No Activities Found</h4>
+            <p class="text-muted">Create your first activity to get started</p>
+            <button class="btn btn-primary" (click)="router.navigate(['/partner/activity/create'])">
+                <i class="bi bi-plus-circle me-2"></i>Create Activity
+            </button>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="pagination.total_pages > 1" class="d-flex justify-content-between align-items-center mt-4">
+            <div>
+                <small class="text-muted">
+                    Showing {{((pagination.current_page - 1) * filters.limit) + 1}} to 
+                    {{Math.min(pagination.current_page * filters.limit, pagination.total_items)}} 
+                    of {{pagination.total_items}} activities
+                </small>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="pagination.current_page === 1">
+                        <button class="page-link" (click)="onPageChange(pagination.current_page - 1)">Previous</button>
+                    </li>
+                    <li *ngFor="let page of [].constructor(pagination.total_pages); let i = index" 
+                        class="page-item" [class.active]="pagination.current_page === i + 1">
+                        <button class="page-link" (click)="onPageChange(i + 1)">{{i + 1}}</button>
+                    </li>
+                    <li class="page-item" [class.disabled]="pagination.current_page === pagination.total_pages">
+                        <button class="page-link" (click)="onPageChange(pagination.current_page + 1)">Next</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- View Activity Modal -->
+<div class="modal fade" id="viewActivity" tabindex="-1" aria-labelledby="viewActivityLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="viewActivityLabel">Activity Details</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <!-- Activity Images -->
+                    <div class="col-12" *ngIf="selectedActivity.images && selectedActivity.images.length > 0">
+                        <div class="row g-2">
+                            <div *ngFor="let image of selectedActivity.images" class="col-md-4">
+                                <img [src]="image" class="img-fluid rounded" alt="Activity Image">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Basic Info -->
+                    <div class="col-md-8">
+                        <h4>{{selectedActivity.title}}</h4>
+                        <p class="text-muted">{{selectedActivity.description}}</p>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-6">
+                                <strong>Category:</strong>
+                                <span class="badge bg-light text-dark ms-2">
+                                    <i [class]="getCategoryIcon(selectedActivity.category)" class="me-1"></i>
+                                    {{selectedActivity.category | titlecase}}
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <strong>Status:</strong>
+                                <span class="badge ms-2" [ngClass]="getStatusBadgeClass(selectedActivity.status)">
+                                    {{selectedActivity.status | titlecase}}
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <strong>Price:</strong> ${{selectedActivity.price}}
+                            </div>
+                            <div class="col-6">
+                                <strong>Duration:</strong> {{selectedActivity.duration}} minutes
+                            </div>
+                            <div class="col-6">
+                                <strong>Max Participants:</strong> {{selectedActivity.max_participants}}
+                            </div>
+                            <div class="col-6">
+                                <strong>Created:</strong> {{getFormatedDate(selectedActivity.created_at)}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-12">
+                        <h6>Location</h6>
+                        <p><i class="bi bi-geo-alt me-2"></i>{{selectedActivity.address}}</p>
+                        <small class="text-muted">
+                            Coordinates: {{selectedActivity.location?.coordinates[1]}}, {{selectedActivity.location?.coordinates[0]}}
+                        </small>
+                    </div>
+
+                    <!-- Partner Info -->
+                    <div class="col-12" *ngIf="selectedActivity.partner_id">
+                        <h6>Partner Information</h6>
+                        <p>
+                            <strong>Name:</strong> {{selectedActivity.partner_id.first_name}} {{selectedActivity.partner_id.last_name}}<br>
+                            <strong>Business:</strong> {{selectedActivity.partner_id.partner_profile?.business_name || 'N/A'}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="editActivity(selectedActivity._id)" data-bs-dismiss="modal">
+                    <i class="bi bi-pencil me-2"></i>Edit Activity
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
