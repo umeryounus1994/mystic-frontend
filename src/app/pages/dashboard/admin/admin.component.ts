@@ -19,7 +19,8 @@ export class AdminComponent implements OnInit {
     quests: 0,
     hunts: 0,
     activities: 0,
-    partners: 0
+    partners: 0,
+    pendingActivities: 0
   }
   constructor(private sp: NgxSpinnerService, private api: RestApiService) {
   }

@@ -145,6 +145,84 @@ deleteActivity(activityId: any) {
     });
   }
 
+  approveActivity(activityId: any) {
+    Swal.fire({
+      title: "Are you sure you want to approve this activity?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Approve",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.sp.show();
+        this.api.post(`activity/${activityId}/approve`, {})
+          .then((response: any) => {
+            this.sp.hide();
+            Swal.fire("Activity!", "Approved Successfully", "success");
+            this.getAllActivities();
+          })
+          .catch((error: any) => {
+            this.sp.hide();
+            this.helper.failureToast(error?.error?.message || 'Failed to approve activity');
+          });
+      }
+    });
+  }
+
+  rejectActivity(activityId: any) {
+    Swal.fire({
+      title: "Are you sure you want to reject this activity?",
+      input: 'textarea',
+      inputLabel: 'Rejection Reason',
+      inputPlaceholder: 'Enter reason for rejection...',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Reject",
+      denyButtonText: `Cancel`,
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to provide a reason for rejection!';
+        }
+        return null;
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.sp.show();
+        const data = {
+          rejection_reason: result.value
+        };
+        this.api.post(`activity/${activityId}/reject`, data)
+          .then((response: any) => {
+            this.sp.hide();
+            Swal.fire("Activity!", "Rejected Successfully", "success");
+            this.getAllActivities();
+          })
+          .catch((error: any) => {
+            this.sp.hide();
+            this.helper.failureToast(error?.error?.message || 'Failed to reject activity');
+          });
+      }
+    });
+  }
+
+  updateActivityStatus(activityId: any, status: string) {
+    this.sp.show();
+    const data = {
+      status: status
+    };
+    this.api.patch(`activity/${activityId}`, data)
+      .then((response: any) => {
+        this.sp.hide();
+        const statusText = status === 'approved' ? 'Approved' : 'Rejected';
+        Swal.fire("Activity!", `${statusText} Successfully`, "success");
+        this.getAllActivities();
+      })
+      .catch((error: any) => {
+        this.sp.hide();
+        this.helper.failureToast(error?.error?.message || `Failed to ${status} activity`);
+      });
+  }
+
   getStatusBadgeClass(status: string): string {
     switch (status) {
       case 'approved': return 'bg-success';
