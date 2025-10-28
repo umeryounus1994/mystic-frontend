@@ -1,1 +1,236 @@
-<p>partner-dashboard works!</p>
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Loading Dashboard...</p>
+</ngx-spinner>
+
+<!-- Header -->
+<div class="row mb-4">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Partner Dashboard</h1>
+        <button class="btn btn-primary" (click)="navigateToCreateActivity()">
+            <i class="bi bi-plus-circle me-2"></i>Create New Activity
+        </button>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <!-- Total Activities -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-primary bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-primary">{{stats.activities.total}}</h2>
+                    <span class="mb-0 h6 fw-light">Total Activities</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-primary text-white mb-0">
+                    <i class="bi bi-calendar-event fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Activities -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-success bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-success">{{stats.activities.active}}</h2>
+                    <span class="mb-0 h6 fw-light">Active Activities</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-success text-white mb-0">
+                    <i class="bi bi-check-circle fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Bookings -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-warning bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-warning">{{stats.bookings.total}}</h2>
+                    <span class="mb-0 h6 fw-light">Total Bookings</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-warning text-white mb-0">
+                    <i class="bi bi-people fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Revenue -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-info bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-info">${{stats.revenue.totalRevenue}}</h2>
+                    <span class="mb-0 h6 fw-light">Total Revenue</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-info text-white mb-0">
+                    <i class="bi bi-currency-dollar fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Secondary Stats -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h4 class="text-primary mb-1">${{stats.revenue.partnerEarnings}}</h4>
+            <small class="text-muted">Partner Earnings</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h4 class="text-warning mb-1">{{stats.activities.pending}}</h4>
+            <small class="text-muted">Pending Approval</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h4 class="text-success mb-1">{{stats.bookings.confirmed}}</h4>
+            <small class="text-muted">Confirmed Bookings</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h4 class="text-info mb-1">${{stats.revenue.monthlyEarnings}}</h4>
+            <small class="text-muted">This Month Earnings</small>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+    <!-- Revenue Chart -->
+    <div class="col-xl-8">
+        <div class="card shadow h-100">
+            <div class="card-header p-4 border-bottom">
+                <h5 class="card-header-title">Monthly Earnings</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activities Status Chart -->
+    <div class="col-xl-4">
+        <div class="card shadow h-100">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center p-4">
+                <h5 class="card-header-title">Activities Status</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="col-sm-8 mx-auto">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities & Bookings -->
+<div class="row g-4">
+    <!-- Recent Activities -->
+    <div class="col-xl-6">
+        <div class="card shadow">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center p-4">
+                <h5 class="card-header-title">Recent Activities</h5>
+                <button class="btn btn-sm btn-primary-soft" (click)="navigateToActivities()">
+                    View All
+                </button>
+            </div>
+            <div class="card-body p-4">
+                <div *ngIf="recentActivities.length === 0" class="text-center py-4">
+                    <p class="text-muted">No activities found</p>
+                    <button class="btn btn-primary btn-sm" (click)="navigateToCreateActivity()">
+                        Create Your First Activity
+                    </button>
+                </div>
+                <div *ngFor="let activity of recentActivities" class="d-flex align-items-center mb-3">
+                    <div class="avatar avatar-sm flex-shrink-0 me-3">
+                        <img *ngIf="activity.image" 
+                             [src]="activity.image" 
+                             class="avatar-img rounded" 
+                             alt="Activity Image">
+                        <div *ngIf="!activity.image" 
+                             class="avatar-img rounded bg-primary d-flex align-items-center justify-content-center">
+                            <i class="bi bi-calendar-event text-white"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">
+                            <a href="javascript:void(0)" (click)="viewActivity(activity._id)" 
+                               class="text-decoration-none">{{activity.title}}</a>
+                        </h6>
+                        <small class="text-muted">
+                            <span class="badge me-2" [ngClass]="getStatusBadgeClass(activity.status)">
+                                {{activity.status | titlecase}}
+                            </span>
+                            ${{activity.price}} • {{getFormatedDate(activity.created_at)}}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="col-xl-6">
+        <div class="card shadow">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center p-4">
+                <h5 class="card-header-title">Recent Bookings</h5>
+                <button class="btn btn-sm btn-primary-soft">
+                    View All
+                </button>
+            </div>
+            <div class="card-body p-4">
+                <div *ngIf="recentBookings.length === 0" class="text-center py-4">
+                    <p class="text-muted">No bookings yet</p>
+                    <small class="text-muted d-block">Bookings will appear here once customers start booking your activities</small>
+                </div>
+                <div *ngFor="let booking of recentBookings" class="d-flex align-items-center mb-3">
+                    <div class="avatar avatar-sm flex-shrink-0 me-3">
+                        <div class="avatar-img rounded bg-success d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person text-white"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">{{booking.user_name || 'Customer'}}</h6>
+                        <small class="text-muted">
+                            {{booking.activity_title}} • ${{booking.amount}}
+                            <br>{{getFormatedDate(booking.booking_date)}}
+                        </small>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-success">Confirmed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Quick Actions</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-primary btn-sm" (click)="navigateToCreateActivity()">
+                        <i class="bi bi-plus me-1"></i>Create Activity
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" (click)="navigateToActivities()">
+                        <i class="bi bi-list me-1"></i>Manage Activities
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

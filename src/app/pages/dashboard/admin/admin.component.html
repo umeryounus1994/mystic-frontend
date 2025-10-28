@@ -1,125 +1,199 @@
 <!-- Title -->
-
 <div class="row">
     <ngx-spinner
-    bdColor="rgba(51,51,51,0.8)"
-    size="medium"
-    color="#fff"
-    type="ball-scale-multiple"
-    [fullScreen] = "true"
-  >
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
-  </ngx-spinner>
+        bdColor="rgba(51,51,51,0.8)"
+        size="medium"
+        color="#fff"
+        type="ball-scale-multiple"
+        [fullScreen]="true">
+        <p style="font-size: 30px; color: white">Fetching Data....</p>
+    </ngx-spinner>
     <div class="col-12 mb-3">
         <h1 class="h3 mb-2 mb-sm-0">Admin Dashboard</h1>
+        <p class="text-muted">Welcome back! Here's what's happening with your platform today.</p>
     </div>
 </div>
 
 <!-- Counter boxes START -->
 <div class="row g-4 mb-4">
-    <!-- Counter item -->
-    <div class="col-md-6 col-xxl-3">
-        <div class="card card-body bg-warning bg-opacity-15 p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center">
-                <!-- Digit -->
-                <div>
-                    <h2 class="purecounter mb-0 fw-bold">{{counters.users}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Users</span>
-                </div>
-                <!-- Icon -->
-                <div class="icon-lg rounded-circle bg-warning text-white mb-0"><i class="fas fa-tv fa-fw"></i></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Counter item -->
-    <div class="col-md-6 col-xxl-3">
-        <div class="card card-body bg-purple bg-opacity-10 p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center">
-                <!-- Digit -->
-                <div>
-                    <h2 class="purecounter mb-0 fw-bold">{{counters.quests}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Quests</span>
-                </div>
-                <!-- Icon -->
-                <div class="icon-lg rounded-circle bg-purple text-white mb-0"><i class="fas fa-user-tie fa-fw"></i></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Counter item -->
-    <div class="col-md-6 col-xxl-3">
+    <!-- Total Users -->
+    <div class="col-md-6 col-xl-4 col-xxl-2">
         <div class="card card-body bg-primary bg-opacity-10 p-4 h-100">
             <div class="d-flex justify-content-between align-items-center">
-                <!-- Digit -->
                 <div>
-                    <h2 class="purecounter mb-0 fw-bold">{{counters.missions}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Missions</span>
+                    <h2 class="purecounter mb-0 fw-bold text-primary">{{counters.users}}</h2>
+                    <span class="mb-0 h6 fw-light">Users</span>
                 </div>
-                <!-- Icon -->
-                <div class="icon-lg rounded-circle bg-primary text-white mb-0"><i class="fas fa-user-graduate fa-fw"></i></div>
+                <div class="icon-lg rounded-circle bg-primary text-white mb-0">
+                    <i class="bi bi-people fa-fw"></i>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Counter item -->
-    <div class="col-md-6 col-xxl-3">
+    <!-- Total Partners -->
+    <div class="col-md-6 col-xl-4 col-xxl-2">
+        <div class="card card-body bg-info bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-info">{{counters.partners}}</h2>
+                    <span class="mb-0 h6 fw-light">Partners</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-info text-white mb-0">
+                    <i class="bi bi-building fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Activities -->
+    <div class="col-md-6 col-xl-4 col-xxl-2">
+        <div class="card card-body bg-warning bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-warning">{{counters.activities}}</h2>
+                    <span class="mb-0 h6 fw-light">Activities</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-warning text-white mb-0">
+                    <i class="bi bi-calendar-event fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Quests -->
+    <div class="col-md-6 col-xl-4 col-xxl-2">
+        <div class="card card-body bg-purple bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-purple">{{counters.quests}}</h2>
+                    <span class="mb-0 h6 fw-light">Quests</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-purple text-white mb-0">
+                    <i class="bi bi-puzzle fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Missions -->
+    <div class="col-md-6 col-xl-4 col-xxl-2">
         <div class="card card-body bg-success bg-opacity-10 p-4 h-100">
             <div class="d-flex justify-content-between align-items-center">
-                <!-- Digit -->
                 <div>
-                    <div class="d-flex">
-                        <h2 class="purecounter mb-0 fw-bold">{{counters.hunts}}</h2>
-                    </div>
-                    <span class="mb-0 h6 fw-light">Total Treasure Hunts</span>
+                    <h2 class="purecounter mb-0 fw-bold text-success">{{counters.missions}}</h2>
+                    <span class="mb-0 h6 fw-light">Missions</span>
                 </div>
-                <!-- Icon -->
-                <div class="icon-lg rounded-circle bg-success text-white mb-0"><i class="bi bi-stopwatch-fill fa-fw"></i></div>
+                <div class="icon-lg rounded-circle bg-success text-white mb-0">
+                    <i class="bi bi-bullseye fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Treasure Hunts -->
+    <div class="col-md-6 col-xl-4 col-xxl-2">
+        <div class="card card-body bg-danger bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-danger">{{counters.hunts}}</h2>
+                    <span class="mb-0 h6 fw-light">Hunts</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-danger text-white mb-0">
+                    <i class="bi bi-gem fa-fw"></i>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- <div class="row g-4 mb-4">
+<!-- Quick Actions -->
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">
+                    <i class="bi bi-lightning-charge me-2"></i>Quick Actions
+                </h5>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-primary btn-sm" routerLink="/management/list-user">
+                        <i class="bi bi-people me-1"></i>Manage Users
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" routerLink="/quest/create-quest">
+                        <i class="bi bi-plus-circle me-1"></i>Create Quest
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" routerLink="/mission/create-mission">
+                        <i class="bi bi-plus-circle me-1"></i>Create Mission
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" routerLink="/hunt/create-hunt">
+                        <i class="bi bi-plus-circle me-1"></i>Create Hunt
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" routerLink="/management/mythicas">
+                        <i class="bi bi-star me-1"></i>Mythicas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <div class="col-xxl-8">
+<!-- Platform Overview -->
+<div class="row g-4">
+    <div class="col-xl-12">
         <div class="card shadow h-100">
-
-
             <div class="card-header p-4 border-bottom">
-                <h5 class="card-header-title">Month Wise Chart of Questions</h5>
+                <h5 class="card-header-title">
+                    <i class="bi bi-bar-chart me-2"></i>Platform Overview
+                </h5>
             </div>
-
-           
-            <div class="card-body" >
-                <div class="chart-container">
-                    <canvas  id="QuestionsChart" >{{ QuestionsChart }}</canvas>
-                </div>
-
-                
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4 col-xxl-4">
-        <div class="card shadow h-100">
-
-           
-            <div class="card-header border-bottom d-flex justify-content-between align-items-center p-4">
-                <h5 class="card-header-title">Category Wise Data</h5>
-            </div>
-
-     
             <div class="card-body p-4">
-      
-                <div class="col-sm-6 mx-auto">
-                    
-                    <canvas  id="CategoriesChart">{{ CategoriesChart }}</canvas>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-primary text-white me-3">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">User Engagement</h6>
+                                <small class="text-muted">{{counters.users}} registered users</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-warning text-white me-3">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Content Library</h6>
+                                <small class="text-muted">{{counters.activities + counters.quests + counters.missions + counters.hunts}} total items</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-success text-white me-3">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Partner Network</h6>
+                                <small class="text-muted">{{counters.partners}} active partners</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-info text-white me-3">
+                                <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Platform Growth</h6>
+                                <small class="text-muted">Expanding ecosystem</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
-
-</div> -->
-
+</div>

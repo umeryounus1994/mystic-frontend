@@ -17,24 +17,27 @@ export class AdminComponent implements OnInit {
     users: 0,
     missions: 0,
     quests: 0,
-    hunts: 0
+    hunts: 0,
+    activities: 0,
+    partners: 0
   }
   constructor(private sp: NgxSpinnerService, private api: RestApiService) {
   }
   async ngOnInit() {
-    //this.sp.show()
-    // await this.getQuestionsCharts();
-    // await this.getCategoriesCharts();
-    // await this.getAllCount();
-    await this.getAnalytics();
+    this.sp.show();
+    try {
+      await this.getAnalytics();
+    } finally {
+      this.sp.hide();
+    }
   }
   async getAnalytics() {
-    this.api.get('user/analytics')
-      .then((response: any) => {
-        this.counters = response.data;
-      }).catch((error: any) => {
-        this.sp.hide();
-      });
+    try {
+      const response: any = await this.api.get('user/analytics');
+      this.counters = response.data;
+    } catch (error: any) {
+      console.error('Failed to load analytics:', error);
+    }
   }
 
 }

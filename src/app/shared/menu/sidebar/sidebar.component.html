@@ -1,12 +1,15 @@
 <!-- Admin/SubAdmin Sidebar -->
 <nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark" *ngIf="auth.isAdmin || auth.isSubAdmin || auth.isPartner || auth.isFamily">
-	<div class="d-flex align-items-center">
-	  <a class="navbar-brand" [routerLink]="['/dashboard/admin']"></a>
-	</div>
+
   
-	<div class="offcanvas offcanvas-start flex-row custom-scrollbar h-100" data-bs-backdrop="true" tabindex="-1" id="offcanvasSidebar">
+	<div class="offcanvas offcanvas-start flex-row custom-scrollbar h-100 mt-5" data-bs-backdrop="true" tabindex="-1" id="offcanvasSidebar">
 	  <div class="offcanvas-body sidebar-content d-flex flex-column bg-dark">
 		<ul class="navbar-nav flex-column" id="navbar-sidebar">
+		  
+		  <!-- Dashboard Section Header -->
+		  <li class="nav-item ms-2 my-2 mt-3" *ngIf="auth.isPartner">
+			<i class="bi bi-grid-3x3-gap me-2"></i>Dashboard
+		  </li>
 		  
 		  <!-- Admin Dashboard (for admin only) -->
 		  <li class="nav-item" *ngIf="auth.isAdmin">
@@ -14,9 +17,11 @@
 			  <i class="bi bi-house fa-fw me-2"></i>Admin Dashboard
 			</a>
 		  </li>
+		  
+		  <!-- Partner Dashboard -->
 		  <li class="nav-item" *ngIf="auth.isPartner">
 			<a [routerLink]="['/dashboard/partner']" class="nav-link" [class.active]="routeURL === '/dashboard/partner'">
-			  <i class="bi bi-house fa-fw me-2"></i>Partner Dashboard
+			  <i class="bi bi-speedometer2 fa-fw me-2"></i>Partner Dashboard
 			</a>
 		  </li>
   
@@ -25,7 +30,7 @@
 		  <!-- Quests -->
 		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Quest')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapsequest" role="button" aria-expanded="false" aria-controls="collapsequest">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Quests
+			  <i class="bi bi-puzzle fa-fw me-2"></i>Quests
 			</a>
 			<ul class="nav collapse flex-column" id="collapsequest" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']">All Quests</a></li>
@@ -36,7 +41,7 @@
 		  <!-- Missions -->
 		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Missions')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapsemissions" role="button" aria-expanded="false" aria-controls="collapsemissions">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Missions
+			  <i class="bi bi-bullseye fa-fw me-2"></i>Missions
 			</a>
 			<ul class="nav collapse flex-column" id="collapsemissions" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mission/list-mission'" [routerLink]="['/mission/list-mission']">All Mission</a></li>
@@ -47,7 +52,7 @@
 		  <!-- Treasure Hunts -->
 		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Hunts')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapsehunts" role="button" aria-expanded="false" aria-controls="collapsehunts">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Treasure Hunts
+			  <i class="bi bi-gem fa-fw me-2"></i>Treasure Hunts
 			</a>
 			<ul class="nav collapse flex-column" id="collapsehunts" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/hunt/list-hunt'" [routerLink]="['/hunt/list-hunt']">All Treasure Hunt</a></li>
@@ -58,7 +63,7 @@
 		  <!-- Picture Mysteries -->
 		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Picture Mysteries')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapsemysteries" role="button" aria-expanded="false" aria-controls="collapsemysteries">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Picture Mysteries
+			  <i class="bi bi-camera fa-fw me-2"></i>Picture Mysteries
 			</a>
 			<ul class="nav collapse flex-column" id="collapsemysteries" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mystery/list-mystery'" [routerLink]="['/mystery/list-mystery']">All Picture Mysteries</a></li>
@@ -68,7 +73,7 @@
 
 		  <li class="nav-item" *ngIf="auth.isPartner">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapseactivity" role="button" aria-expanded="false" aria-controls="collapseactivity">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Activities
+			  <i class="bi bi-calendar-event fa-fw me-2"></i>Activities
 			</a>
 			<ul class="nav collapse flex-column" id="collapseactivity" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/partner/list-activities'" [routerLink]="['/partner/list-activities']">All Activities</a></li>
@@ -82,7 +87,7 @@
 		  <!-- User Management (Admin Only) -->
 		  <li class="nav-item" *ngIf="auth.isAdmin">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapsemanagement" role="button" aria-expanded="false" aria-controls="collapsemanagement">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Users
+			  <i class="bi bi-people fa-fw me-2"></i>Users
 			</a>
 			<ul class="nav collapse flex-column" id="collapsemanagement" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']">All Users</a></li>
@@ -92,7 +97,7 @@
 		  <!-- Drops -->
 		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapsedrops" role="button" aria-expanded="false" aria-controls="collapsedrops">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Drops
+			  <i class="bi bi-box fa-fw me-2"></i>Drops
 			</a>
 			<ul class="nav collapse flex-column" id="collapsedrops" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/management/list-drop'" [routerLink]="['/management/list-drop']">All Drops</a></li>
@@ -104,7 +109,7 @@
 		  <!-- Sky Dropped Gifts -->
 		  <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapseskygifts" role="button" aria-expanded="false" aria-controls="collapseskygifts">
-			  <i class="fas fa-user-tie fa-fw me-2"></i>Sky Dropped Gifts
+			  <i class="bi bi-gift fa-fw me-2"></i>Sky Dropped Gifts
 			</a>
 			<ul class="nav collapse flex-column" id="collapseskygifts" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/skygifts/list-skygifts'" [routerLink]="['/skygifts/list-skygifts']">All Gifts</a></li>
@@ -115,7 +120,7 @@
 		  <!-- Mythicas (Admin Only) -->
 		  <li class="nav-item" *ngIf="auth.isAdmin">
 			<a [routerLink]="['/management/mythicas']" class="nav-link" [class.active]="routeURL === '/management/mythicas'">
-			  <i class="bi bi-house fa-fw me-2"></i>Mythicas
+			  <i class="bi bi-star fa-fw me-2"></i>Mythicas
 			</a>
 		  </li>
   
