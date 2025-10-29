@@ -5,6 +5,7 @@ import { AuthGuard } from '../../guards/auth/auth.guard';
 import { CreateActivityComponent } from './activity/create-activity/create-activity.component';
 import { ViewActivityComponent } from './activity/view-activity/view-activity.component';
 import { EditActivityComponent } from './activity/edit-activity/edit-activity.component';
+import { SearchActivitiesComponent } from './search-activities/search-activities.component';
 
 const routes: Routes = [{
   path: '',
@@ -27,6 +28,11 @@ const routes: Routes = [{
     {
       path: 'edit-activity',
       component: EditActivityComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'search-activities',
+      component: SearchActivitiesComponent,
       canActivate: [AuthGuard]
     }
   ]

@@ -1,0 +1,193 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Searching Activities....</p>
+</ngx-spinner>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Browse Activities</h1>
+        <p class="text-muted">Discover amazing activities near you</p>
+    </div>
+</div>
+
+<!-- Search and Filters -->
+<div class="card bg-transparent border mb-4">
+    <div class="card-body">
+        <!-- Search Bar -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search activities..." 
+                           [(ngModel)]="filters.search" (keyup.enter)="onFilterChange()">
+                    <button class="btn btn-primary" type="button" (click)="onFilterChange()">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-outline-secondary w-100" (click)="getCurrentLocation()">
+                    <i class="bi bi-geo-alt me-2"></i>Use My Location
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Row 1 -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" [(ngModel)]="filters.category" (change)="onFilterChange()">
+                    <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label}}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-control" [(ngModel)]="filters.date" (change)="onFilterChange()">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Min Price ($)</label>
+                <input type="number" class="form-control" placeholder="0" 
+                       [(ngModel)]="filters.min_price" (change)="onFilterChange()">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Max Price ($)</label>
+                <input type="number" class="form-control" placeholder="1000" 
+                       [(ngModel)]="filters.max_price" (change)="onFilterChange()">
+            </div>
+        </div>
+
+        <!-- Filters Row 2 -->
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Latitude</label>
+                <input type="number" class="form-control" step="any" placeholder="40.7128" 
+                       [(ngModel)]="filters.latitude" (change)="onFilterChange()">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Longitude</label>
+                <input type="number" class="form-control" step="any" placeholder="-74.0060" 
+                       [(ngModel)]="filters.longitude" (change)="onFilterChange()">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Radius (km)</label>
+                <input type="number" class="form-control" [(ngModel)]="filters.radius" (change)="onFilterChange()">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-outline-danger w-100" (click)="clearFilters()">
+                    <i class="bi bi-x-circle me-2"></i>Clear Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activities Grid -->
+<div class="row g-4 mb-4" *ngIf="activities.length > 0">
+    <div class="col-md-6 col-lg-4" *ngFor="let activity of activities">
+        <div class="card h-100 shadow-sm">
+            <!-- Activity Image -->
+            <div class="position-relative">
+                <img *ngIf="activity.images && activity.images.length > 0" 
+                     [src]="activity.images[0]" 
+                     class="card-img-top" 
+                     style="height: 200px; object-fit: cover;"
+                     alt="Activity Image">
+                <div *ngIf="!activity.images || activity.images.length === 0" 
+                     class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                     style="height: 200px;">
+                    <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                </div>
+                
+                <!-- Category Badge -->
+                <span class="badge bg-primary position-absolute top-0 start-0 m-2">
+                    <i [class]="getCategoryIcon(activity.category)" class="me-1"></i>
+                    {{activity.category | titlecase}}
+                </span>
+                
+                <!-- Price Badge -->
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                    ${{activity.price}}
+                </span>
+            </div>
+
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{activity.title}}</h5>
+                <p class="card-text text-muted flex-grow-1">
+                    {{activity.description?.substring(0, 100)}}...
+                </p>
+                
+                <!-- Activity Details -->
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i>{{activity.duration}} min
+                        </small>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">
+                            <i class="bi bi-people me-1"></i>Max {{activity.max_participants}}
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Partner Info -->
+                <div class="d-flex align-items-center mb-3" *ngIf="activity.partner_id">
+                    <div class="avatar avatar-xs me-2">
+                        <div class="avatar-img rounded-circle bg-primary d-flex align-items-center justify-content-center">
+                            <i class="bi bi-building text-white"></i>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        {{activity.partner_id.partner_profile?.business_name || 
+                          (activity.partner_id.first_name + ' ' + activity.partner_id.last_name)}}
+                    </small>
+                </div>
+
+                <!-- Location -->
+                <div class="mb-3" *ngIf="activity.address">
+                    <small class="text-muted">
+                        <i class="bi bi-geo-alt me-1"></i>{{activity.address}}
+                    </small>
+                </div>
+
+                <!-- Action Button -->
+                <button class="btn btn-primary mt-auto" (click)="viewActivity(activity)">
+                    <i class="bi bi-eye me-2"></i>View Details
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- No Results -->
+<div *ngIf="activities.length === 0" class="text-center py-5">
+    <i class="bi bi-search display-1 text-muted"></i>
+    <h4 class="mt-3">No Activities Found</h4>
+    <p class="text-muted">Try adjusting your search criteria</p>
+    <button class="btn btn-primary" (click)="clearFilters()">
+        <i class="bi bi-arrow-clockwise me-2"></i>Reset Search
+    </button>
+</div>
+
+<!-- Pagination -->
+<div *ngIf="pagination.total_pages > 1" class="d-flex justify-content-between align-items-center mt-4">
+    <div>
+        <small class="text-muted">
+            Showing {{((pagination.current_page - 1) * filters.limit) + 1}} to 
+            {{Math.min(pagination.current_page * filters.limit, pagination.total_items)}} 
+            of {{pagination.total_items}} activities
+        </small>
+    </div>
+    <nav>
+        <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="pagination.current_page === 1">
+                <button class="page-link" (click)="onPageChange(pagination.current_page - 1)">Previous</button>
+            </li>
+            <li *ngFor="let page of [].constructor(pagination.total_pages); let i = index" 
+                class="page-item" [class.active]="pagination.current_page === i + 1">
+                <button class="page-link" (click)="onPageChange(i + 1)">{{i + 1}}</button>
+            </li>
+            <li class="page-item" [class.disabled]="pagination.current_page === pagination.total_pages">
+                <button class="page-link" (click)="onPageChange(pagination.current_page + 1)">Next</button>
+            </li>
+        </ul>
+    </nav>
+</div>

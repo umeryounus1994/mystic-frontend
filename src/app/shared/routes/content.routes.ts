@@ -38,4 +38,8 @@ export const content: Routes = [
     path: 'partner',
     loadChildren: () => import("../../pages/partner/partner.module").then(module => module.PartnerModule)
   },
+  {
+    path: 'bookings',
+    loadChildren: () => import("../../pages/booking/booking.module").then(module => module.BookingModule)
+  },
 ];

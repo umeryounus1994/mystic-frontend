@@ -1,0 +1,206 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Fetching Bookings....</p>
+</ngx-spinner>
+
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">My Bookings</h1>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="row mb-3">
+    <div class="col-md-4">
+        <select class="form-select" [(ngModel)]="filters.status" (change)="onFilterChange()">
+            <option *ngFor="let status of statuses" [value]="status.value">
+                {{status.label}}
+            </option>
+        </select>
+    </div>
+</div>
+
+<!-- Bookings Table -->
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allBookings.length > 0">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover" id="dtable">
+                <thead>
+                    <tr>
+                        <th scope="col" class="border-0 rounded-start">Activity</th>
+                        <th scope="col" class="border-0">Date & Time</th>
+                        <th scope="col" class="border-0">Participants</th>
+                        <th scope="col" class="border-0">Total Amount</th>
+                        <th scope="col" class="border-0">Status</th>
+                        <th scope="col" class="border-0">Booking Date</th>
+                        <th scope="col" class="border-0 rounded-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let booking of allBookings; let i = index">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-sm flex-shrink-0 me-2">
+                                    <img *ngIf="booking.activity_id?.images && booking.activity_id.images.length > 0" 
+                                         [src]="booking.activity_id.images[0]" 
+                                         class="avatar-img rounded" 
+                                         alt="Activity Image">
+                                    <div *ngIf="!booking.activity_id?.images || booking.activity_id.images.length === 0" 
+                                         class="avatar-img rounded bg-primary d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-calendar-event text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">{{booking.activity_id?.title}}</h6>
+                                    <small class="text-muted">{{booking.activity_id?.description?.substring(0, 40)}}...</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <strong>{{booking.slot_id?.start_time | date:'mediumDate'}}</strong><br>
+                                <small class="text-muted">
+                                    {{booking.slot_id?.start_time | date:'shortTime'}} - 
+                                    {{booking.slot_id?.end_time | date:'shortTime'}}
+                                </small>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark">
+                                <i class="bi bi-people me-1"></i>
+                                {{booking.participants}}
+                            </span>
+                        </td>
+                        <td>
+                            <strong>${{booking.total_amount}}</strong>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="getStatusBadgeClass(booking.booking_status)">
+                                {{booking.booking_status | titlecase}}
+                            </span>
+                        </td>
+                        <td>{{getFormatedDate(booking.created_at)}}</td>
+                        <td>
+                            <div class="dropdown dropup">
+                                <button class="btn btn-light btn-round btn-sm" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button class="dropdown-item" (click)="viewBooking(booking)">
+                                            <i class="bi bi-eye me-2"></i>View Details
+                                        </button>
+                                    </li>
+                                    <li *ngIf="booking.booking_status === 'pending'">
+                                        <button class="dropdown-item text-danger">
+                                            <i class="bi bi-x-circle me-2"></i>Cancel Booking
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- No bookings message -->
+        <div *ngIf="allBookings.length === 0" class="text-center py-5">
+            <i class="bi bi-calendar-x display-1 text-muted"></i>
+            <h4 class="mt-3">No Bookings Found</h4>
+            <p class="text-muted">You haven't made any bookings yet.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="pagination.total_pages > 1">
+            <div>
+                <small class="text-muted">
+                    Showing {{((pagination.current_page - 1) * filters.limit) + 1}} to 
+                    {{Math.min(pagination.current_page * filters.limit, pagination.total_items)}} 
+                    of {{pagination.total_items}} bookings
+                </small>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="pagination.current_page === 1">
+                        <button class="page-link" (click)="onPageChange(pagination.current_page - 1)">Previous</button>
+                    </li>
+                    <li *ngFor="let page of getPageNumbers()" 
+                        class="page-item" 
+                        [class.active]="page === pagination.current_page">
+                        <button class="page-link" (click)="onPageChange(page)">{{page}}</button>
+                    </li>
+                    <li class="page-item" [class.disabled]="pagination.current_page === pagination.total_pages">
+                        <button class="page-link" (click)="onPageChange(pagination.current_page + 1)">Next</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- View Booking Modal -->
+<div class="modal fade" id="viewBooking" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Booking Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" *ngIf="selectedBooking">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Activity Information</h6>
+                        <p><strong>Title:</strong> {{selectedBooking.activity_id?.title}}</p>
+                        <p><strong>Description:</strong> {{selectedBooking.activity_id?.description}}</p>
+                        <p><strong>Location:</strong> {{selectedBooking.activity_id?.address}}</p>
+                        <p><strong>Price per person:</strong> ${{selectedBooking.activity_id?.price}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Booking Information</h6>
+                        <p><strong>Booking ID:</strong> {{selectedBooking.booking_id}}</p>
+                        <p><strong>Date:</strong> {{selectedBooking.slot_id?.date | date:'fullDate'}}</p>
+                        <p><strong>Time:</strong> 
+                            {{selectedBooking.slot_id?.start_time | date:'shortTime'}} - 
+                            {{selectedBooking.slot_id?.end_time | date:'shortTime'}}
+                        </p>
+                        <p><strong>Participants:</strong> {{selectedBooking.participants}}</p>
+                        <p><strong>Total Amount:</strong> ${{selectedBooking.total_amount}}</p>
+                        <p><strong>Status:</strong> 
+                            <span class="badge" [ngClass]="getStatusBadgeClass(selectedBooking.booking_status)">
+                                {{selectedBooking.booking_status | titlecase}}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row mt-3" *ngIf="selectedBooking.special_requests">
+                    <div class="col-12">
+                        <h6>Special Requests</h6>
+                        <p class="bg-light p-3 rounded">{{selectedBooking.special_requests}}</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6>Payment Breakdown</h6>
+                        <div class="bg-light p-3 rounded">
+                            <div class="d-flex justify-content-between">
+                                <span>Subtotal:</span>
+                                <span>${{selectedBooking.total_amount}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Commission ({{selectedBooking.commission_rate}}%):</span>
+                                <span>${{selectedBooking.commission_amount}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Partner Amount:</span>
+                                <span>${{selectedBooking.partner_amount}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

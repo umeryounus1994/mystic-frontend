@@ -4,6 +4,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../../services/api/rest-api.service';
 import { HelperService } from '../../../../services/helper/helper.service';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../../services/auth/auth.service';
+declare var $: any;
 @Component({
   selector: 'app-view-activity',
   templateUrl: './view-activity.component.html',
@@ -12,13 +14,19 @@ import Swal from 'sweetalert2';
 export class ViewActivityComponent implements OnInit {
   activity: any = {};
   activityId: string = '';
+  selectedSlot: any = null;
+  bookingData = {
+    participants: '',
+    special_requests: ''
+  };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private sp: NgxSpinnerService,
     private api: RestApiService,
-    private helper: HelperService
+    private helper: HelperService,
+    public auth: AuthService
   ) {}
 
   ngOnInit() {
@@ -114,5 +122,51 @@ deleteActivity() {
   goBack() {
     this.router.navigate(['/partner/list-activities']);
   }
-  
+
+  openBookingModal(slot: any) {
+    this.selectedSlot = slot;
+    this.bookingData = {
+      participants: '',
+      special_requests: ''
+    };
+    $("#bookingModal").modal("show");
+  }
+
+  getParticipantOptions(slot: any): number[] {
+    const maxAvailable = slot.available_spots - slot.booked_spots - (slot.reserved_spots || 0);
+    const maxAllowed = Math.min(maxAvailable, this.activity.max_participants);
+    return Array.from({length: maxAllowed}, (_, i) => i + 1);
+  }
+
+  createBooking() {
+    if (!this.bookingData.participants) {
+      this.helper.failureToast('Please select number of participants');
+      return;
+    }
+
+    const bookingPayload = {
+      activity_id: this.activity._id,
+      slot_id: this.selectedSlot._id,
+      participants: parseInt(this.bookingData.participants),
+      special_requests: this.bookingData.special_requests || ''
+    };
+
+    this.sp.show();
+    this.api.post('booking/create', bookingPayload)
+      .then((response: any) => {
+        this.sp.hide();
+        $("#bookingModal").modal("hide");
+        this.helper.successToast('Booking created successfully!');
+        
+        // Refresh activity details to update slot availability
+        this.getActivityDetails();
+        
+        // Optionally redirect to booking confirmation or payment page
+        // this.router.navigate(['/booking-confirmation'], { queryParams: { bookingId: response.data._id } });
+      })
+      .catch((error: any) => {
+        this.sp.hide();
+        this.helper.failureToast(error?.error?.message || 'Failed to create booking');
+      });
+  }
 }

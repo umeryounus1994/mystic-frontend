@@ -9,10 +9,11 @@ import { CreateActivityComponent } from './activity/create-activity/create-activ
 import { ListActivityComponent } from './activity/list-activity/list-activity.component';
 import { ViewActivityComponent } from './activity/view-activity/view-activity.component';
 import { EditActivityComponent } from './activity/edit-activity/edit-activity.component';
+import { SearchActivitiesComponent } from './search-activities/search-activities.component';
 
 
 @NgModule({
-  declarations: [CreateActivityComponent, ListActivityComponent, ViewActivityComponent, EditActivityComponent],
+  declarations: [CreateActivityComponent, ListActivityComponent, ViewActivityComponent, EditActivityComponent, SearchActivitiesComponent],
   imports: [
     CommonModule,
     PartnerRoutingModule,

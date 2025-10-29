@@ -71,13 +71,23 @@
 			</ul>
 		  </li>
 
-		  <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin">
+		  <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
 			<a class="nav-link" data-bs-toggle="collapse" href="#collapseactivity" role="button" aria-expanded="false" aria-controls="collapseactivity">
 			  <i class="bi bi-calendar-event fa-fw me-2"></i>Activities
 			</a>
 			<ul class="nav collapse flex-column" id="collapseactivity" data-bs-parent="#navbar-sidebar">
 			  <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin"><a class="nav-link" [class.active]="routeURL === '/partner/list-activities'" [routerLink]="['/partner/list-activities']">All Activities</a></li>
 			  <li class="nav-item" *ngIf="auth.isPartner"><a class="nav-link" [class.active]="routeURL === '/partner/create-activity'" [routerLink]="['/partner/create-activity']">Create Activity</a></li>
+			   <li class="nav-item" *ngIf="auth.isFamily"><a class="nav-link" [class.active]="routeURL === '/partner/search-activities'" [routerLink]="['/partner/search-activities']">Browse Activities</a></li>
+			</ul>
+		  </li>
+		  <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
+			<a class="nav-link" data-bs-toggle="collapse" href="#collapsebookings" role="button" aria-expanded="false" aria-controls="collapsebookings">
+			  <i class="bi bi-calendar-event fa-fw me-2"></i>Bookings
+			</a>
+			<ul class="nav collapse flex-column" id="collapsebookings" data-bs-parent="#navbar-sidebar">
+			  <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/bookings/list-bookings'" [routerLink]="['/bookings/list-bookings']">All Bookings</a></li>
+			 
 			</ul>
 		  </li>
   
