@@ -4,6 +4,7 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { RestApiService } from '../../../services/api/rest-api.service';
+import Swal from 'sweetalert2';
 
 declare var $: any;
 
@@ -74,7 +75,9 @@ export class ListBookingsComponent implements OnInit {
     queryParams.append('page', this.filters.page.toString());
     queryParams.append('limit', this.filters.limit.toString());
 
-    const endpoint = `booking/my-bookings?${queryParams.toString()}`;
+    const endpoint = this.auth.isPartner 
+    ? `booking/partner/my-bookings?${queryParams.toString()}`
+    : `booking/my-bookings?${queryParams.toString()}`;
     
     this.api.get(endpoint)
       .then((response: any) => {
@@ -101,6 +104,16 @@ export class ListBookingsComponent implements OnInit {
     }
   }
 
+  getPaymentStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'paid': return 'bg-success';
+      case 'pending': return 'bg-warning';
+      case 'failed': return 'bg-danger';
+      case 'refunded': return 'bg-info';
+      default: return 'bg-secondary';
+    }
+  }
+
   viewBooking(booking: any) {
     this.selectedBooking = booking;
     $("#viewBooking").modal("show");
@@ -122,5 +135,87 @@ export class ListBookingsComponent implements OnInit {
       pages.push(i);
     }
     return pages;
+  }
+
+  approveBooking(bookingId: any) {
+    Swal.fire({
+      title: "Are you sure you want to approve this booking?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Approve",
+      denyButtonText: `Cancel`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.sp.show();
+        this.api.post(`booking/${bookingId}/approve`, {})
+          .then((response: any) => {
+            this.sp.hide();
+            Swal.fire("Booking!", "Approved Successfully", "success");
+            this.getAllBookings();
+          })
+          .catch((error: any) => {
+            this.sp.hide();
+            this.helper.failureToast(error?.error?.message || 'Failed to approve booking');
+          });
+      }
+    });
+  }
+
+  rejectBooking(bookingId: any) {
+    Swal.fire({
+      title: "Are you sure you want to reject this booking?",
+      input: 'textarea',
+      inputLabel: 'Rejection Reason',
+      inputPlaceholder: 'Enter reason for rejection...',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Reject",
+      denyButtonText: `Cancel`,
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to provide a reason for rejection!';
+        }
+        return null;
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.sp.show();
+        const data = { rejection_reason: result.value };
+        this.api.post(`booking/${bookingId}/reject`, data)
+          .then((response: any) => {
+            this.sp.hide();
+            Swal.fire("Booking!", "Rejected Successfully", "success");
+            this.getAllBookings();
+          })
+          .catch((error: any) => {
+            this.sp.hide();
+            this.helper.failureToast(error?.error?.message || 'Failed to reject booking');
+          });
+      }
+    });
+  }
+
+  cancelBooking(bookingId: any) {
+    Swal.fire({
+      title: "Are you sure you want to cancel this booking?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Cancel Booking",
+      denyButtonText: `Keep Booking`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.sp.show();
+        this.api.post(`booking/${bookingId}/cancel`, {})
+          .then((response: any) => {
+            this.sp.hide();
+            Swal.fire("Booking!", "Cancelled Successfully", "success");
+            this.getAllBookings();
+          })
+          .catch((error: any) => {
+            this.sp.hide();
+            this.helper.failureToast(error?.error?.message || 'Failed to cancel booking');
+          });
+      }
+    });
   }
 }

@@ -1,1 +1,237 @@
-<p>family-dashboard works!</p>
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Loading Dashboard....</p>
+</ngx-spinner>
+
+<!-- Title -->
+<div class="row">
+    <div class="col-12 mb-3">
+        <h1 class="h3 mb-2 mb-sm-0">Family Dashboard</h1>
+        <p class="text-muted">Welcome back! Here's your booking activity and upcoming adventures.</p>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <!-- Total Bookings -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-primary bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-primary">{{stats.bookings.total}}</h2>
+                    <span class="mb-0 h6 fw-light">Total Bookings</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-primary text-white mb-0">
+                    <i class="bi bi-calendar-event fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmed Bookings -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-success bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-success">{{stats.bookings.confirmed}}</h2>
+                    <span class="mb-0 h6 fw-light">Confirmed</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-success text-white mb-0">
+                    <i class="bi bi-check-circle fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Bookings -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-warning bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-warning">{{stats.bookings.pending}}</h2>
+                    <span class="mb-0 h6 fw-light">Pending</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-warning text-white mb-0">
+                    <i class="bi bi-clock fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Spent -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-body bg-info bg-opacity-10 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="purecounter mb-0 fw-bold text-info">${{stats.spending.totalSpent}}</h2>
+                    <span class="mb-0 h6 fw-light">Total Spent</span>
+                </div>
+                <div class="icon-lg rounded-circle bg-info text-white mb-0">
+                    <i class="bi bi-currency-dollar fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="row g-4">
+    <!-- Upcoming Bookings -->
+    <div class="col-xl-6">
+        <div class="card shadow h-100">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center p-4">
+                <h5 class="card-header-title">
+                    <i class="bi bi-calendar-check me-2"></i>Upcoming Adventures
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div *ngIf="upcomingBookings.length === 0" class="text-center py-4">
+                    <i class="bi bi-calendar-x display-4 text-muted"></i>
+                    <p class="text-muted mt-3">No upcoming bookings</p>
+                    <small class="text-muted d-block">Your confirmed and pending bookings will appear here</small>
+                </div>
+                <div *ngFor="let booking of upcomingBookings" class="d-flex align-items-center mb-3">
+                    <div class="avatar avatar-sm flex-shrink-0 me-3">
+                        <img *ngIf="booking.activity_id?.images && booking.activity_id.images.length > 0" 
+                             [src]="booking.activity_id.images[0]" 
+                             class="avatar-img rounded" 
+                             alt="Activity Image">
+                        <div *ngIf="!booking.activity_id?.images || booking.activity_id.images.length === 0" 
+                             class="avatar-img rounded bg-primary d-flex align-items-center justify-content-center">
+                            <i class="bi bi-calendar-event text-white"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">{{booking.activity_id?.title}}</h6>
+                        <small class="text-muted">
+                            <i class="bi bi-calendar me-1"></i>
+                            {{booking.slot_id?.start_time | date:'mediumDate'}} at {{booking.slot_id?.start_time | date:'shortTime'}}
+                            <br>
+                            <span class="badge me-2" [ngClass]="getStatusBadgeClass(booking.booking_status)">
+                                {{booking.booking_status | titlecase}}
+                            </span>
+                            ${{booking.total_amount}}
+                        </small>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block">{{getFormatedDate(booking.created_at)}}</small>
+                        <button class="btn btn-sm btn-light mt-1" (click)="viewActivityDetails(booking.activity_id?._id)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="col-xl-6">
+        <div class="card shadow h-100">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center p-4">
+                <h5 class="card-header-title">
+                    <i class="bi bi-clock-history me-2"></i>Recent Bookings
+                </h5>
+                <button class="btn btn-sm btn-primary-soft" (click)="viewAllBookings()">
+                    View All
+                </button>
+            </div>
+            <div class="card-body p-4">
+                <div *ngIf="recentBookings.length === 0" class="text-center py-4">
+                    <i class="bi bi-calendar-x display-4 text-muted"></i>
+                    <p class="text-muted mt-3">No bookings yet</p>
+                    <small class="text-muted d-block">Start exploring activities to make your first booking!</small>
+                </div>
+                <div *ngFor="let booking of recentBookings" class="d-flex align-items-center mb-3">
+                    <div class="avatar avatar-sm flex-shrink-0 me-3">
+                        <img *ngIf="booking.activity_id?.images && booking.activity_id.images.length > 0" 
+                             [src]="booking.activity_id.images[0]" 
+                             class="avatar-img rounded" 
+                             alt="Activity Image">
+                        <div *ngIf="!booking.activity_id?.images || booking.activity_id.images.length === 0" 
+                             class="avatar-img rounded bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="bi bi-calendar-event text-white"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">{{booking.activity_id?.title}}</h6>
+                        <small class="text-muted">
+                            <i class="bi bi-calendar me-1"></i>
+                            {{booking.slot_id?.start_time | date:'mediumDate'}} at {{booking.slot_id?.start_time | date:'shortTime'}}
+                            <br>
+                            <span class="badge me-2" [ngClass]="getStatusBadgeClass(booking.booking_status)">
+                                {{booking.booking_status | titlecase}}
+                            </span>
+                            ${{booking.total_amount}}
+                        </small>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block">{{getFormatedDate(booking.created_at)}}</small>
+                        <button class="btn btn-sm btn-light mt-1" (click)="viewActivityDetails(booking.activity_id?._id)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Summary -->
+<div class="row g-4 mt-2">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header p-4 border-bottom">
+                <h5 class="card-header-title">
+                    <i class="bi bi-bar-chart me-2"></i>Booking Summary
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-success text-white me-3">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{stats.bookings.completed}}</h6>
+                                <small class="text-muted">Completed</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-danger text-white me-3">
+                                <i class="bi bi-x-circle"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{stats.bookings.cancelled}}</h6>
+                                <small class="text-muted">Cancelled</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-info text-white me-3">
+                                <i class="bi bi-calculator"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">${{stats.spending.averagePerBooking.toFixed(2)}}</h6>
+                                <small class="text-muted">Avg per Booking</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="icon-md rounded-circle bg-primary text-white me-3">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{stats.bookings.total}}</h6>
+                                <small class="text-muted">Total Adventures</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

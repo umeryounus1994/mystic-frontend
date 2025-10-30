@@ -22,11 +22,12 @@
 <!-- Bookings Table -->
 <div class="card bg-transparent border">
     <div class="card-body mt-2">
-        <div class="table-responsive border-0 rounded-3" *ngIf="allBookings.length > 0">
+        <div class="table-responsive border-0 rounded-3" style="overflow: visible;" *ngIf="allBookings.length > 0">
             <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover" id="dtable">
                 <thead>
                     <tr>
                         <th scope="col" class="border-0 rounded-start">Activity</th>
+                        <th scope="col" class="border-0" *ngIf="auth.isPartner">Customer</th>
                         <th scope="col" class="border-0">Date & Time</th>
                         <th scope="col" class="border-0">Participants</th>
                         <th scope="col" class="border-0">Total Amount</th>
@@ -55,6 +56,19 @@
                                 </div>
                             </div>
                         </td>
+                        <td *ngIf="auth.isPartner">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-xs flex-shrink-0 me-2">
+                                    <div class="avatar-img rounded-circle bg-success d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">{{booking.customer?.name || booking.user_id?.first_name + ' ' + booking.user_id?.last_name}}</h6>
+                                    <small class="text-muted">{{booking.customer?.email || booking.user_id?.email}}</small>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <div>
                                 <strong>{{booking.slot_id?.start_time | date:'mediumDate'}}</strong><br>
@@ -74,24 +88,52 @@
                             <strong>${{booking.total_amount}}</strong>
                         </td>
                         <td>
-                            <span class="badge" [ngClass]="getStatusBadgeClass(booking.booking_status)">
-                                {{booking.booking_status | titlecase}}
-                            </span>
+                            <div>
+                           
+                                <small class="text-muted mt-1">
+                                    Booking: 
+                                     <span class="badge badge-sm" [ngClass]="getPaymentStatusBadgeClass(booking.payment_status)">
+                                        {{booking.payment_status | titlecase}}
+                                    </span>
+                                </small>
+                                <br>
+                                <small class="text-muted mt-1">
+                                    Payment: 
+                                    <span class="badge badge-sm" [ngClass]="getPaymentStatusBadgeClass(booking.payment_status)">
+                                        {{booking.payment_status | titlecase}}
+                                    </span>
+                                </small>
+                            </div>
                         </td>
                         <td>{{getFormatedDate(booking.created_at)}}</td>
                         <td>
-                            <div class="dropdown dropup">
-                                <button class="btn btn-light btn-round btn-sm" type="button" data-bs-toggle="dropdown">
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-round btn-sm" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
                                         <button class="dropdown-item" (click)="viewBooking(booking)">
                                             <i class="bi bi-eye me-2"></i>View Details
                                         </button>
                                     </li>
-                                    <li *ngIf="booking.booking_status === 'pending'">
-                                        <button class="dropdown-item text-danger">
+                                    <!-- Partner Actions -->
+                                    <li *ngIf="auth.isPartner && booking.booking_status === 'pending'">
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li *ngIf="auth.isPartner && booking.booking_status === 'pending'">
+                                        <button class="dropdown-item text-success" (click)="approveBooking(booking._id)">
+                                            <i class="bi bi-check-circle me-2"></i>Approve Booking
+                                        </button>
+                                    </li>
+                                    <li *ngIf="auth.isPartner && booking.booking_status === 'pending'">
+                                        <button class="dropdown-item text-danger" (click)="rejectBooking(booking._id)">
+                                            <i class="bi bi-x-circle me-2"></i>Reject Booking
+                                        </button>
+                                    </li>
+                                    <!-- Family Actions -->
+                                    <li *ngIf="!auth.isPartner && booking.booking_status === 'pending'">
+                                        <button class="dropdown-item text-danger" (click)="cancelBooking(booking._id)">
                                             <i class="bi bi-x-circle me-2"></i>Cancel Booking
                                         </button>
                                     </li>
@@ -158,7 +200,7 @@
                     <div class="col-md-6">
                         <h6>Booking Information</h6>
                         <p><strong>Booking ID:</strong> {{selectedBooking.booking_id}}</p>
-                        <p><strong>Date:</strong> {{selectedBooking.slot_id?.date | date:'fullDate'}}</p>
+                        <p><strong>Date:</strong> {{selectedBooking.slot_id?.start_time | date:'fullDate'}}</p>
                         <p><strong>Time:</strong> 
                             {{selectedBooking.slot_id?.start_time | date:'shortTime'}} - 
                             {{selectedBooking.slot_id?.end_time | date:'shortTime'}}

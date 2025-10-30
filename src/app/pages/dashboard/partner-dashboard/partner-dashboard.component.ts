@@ -175,6 +175,10 @@ export class PartnerDashboardComponent implements OnInit {
     return this.helper.getReportFormatedDateYMD(date);
   }
 
+  navigateToBookings() {
+    this.router.navigate(['/partner/bookings']);
+  }
+
   ngOnDestroy() {
     if (this.monthlyRevenueChart) {
       this.monthlyRevenueChart.destroy();

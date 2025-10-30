@@ -7,7 +7,7 @@
 		<ul class="navbar-nav flex-column" id="navbar-sidebar">
 		  
 		  <!-- Dashboard Section Header -->
-		  <li class="nav-item ms-2 my-2 mt-3" *ngIf="auth.isPartner">
+		  <li class="nav-item ms-2 my-2 mt-3" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
 			<i class="bi bi-grid-3x3-gap me-2"></i>Dashboard
 		  </li>
 		  
@@ -22,6 +22,11 @@
 		  <li class="nav-item" *ngIf="auth.isPartner">
 			<a [routerLink]="['/dashboard/partner']" class="nav-link" [class.active]="routeURL === '/dashboard/partner'">
 			  <i class="bi bi-speedometer2 fa-fw me-2"></i>Partner Dashboard
+			</a>
+		  </li>
+		   <li class="nav-item" *ngIf="auth.isFamily">
+			<a [routerLink]="['/dashboard/family']" class="nav-link" [class.active]="routeURL === '/dashboard/family'">
+			  <i class="bi bi-speedometer2 fa-fw me-2"></i>Family Dashboard
 			</a>
 		  </li>
   
