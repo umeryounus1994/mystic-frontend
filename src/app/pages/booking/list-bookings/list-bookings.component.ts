@@ -75,9 +75,14 @@ export class ListBookingsComponent implements OnInit {
     queryParams.append('page', this.filters.page.toString());
     queryParams.append('limit', this.filters.limit.toString());
 
-    const endpoint = this.auth.isPartner 
-    ? `booking/partner/my-bookings?${queryParams.toString()}`
-    : `booking/my-bookings?${queryParams.toString()}`;
+    let endpoint;
+    if (this.auth.isAdmin) {
+      endpoint = `booking/admin/all-bookings?${queryParams.toString()}`;
+    } else if (this.auth.isPartner) {
+      endpoint = `booking/partner/my-bookings?${queryParams.toString()}`;
+    } else {
+      endpoint = `booking/my-bookings?${queryParams.toString()}`;
+    }
     
     this.api.get(endpoint)
       .then((response: any) => {

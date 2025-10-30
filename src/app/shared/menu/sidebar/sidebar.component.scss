@@ -1,9 +1,21 @@
 
 
-.sidebar {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
-  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+#offcanvasSidebar {
+  height: 100vh !important;
+  overflow-y: auto !important;
+  margin-top: 0 !important;
+  
+  .offcanvas-body {
+    padding: 1rem 0;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  #offcanvasSidebar {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
 }
 
 .sidebar-content {
