@@ -92,8 +92,8 @@
                            
                                 <small class="text-muted mt-1">
                                     Booking: 
-                                     <span class="badge badge-sm" [ngClass]="getPaymentStatusBadgeClass(booking.payment_status)">
-                                        {{booking.payment_status | titlecase}}
+                                     <span class="badge badge-sm" [ngClass]="getBookingStatusBadgeClass(booking.booking_status)">
+                                        {{booking.booking_status | titlecase}}
                                     </span>
                                 </small>
                                 <br>
@@ -127,12 +127,12 @@
                                         </button>
                                     </li>
                                     <li *ngIf="auth.isPartner && booking.booking_status === 'pending'">
-                                        <button class="dropdown-item text-danger" (click)="rejectBooking(booking._id)">
+                                        <button class="dropdown-item text-danger" (click)="cancelBooking(booking._id)">
                                             <i class="bi bi-x-circle me-2"></i>Reject Booking
                                         </button>
                                     </li>
                                     <!-- Family Actions -->
-                                    <li *ngIf="!auth.isPartner && booking.booking_status === 'pending'">
+                                    <li *ngIf="auth.isFamily && booking.booking_status === 'pending'">
                                         <button class="dropdown-item text-danger" (click)="cancelBooking(booking._id)">
                                             <i class="bi bi-x-circle me-2"></i>Cancel Booking
                                         </button>
@@ -208,7 +208,7 @@
                         <p><strong>Participants:</strong> {{selectedBooking.participants}}</p>
                         <p><strong>Total Amount:</strong> ${{selectedBooking.total_amount}}</p>
                         <p><strong>Status:</strong> 
-                            <span class="badge" [ngClass]="getStatusBadgeClass(selectedBooking.booking_status)">
+                            <span class="badge" [ngClass]="getBookingStatusBadgeClass(selectedBooking.booking_status)">
                                 {{selectedBooking.booking_status | titlecase}}
                             </span>
                         </p>
@@ -218,6 +218,12 @@
                     <div class="col-12">
                         <h6>Special Requests</h6>
                         <p class="bg-light p-3 rounded">{{selectedBooking.special_requests}}</p>
+                    </div>
+                </div>
+                <div class="row mt-3" *ngIf="selectedBooking.booking_status === 'cancelled' && selectedBooking.cancellation_reason">
+                    <div class="col-12">
+                        <h6>Cancellation Reason</h6>
+                        <p class="bg-light p-3 rounded text-danger">{{selectedBooking.cancellation_reason}}</p>
                     </div>
                 </div>
                 <div class="row mt-3">

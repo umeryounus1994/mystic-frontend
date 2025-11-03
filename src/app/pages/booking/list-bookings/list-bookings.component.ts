@@ -99,7 +99,7 @@ export class ListBookingsComponent implements OnInit {
     return this.helper.getReportFormatedDateYMD(date);
   }
 
-  getStatusBadgeClass(status: string): string {
+  getBookingStatusBadgeClass(status: string): string {
     switch (status) {
       case 'pending': return 'bg-warning';
       case 'confirmed': return 'bg-success';
@@ -152,7 +152,7 @@ export class ListBookingsComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
-        this.api.post(`booking/${bookingId}/approve`, {})
+        this.api.post(`booking/confirm-booking`, {booking_id: bookingId})
           .then((response: any) => {
             this.sp.hide();
             Swal.fire("Booking!", "Approved Successfully", "success");
@@ -166,54 +166,30 @@ export class ListBookingsComponent implements OnInit {
     });
   }
 
-  rejectBooking(bookingId: any) {
+  cancelBooking(bookingId: any) {
     Swal.fire({
-      title: "Are you sure you want to reject this booking?",
+      title: "Are you sure you want to cancel this booking?",
       input: 'textarea',
-      inputLabel: 'Rejection Reason',
-      inputPlaceholder: 'Enter reason for rejection...',
+      inputLabel: 'Cancellation Reason',
+      inputPlaceholder: 'Enter reason for cancellation...',
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonText: "Reject",
       denyButtonText: `Cancel`,
       inputValidator: (value) => {
         if (!value) {
-          return 'You need to provide a reason for rejection!';
+          return 'You need to provide a reason for cancellation!';
         }
         return null;
       }
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
-        const data = { rejection_reason: result.value };
-        this.api.post(`booking/${bookingId}/reject`, data)
+        const data = { booking_id: bookingId, cancellation_reason: result.value };
+        this.api.post(`booking/cancel-booking`, data)
           .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Booking!", "Rejected Successfully", "success");
-            this.getAllBookings();
-          })
-          .catch((error: any) => {
-            this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to reject booking');
-          });
-      }
-    });
-  }
-
-  cancelBooking(bookingId: any) {
-    Swal.fire({
-      title: "Are you sure you want to cancel this booking?",
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonText: "Cancel Booking",
-      denyButtonText: `Keep Booking`
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.sp.show();
-        this.api.post(`booking/${bookingId}/cancel`, {})
-          .then((response: any) => {
-            this.sp.hide();
-            Swal.fire("Booking!", "Cancelled Successfully", "success");
+            Swal.fire("Booking!", "Cancellation Successfully", "success");
             this.getAllBookings();
           })
           .catch((error: any) => {
@@ -223,4 +199,38 @@ export class ListBookingsComponent implements OnInit {
       }
     });
   }
+
+  rejectBooking(bookingId: any) {
+  Swal.fire({
+    title: "Are you sure you want to reject this booking?",
+    input: 'textarea',
+    inputLabel: 'Rejection Reason',
+    inputPlaceholder: 'Enter reason for rejection...',
+    showDenyButton: true,
+    showCancelButton: false,
+    confirmButtonText: "Reject",
+    denyButtonText: `Cancel`,
+    inputValidator: (value) => {
+      if (!value) {
+        return 'You need to provide a reason for rejection!';
+      }
+      return null;
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.sp.show();
+      const data = { rejection_reason: result.value };
+      this.api.post(`booking/${bookingId}/reject`, data)
+        .then((response: any) => {
+          this.sp.hide();
+          Swal.fire("Booking!", "Rejected Successfully", "success");
+          this.getAllBookings();
+        })
+        .catch((error: any) => {
+          this.sp.hide();
+          this.helper.failureToast(error?.error?.message || 'Failed to reject booking');
+        });
+    }
+  });
+}
 }

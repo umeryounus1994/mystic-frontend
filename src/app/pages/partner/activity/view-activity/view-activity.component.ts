@@ -105,16 +105,39 @@ deleteActivity() {
       case 'sports': return 'bi-trophy';
       case 'arts': return 'bi-palette';
       case 'adventure': return 'bi-compass';
+      case 'others': return 'bi-tag';
       default: return 'bi-tag';
     }
   }
 
-  getSlotStatusBadgeClass(status: string): string {
+  getSlotStatusBadgeClass(status: string, isExpired: boolean = false): string {
+    if (isExpired) return 'bg-secondary';
+    
     switch (status) {
       case 'available': return 'bg-success';
       case 'full': return 'bg-warning';
       case 'cancelled': return 'bg-danger';
       case 'completed': return 'bg-info';
+      default: return 'bg-secondary';
+    }
+  }
+
+  getBookingStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'confirmed': return 'bg-success';
+      case 'pending': return 'bg-warning';
+      case 'cancelled': return 'bg-danger';
+      case 'completed': return 'bg-info';
+      default: return 'bg-secondary';
+    }
+  }
+
+  getPaymentStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'paid': return 'bg-success';
+      case 'pending': return 'bg-warning';
+      case 'failed': return 'bg-danger';
+      case 'refunded': return 'bg-info';
       default: return 'bg-secondary';
     }
   }
@@ -168,5 +191,11 @@ deleteActivity() {
         this.sp.hide();
         this.helper.failureToast(error?.error?.message || 'Failed to create booking');
       });
+  }
+
+  isSlotExpired(slot: any): boolean {
+    const currentDate = new Date();
+    const slotEndDate = new Date(slot.end_time);
+    return slotEndDate < currentDate;
   }
 }

@@ -31,7 +31,8 @@ export class ListActivityComponent implements OnInit {
     { value: 'educational', label: 'Educational' },
     { value: 'sports', label: 'Sports' },
     { value: 'arts', label: 'Arts' },
-    { value: 'adventure', label: 'Adventure' }
+    { value: 'adventure', label: 'Adventure' },
+    { value: 'others', label: 'Others' }
   ];
   
   statuses = [
@@ -242,6 +243,7 @@ deleteActivity(activityId: any) {
       case 'sports': return 'bi-trophy';
       case 'arts': return 'bi-palette';
       case 'adventure': return 'bi-compass';
+      case 'others': return 'bi-tag';
       default: return 'bi-tag';
     }
   }

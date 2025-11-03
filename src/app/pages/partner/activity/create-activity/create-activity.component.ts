@@ -20,7 +20,8 @@ export class CreateActivityComponent implements OnInit {
     { value: 'educational', label: 'Educational' },
     { value: 'sports', label: 'Sports' },
     { value: 'arts', label: 'Arts' },
-    { value: 'adventure', label: 'Adventure' }
+    { value: 'adventure', label: 'Adventure' },
+    { value: 'others', label: 'Others' }
   ];
 
   constructor(
