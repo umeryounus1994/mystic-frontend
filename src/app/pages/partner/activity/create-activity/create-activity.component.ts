@@ -114,7 +114,7 @@ export class CreateActivityComponent implements OnInit {
           this.helper.successToast("Activity Created Successfully");
         }, 1000);
         setTimeout(() => {
-         // this.router.navigate(['partner/list-activities']);
+          this.router.navigate(['partner/list-activities']);
         }, 2000);
       })
       .catch((error: any) => {
