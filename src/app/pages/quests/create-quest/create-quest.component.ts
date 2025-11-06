@@ -38,6 +38,7 @@ export class CreateQuestComponent implements OnInit {
       this.questForm = this.fb.group({
         quest_question: ['', [Validators.required, Validators.minLength(5)]],
         quest_title: ['', [Validators.required, Validators.minLength(5)]],
+        quest_password: [''], // Optional password field
         no_of_xp: [0, Validators.required],
         no_of_crypes: [0, Validators.required],
         level_increase: ['', Validators.required],
@@ -50,6 +51,7 @@ export class CreateQuestComponent implements OnInit {
       this.questForm = this.fb.group({
         quest_question: ['', [Validators.required, Validators.minLength(5)]],
         quest_title: ['', [Validators.required, Validators.minLength(5)]],
+        quest_password: [''], // Optional password field
         no_of_xp: [0],
         no_of_crypes: [0],
         level_increase: ['', Validators.required],
@@ -103,6 +105,9 @@ export class CreateQuestComponent implements OnInit {
     const fD = new FormData();
     fD.append('quest_question', formData?.quest_question);
     fD.append('quest_title', formData?.quest_title);
+    if(formData?.quest_password) {
+      fD.append('quest_password', formData?.quest_password);
+    }
     fD.append('no_of_xp', formData?.no_of_xp);
     fD.append('no_of_crypes', formData?.no_of_crypes);
     fD.append('level_increase', formData?.level_increase);

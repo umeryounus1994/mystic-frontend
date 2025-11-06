@@ -50,6 +50,11 @@
                                     formControlName="quest_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_title'].errors }">
                             </div>
+                            <div class="col-lg-4">
+                                <label class="form-label">Quest Password (Optional)</label>
+                                <input type="password" class="form-control" placeholder="Enter password"
+                                    formControlName="quest_password">
+                            </div>
                            
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">No of Crypes</label>
