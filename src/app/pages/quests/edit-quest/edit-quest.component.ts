@@ -6,6 +6,7 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-edit-quest',
@@ -18,6 +19,7 @@ export class EditQuestComponent implements OnInit {
   public QrCode: string = "";
   public qrCodeDownloadLink: SafeUrl = "";
   allCreatures: any = [];
+  allActivities: any = [];
   reward: File | undefined = undefined;
   Id = '';
   rewardFile = '';
@@ -29,7 +31,7 @@ export class EditQuestComponent implements OnInit {
   option5: File | undefined = undefined;
   questimg = '';
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+    private router: Router, private fb: FormBuilder, private route: ActivatedRoute, private auth: AuthService) {
       this.route.queryParams.subscribe(params => {
         if (params && Object.keys(params).length > 0) {
           this.Id = params['Id'];
@@ -40,6 +42,9 @@ export class EditQuestComponent implements OnInit {
     this.questForm = this.fb.group({
       quest_question: ['', [Validators.required, Validators.minLength(5)]],
       quest_title: ['', [Validators.required, Validators.minLength(5)]],
+      quest_password: [''], // Add password field
+      activity_id: [''], // Add activity field
+      quest_context: ['standalone'], // Add context field
       no_of_xp: ['', Validators.required],
       no_of_crypes: ['', Validators.required],
       level_increase: ['', Validators.required],
@@ -49,9 +54,11 @@ export class EditQuestComponent implements OnInit {
     });
    
     this.getAllCreatures()
+    this.getAllActivities() // Add this
     this.getProductDetails()
   }
   getProductDetails() {
+    this.sp.show(); // Add spinner at start
     
     this.api.get('quest/get_quest_by_id/' + this.Id)
       .then((response: any) => {
@@ -59,8 +66,13 @@ export class EditQuestComponent implements OnInit {
         if(response?.data?.questQuiz && response?.data?.questQuiz.length < 1){
           this.addQuestion();
         }
-       this.questForm.controls['quest_question'].setValue(response?.data?.quest?.quest_question);
+        this.questForm.controls['quest_question'].setValue(response?.data?.quest?.quest_question);
         this.questForm.controls['quest_title'].setValue(response?.data?.quest?.quest_title);
+        this.questForm.controls['quest_password'].setValue(response?.data?.quest?.quest_password || '');
+        // Handle both populated and non-populated activity_id
+        const activityId = response?.data?.quest?.activity_id?._id || response?.data?.quest?.activity_id || '';
+        this.questForm.controls['activity_id'].setValue(activityId);
+        this.questForm.controls['quest_context'].setValue(response?.data?.quest?.quest_context || 'standalone');
         this.questForm.controls['no_of_xp'].setValue(response?.data?.quest?.no_of_xp);
         this.questForm.controls['level_increase'].setValue(response?.data?.quest?.level_increase);
         this.questForm.controls['no_of_crypes'].setValue(response?.data?.quest?.no_of_crypes);
@@ -75,9 +87,12 @@ export class EditQuestComponent implements OnInit {
             answer_image: question.answer_image || ""
           }));
         });
-
-
-      })};
+      })
+      .catch((error: any) => {
+        this.sp.hide(); // Hide spinner on error
+        console.error('Error loading quest details:', error);
+      });
+  }
   get f() { return this.questForm?.controls; }
   questions() : FormArray {  
     return this.questForm.get("questions") as FormArray  
@@ -92,7 +107,36 @@ export class EditQuestComponent implements OnInit {
       this.sp.hide();
     });
   }
-     
+  getAllActivities() {
+    this.allActivities = [];
+    
+    const queryParams = new URLSearchParams();
+    queryParams.append('status', 'approved');
+    queryParams.append('page', '1');
+    queryParams.append('limit', '100');
+
+    // Add partner_id only if user is a partner
+    if (this.auth.isPartner) {
+      queryParams.append('partner_id', this.auth.user._id.toString());
+    }
+
+    const endpoint = `activity/?${queryParams.toString()}`;
+    
+    this.api.get(endpoint)
+      .then((response: any) => {
+        this.allActivities = response?.data?.activities || [];
+      }).catch((error: any) => {
+        console.error('Error loading activities:', error);
+      });
+  }
+  onActivityChange(event: any) {
+    const activityId = event.target.value;
+    if (activityId) {
+      this.questForm.patchValue({ quest_context: 'activity_linked' });
+    } else {
+      this.questForm.patchValue({ quest_context: 'standalone' });
+    }
+  }
   newQuestion(): FormGroup {  
     return this.fb.group({  
       answer: '',  
@@ -119,6 +163,13 @@ export class EditQuestComponent implements OnInit {
     const fD = new FormData();
     fD.append('quest_question', formData?.quest_question);
     fD.append('quest_title', formData?.quest_title);
+    if(formData?.quest_password) {
+      fD.append('quest_password', formData?.quest_password);
+    }
+    if(formData?.activity_id) {
+      fD.append('activity_id', formData?.activity_id);
+    }
+    fD.append('quest_context', formData?.quest_context);
     fD.append('no_of_xp', formData?.no_of_xp);
     fD.append('no_of_crypes', formData?.no_of_crypes);
     fD.append('level_increase', formData?.level_increase);

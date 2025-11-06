@@ -85,6 +85,11 @@ async getAllActivities() {
     if (this.filters.status) queryParams.append('status', this.filters.status);
     queryParams.append('page', this.filters.page.toString());
     queryParams.append('limit', this.filters.limit.toString());
+    
+        // Add partner_id only if user is a partner
+    if (this.auth.isPartner) {
+      queryParams.append('partner_id', this.auth.user._id.toString());
+    }
 
     const endpoint = `activity/?${queryParams.toString()}`;
     

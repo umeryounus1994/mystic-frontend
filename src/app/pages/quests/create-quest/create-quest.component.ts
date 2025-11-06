@@ -19,6 +19,7 @@ export class CreateQuestComponent implements OnInit {
   public QrCode: string = "";
   public qrCodeDownloadLink: SafeUrl = "";
   allCreatures: any = [];
+  allActivities: any = [];
   reward: File | undefined = undefined;
   quest_file: File | undefined = undefined;
   option1: File | undefined = undefined;
@@ -39,6 +40,8 @@ export class CreateQuestComponent implements OnInit {
         quest_question: ['', [Validators.required, Validators.minLength(5)]],
         quest_title: ['', [Validators.required, Validators.minLength(5)]],
         quest_password: [''], // Optional password field
+        activity_id: [''], // Optional activity link
+        quest_context: ['standalone'], // Default to standalone
         no_of_xp: [0, Validators.required],
         no_of_crypes: [0, Validators.required],
         level_increase: ['', Validators.required],
@@ -52,6 +55,8 @@ export class CreateQuestComponent implements OnInit {
         quest_question: ['', [Validators.required, Validators.minLength(5)]],
         quest_title: ['', [Validators.required, Validators.minLength(5)]],
         quest_password: [''], // Optional password field
+        activity_id: [''], // Add this line
+        quest_context: ['standalone'], // Add this line
         no_of_xp: [0],
         no_of_crypes: [0],
         level_increase: ['', Validators.required],
@@ -63,7 +68,8 @@ export class CreateQuestComponent implements OnInit {
     }
  
     this.addQuestion();
-    this.getAllCreatures()
+    this.getAllCreatures();
+    this.getAllActivities(); // Load activities
   }
   get f() { return this.questForm?.controls; }
   questions() : FormArray {  
@@ -79,7 +85,36 @@ export class CreateQuestComponent implements OnInit {
       this.sp.hide();
     });
   }
-     
+  getAllActivities() {
+    this.allActivities = [];
+    
+    const queryParams = new URLSearchParams();
+    queryParams.append('status', 'approved'); // Only show approved activities
+    queryParams.append('page', '1');
+    queryParams.append('limit', '100'); // Get all activities for dropdown
+
+    // Add partner_id only if user is a partner
+    if (this.auth.isPartner) {
+      queryParams.append('partner_id', this.auth.user._id.toString());
+    }
+
+    const endpoint = `activity/?${queryParams.toString()}`;
+    
+    this.api.get(endpoint)
+      .then((response: any) => {
+        this.allActivities = response?.data?.activities || [];
+      }).catch((error: any) => {
+        console.error('Error loading activities:', error);
+      });
+  }
+  onActivityChange(event: any) {
+    const activityId = event.target.value;
+    if (activityId) {
+      this.questForm.patchValue({ quest_context: 'activity_linked' });
+    } else {
+      this.questForm.patchValue({ quest_context: 'standalone' });
+    }
+  }
   newQuestion(): FormGroup {  
     return this.fb.group({  
       answer: '',  
@@ -101,13 +136,16 @@ export class CreateQuestComponent implements OnInit {
   }
   _sendSaveRequest(formData: any) {
     this.sp.show();
-    let questions = formData.questions;
     const fD = new FormData();
     fD.append('quest_question', formData?.quest_question);
     fD.append('quest_title', formData?.quest_title);
     if(formData?.quest_password) {
       fD.append('quest_password', formData?.quest_password);
     }
+    if(formData?.activity_id) {
+      fD.append('activity_id', formData?.activity_id);
+    }
+    fD.append('quest_context', formData?.quest_context);
     fD.append('no_of_xp', formData?.no_of_xp);
     fD.append('no_of_crypes', formData?.no_of_crypes);
     fD.append('level_increase', formData?.level_increase);

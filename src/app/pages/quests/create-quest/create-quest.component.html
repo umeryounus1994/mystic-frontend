@@ -24,20 +24,18 @@
                             <div class="col-lg-2">
                                 <label class="form-label">Quest Type</label>
                                 <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
-                                formControlName="quest_type"
-                                [ngClass]="{ 'is-invalid': submitted && f['quest_type']?.errors }">
+                                    formControlName="quest_type"
+                                    [ngClass]="{ 'is-invalid': submitted && f['quest_type']?.errors }">
                                     <option value="" selected disabled>Select Quest Type</option>
                                     <option value='simple'>Simple</option>
                                     <option value='image'>Picture</option>
                                     <option value='video'>Video</option>
-                            </select>
+                                </select>
                             </div>
                             <div class="col-lg-7 mb-1">
                                 <label class="form-label">Quest File</label>
-                                <input type="file" class="form-control"
-                                accept="image/*"
-                                (change)="onFileSelectedQuest($event)"
-                                    placeholder="Answer">
+                                <input type="file" class="form-control" accept="image/*"
+                                    (change)="onFileSelectedQuest($event)" placeholder="Answer">
                             </div>
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">No of XP</label>
@@ -55,7 +53,17 @@
                                 <input type="password" class="form-control" placeholder="Enter password"
                                     formControlName="quest_password">
                             </div>
-                           
+                            <div class="col-lg-3">
+                                <label class="form-label">Link to Activity (Optional)</label>
+                                <select class="form-select" formControlName="activity_id"
+                                    (change)="onActivityChange($event)">
+                                    <option value="">Select Activity</option>
+                                    <option *ngFor="let activity of allActivities" [value]="activity._id">
+                                        {{activity.title}}
+                                    </option>
+                                </select>
+                            </div>
+
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">No of Crypes</label>
                                 <input type="text" class="form-control" placeholder="0" formControlName="no_of_crypes"
@@ -69,17 +77,18 @@
                             <div class="col-lg-3">
                                 <label class="form-label">Mythica</label>
                                 <select class="form-control" formControlName="mythica_ID"
-                                [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
                                     <option value="" selected disabled>Select Mythica</option>
-                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Reward PDF</label>
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
-                                (change)="onFileSelected($event, 'reward')">
+                                    (change)="onFileSelected($event, 'reward')">
                             </div>
-                
+
                             <label class="form-label">Answers</label>
                             <div formArrayName="questions">
                                 <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index"
@@ -91,8 +100,8 @@
                                     </div>
                                     <div class="col-lg-3 mb-1">
                                         <input type="file" class="form-control" formControlName="answer_image"
-                                        accept="image/*, video/*"
-                                        (change)="onFileSelectedOptions($event, 'option'+(i+1))"
+                                            accept="image/*, video/*"
+                                            (change)="onFileSelectedOptions($event, 'option'+(i+1))"
                                             placeholder="Answer">
                                     </div>
                                     <div class="col-lg-2 mb-1">

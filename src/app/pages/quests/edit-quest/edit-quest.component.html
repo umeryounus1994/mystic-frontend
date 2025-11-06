@@ -1,5 +1,5 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Updating Quest.....</p>
+    <p style="font-size: 30px; color: white">Loading Quest Details.....</p>
 </ngx-spinner>
 <div class="row">
     <div class="col-12 mb-3">
@@ -50,6 +50,20 @@
                                 <input type="text" class="form-control" placeholder="Title"
                                     formControlName="quest_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_title'].errors }">
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="form-label">Quest Password (Optional)</label>
+                                <input type="password" class="form-control" placeholder="Enter password"
+                                    formControlName="quest_password">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Link to Activity (Optional)</label>
+                                <select class="form-select" formControlName="activity_id" (change)="onActivityChange($event)">
+                                    <option value="">Select Activity</option>
+                                    <option *ngFor="let activity of allActivities" [value]="activity._id">
+                                        {{activity.title}}
+                                    </option>
+                                </select>
                             </div>
                         
                             <div class="col-lg-3">

@@ -32,9 +32,9 @@
         <li class="nav-item ms-2 my-2">Content Management</li>
 
         <!-- Quests -->
-        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Quest')">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.isPartner || auth.user?.permissions?.includes('Quest')">
           <a class="nav-link" data-bs-toggle="collapse" href="#collapsequest" role="button" aria-expanded="false" aria-controls="collapsequest">
-            <i class="bi bi-puzzle fa-fw me-2"></i>Quests
+            <i class="bi bi-puzzle fa-fw me-2"></i>Digital Quests
           </a>
           <ul class="nav collapse flex-column" id="collapsequest" data-bs-parent="#navbar-sidebar">
             <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']">All Quests</a></li>

@@ -40,8 +40,8 @@ export class ListQuestComponent implements OnInit {
   }, 1000);
   }
   ngOnInit() {
-    this.sp.show()
-    if(this.auth.isAdmin){
+    this.sp.show() // Keep initial spinner
+    if(this.auth.isAdmin || this.auth.isPartner){
       this.getAllUsers();
       this.getAllAnalytics();
       this.getAllGroups();
@@ -55,32 +55,34 @@ export class ListQuestComponent implements OnInit {
 
   getAllUsers() {
     this.allQuests = [];
+    // Don't show spinner here - already showing from ngOnInit
     this.api.get('quest/get_all')
     .then((response: any) => {
-        this.sp.hide();
+        this.sp.hide(); // Hide spinner when main data is loaded
         this.allQuests = response?.data;
     }).catch((error: any) => {
-      this.sp.hide();
+      this.sp.hide(); // Hide spinner on error
     });
   }
   getAllUsersSubAdmin() {
     this.allQuests = [];
+    // Don't show spinner here - already showing from ngOnInit
     this.api.get('quest/get_all_subadmin')
     .then((response: any) => {
-        this.sp.hide();
+        this.sp.hide(); // Hide spinner when main data is loaded
         this.allQuests = response?.data;
     }).catch((error: any) => {
-      this.sp.hide();
+      this.sp.hide(); // Hide spinner on error
     });
   }
   getAllGroups() {
     this.allQuestsGroups = [];
+    // Remove spinner from here - runs in background
     this.api.get('quest/get_all_quest_groups')
     .then((response: any) => {
-        this.sp.hide();
         this.allQuestsGroups = response?.data;
     }).catch((error: any) => {
-      this.sp.hide();
+      // Handle error silently for background calls
     });
   }
   getFormatedDate(date: any) {
@@ -158,12 +160,12 @@ export class ListQuestComponent implements OnInit {
     this.quest_image = quest.quest_image
   }
   async getAllAnalytics() {
+    // Remove spinner from here - runs in background
     this.api.get('quest/quest_analytics')
     .then((response: any) => {
-        this.sp.hide();
         this.counters = response?.data;
     }).catch((error: any) => {
-      this.sp.hide();
+      // Handle error silently for background calls
     });
   }
 }
