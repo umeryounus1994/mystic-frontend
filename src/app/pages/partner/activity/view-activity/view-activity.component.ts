@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../../services/api/rest-api.service';
 import { HelperService } from '../../../../services/helper/helper.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { PaymentService } from '../../../../services/payment/payment.service';
 declare var $: any;
 @Component({
   selector: 'app-view-activity',
@@ -19,6 +20,12 @@ export class ViewActivityComponent implements OnInit {
     participants: '',
     special_requests: ''
   };
+  selectedPaymentMethod: string = 'stripe';
+  paymentProcessing: boolean = false;
+  showStripePaymentForm = false;
+  stripeElements: any = null;
+  currentBookingId: string = ''; // Add this property
+  @ViewChild('paymentElement', { static: false }) paymentElementRef!: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,7 +33,8 @@ export class ViewActivityComponent implements OnInit {
     private sp: NgxSpinnerService,
     private api: RestApiService,
     private helper: HelperService,
-    public auth: AuthService
+    public auth: AuthService,
+    private paymentService: PaymentService
   ) {}
 
   ngOnInit() {
@@ -152,6 +160,7 @@ deleteActivity() {
       participants: '',
       special_requests: ''
     };
+    this.selectedPaymentMethod = 'stripe'; // Default to Stripe
     $("#bookingModal").modal("show");
   }
 
@@ -171,31 +180,286 @@ deleteActivity() {
       activity_id: this.activity._id,
       slot_id: this.selectedSlot._id,
       participants: parseInt(this.bookingData.participants),
-      special_requests: this.bookingData.special_requests || ''
+      special_requests: this.bookingData.special_requests || '',
+      payment_method: this.selectedPaymentMethod // Add this line
     };
 
     this.sp.show();
     this.api.post('booking/create', bookingPayload)
       .then((response: any) => {
         this.sp.hide();
-        $("#bookingModal").modal("hide");
-        this.helper.successToast('Booking created successfully!');
         
-        // Refresh activity details to update slot availability
-        this.getActivityDetails();
+        if (!response?.data?._id) {
+          throw new Error('No booking ID received');
+        }
         
-        // Optionally redirect to booking confirmation or payment page
-        // this.router.navigate(['/booking-confirmation'], { queryParams: { bookingId: response.data._id } });
+        const bookingId = response.data._id;
+        this.currentBookingId = bookingId;
+        
+        // Process payment based on selected method
+        this.processPayment(bookingId);
       })
       .catch((error: any) => {
         this.sp.hide();
+        this.paymentProcessing = false;
         this.helper.failureToast(error?.error?.message || 'Failed to create booking');
       });
+  }
+
+  calculateTotalAmount(): number {
+    const pricePerPerson = this.activity.price_per_person || 0;
+    const participants = parseInt(this.bookingData.participants) || 0;
+    return pricePerPerson * participants;
+  }
+
+  async processPayment(bookingId: string) {
+    console.log('🔍 Processing payment with method:', this.selectedPaymentMethod);
+    console.log('🔍 Booking ID:', bookingId);
+    
+    this.paymentProcessing = true;
+
+    try {
+      if (this.selectedPaymentMethod === 'stripe') {
+        console.log('🔵 Routing to Stripe payment');
+        await this.processStripePayment(bookingId);
+      } else if (this.selectedPaymentMethod === 'paypal') {
+        console.log('🟡 Routing to PayPal payment');
+        await this.processPayPalPayment(bookingId);
+      } else {
+        console.error('❌ Invalid payment method:', this.selectedPaymentMethod);
+        throw new Error('Invalid payment method selected');
+      }
+    } catch (error: any) {
+      console.error('💥 Payment processing error:', error);
+      this.paymentProcessing = false;
+      this.helper.failureToast(error?.message || 'Payment failed');
+    }
+  }
+
+  async processStripePayment(bookingId: string) {
+    try {
+      
+      const response: any = await this.paymentService.createStripePaymentIntent(bookingId);
+      
+      if (!response?.data?.client_secret) {
+        throw new Error('No client secret received from Stripe');
+      }
+      
+      const clientSecret = response.data.client_secret;
+      
+      // Show payment form first
+      this.showStripePaymentForm = true;
+      
+      // Wait for DOM to update
+      setTimeout(async () => {
+        try {
+          // Create Stripe Elements for payment collection
+          const { stripe, elements, paymentElement } = await this.paymentService.createStripeElements(clientSecret);
+          
+          // Alternative mounting approach using ViewChild
+          if (this.paymentElementRef?.nativeElement) {
+            paymentElement.mount(this.paymentElementRef.nativeElement);
+            this.stripeElements = { stripe, elements, paymentElement };
+          } else {
+            // Fallback to getElementById
+            const paymentElementContainer = document.getElementById('payment-element');
+            if (paymentElementContainer) {
+              paymentElement.mount('#payment-element');
+              this.stripeElements = { stripe, elements, paymentElement };
+            } else {
+              throw new Error('Payment element container not found');
+            }
+          }
+          
+          // Reset paymentProcessing after successful mounting
+          this.paymentProcessing = false;
+          
+        } catch (mountError) {
+          console.error('Error mounting Stripe Elements:', mountError);
+          this.showStripePaymentForm = false;
+          this.paymentProcessing = false;
+          throw mountError;
+        }
+      }, 100);
+      
+    } catch (error: any) {
+      console.error('Stripe Payment Process Error:', error);
+      this.showStripePaymentForm = false;
+      this.paymentProcessing = false;
+      throw error;
+    }
+  }
+
+  async confirmStripePayment() {
+    try {
+      if (!this.stripeElements) {
+        throw new Error('Stripe elements not initialized');
+      }
+      
+      this.paymentProcessing = true;
+      
+      // Add timeout to prevent infinite processing
+      const timeoutId = setTimeout(() => {
+        if (this.paymentProcessing) {
+          this.paymentProcessing = false;
+          this.helper.failureToast('Payment confirmation timed out. Please check your payment status.');
+        }
+      }, 30000); // 30 second timeout
+      
+      const { stripe, elements } = this.stripeElements;
+      
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/partner/view-activity`
+        },
+        redirect: 'if_required'
+      });
+      
+      clearTimeout(timeoutId); // Clear timeout if we get a result
+      this.handleStripeResult(result);
+      
+    } catch (error: any) {
+      console.error('Stripe confirmation error:', error);
+      this.paymentProcessing = false;
+      this.helper.failureToast(error.message || 'Payment confirmation failed');
+    }
+  }
+
+  handleStripeResult(result: any) {
+    console.log('Handling Stripe result:', JSON.stringify(result, null, 2));
+    
+    // Force reset processing state after 1 second if not already reset
+    setTimeout(() => {
+      if (this.paymentProcessing) {
+        console.log('Force resetting paymentProcessing state');
+        this.paymentProcessing = false;
+      }
+    }, 1000);
+    
+    if (result?.error) {
+      console.error('Stripe Payment Error:', result.error);
+      this.paymentProcessing = false;
+      this.helper.failureToast(result.error.message);
+    } else if (result?.paymentIntent) {
+      const status = result.paymentIntent.status;
+      
+      switch (status) {
+        case 'succeeded':
+          this.saveStripePaymentData(result.paymentIntent);
+          break;
+        case 'processing':
+          this.paymentProcessing = false;
+          this.helper.successToast('Payment is being processed. You will be notified once completed.');
+          this.saveStripePaymentData(result.paymentIntent);
+          break;
+        case 'requires_payment_method':
+          this.paymentProcessing = false;
+          this.helper.failureToast('Please check your payment details and try again.');
+          break;
+        default:
+          this.paymentProcessing = false;
+          this.helper.failureToast('Payment status unclear. Please check your booking history.');
+          break;
+      }
+    } else {
+      this.paymentProcessing = false;
+      this.helper.successToast('Payment completed successfully!');
+      this.handlePaymentSuccess();
+    }
+  }
+
+  async saveStripePaymentData(paymentIntent: any) {
+    try {
+      
+      const paymentData = {
+        booking_id: this.currentBookingId,
+        stripe_payment_data: {
+          payment_intent_id: paymentIntent.id,
+          status: paymentIntent.status,
+          amount: paymentIntent.amount,
+          currency: paymentIntent.currency,
+          payment_method: paymentIntent.payment_method,
+          created: paymentIntent.created,
+          client_secret: paymentIntent.client_secret
+        }
+      };
+      
+      const response = await this.api.post('booking/update-payment-data', paymentData);
+      
+      this.handlePaymentSuccess();
+    } catch (error: any) {
+      console.error('Error saving payment data:', error);
+      this.paymentProcessing = false;
+      this.helper.failureToast('Payment successful but failed to update booking. Please contact support.');
+    }
+  }
+
+  async processPayPalPayment(bookingId: string) {
+    try {
+      console.log('🟡 Creating PayPal Order for booking:', bookingId);
+      console.log('🟡 Selected payment method:', this.selectedPaymentMethod);
+      
+      // Make sure we're not calling Stripe service
+      if (this.selectedPaymentMethod !== 'paypal') {
+        throw new Error('Payment method mismatch - expected PayPal');
+      }
+      
+      const response: any = await this.paymentService.createPayPalOrder(bookingId);
+      console.log('🟡 PayPal Order Response:', response);
+      
+      if (!response?.data?.approval_url) {
+        throw new Error('No approval URL received from PayPal');
+      }
+      
+      console.log('🟡 Redirecting to PayPal URL:', response.data.approval_url);
+      
+      // Store booking ID for when user returns
+      localStorage.setItem('pendingBooking', JSON.stringify({
+        bookingId: bookingId,
+        activityId: this.activityId,
+        paymentMethod: 'paypal' // Add this to track payment method
+      }));
+      
+      // Redirect to PayPal
+      window.location.href = response.data.approval_url;
+    } catch (error: any) {
+      console.error('🟡 PayPal Payment Process Error:', error);
+      throw error;
+    }
+  }
+
+  handlePaymentSuccess() {
+    console.log('Handling payment success');
+    this.paymentProcessing = false;
+    this.showStripePaymentForm = false;
+    $("#bookingModal").modal("hide");
+    this.helper.successToast('Payment successful! Booking confirmed.');
+    this.getActivityDetails();
   }
 
   isSlotExpired(slot: any): boolean {
     const currentDate = new Date();
     const slotEndDate = new Date(slot.end_time);
     return slotEndDate < currentDate;
+  }
+
+  cancelStripePayment() {
+    this.showStripePaymentForm = false;
+    this.stripeElements = null;
+    this.paymentProcessing = false;
+    this.sp.hide();
+    
+    // Unmount any existing Stripe elements
+    const paymentElement = document.getElementById('payment-element');
+    if (paymentElement) {
+      paymentElement.innerHTML = '';
+    }
+  }
+
+  resetPaymentState() {
+    console.log('Manually resetting payment state');
+    this.paymentProcessing = false;
+    this.helper.infoToast('Payment state reset. Please try again or check your payment status.');
   }
 }

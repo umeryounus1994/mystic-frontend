@@ -19,7 +19,7 @@ export class ListBookingsComponent implements OnInit {
   dtOptions: any = {
     pagingType: 'numbers',
     ordering: false,
-    paging: false,
+    paging: true,
     info: false,
     searching: false
   };

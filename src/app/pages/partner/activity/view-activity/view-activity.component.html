@@ -254,59 +254,118 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" *ngIf="selectedSlot">
-                <div class="mb-3">
-                    <h6>{{activity.title}}</h6>
-                    <p class="text-muted mb-1">
-                        <i class="bi bi-clock me-2"></i>
-                        {{selectedSlot.start_time | date:'medium'}} - {{selectedSlot.end_time | date:'medium'}}
-                    </p>
-                    <p class="text-muted">
-                        <i class="bi bi-people me-2"></i>
-                        {{selectedSlot.available_spots - selectedSlot.booked_spots - (selectedSlot.reserved_spots || 0)}} spots remaining
-                    </p>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Number of Participants *</label>
-                    <select class="form-select" [(ngModel)]="bookingData.participants">
-                        <option value="">Select participants</option>
-                        <option *ngFor="let i of getParticipantOptions(selectedSlot)" [value]="i">
-                            {{i}} participant{{i > 1 ? 's' : ''}}
-                        </option>
-                    </select>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Special Requests (Optional)</label>
-                    <textarea class="form-control" rows="3" 
-                              [(ngModel)]="bookingData.special_requests"
-                              placeholder="Any special requirements or requests..."></textarea>
-                </div>
-                
-                <div class="mb-3" *ngIf="bookingData.participants">
-                    <div class="bg-light p-3 rounded">
-                        <div class="d-flex justify-content-between">
-                            <span>Price per person:</span>
-                            <span>${{activity.price}}</span>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <span>Participants:</span>
-                            <span>{{bookingData.participants}}</span>
-                        </div>
-                        <hr class="my-2">
-                        <div class="d-flex justify-content-between fw-bold">
-                            <span>Total Amount:</span>
-                            <span>${{activity.price * (+bookingData.participants)}}</span>
+                <!-- Booking form (show when not processing payment) -->
+                <div *ngIf="!showStripePaymentForm">
+                    <div class="mb-3">
+                        <h6>{{activity.title}}</h6>
+                        <p class="text-muted mb-1">
+                            <i class="bi bi-clock me-2"></i>
+                            {{selectedSlot.start_time | date:'medium'}} - {{selectedSlot.end_time | date:'medium'}}
+                        </p>
+                        <p class="text-muted">
+                            <i class="bi bi-people me-2"></i>
+                            {{selectedSlot.available_spots - selectedSlot.booked_spots - (selectedSlot.reserved_spots || 0)}} spots remaining
+                        </p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Number of Participants *</label>
+                        <select class="form-select" [(ngModel)]="bookingData.participants">
+                            <option value="">Select participants</option>
+                            <option *ngFor="let i of getParticipantOptions(selectedSlot)" [value]="i">
+                                {{i}} participant{{i > 1 ? 's' : ''}}
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Special Requests (Optional)</label>
+                        <textarea class="form-control" rows="3" 
+                                  [(ngModel)]="bookingData.special_requests"
+                                  placeholder="Any special requirements or requests..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3" *ngIf="bookingData.participants">
+                        <div class="bg-light p-3 rounded">
+                            <div class="d-flex justify-content-between">
+                                <span>Price per person:</span>
+                                <span>${{activity.price}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Participants:</span>
+                                <span>{{bookingData.participants}}</span>
+                            </div>
+                            <hr class="my-2">
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total Amount:</span>
+                                <span>${{activity.price * (+bookingData.participants)}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
+                <!-- Add this payment method selection section in your booking modal, before the Stripe payment form -->
+                <div *ngIf="!showStripePaymentForm" class="mb-3">
+                    <label class="form-label">Payment Method</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" 
+                                       id="stripe" value="stripe" [(ngModel)]="selectedPaymentMethod">
+                                <label class="form-check-label" for="stripe">
+                                    <i class="bi bi-credit-card me-2"></i>Credit Card (Stripe)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" 
+                                       id="paypal" value="paypal" [(ngModel)]="selectedPaymentMethod">
+                                <label class="form-check-label" for="paypal">
+                                    <i class="bi bi-paypal me-2"></i>PayPal
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stripe payment form (show when processing Stripe payment) -->
+                <div *ngIf="showStripePaymentForm" class="stripe-payment-form">
+                    <h5 class="mb-3">Complete Payment</h5>
+                    <div class="mb-3">
+                        <div class="bg-light p-3 rounded">
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total Amount:</span>
+                                <span>${{activity.price * (+bookingData.participants)}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div #paymentElement id="payment-element" class="mb-3">
+                        <!-- Stripe Elements will mount here -->
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary" (click)="cancelStripePayment()" [disabled]="paymentProcessing">
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary" (click)="confirmStripePayment()" [disabled]="paymentProcessing">
+                            <span *ngIf="paymentProcessing" class="spinner-border spinner-border-sm me-2"></span>
+                            {{paymentProcessing ? 'Processing...' : 'Complete Payment'}}
+                        </button>
+                        <!-- Emergency reset button (only show when stuck) -->
+                        <button *ngIf="paymentProcessing" class="btn btn-outline-warning btn-sm" (click)="resetPaymentState()">
+                            Reset
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" *ngIf="!showStripePaymentForm">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" 
                         [disabled]="!bookingData.participants"
                         (click)="createBooking()">
-                    <i class="bi bi-credit-card me-2"></i>Book & Pay
+                    <i class="bi bi-credit-card me-2" *ngIf="selectedPaymentMethod === 'stripe'"></i>
+                    <i class="bi bi-paypal me-2" *ngIf="selectedPaymentMethod === 'paypal'"></i>
+                    Book & Pay with {{selectedPaymentMethod === 'stripe' ? 'Card' : 'PayPal'}}
                 </button>
             </div>
         </div>
