@@ -6,6 +6,8 @@ import { CreateActivityComponent } from './activity/create-activity/create-activ
 import { ViewActivityComponent } from './activity/view-activity/view-activity.component';
 import { EditActivityComponent } from './activity/edit-activity/edit-activity.component';
 import { SearchActivitiesComponent } from './search-activities/search-activities.component';
+import { CreateActivityDropComponent } from './create-activity-drop/create-activity-drop.component';
+import { ListActivityDropsComponent } from './list-activity-drops/list-activity-drops.component';
 
 const routes: Routes = [{
   path: '',
@@ -33,6 +35,16 @@ const routes: Routes = [{
     {
       path: 'search-activities',
       component: SearchActivitiesComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'create-activity-drop',
+      component: CreateActivityDropComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'list-activity-drops',
+      component: ListActivityDropsComponent,
       canActivate: [AuthGuard]
     }
   ]

@@ -85,6 +85,15 @@
             <li class="nav-item" *ngIf="auth.isFamily"><a class="nav-link" [class.active]="routeURL === '/partner/search-activities'" [routerLink]="['/partner/search-activities']">Browse Activities</a></li>
           </ul>
         </li>
+        <li class="nav-item" *ngIf="auth.isPartner">
+          <a class="nav-link" data-bs-toggle="collapse" href="#collapseactivitydrops" role="button" aria-expanded="false" aria-controls="collapseactivitydrops">
+            <i class="bi bi-box-seam fa-fw me-2"></i>Activity Drops
+          </a>
+          <ul class="nav collapse flex-column" id="collapseactivitydrops" data-bs-parent="#navbar-sidebar">
+            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/partner/list-activity-drops'" [routerLink]="['/partner/list-activity-drops']">All Activity Drops</a></li>
+            <li class="nav-item" *ngIf="auth.isPartner"><a class="nav-link" [class.active]="routeURL === '/partner/create-activity-drop'" [routerLink]="['/partner/create-activity-drop']">Create Activity Drop</a></li>
+          </ul>
+        </li>
         <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
           <a class="nav-link" data-bs-toggle="collapse" href="#collapsebookings" role="button" aria-expanded="false" aria-controls="collapsebookings">
             <i class="bi bi-calendar-event fa-fw me-2"></i>Bookings

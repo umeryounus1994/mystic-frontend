@@ -10,10 +10,14 @@ import { ListActivityComponent } from './activity/list-activity/list-activity.co
 import { ViewActivityComponent } from './activity/view-activity/view-activity.component';
 import { EditActivityComponent } from './activity/edit-activity/edit-activity.component';
 import { SearchActivitiesComponent } from './search-activities/search-activities.component';
+import { CreateActivityDropComponent } from './create-activity-drop/create-activity-drop.component';
+import { ListActivityDropsComponent } from './list-activity-drops/list-activity-drops.component';
 
 
 @NgModule({
-  declarations: [CreateActivityComponent, ListActivityComponent, ViewActivityComponent, EditActivityComponent, SearchActivitiesComponent],
+  declarations: [CreateActivityComponent, ListActivityComponent, ViewActivityComponent, EditActivityComponent, SearchActivitiesComponent,
+    CreateActivityDropComponent, ListActivityDropsComponent
+  ],
   imports: [
     CommonModule,
     PartnerRoutingModule,

@@ -1,0 +1,74 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Creating Activity Drop.....</p>
+</ngx-spinner>
+
+<div class="row">
+    <div class="col-12 mb-3">
+        <h1 class="h3 mb-2 mb-sm-0">Create Activity Drop</h1>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-12">
+        <div class="tab-content">
+            <div class="tab-pane show active" id="tab-1">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form class="row g-4 align-items-center" [formGroup]="dropForm" *ngIf="dropForm"
+                            (ngSubmit)="onSubmit()">
+                            
+                            <div class="col-lg-3 mb-2">
+                                <label class="form-label">Drop Name</label>
+                                <input type="text" class="form-control" placeholder="Enter drop name"
+                                formControlName="drop_name"
+                                [ngClass]="{ 'is-invalid': submitted && f['drop_name'].errors }">
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label">Select Activity</label>
+                                <select class="form-control" formControlName="activity_id"
+                                [ngClass]="{ 'is-invalid': submitted && f['activity_id']?.errors }">
+                                    <option value="" selected disabled>Select Activity</option>
+                                    <option *ngFor="let activity of allActivities" [value]="activity._id">
+                                        {{activity.title}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label">Latitude</label>
+                                <input type="number" step="any" class="form-control" placeholder="Enter latitude" 
+                                formControlName="latitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label">Longitude</label>
+                                <input type="number" step="any" class="form-control" placeholder="Enter longitude" 
+                                formControlName="longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label">Drop Image</label>
+                                <input type="file" class="form-control" accept="image/*" 
+                                (change)="onFileSelected($event)">
+                            </div>
+
+                            <div class="col-lg-12">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" rows="3" placeholder="Enter drop description"
+                                formControlName="drop_description"
+                                [ngClass]="{ 'is-invalid': submitted && f['drop_description'].errors }"></textarea>
+                            </div>
+
+                            <div class="d-sm-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mb-0">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
