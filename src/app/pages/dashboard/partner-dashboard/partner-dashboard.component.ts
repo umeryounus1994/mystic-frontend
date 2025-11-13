@@ -47,12 +47,8 @@ export class PartnerDashboardComponent implements OnInit {
   async ngOnInit() {
     this.sp.show();
     await this.getPartnerStats();
+    await this.getEarningsSummary();
     this.sp.hide();
-    
-    // Initialize charts after data is loaded
-    setTimeout(() => {
-      this.initializeCharts();
-    }, 500);
   }
 
   async getPartnerStats() {
@@ -68,78 +64,23 @@ export class PartnerDashboardComponent implements OnInit {
     }
   }
 
-  initializeCharts() {
-    this.createRevenueChart();
-    this.createActivitiesStatusChart();
-  }
-
-  createRevenueChart() {
-    const ctx = document.getElementById('revenueChart') as HTMLCanvasElement;
-    if (ctx) {
-      // Sample monthly data - you can replace with actual monthly data from API
-      const monthlyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, this.stats.revenue.monthlyEarnings];
-      
-      this.monthlyRevenueChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          datasets: [{
-            label: 'Monthly Earnings ($)',
-            data: monthlyData,
-            borderColor: '#0d6efd',
-            backgroundColor: 'rgba(13, 110, 253, 0.1)',
-            tension: 0.4,
-            fill: true
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: function(value) {
-                  return '$' + value;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-  }
-
-  createActivitiesStatusChart() {
-    const ctx = document.getElementById('statusChart') as HTMLCanvasElement;
-    if (ctx) {
-      this.activitiesStatusChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Active', 'Pending', 'Rejected'],
-          datasets: [{
-            data: [
-              this.stats.activities.active,
-              this.stats.activities.pending,
-              this.stats.activities.rejected
-            ],
-            backgroundColor: ['#198754', '#ffc107', '#dc3545'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }
-      });
+  async getEarningsSummary() {
+    try {
+      const response: any = await this.api.get('partner-earnings/summary');
+      if (response?.data) {
+        // Merge earnings data with existing revenue stats
+        this.stats.revenue = {
+          ...this.stats.revenue,
+          totalEarnings: response.data.totalEarnings,
+          pendingEarnings: response.data.pendingEarnings,
+          monthlyEarnings: response.data.monthlyEarnings,
+          totalBookings: response.data.totalBookings,
+          averageEarningsPerBooking: response.data.averageEarningsPerBooking,
+          commissionStats: response.data.commissionStats
+        };
+      }
+    } catch (error: any) {
+      console.error('Failed to load earnings summary:', error);
     }
   }
 
@@ -160,6 +101,8 @@ export class PartnerDashboardComponent implements OnInit {
       case 'active':
       case 'approved':
         return 'bg-success';
+      case 'confirmed':
+        return 'bg-success';    
       case 'pending':
         return 'bg-warning';
       case 'rejected':

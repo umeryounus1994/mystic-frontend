@@ -125,7 +125,7 @@ export class PartnerRegistrationComponent implements OnInit {
           } else if (error?.status === 409) {
             this.helper.failureToast('Email or username already exists.');
           } else {
-            Swal.fire("Registration Failed!", "There was an error during registration. Please try again.", "error");
+            Swal.fire("Registration Failed!", error?.error?.message, "error");
           }
         }
       });
