@@ -1,23 +1,44 @@
 
 .table-responsive {
-  overflow: visible !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
 }
 
-.dropdown-menu {
-  z-index: 1050;
-  position: absolute;
-}
-
-.dropdown {
-  position: static;
-}
-
-// Alternative fix if above doesn't work
 .card-body {
-  overflow: visible;
+  overflow: visible !important;
+  position: relative;
 }
 
-table {
-  overflow: visible;
+// Force dropdown to render outside scroll container
+.table .dropdown {
+  position: static !important;
 }
 
+.table .dropdown-menu {
+  position: fixed !important;
+  z-index: 9999 !important;
+  transform: none !important;
+}
+
+// Alternative: Use button group instead of dropdown for mobile
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    white-space: nowrap;
+    padding: 0.5rem !important;
+    font-size: 0.875rem;
+  }
+  
+  // Replace dropdown with horizontal buttons on mobile
+  .mobile-actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: nowrap;
+  }
+  
+  .mobile-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    min-width: auto;
+  }
+}

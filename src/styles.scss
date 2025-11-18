@@ -167,21 +167,62 @@ table.dataTable th.dt-type-numeric {
   top: 0;
   left: 0;
   z-index: 1000;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 }
 
 // Page content adjustment for sidebar
 .page-content {
   margin-left: 280px;
   transition: margin-left 0.3s ease;
+  min-height: 100vh;
 }
 
 @media (max-width: 1199.98px) {
   .sidebar.navbar-expand-xl {
-    width: 260px !important;
+    width: 280px !important;
+    transform: translateX(-100%);
+    height: 100vh;
+    
+    &.show {
+      transform: translateX(0);
+    }
   }
   
   .page-content {
-    margin-left: 0;
+    margin-left: 0 !important;
+    min-height: 100vh;
+  }
+  
+  // Fix mobile viewport issues
+  .page-content-wrapper {
+    min-height: auto !important;
+  }
+}
+
+// Mobile viewport fix
+@media (max-width: 1199.98px) {
+  html, body {
+    height: 100%;
+    overflow-x: hidden;
+  }
+  
+  .page-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .page-content-wrapper {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+// Offcanvas enhancements for mobile
+@media (max-width: 1199.98px) {
+  .offcanvas-start {
+    width: 280px !important;
   }
 }
 
@@ -192,5 +233,42 @@ table.dataTable th.dt-type-numeric {
 
 .offcanvas-body {
   padding: 0 !important;
+}
+
+// Table responsive fixes
+.table-responsive {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+// Force table responsiveness on all screen sizes
+.table-responsive table {
+  min-width: 100%;
+  width: max-content;
+}
+
+@media (max-width: 768px) {
+  .table-responsive table {
+    min-width: 800px !important; // Force minimum width on mobile
+  }
+  
+  .table th,
+  .table td {
+    white-space: nowrap;
+    padding: 0.5rem !important;
+    font-size: 0.875rem;
+    min-width: 100px; // Ensure columns have minimum width
+  }
+}
+
+// Override any conflicting styles
+.card-body .table-responsive {
+  overflow-x: auto !important;
+}
+
+// Remove conflicting table classes
+.table.table-responsive {
+  display: table !important;
 }
 

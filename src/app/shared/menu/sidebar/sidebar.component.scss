@@ -1,248 +1,148 @@
 
 
-#offcanvasSidebar {
-  height: 100vh !important;
-  overflow-y: auto !important;
-  margin-top: 0 !important;
+.sidebar-wrapper {
+  position: relative;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  // Remove all transition and visibility logic - let Angular handle it
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  background-color: #212529;
+  z-index: 1050;
+  transition: left 0.3s ease;
+  overflow-y: auto;
   
-  .offcanvas-body {
-    padding: 1rem 0;
-    overflow: visible;
+  &.show {
+    left: 0;
   }
 }
 
-@media (max-width: 1199.98px) {
-  #offcanvasSidebar {
-    max-height: 100vh;
-    overflow-y: auto;
-  }
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #495057;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 1.25rem;
 }
 
 .sidebar-content {
-  background: transparent !important;
   padding: 1rem 0;
 }
 
-.navbar-nav {
-  .nav-item {
-    margin-bottom: 0.25rem;
-    
-    &.ms-2.my-2 {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 1.5rem 0 0.75rem 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 0.5rem;
-    }
+.nav-link {
+  padding: 0.75rem 1rem;
+  color: #fff !important;
+  border-radius: 0;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  
+  &:hover {
+    background-color: #495057;
   }
   
-  .nav-link {
-    color: rgba(255, 255, 255, 0.8) !important;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.5rem;
-    margin: 0 0.75rem;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    position: relative;
-    overflow: hidden;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transition: left 0.5s;
-    }
-    
-    &:hover {
-      color: #fff !important;
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateX(5px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      
-      &::before {
-        left: 100%;
-      }
-      
-      i {
-        transform: scale(1.1);
-        color: #4fc3f7;
-      }
-    }
-    
-    &.active {
-      background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
-      color: #fff !important;
-      box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
-      transform: translateX(5px);
-      
-      i {
-        color: #fff;
-        transform: scale(1.1);
-      }
-    }
-    
-    i {
-      transition: all 0.3s ease;
-      width: 20px;
-      text-align: center;
-    }
-  }
-  
-  // Collapsed menu items
-  .collapse {
-    .nav-item {
-      margin-bottom: 0;
-      
-      .nav-link {
-        padding: 0.5rem 1.25rem 0.5rem 3rem;
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.7) !important;
-        position: relative;
-        
-        &::before {
-          content: '';
-          position: absolute;
-          left: 2.5rem;
-          top: 50%;
-          width: 4px;
-          height: 4px;
-          background: rgba(255, 255, 255, 0.4);
-          border-radius: 50%;
-          transform: translateY(-50%);
-          transition: all 0.3s ease;
-        }
-        
-        &:hover {
-          color: #fff !important;
-          background: rgba(255, 255, 255, 0.05);
-          transform: translateX(8px);
-          
-          &::before {
-            background: #4fc3f7;
-            transform: translateY(-50%) scale(1.5);
-          }
-        }
-        
-        &.active {
-          color: #4fc3f7 !important;
-          background: rgba(79, 195, 247, 0.1);
-          transform: translateX(8px);
-          
-          &::before {
-            background: #4fc3f7;
-            transform: translateY(-50%) scale(1.5);
-          }
-        }
-      }
-    }
+  &.active {
+    background-color: #0d6efd;
   }
 }
 
-// Collapsible menu icons
-.nav-link[data-bs-toggle="collapse"] {
-  position: relative;
-  
-  &::after {
-    content: '\f107';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: transform 0.3s ease;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  
-  &[aria-expanded="true"]::after {
-    transform: translateY(-50%) rotate(180deg);
-    color: #4fc3f7;
-  }
+.nav .show {
+  display: block !important;
 }
 
-// Navbar brand
-.navbar-brand {
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.nav:not(.show) {
+  display: none;
 }
 
-// Custom scrollbar
-.custom-scrollbar {
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.5);
-    }
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 1199.98px) {
+// Desktop styles - Fixed positioning
+@media (min-width: 1200px) {
   .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    position: fixed !important;
+    left: 0 !important;
+    width: 280px;
+    height: 100vh;
+    transition: none;
+    transform: none !important;
+  }
+  
+  .sidebar-backdrop {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
     
     &.show {
-      transform: translateX(0);
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
     }
   }
-}
-
-// Animation for menu items
-.nav-item {
-  animation: slideInLeft 0.3s ease forwards;
-  opacity: 0;
-  transform: translateX(-20px);
   
-  @for $i from 1 through 20 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.05}s;
-    }
+  .sidebar-header {
+    display: none !important;
   }
-}
-
-@keyframes slideInLeft {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// Hover effect for section headers
-.nav-item.ms-2.my-2 {
-  position: relative;
   
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
+  .sidebar-wrapper {
+    position: fixed;
+    top: 0;
     left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #4fc3f7, #29b6f6);
-    transition: width 0.3s ease;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+  }
+}
+
+// Mobile styles - ensure sidebar closes properly
+@media (max-width: 1199.98px) {
+  .sidebar {
+    display: block;
+    height: 100vh;
+    overflow-y: auto;
   }
   
-  &:hover::after {
-    width: 100%;
+  .sidebar-backdrop {
+    display: block !important;
+    
+    &.show {
+      display: block !important;
+      pointer-events: auto;
+    }
   }
+}
+
+// Fix z-index issues
+.sidebar-backdrop {
+  pointer-events: none;
+  
+  &.show {
+    pointer-events: auto;
+  }
+}
+
+:global(body.sidebar-open) {
+  overflow: hidden !important;
+}
+
+:global(body:not(.sidebar-open)) {
+  overflow: auto !important;
 }

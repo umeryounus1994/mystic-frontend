@@ -1,0 +1,38 @@
+
+.table-responsive {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+.dropdown-menu {
+  z-index: 1050;
+  position: absolute;
+}
+
+.dropdown {
+  position: static;
+}
+
+.card-body {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+table {
+  overflow: visible;
+}
+
+// Modal table responsiveness
+.modal-body .table-responsive {
+  overflow-x: auto !important;
+}
+
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    white-space: nowrap;
+    padding: 0.5rem !important;
+    font-size: 0.875rem;
+  }
+}
+

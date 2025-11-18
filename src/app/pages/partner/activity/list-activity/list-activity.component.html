@@ -101,8 +101,9 @@
                         </td>
                         <td>{{getFormatedDate(activity.created_at)}}</td>
                         <td>
-                            <div class="dropdown dropup">
-                                <button class="btn btn-light btn-round btn-sm" type="button" data-bs-toggle="dropdown">
+                            <!-- Desktop dropdown -->
+                            <div class="dropdown dropstart d-none d-md-block">
+                                <button class="btn btn-light btn-round btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <ul class="dropdown-menu">
@@ -117,15 +118,12 @@
                                         </button>
                                     </li>
                                     <li *ngIf="auth.isAdmin && activity.status === 'pending'">
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li *ngIf="auth.isAdmin && activity.status === 'pending'">
-                                        <button class="dropdown-item text-success" (click)="approveActivity(activity._id)">
+                                        <button class="dropdown-item" (click)="approveActivity(activity._id)">
                                             <i class="bi bi-check-circle me-2"></i>Approve
                                         </button>
                                     </li>
                                     <li *ngIf="auth.isAdmin && activity.status === 'pending'">
-                                        <button class="dropdown-item text-warning" (click)="rejectActivity(activity._id)">
+                                        <button class="dropdown-item" (click)="rejectActivity(activity._id)">
                                             <i class="bi bi-x-circle me-2"></i>Reject
                                         </button>
                                     </li>
@@ -136,6 +134,25 @@
                                         </button>
                                     </li>
                                 </ul>
+                            </div>
+                            
+                            <!-- Mobile buttons -->
+                            <div class="mobile-actions d-md-none">
+                                <button class="btn btn-info-soft btn-sm" (click)="viewActivity(activity)" title="View">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-warning-soft btn-sm" (click)="editActivity(activity._id)" *ngIf="auth.isPartner" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-success-soft btn-sm" (click)="approveActivity(activity._id)" *ngIf="auth.isAdmin && activity.status === 'pending'" title="Approve">
+                                    <i class="bi bi-check-circle"></i>
+                                </button>
+                                <button class="btn btn-warning-soft btn-sm" (click)="rejectActivity(activity._id)" *ngIf="auth.isAdmin && activity.status === 'pending'" title="Reject">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                                <button class="btn btn-danger-soft btn-sm" (click)="deleteActivity(activity._id)" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>

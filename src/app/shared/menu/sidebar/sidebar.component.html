@@ -1,155 +1,227 @@
 <!-- Admin/SubAdmin Sidebar -->
-<nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark" *ngIf="auth.isAdmin || auth.isSubAdmin || auth.isPartner || auth.isFamily">
-
-  <div class="offcanvas offcanvas-start custom-scrollbar" style="height: 100vh; overflow-y: auto; margin-top: 0;" data-bs-backdrop="true" tabindex="-1" id="offcanvasSidebar">
-    <div class="offcanvas-body sidebar-content d-flex flex-column bg-dark custom-scrollbar">
-      <ul class="navbar-nav flex-column" id="navbar-sidebar">
+<div class="sidebar-wrapper" *ngIf="auth.isAdmin || auth.isSubAdmin || auth.isPartner || auth.isFamily">
+  <!-- Backdrop - only show on mobile when sidebar is open -->
+  <div class="sidebar-backdrop" 
+       (click)="closeSidebar()"
+       *ngIf="isMobile && sidebarOpen">
+  </div>
+  
+  <!-- Sidebar -->
+  <nav class="sidebar" [class.show]="sidebarOpen" id="offcanvasSidebar">
+    <div class="sidebar-header d-xl-none">
+      <h5 class="sidebar-title text-white">Menu</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeSidebar()"></button>
+    </div>
+    
+    <div class="sidebar-content">
+      <ul class="navbar-nav flex-column">
         
         <!-- Dashboard Section Header -->
         <li class="nav-item ms-2 my-2 mt-3" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
-          <i class="bi bi-grid-3x3-gap me-2"></i>Dashboard
+          <span class="text-white-50 small text-uppercase fw-bold"><i class="bi bi-grid-3x3-gap me-2"></i>Dashboard</span>
         </li>
         
-        <!-- Admin Dashboard (for admin only) -->
+        <!-- Admin Dashboard -->
         <li class="nav-item" *ngIf="auth.isAdmin">
-          <a [routerLink]="['/dashboard/admin']" class="nav-link" [class.active]="routeURL === '/dashboard/admin'">
+          <a [routerLink]="['/dashboard/admin']" class="nav-link text-white" [class.active]="routeURL === '/dashboard/admin'" (click)="closeSidebar()">
             <i class="bi bi-house fa-fw me-2"></i>Admin Dashboard
           </a>
         </li>
         
         <!-- Partner Dashboard -->
         <li class="nav-item" *ngIf="auth.isPartner">
-          <a [routerLink]="['/dashboard/partner']" class="nav-link" [class.active]="routeURL === '/dashboard/partner'">
+          <a [routerLink]="['/dashboard/partner']" class="nav-link text-white" [class.active]="routeURL === '/dashboard/partner'" (click)="closeSidebar()">
             <i class="bi bi-speedometer2 fa-fw me-2"></i>Partner Dashboard
           </a>
         </li>
+        
+        <!-- Family Dashboard -->
         <li class="nav-item" *ngIf="auth.isFamily">
-          <a [routerLink]="['/dashboard/family']" class="nav-link" [class.active]="routeURL === '/dashboard/family'">
+          <a [routerLink]="['/dashboard/family']" class="nav-link text-white" [class.active]="routeURL === '/dashboard/family'" (click)="closeSidebar()">
             <i class="bi bi-speedometer2 fa-fw me-2"></i>Family Dashboard
           </a>
         </li>
 
-        <li class="nav-item ms-2 my-2">Content Management</li>
+        <li class="nav-item ms-2 my-2">
+          <span class="text-white-50 small text-uppercase fw-bold">Content Management</span>
+        </li>
 
         <!-- Quests -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.isPartner || auth.user?.permissions?.includes('Quest')">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapsequest" role="button" aria-expanded="false" aria-controls="collapsequest">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapsequest')">
             <i class="bi bi-puzzle fa-fw me-2"></i>Digital Quests
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapsequest" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']">All Quests</a></li>
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']">Create Quest</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsequest']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']" (click)="closeSidebar()">All Quests</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']" (click)="closeSidebar()">Create Quest</a>
+            </li>
           </ul>
         </li>
 
         <!-- Missions -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Missions')">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapsemissions" role="button" aria-expanded="false" aria-controls="collapsemissions">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapsemissions')">
             <i class="bi bi-bullseye fa-fw me-2"></i>Missions
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapsemissions" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mission/list-mission'" [routerLink]="['/mission/list-mission']">All Mission</a></li>
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mission/create-mission'" [routerLink]="['/mission/create-mission']">Create Mission</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsemissions']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mission/list-mission'" [routerLink]="['/mission/list-mission']" (click)="closeSidebar()">All Mission</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mission/create-mission'" [routerLink]="['/mission/create-mission']" (click)="closeSidebar()">Create Mission</a>
+            </li>
           </ul>
         </li>
 
         <!-- Treasure Hunts -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Hunts')">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapsehunts" role="button" aria-expanded="false" aria-controls="collapsehunts">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapsehunts')">
             <i class="bi bi-gem fa-fw me-2"></i>Treasure Hunts
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapsehunts" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/hunt/list-hunt'" [routerLink]="['/hunt/list-hunt']">All Treasure Hunt</a></li>
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/hunt/create-hunt'" [routerLink]="['/hunt/create-hunt']">Create Treasure Hunt</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsehunts']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/hunt/list-hunt'" [routerLink]="['/hunt/list-hunt']" (click)="closeSidebar()">All Treasure Hunt</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/hunt/create-hunt'" [routerLink]="['/hunt/create-hunt']" (click)="closeSidebar()">Create Treasure Hunt</a>
+            </li>
           </ul>
         </li>
 
         <!-- Picture Mysteries -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Picture Mysteries')">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapsemysteries" role="button" aria-expanded="false" aria-controls="collapsemysteries">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapsemysteries')">
             <i class="bi bi-camera fa-fw me-2"></i>Picture Mysteries
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapsemysteries" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mystery/list-mystery'" [routerLink]="['/mystery/list-mystery']">All Picture Mysteries</a></li>
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/mystery/add-mystery'" [routerLink]="['/mystery/add-mystery']">Add Mystery</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsemysteries']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mystery/list-mystery'" [routerLink]="['/mystery/list-mystery']" (click)="closeSidebar()">All Picture Mysteries</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mystery/add-mystery'" [routerLink]="['/mystery/add-mystery']" (click)="closeSidebar()">Add Mystery</a>
+            </li>
           </ul>
         </li>
 
+        <!-- Activities -->
         <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapseactivity" role="button" aria-expanded="false" aria-controls="collapseactivity">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapseactivity')">
             <i class="bi bi-calendar-event fa-fw me-2"></i>Activities
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapseactivity" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin"><a class="nav-link" [class.active]="routeURL === '/partner/list-activities'" [routerLink]="['/partner/list-activities']">All Activities</a></li>
-            <li class="nav-item" *ngIf="auth.isPartner"><a class="nav-link" [class.active]="routeURL === '/partner/create-activity'" [routerLink]="['/partner/create-activity']">Create Activity</a></li>
-            <li class="nav-item" *ngIf="auth.isFamily"><a class="nav-link" [class.active]="routeURL === '/partner/search-activities'" [routerLink]="['/partner/search-activities']">Browse Activities</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapseactivity']">
+            <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/list-activities'" [routerLink]="['/partner/list-activities']" (click)="closeSidebar()">All Activities</a>
+            </li>
+            <li class="nav-item" *ngIf="auth.isPartner">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/create-activity'" [routerLink]="['/partner/create-activity']" (click)="closeSidebar()">Create Activity</a>
+            </li>
+            <li class="nav-item" *ngIf="auth.isFamily">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/search-activities'" [routerLink]="['/partner/search-activities']" (click)="closeSidebar()">Browse Activities</a>
+            </li>
           </ul>
         </li>
+
+        <!-- Activity Drops -->
         <li class="nav-item" *ngIf="auth.isPartner">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapseactivitydrops" role="button" aria-expanded="false" aria-controls="collapseactivitydrops">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapseactivitydrops')">
             <i class="bi bi-box-seam fa-fw me-2"></i>Activity Drops
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapseactivitydrops" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/partner/list-activity-drops'" [routerLink]="['/partner/list-activity-drops']">All Activity Drops</a></li>
-            <li class="nav-item" *ngIf="auth.isPartner"><a class="nav-link" [class.active]="routeURL === '/partner/create-activity-drop'" [routerLink]="['/partner/create-activity-drop']">Create Activity Drop</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapseactivitydrops']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/list-activity-drops'" [routerLink]="['/partner/list-activity-drops']" (click)="closeSidebar()">All Activity Drops</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/create-activity-drop'" [routerLink]="['/partner/create-activity-drop']" (click)="closeSidebar()">Create Activity Drop</a>
+            </li>
           </ul>
         </li>
+
+        <!-- Bookings -->
         <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapsebookings" role="button" aria-expanded="false" aria-controls="collapsebookings">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapsebookings')">
             <i class="bi bi-calendar-event fa-fw me-2"></i>Bookings
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapsebookings" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/bookings/list-bookings'" [routerLink]="['/bookings/list-bookings']">All Bookings</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsebookings']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/bookings/list-bookings'" [routerLink]="['/bookings/list-bookings']" (click)="closeSidebar()">All Bookings</a>
+            </li>
           </ul>
         </li>
 
-        <!-- Section: Management -->
-        <li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin">Management</li>
+        <!-- Management Section Header -->
+        <li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin">
+          <span class="text-white-50 small text-uppercase fw-bold">Management</span>
+        </li>
 
-        <!-- User Management (Admin Only) -->
+        <!-- User Management -->
         <li class="nav-item" *ngIf="auth.isAdmin">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapsemanagement" role="button" aria-expanded="false" aria-controls="collapsemanagement">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapsemanagement')">
             <i class="bi bi-people fa-fw me-2"></i>Users
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapsemanagement" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']">All Users</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsemanagement']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']" (click)="closeSidebar()">All Users</a>
+            </li>
           </ul>
         </li>
 
         <!-- Drops -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapsedrops" role="button" aria-expanded="false" aria-controls="collapsedrops">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapsedrops')">
             <i class="bi bi-box fa-fw me-2"></i>Drops
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapsedrops" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/management/list-drop'" [routerLink]="['/management/list-drop']">All Drops</a></li>
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/management/add-drop'" [routerLink]="['/management/add-drop']">Add Drop</a></li>
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/management/list-rewards'" [routerLink]="['/management/list-rewards']">Drop Rewards</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsedrops']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-drop'" [routerLink]="['/management/list-drop']" (click)="closeSidebar()">All Drops</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/add-drop'" [routerLink]="['/management/add-drop']" (click)="closeSidebar()">Add Drop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-rewards'" [routerLink]="['/management/list-rewards']" (click)="closeSidebar()">Drop Rewards</a>
+            </li>
           </ul>
         </li>
 
         <!-- Sky Dropped Gifts -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
-          <a class="nav-link" data-bs-toggle="collapse" href="#collapseskygifts" role="button" aria-expanded="false" aria-controls="collapseskygifts">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapseskygifts')">
             <i class="bi bi-gift fa-fw me-2"></i>Sky Dropped Gifts
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul class="nav collapse flex-column" id="collapseskygifts" data-bs-parent="#navbar-sidebar">
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/skygifts/list-skygifts'" [routerLink]="['/skygifts/list-skygifts']">All Gifts</a></li>
-            <li class="nav-item"><a class="nav-link" [class.active]="routeURL === '/skygifts/add-skygifts'" [routerLink]="['/skygifts/add-skygifts']">Add Gifts</a></li>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapseskygifts']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/skygifts/list-skygifts'" [routerLink]="['/skygifts/list-skygifts']" (click)="closeSidebar()">All Gifts</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/skygifts/add-skygifts'" [routerLink]="['/skygifts/add-skygifts']" (click)="closeSidebar()">Add Gifts</a>
+            </li>
           </ul>
         </li>
 
-        <!-- Mythicas (Admin Only) -->
+        <!-- Mythicas -->
         <li class="nav-item" *ngIf="auth.isAdmin">
-          <a [routerLink]="['/management/mythicas']" class="nav-link" [class.active]="routeURL === '/management/mythicas'">
+          <a [routerLink]="['/management/mythicas']" class="nav-link text-white" [class.active]="routeURL === '/management/mythicas'" (click)="closeSidebar()">
             <i class="bi bi-star fa-fw me-2"></i>Mythicas
           </a>
         </li>
 
       </ul>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
 
 <!-- Family/Partner - No Sidebar, Hide Everything -->
 <div *ngIf="auth.isFamily || auth.isPartner" class="d-none">
