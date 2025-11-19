@@ -27,7 +27,8 @@
                 <thead>
                     <tr>
                         <th scope="col" class="border-0 rounded-start">Activity</th>
-                        <th scope="col" class="border-0" *ngIf="auth.isPartner">Customer</th>
+                        <th scope="col" class="border-0" *ngIf="auth.isPartner || auth.isAdmin">Customer</th>
+                        <th scope="col" class="border-0" *ngIf="auth.isAdmin">Partner</th>
                         <th scope="col" class="border-0">Date & Time</th>
                         <th scope="col" class="border-0">Participants</th>
                         <th scope="col" class="border-0">Total Amount</th>
@@ -56,7 +57,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td *ngIf="auth.isPartner">
+                        <td *ngIf="auth.isPartner || auth.isAdmin">
                             <div class="d-flex align-items-center">
                                 <div class="avatar avatar-xs flex-shrink-0 me-2">
                                     <div class="avatar-img rounded-circle bg-success d-flex align-items-center justify-content-center">
@@ -64,8 +65,21 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0">{{booking.customer?.name || booking.user_id?.first_name + ' ' + booking.user_id?.last_name}}</h6>
-                                    <small class="text-muted">{{booking.customer?.email || booking.user_id?.email}}</small>
+                                    <h6 class="mb-0">{{booking.user_id?.username}}</h6>
+                                    <small class="text-muted">{{booking.user_id?.email}}</small>
+                                </div>
+                            </div>
+                        </td>
+                         <td *ngIf="auth.isAdmin">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-xs flex-shrink-0 me-2">
+                                    <div class="avatar-img rounded-circle bg-success d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">{{booking.partner?.name}}</h6>
+                                    <small class="text-muted">{{booking.partner?.email}}</small>
                                 </div>
                             </div>
                         </td>
@@ -197,6 +211,7 @@
                         <p><strong>Description:</strong> {{selectedBooking.activity_id?.description}}</p>
                         <p><strong>Location:</strong> {{selectedBooking.activity_id?.address}}</p>
                         <p><strong>Price per person:</strong> ${{selectedBooking.activity_id?.price}}</p>
+                        <p><strong>Partner:</strong> {{selectedBooking.activity_id?.partner_id?.username}}</p>
                     </div>
                     <div class="col-md-6">
                         <h6>Booking Information</h6>
