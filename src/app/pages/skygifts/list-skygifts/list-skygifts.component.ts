@@ -95,17 +95,24 @@ export class ListSkygiftsComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
-        let data = {
-          status: 'deleted'
-        };
-        this.api.patch('skyGift/'+giftId, data)
+        this.api.delete('skygift/delete/'+giftId)
         .then((response: any) => {
           this.sp.hide();
           Swal.fire("Sky Gift!", "Deleted Successfully", "success");
-          this.getAllSkyGifts();
+          // Refresh list based on user type
+          if(this.auth.isAdmin){
+            this.getAllSkyGifts();
+          } else {
+            this.getAllSkyGiftsSubAdmin();
+          }
         }, err => {
-          this.helper.failureToast(err?.error?.message);
           this.sp.hide();
+          // Don't logout on non-401 errors
+          if (err?.status === 401) {
+            // Session expired - handleUnauthorized will handle logout
+            return;
+          }
+          this.helper.failureToast(err?.error?.message || 'Failed to delete gift');
         });
       }
     });

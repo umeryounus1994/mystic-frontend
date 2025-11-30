@@ -1,9 +1,14 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
     <p style="font-size: 30px; color: white">Creating Quest.....</p>
 </ngx-spinner>
-<div class="row">
-    <div class="col-12 mb-3">
-        <h1 class="h3 mb-2 mb-sm-0">Create Quest</h1>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['quest/list-quest'])">
+                <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+            <h1 class="h3 mb-0 d-inline">Create Quest</h1>
+        </div>
     </div>
 </div>
 
@@ -17,12 +22,17 @@
                             (ngSubmit)="onSubmit()">
 
                             <div class="col-12 mb-2">
-                                <label class="form-label">Quest Summary/Question</label>
-                                <textarea class="form-control" rows="3" formControlName="quest_question"
+                                <label class="form-label">Quest Summary/Question <span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="3" formControlName="quest_question" maxlength="500"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_question'].errors }"></textarea>
+                                <div class="invalid-feedback" *ngIf="submitted && f['quest_question'].errors">
+                                    <div *ngIf="f['quest_question'].errors['required']">Quest Question is required</div>
+                                    <div *ngIf="f['quest_question'].errors['minlength']">Quest Question must be at least 5 characters</div>
+                                    <div *ngIf="f['quest_question'].errors['maxlength']">Quest Question cannot exceed 500 characters</div>
+                                </div>
                             </div>
                             <div class="col-lg-2">
-                                <label class="form-label">Quest Type</label>
+                                <label class="form-label">Quest Type <span class="text-danger">*</span></label>
                                 <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
                                     formControlName="quest_type"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_type']?.errors }">
@@ -31,6 +41,9 @@
                                     <option value='image'>Picture</option>
                                     <option value='video'>Video</option>
                                 </select>
+                                <div class="invalid-feedback" *ngIf="submitted && f['quest_type']?.errors">
+                                    Quest Type is required
+                                </div>
                             </div>
                             <div class="col-lg-7 mb-1">
                                 <label class="form-label">Quest File</label>
@@ -38,15 +51,27 @@
                                     (change)="onFileSelectedQuest($event)" placeholder="Answer">
                             </div>
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
-                                <label class="form-label">No of XP</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="no_of_xp"
-                                    [ngClass]="{ 'is-invalid': submitted && f['no_of_xp'].errors }">
+                                <label class="form-label">No of XP <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Enter XP" formControlName="no_of_xp" 
+                                       min="1" step="1" required
+                                       (keydown)="preventNegativeInput($event)"
+                                       (input)="validateNumberInput($event, 'no_of_xp', 1)">
+                                <div class="invalid-feedback" *ngIf="submitted && f['no_of_xp'].errors">
+                                    <div *ngIf="f['no_of_xp'].errors['required']">No of XP is required</div>
+                                    <div *ngIf="f['no_of_xp'].errors['min']">No of XP must be greater than 0</div>
+                                </div>
+                                <small class="text-muted">Must be at least 1</small>
                             </div>
                             <div class="col-lg-5">
-                                <label class="form-label">Quest Title</label>
-                                <input type="text" class="form-control" placeholder="Title"
+                                <label class="form-label">Quest Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Title" maxlength="100"
                                     formControlName="quest_title"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_title'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['quest_title'].errors">
+                                    <div *ngIf="f['quest_title'].errors['required']">Quest Title is required</div>
+                                    <div *ngIf="f['quest_title'].errors['minlength']">Quest Title must be at least 5 characters</div>
+                                    <div *ngIf="f['quest_title'].errors['maxlength']">Quest Title cannot exceed 100 characters</div>
+                                </div>
                             </div>
                             <div class="col-lg-4">
                                 <label class="form-label">Quest Password (Optional)</label>
@@ -65,23 +90,40 @@
                             </div>
 
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
-                                <label class="form-label">No of Crypes</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="no_of_crypes"
-                                    [ngClass]="{ 'is-invalid': submitted && f['no_of_crypes'].errors }">
+                                <label class="form-label">No of Crypes <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Enter Crypes" formControlName="no_of_crypes" 
+                                       min="0" step="1" required
+                                       (keydown)="preventNegativeInput($event)"
+                                       (input)="validateNumberInput($event, 'no_of_crypes', 0)">
+                                <div class="invalid-feedback" *ngIf="submitted && f['no_of_crypes'].errors">
+                                    <div *ngIf="f['no_of_crypes'].errors['required']">No of Crypes is required</div>
+                                    <div *ngIf="f['no_of_crypes'].errors['min']">No of Crypes cannot be negative</div>
+                                </div>
+                                <small class="text-muted">Cannot be negative</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Level Increase Points</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="level_increase"
-                                    [ngClass]="{ 'is-invalid': submitted && f['level_increase'].errors }">
+                                <label class="form-label">Level Increase Points <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Enter points" formControlName="level_increase" 
+                                       min="0" step="1" required
+                                       (keydown)="preventNegativeInput($event)"
+                                       (input)="validateNumberInput($event, 'level_increase', 0)">
+                                <div class="invalid-feedback" *ngIf="submitted && f['level_increase'].errors">
+                                    <div *ngIf="f['level_increase'].errors['required']">Level Increase is required</div>
+                                    <div *ngIf="f['level_increase'].errors['min']">Level Increase cannot be negative</div>
+                                </div>
+                                <small class="text-muted">Cannot be negative</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica</label>
+                                <label class="form-label">Mythica <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_ID"
                                     [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
                                     <option value="" selected disabled>Select Mythica</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}
                                     </option>
                                 </select>
+                                <div class="invalid-feedback" *ngIf="submitted && f['mythica_ID']?.errors">
+                                    Mythica is required
+                                </div>
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Reward PDF</label>
@@ -91,7 +133,7 @@
 
                             <label class="form-label">Answers</label>
                             <div formArrayName="questions">
-                                <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index"
+                                <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index; trackBy: trackByIndex"
                                     [formGroupName]="i">
 
                                     <div class="col-lg-4 mb-1">
@@ -115,17 +157,21 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-2">
-
-                                        <a href="javascript:;" *ngIf="i == questions().controls.length -1"
-                                            (click)="addQuestion()"
-                                            class="btn btn-success-soft btn-round me-1 mb-1 mb-md-0"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                            data-bs-original-title="Edit">
-                                            <i class="bi bi-plus"></i>
-                                        </a>
-                                        <button class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                            (click)="removeQuestion(i)">
+                                        <button type="button" class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                                            (click)="removeQuestion(i)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Answer">
                                             <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Always visible Add Answer button -->
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-success-soft btn-round"
+                                            (click)="addQuestion()"
+                                            data-bs-toggle="tooltip" title="">
+                                            <i class="bi bi-plus"></i>
                                         </button>
                                     </div>
                                 </div>

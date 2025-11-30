@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
@@ -25,8 +25,11 @@ export class ListUserComponent implements OnInit {
   allUsers : any = [];
   filteredUsers : any = [];
   selectedFilter = 'all';
+  selectedStatusFilter = '';
   examId = null;
   permissions: string[] = [];
+  lastActionUserId: string | null = null;
+  lastActionType: string | null = null;
 
   // Filter options
   filterOptions = [
@@ -49,60 +52,236 @@ export class ListUserComponent implements OnInit {
   ];
 
 
-  constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router) {
+  constructor(
+    private sp: NgxSpinnerService, 
+    private api: RestApiService, 
+    private helper: HelperService,
+    private router: Router,
+    private cdr: ChangeDetectorRef  // Add this
+  ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
-  }, 1000);
+    }, 1000);
   }
   async ngOnInit() {
     this.sp.show()
     await this.getAllUsers();
     await this.getAllAnalytics()
-    setTimeout(function () {
+    setTimeout(() => {
       $('#dtable').removeClass('dataTable');
-  }, 1000);
+      this.initializeTooltips();
+    }, 1000);
   }
 
   async getAllUsers() {
-    this.allUsers = [];
-    this.api.get('user/get_all_admin')
-    .then((response: any) => {
+    return new Promise<void>((resolve, reject) => {
+      this.sp.show();
+      
+      this.api.get('user/get_all_admin')
+      .then((response: any) => {
+          // Temporarily clear filteredUsers to force table re-render
+          const tempFiltered = this.filteredUsers;
+          this.filteredUsers = [];
+          this.cdr.detectChanges();
+          
+          // Now update with new data
+          if (response?.data && Array.isArray(response.data)) {
+            this.allUsers = response.data;
+          } else {
+            this.allUsers = this.allUsers || [];
+          }
+          
+          // Apply filter
+          this.applyFilter();
+          
+          // Force change detection
+          this.cdr.detectChanges();
+          
+          // Remove dataTable class after a short delay
+          setTimeout(() => {
+            $('#dtable').removeClass('dataTable');
+          }, 100);
+          
+          this.sp.hide();
+          
+          // Reinitialize tooltips
+          setTimeout(() => {
+            this.initializeTooltips();
+          }, 300);
+          
+          resolve();
+      }).catch((error: any) => {
         this.sp.hide();
-        this.allUsers = response?.data;
-        this.applyFilter();
-    }).catch((error: any) => {
-      this.sp.hide();
+        console.error('Error loading users:', error);
+        if (this.allUsers.length === 0) {
+          this.helper.failureToast('Failed to load users. Please refresh the page.');
+        }
+        reject(error);
+      });
+    });
+  }
+
+  initializeTooltips() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach((tooltipTriggerEl: any) => {
+      // Destroy existing tooltip if any
+      const existingTooltip = (window as any).bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+      if (existingTooltip) {
+        existingTooltip.dispose();
+      }
+      // Create new tooltip
+      new (window as any).bootstrap.Tooltip(tooltipTriggerEl);
     });
   }
 
   applyFilter() {
+    // Check if we have data to filter
+    if (!this.allUsers || this.allUsers.length === 0) {
+      this.filteredUsers = [];
+      this.cdr.detectChanges();
+      return;
+    }
+    
+    // Start with a FRESH copy of all users
+    let filtered = [...this.allUsers];
+    
+    // Apply type filter - primarily check 'type' field, with fallbacks
     if (this.selectedFilter === 'all') {
-      this.filteredUsers = this.allUsers;
+      // Keep all users - no filtering needed
     } else if (this.selectedFilter === 'user') {
-      this.filteredUsers = this.allUsers.filter((user: any) => user.type === 'user');
+      // Regular users (not partner, not family, not admin, not subadmin)
+      filtered = filtered.filter((user: any) => {
+        const userType = user.type || user.user_type || '';
+        const userRole = user.user_role || '';
+        
+        const isUser = userType === 'user' && 
+                       userType !== 'admin' && 
+                       userType !== 'subadmin' &&
+                       userType !== 'partner' &&
+                       userType !== 'family' &&
+                       userRole !== 'admin' &&
+                       userRole !== 'subadmin' &&
+                       userRole !== 'partner' &&
+                       userRole !== 'family';
+        return isUser;
+      });
     } else if (this.selectedFilter === 'family') {
-      this.filteredUsers = this.allUsers.filter((user: any) => 
-        user.type === 'family' || (user.type === 'user' && user.type === 'family')
-      );
+      filtered = filtered.filter((user: any) => {
+        const userType = user.type || user.user_type || '';
+        const userRole = user.user_role || '';
+        const isFamily = userType === 'family' || userRole === 'family';
+        return isFamily;
+      });
     } else if (this.selectedFilter === 'partner') {
-      this.filteredUsers = this.allUsers.filter((user: any) => 
-        user.type === 'partner' || (user.type === 'user' && user.type === 'partner')
-      );
+      filtered = filtered.filter((user: any) => {
+        const userType = user.type || user.user_type || '';
+        const userRole = user.user_role || '';
+        const isPartner = userType === 'partner' || userRole === 'partner';
+        return isPartner;
+      });
+    } else if (this.selectedFilter === 'admin') {
+      filtered = filtered.filter((user: any) => {
+        const userType = user.type || user.user_type || '';
+        const userRole = user.user_role || '';
+        const isAdmin = userType === 'admin' || userRole === 'admin';
+        return isAdmin;
+      });
+    } else if (this.selectedFilter === 'subadmin') {
+      filtered = filtered.filter((user: any) => {
+        const userType = user.type || user.user_type || '';
+        const userRole = user.user_role || '';
+        const isSubAdmin = userType === 'subadmin' || userRole === 'subadmin';
+        return isSubAdmin;
+      });
     } else {
-      this.filteredUsers = this.allUsers.filter((user: any) => 
-        user.type === this.selectedFilter || user.user_type === this.selectedFilter
-      );
+      // Generic fallback
+      filtered = filtered.filter((user: any) => {
+        const userType = user.type || user.user_type || '';
+        const userRole = user.user_role || '';
+        const matches = userType === this.selectedFilter || userRole === this.selectedFilter;
+        return matches;
+      });
+    }
+    
+    // Apply status filter
+    if (this.selectedStatusFilter) {
+      const beforeStatusFilter = filtered.length;
+      if (this.selectedStatusFilter === 'pending') {
+        filtered = filtered.filter((user: any) => {
+          const isPending = user.approval_status === 'pending' || 
+                           user.status === 'pending';
+          return isPending;
+        });
+      } else if (this.selectedStatusFilter === 'blocked') {
+        // Check both status and approval_status for blocked
+        filtered = filtered.filter((user: any) => {
+          const isBlocked = user.status === 'blocked' || 
+                            user.approval_status === 'blocked' ||
+                            user.approval_status === 'rejected';
+          return isBlocked;
+        });
+      } else {
+        filtered = filtered.filter((user: any) => {
+          // For active, make sure it's not blocked or rejected
+          const matchesStatus = user.status === this.selectedStatusFilter && 
+                               user.approval_status !== 'blocked' &&
+                               user.approval_status !== 'rejected';
+          return matchesStatus;
+        });
+      }
+    }
+    
+    // CRITICAL FIX: Force table refresh by temporarily clearing and restoring
+    // This forces Angular DataTables to re-render
+    this.filteredUsers = [];
+    this.cdr.detectChanges();
+    
+    // Use setTimeout to ensure Angular processes the empty array first
+    setTimeout(() => {
+      this.filteredUsers = filtered || [];
+      this.cdr.detectChanges();
+      
+      // Force DataTables refresh
+      setTimeout(() => {
+        const tableElement = document.getElementById('dtable');
+        if (tableElement) {
+          // Remove dataTable class to force re-initialization
+          $(tableElement).removeClass('dataTable');
+          
+          // Force another change detection after removing class
+          this.cdr.detectChanges();
+        }
+      }, 50);
+    }, 10);
+    
+  }
+
+  applyStatusFilter() {
+    // Ensure we have data before filtering
+    if (!this.allUsers || this.allUsers.length === 0) {
+      this.getAllUsers().then(() => {
+        this.applyFilter();
+      });
+    } else {
+      this.applyFilter();
     }
   }
 
   onFilterChange(filter: string) {
     this.selectedFilter = filter;
-    this.applyFilter();
+    // Ensure we have data before filtering
+    if (!this.allUsers || this.allUsers.length === 0) {
+      this.getAllUsers().then(() => {
+        this.applyFilter();
+      });
+    } else {
+      this.applyFilter();
+    }
   }
 
   async getAllAnalytics() {
-    this.allUsers = [];
+    // Don't clear allUsers here - it's used by the filter
+    // this.allUsers = []; // Remove this line if it exists
     this.api.get('user/user_analytics')
     .then((response: any) => {
         this.sp.hide();
@@ -125,16 +304,16 @@ export class ListUserComponent implements OnInit {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-
       this.sp.show();
-        this.api.delete('User/'+userId)
+        this.api.delete('user/'+userId)
         .then((response: any) => {
           this.sp.hide();
           Swal.fire("User!", "Deleted Successfully", "success");
-         this.getAllUsers()
-         this.getAllAnalytics()
+          // Refresh data immediately
+          this.getAllUsers();
+          this.getAllAnalytics();
         }, err => {
-          this.helper.failureToast(err?.error?.message);
+          this.helper.failureToast(err?.error?.message || 'Failed to delete user');
           this.sp.hide();
         });
       } else if (result.isDenied) {
@@ -163,15 +342,22 @@ export class ListUserComponent implements OnInit {
           }
         }
       this.sp.show();
-        this.api.patch('User/'+userId, d)
+        this.api.patch('user/'+userId, d)
         .then((response: any) => {
-          this.sp.hide();
+          // Show success message
           Swal.fire("User!", "Updated Successfully", "success");
-         this.getAllUsers()
-         this.getAllAnalytics()
+          
+          // Refresh data - don't hide spinner, let getAllUsers handle it
+          this.getAllUsers().then(() => {
+            this.getAllAnalytics();
+            // Reinitialize tooltips after update
+            setTimeout(() => {
+              this.initializeTooltips();
+            }, 500);
+          });
         }, err => {
-          this.helper.failureToast(err?.error?.message);
           this.sp.hide();
+          this.helper.failureToast(err?.error?.message || 'Failed to update user status');
         });
       } else if (result.isDenied) {
        // Swal.fire("Exam not deleted", "", "info");
@@ -179,37 +365,100 @@ export class ListUserComponent implements OnInit {
     });
   }
   saveRequest(){
-    if($('#email').val() == '' || $('#email').val() == undefined){
+    const email = $('#email').val()?.toString().trim() || '';
+    const password = $('#password').val()?.toString().trim() || '';
+    const username = $('#username').val()?.toString().trim() || '';
+    const allowedQuestInput = $('#allowed_quest').val();
+    const allowedHuntInput = $('#allowed_hunt').val();
+    
+    // Parse numbers and handle edge cases
+    const allowedQuest = parseInt(allowedQuestInput?.toString() || '0', 10);
+    const allowedHunt = parseInt(allowedHuntInput?.toString() || '0', 10);
+    
+    // Email validation
+    if(!email || email === ''){
       Swal.fire("Email!", "Email is required", "error");
+      $('#email').focus();
       return;
     }
-    if($('#password').val() == '' || $('#password').val() == undefined){
+    if(email.length > 100){
+      Swal.fire("Email!", "Email cannot exceed 100 characters", "error");
+      $('#email').focus();
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(email)){
+      Swal.fire("Email!", "Please enter a valid email address", "error");
+      $('#email').focus();
+      return;
+    }
+    
+    // Password validation
+    if(!password || password === ''){
       Swal.fire("Password!", "Password is required", "error");
+      $('#password').focus();
       return;
     }
-    if($('#username').val() == '' || $('#username').val() == undefined){
+    if(password.length < 6){
+      Swal.fire("Password!", "Password must be at least 6 characters", "error");
+      $('#password').focus();
+      return;
+    }
+    if(password.length > 50){
+      Swal.fire("Password!", "Password cannot exceed 50 characters", "error");
+      $('#password').focus();
+      return;
+    }
+    
+    // Username validation
+    if(!username || username === ''){
       Swal.fire("Username!", "Username is required", "error");
+      $('#username').focus();
       return;
     }
-    if($('#allowed_quest').val() == '' || $('#allowed_quest').val() == undefined){
-      Swal.fire("Quest!", "No of Quest is required", "error");
+    if(username.length < 3){
+      Swal.fire("Username!", "Username must be at least 3 characters", "error");
+      $('#username').focus();
       return;
     }
-    if($('#allowed_hunt').val() == '' || $('#allowed_hunt').val() == undefined){
-      Swal.fire("Hunt!", "No of Hunt is required", "error");
+    if(username.length > 50){
+      Swal.fire("Username!", "Username cannot exceed 50 characters", "error");
+      $('#username').focus();
       return;
     }
+    // Username should only contain alphanumeric and underscore
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if(!usernameRegex.test(username)){
+      Swal.fire("Username!", "Username can only contain letters, numbers, and underscores", "error");
+      $('#username').focus();
+      return;
+    }
+    
+    // Allowed Quest validation - must be positive integer >= 1
+    if(isNaN(allowedQuest) || allowedQuest < 1 || !Number.isInteger(allowedQuest)){
+      Swal.fire("Quest!", "Allowed Quests must be a positive whole number (at least 1)", "error");
+      $('#allowed_quest').focus();
+      return;
+    }
+    
+    // Allowed Hunt validation - must be positive integer >= 1
+    if(isNaN(allowedHunt) || allowedHunt < 1 || !Number.isInteger(allowedHunt)){
+      Swal.fire("Hunt!", "Allowed Hunts must be a positive whole number (at least 1)", "error");
+      $('#allowed_hunt').focus();
+      return;
+    }
+    
     if(this.permissions.length < 1){
-      Swal.fire("Hunt!", "Permissions is required", "error");
+      Swal.fire("Permissions!", "At least one permission is required", "error");
       return;
     }
    let data = {
-    email: $('#email').val(),
-    password: $('#password').val(),
-    username: $('#username').val(),
+    email: email,
+    password: password,
+    username: username,
     image: " ",
-    allowed_quest: $('#allowed_quest').val(),
-    allowed_hunt: $('#allowed_hunt').val(),
+    allowed_quest: allowedQuest,
+    allowed_hunt: allowedHunt,
     user_type: "subadmin",
     permissions: this.permissions
    }
@@ -223,23 +472,31 @@ export class ListUserComponent implements OnInit {
             this.getAllUsers()
             this.getAllAnalytics()
             this.resetPermissionForm();
+            // Clear form fields
+            $('#email').val('');
+            $('#password').val('');
+            $('#username').val('');
+            $('#allowed_quest').val('1');
+            $('#allowed_hunt').val('1');
             this.helper.successToast("Sub Admin Created Successfully");
           }, 1000);
           
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Sub Admin!", "There is an error, please try again", "error");
+        Swal.fire("Sub Admin!", error?.error?.message || "There is an error, please try again", "error");
       });
   }
   showRewardDialog(){
     $("#addProfession").modal("show");
-    $('#email').val('')
-    $('#password').val('')
-    $('#username').val('')
-    $('#image').val('')
-    $('#allowed_quest').val('')
-    $('#allowed_hunt').val('')
+    // Reset form fields with default values
+    $('#email').val('');
+    $('#password').val('');
+    $('#username').val('');
+    $('#allowed_quest').val('1');  // Set default to 1 instead of 0
+    $('#allowed_hunt').val('1');   // Set default to 1 instead of 0
+    // Reset permissions
+    this.resetPermissionForm();
   }
   onPermissionChange(event: Event) {
    
@@ -330,12 +587,51 @@ export class ListUserComponent implements OnInit {
         this.sp.hide();
         const statusText = status === 'approved' ? 'Approved' : 'Rejected';
         Swal.fire("User!", `${statusText} Successfully`, "success");
+        this.lastActionUserId = userId;
+        this.lastActionType = status;
         this.getAllUsers();
         this.getAllAnalytics();
+        setTimeout(() => {
+          this.lastActionUserId = null;
+          this.lastActionType = null;
+        }, 3000);
       }, err => {
         this.helper.failureToast(err?.error?.message);
         this.sp.hide();
       });
   }
   
+  trackByUserId(index: number, user: any): any {
+    return user.id || user._id || index;
+  }
+
+  preventNegativeInput(event: KeyboardEvent) {
+    // Prevent minus sign, plus sign (for negative), and 'e' (scientific notation)
+    const invalidKeys = ['-', '+', 'e', 'E', '.'];
+    if (invalidKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  validateNumberInput(event: any, fieldId: string) {
+    const input = event.target;
+    let value = input.value;
+    
+    // Remove any negative signs
+    if (value.includes('-')) {
+      value = value.replace(/-/g, '');
+    }
+    
+    // Convert to number
+    const numValue = parseInt(value, 10);
+    
+    // If invalid, empty, or less than 1, set to 1
+    if (isNaN(numValue) || value === '' || numValue < 1) {
+      input.value = 1;
+    } else {
+      // Ensure it's a whole number (no decimals)
+      input.value = Math.floor(numValue);
+    }
+  }
 }
+

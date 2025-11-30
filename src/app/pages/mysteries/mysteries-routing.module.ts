@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { ListMysteriesComponent } from './list-mysteries/list-mysteries.component';
 import { AddMysteriesComponent } from './add-mysteries/add-mysteries.component';
+import { EditMysteriesComponent } from './edit-mysteries/edit-mysteries.component';
 
 const routes: Routes = [{
   path: '',
@@ -15,6 +16,11 @@ const routes: Routes = [{
     {
       path: 'add-mystery',
       component: AddMysteriesComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'edit-mystery',
+      component: EditMysteriesComponent,
       canActivate: [AuthGuard]
     }
   ]

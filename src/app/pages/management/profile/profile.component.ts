@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
-import { AuthService } from '../../../services/auth/auth.service';
+import { Router } from '@angular/router';
 declare var $: any;
 
 @Component({
@@ -14,7 +14,7 @@ export class ProfileComponent implements OnInit {
   spinnerTitle = '';
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    private auth: AuthService) {
+    public router: Router) {
 
   }
 
@@ -64,15 +64,43 @@ export class ProfileComponent implements OnInit {
     }
     this.spinnerTitle = "Updating Profile"
     this.sp.show()
-    this.api.patch('Admin/' + storageUser?._id, data)
+    
+    // Determine correct endpoint based on user type
+    let endpoint = '';
+    if (storageUser?.user_type === 'admin') {
+      endpoint = 'admin/' + storageUser?._id;
+    } else if (storageUser?.user_type === 'partner') {
+      endpoint = 'user/partner/' + storageUser?._id;
+    } else if (storageUser?.user_type === 'family') {
+      endpoint = 'user/family/' + storageUser?._id;
+    } else {
+      endpoint = 'user/' + storageUser?._id;
+    }
+    
+    this.api.patch(endpoint, data)
       .then(async (response: any) => {
         setTimeout(() => {
           this.sp.hide()
           this.helper.successToast('Profile Updated Successfully');
+          // Update local storage with new data
+          if (response?.data) {
+            localStorage.setItem('mystic9834!@', JSON.stringify(response.data));
+          }
         }, 1000);
 
       }, err => {
         this.sp.hide();
+        // Don't logout on non-401 errors
+        if (err?.status === 401) {
+          // Session expired - handleUnauthorized will handle logout
+          return;
+        }
+        this.helper.failureToast(err?.error?.message || 'Failed to update profile');
       });
+  }
+
+  goBack() {
+    // Navigate back to dashboard or previous page
+    this.router.navigate(['dashboard/admin']); // or use location.back() for browser history
   }
 }

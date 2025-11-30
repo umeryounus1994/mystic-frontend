@@ -8,7 +8,7 @@
 </div>
 <div class="card bg-transparent border">
     <div class="card-body mt-2">
-        <div class="table-responsive border-0 rounded-3" *ngIf="allQuests.length > 0">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allQuests.length > 0; else noMysteriesTemplate">
             <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
                 id="dtable">
                 <thead>
@@ -35,15 +35,22 @@
                                 class="badge bg-danger bg-opacity-10 text-danger">Deleted</div>
                         </td>
                         <td>
-                            <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0" (click)="viewQuest(q)">
+                            <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0" (click)="viewQuest(q)"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="View Details">
                                 <i class="bi bi-eye"></i>
                             </button>
+                            <button class="btn btn-primary-soft btn-round me-1 mb-1 mb-md-0" (click)="edit(q.id)"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Mystery">
+                                <i class="bi bi-pencil"></i>
+                            </button>
                             <button *ngIf="q.status == 'active'" class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                (click)="deleteExamModal(q.id, 'block')">
+                                (click)="deleteExamModal(q.id, 'block')"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
                                 <i class="bi bi-trash"></i>
                             </button>
                             <button *ngIf="q.status == 'deleted'" class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0"
-                                (click)="deleteExamModal(q.id, 'activate')">
+                                (click)="deleteExamModal(q.id, 'activate')"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Restore">
                                 <i class="bi bi-arrow-counterclockwise"></i>
                             </button>
                         </td>
@@ -51,6 +58,12 @@
                 </tbody>
             </table>
         </div>
+        <ng-template #noMysteriesTemplate>
+            <div class="text-center p-5">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="text-muted mt-3 mb-0">No picture mysteries available</p>
+            </div>
+        </ng-template>
     </div>
 
 </div>

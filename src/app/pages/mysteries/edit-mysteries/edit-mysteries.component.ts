@@ -8,11 +8,11 @@ import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-add-mysteries',
-  templateUrl: './add-mysteries.component.html',
-  styleUrl: './add-mysteries.component.scss'
+  selector: 'app-edit-mysteries',
+  templateUrl: './edit-mysteries.component.html',
+  styleUrl: './edit-mysteries.component.scss'
 })
-export class AddMysteriesComponent implements OnInit {
+export class EditMysteriesComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
   allCreatures: any = [];
@@ -22,9 +22,22 @@ export class AddMysteriesComponent implements OnInit {
   option3: File | undefined = undefined;
   option4: File | undefined = undefined;
   correctOption = '';
+  Id = '';
+  
+  // Store existing file URLs
+  existingQuestionPicture = '';
+  existingOption1 = '';
+  existingOption2 = '';
+  existingOption3 = '';
+  existingOption4 = '';
   
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
     public router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      if (params && Object.keys(params).length > 0) {
+        this.Id = params['Id'];
+      }
+    });
   }
 
   // Custom validators
@@ -33,14 +46,12 @@ export class AddMysteriesComponent implements OnInit {
       return { required: true };
     }
     
-    // Convert to string first to catch "0000", "0", etc.
     const valueStr = String(control.value).trim();
     if (valueStr === '' || valueStr === '0' || valueStr === '0000') {
       return { invalidLatitude: true };
     }
     
     const lat = parseFloat(control.value);
-    // Reject NaN, out of range, or exactly zero
     if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0) {
       return { invalidLatitude: true };
     }
@@ -52,14 +63,12 @@ export class AddMysteriesComponent implements OnInit {
       return { required: true };
     }
     
-    // Convert to string first to catch "0000", "0", etc.
     const valueStr = String(control.value).trim();
     if (valueStr === '' || valueStr === '0' || valueStr === '0000') {
       return { invalidLongitude: true };
     }
     
     const lng = parseFloat(control.value);
-    // Reject NaN, out of range, or exactly zero
     if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0) {
       return { invalidLongitude: true };
     }
@@ -97,16 +106,13 @@ export class AddMysteriesComponent implements OnInit {
     const value = event.target.value;
     const numValue = parseFloat(value);
     
-    // If the value is 0, "0", "0000", or any variation, clear it and set error
     if (value === '0' || value === '0000' || value === '00' || numValue === 0 || (value && Math.abs(numValue) < 0.0001)) {
       event.target.value = '';
       this.questForm.get('latitude')?.setValue('');
       this.questForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.questForm.get('latitude')?.markAsTouched();
-      // Force form to be invalid
       this.questForm.setErrors({ ...this.questForm.errors, invalidLatitude: true });
     } else if (value && !isNaN(numValue)) {
-      // Clear errors if valid
       if (numValue >= -90 && numValue <= 90 && numValue !== 0) {
         const currentErrors = this.questForm.get('latitude')?.errors;
         if (currentErrors && currentErrors['invalidLatitude']) {
@@ -125,16 +131,13 @@ export class AddMysteriesComponent implements OnInit {
     const value = event.target.value;
     const numValue = parseFloat(value);
     
-    // If the value is 0, "0", "0000", or any variation, clear it and set error
     if (value === '0' || value === '0000' || value === '00' || numValue === 0 || (value && Math.abs(numValue) < 0.0001)) {
       event.target.value = '';
       this.questForm.get('longitude')?.setValue('');
       this.questForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.questForm.get('longitude')?.markAsTouched();
-      // Force form to be invalid
       this.questForm.setErrors({ ...this.questForm.errors, invalidLongitude: true });
     } else if (value && !isNaN(numValue)) {
-      // Clear errors if valid
       if (numValue >= -180 && numValue <= 180 && numValue !== 0) {
         const currentErrors = this.questForm.get('longitude')?.errors;
         if (currentErrors && currentErrors['invalidLongitude']) {
@@ -161,8 +164,8 @@ export class AddMysteriesComponent implements OnInit {
       latitude: ['', [Validators.required, this.validateLatitude]],
       longitude: ['', [Validators.required, this.validateLongitude]],
     });
-    this.addQuestion();
-    this.getAllCreatures()
+    this.getAllCreatures();
+    this.getProductDetails();
   }
 
   get f() { return this.questForm?.controls; }
@@ -194,7 +197,6 @@ export class AddMysteriesComponent implements OnInit {
   }  
      
   removeQuestion(i:number) {  
-    // Ensure at least one answer always remains
     if (this.questions().length > 1) {
       this.questions().removeAt(i);
     } else {
@@ -202,38 +204,95 @@ export class AddMysteriesComponent implements OnInit {
     }
   } 
 
+  getProductDetails() {
+    this.sp.show();
+    this.api.get('pictureMystery/get_picture_mystery_by_id/' + this.Id)
+      .then((response: any) => {
+        this.sp.hide();
+        const data = response?.data;
+        
+        // Set form values
+        this.questForm.controls['picture_mystery_question'].setValue(data?.picture_mystery_question || '');
+        this.questForm.controls['no_of_xp'].setValue(data?.no_of_xp || 1);
+        this.questForm.controls['no_of_crypes'].setValue(data?.no_of_crypes || 0);
+        this.questForm.controls['level_increase'].setValue(data?.level_increase || 0);
+        this.questForm.controls['mythica_ID'].setValue(data?.mythica_ID?._id || data?.mythica_ID || '');
+        
+        // Handle location coordinates
+        if (data?.location?.coordinates) {
+          this.questForm.controls['latitude'].setValue(data.location.coordinates[1] || data.location.coordinates[0]);
+          this.questForm.controls['longitude'].setValue(data.location.coordinates[0] || data.location.coordinates[1]);
+        } else if (data?.latitude && data?.longitude) {
+          this.questForm.controls['latitude'].setValue(data.latitude);
+          this.questForm.controls['longitude'].setValue(data.longitude);
+        }
+        
+        // Store existing file URLs
+        this.existingQuestionPicture = data?.picture_mystery_question_url || '';
+        
+        // Load questions/options
+        if (data?.options && data.options.length > 0) {
+          // Clear existing questions
+          while (this.questions().length !== 0) {
+            this.questions().removeAt(0);
+          }
+          
+          data.options.forEach((option: any, index: number) => {
+            const questionGroup = this.fb.group({
+              answer: [option.answer_image || '', Validators.required],
+              correct_option: [option.is_correct || false],
+              quest_id: [option._id || '']
+            });
+            this.questions().push(questionGroup);
+            
+            // Store existing option file URLs
+            if (index === 0) this.existingOption1 = option.answer_image || '';
+            if (index === 1) this.existingOption2 = option.answer_image || '';
+            if (index === 2) this.existingOption3 = option.answer_image || '';
+            if (index === 3) this.existingOption4 = option.answer_image || '';
+            
+            // Set correct option
+            if (option.is_correct) {
+              this.correctOption = 'option' + (index + 1);
+            }
+          });
+        } else {
+          // If no questions exist, add one
+          this.addQuestion();
+        }
+      })
+      .catch((error: any) => {
+        this.sp.hide();
+        Swal.fire("Error!", "Failed to load mystery details", "error");
+        console.error('Error loading mystery details:', error);
+      });
+  }
+
   onSubmit(){
     this.submitted = true;
     
-    // Additional validation for numeric fields FIRST (before form validation check)
     const formValue = this.questForm.value;
     
-    // Validate latitude and longitude FIRST - check for empty, zero, or invalid values
-    // Get the actual input element value to catch "0000" before it's converted
+    // Validate latitude and longitude FIRST
     const latInput = document.querySelector('[formControlName="latitude"]') as HTMLInputElement;
     const lngInput = document.querySelector('[formControlName="longitude"]') as HTMLInputElement;
     
     const latControl = this.questForm.get('latitude');
     const lngControl = this.questForm.get('longitude');
     
-    // Get raw input value first (before conversion)
     const latRawValue = latInput?.value || latControl?.value || '';
     const lngRawValue = lngInput?.value || lngControl?.value || '';
     
-    // Convert to string to check original input
     const latStr = String(latRawValue).trim();
     const lngStr = String(lngRawValue).trim();
     
-    // Check if empty or zero (including "0", "0000", etc.) - do this BEFORE form validation
     const latNum = parseFloat(latStr);
     const lngNum = parseFloat(lngStr);
     
-    // More comprehensive check for zero values
     if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latNum === 0 || isNaN(latNum) || Math.abs(latNum) < 0.0001) {
       Swal.fire("Validation Error!", "Please enter a valid Latitude (cannot be 0 or empty)", "error");
       latControl?.setErrors({ invalidLatitude: true });
       latControl?.markAsTouched();
-      // Force form to be invalid
       this.questForm.setErrors({ ...this.questForm.errors, invalidLatitude: true });
       this.questForm.markAllAsTouched();
       return;
@@ -243,7 +302,6 @@ export class AddMysteriesComponent implements OnInit {
       Swal.fire("Validation Error!", "Please enter a valid Longitude (cannot be 0 or empty)", "error");
       lngControl?.setErrors({ invalidLongitude: true });
       lngControl?.markAsTouched();
-      // Force form to be invalid
       this.questForm.setErrors({ ...this.questForm.errors, invalidLongitude: true });
       this.questForm.markAllAsTouched();
       return;
@@ -267,12 +325,8 @@ export class AddMysteriesComponent implements OnInit {
       return;
     }
     
-    // Update form control values to ensure they're set correctly
     latControl?.setValue(latNum);
     lngControl?.setValue(lngNum);
-    
-    // Now check if form is valid - this will trigger all validators
-    // Force validation update
     latControl?.updateValueAndValidity();
     lngControl?.updateValueAndValidity();
     
@@ -303,7 +357,7 @@ export class AddMysteriesComponent implements OnInit {
       if (errors.length > 0) {
         Swal.fire("Validation Error!", `Please fix errors in: ${errors.join(', ')}`, "error");
       }
-      return; // Don't proceed if form is invalid
+      return;
     }
     
     // Additional validation for numeric fields
@@ -332,14 +386,15 @@ export class AddMysteriesComponent implements OnInit {
     
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
-      // Check if answer file exists (option1, option2, etc.)
       const optionFile = i === 0 ? this.option1 : i === 1 ? this.option2 : i === 2 ? this.option3 : this.option4;
-      if (optionFile) {
+      const existingFile = i === 0 ? this.existingOption1 : i === 1 ? this.existingOption2 : i === 2 ? this.existingOption3 : this.existingOption4;
+      
+      if (optionFile || existingFile) {
         hasAnswerFiles = true;
       }
       if (q.correct_option === true || q.correct_option === 'true') {
         hasCorrectAnswer = true;
-        if (!optionFile) {
+        if (!optionFile && !existingFile) {
           Swal.fire("Validation Error!", `Answer ${i + 1} is marked as correct but no file is uploaded`, "error");
           return;
         }
@@ -356,13 +411,11 @@ export class AddMysteriesComponent implements OnInit {
       return;
     }
     
-    // Final check - ensure form is still valid after all validations
     if (!this.questForm.valid) {
       Swal.fire("Validation Error!", "Please fix all form errors before submitting", "error");
       return;
     }
     
-    // All validations passed, submit the form
     this._sendSaveRequest(this.questForm.value);
   }
 
@@ -376,6 +429,7 @@ export class AddMysteriesComponent implements OnInit {
     fD.append('mythica_ID', formData?.mythica_ID);
     fD.append('latitude', formData?.latitude);
     fD.append('longitude', formData?.longitude);
+    
     if(this.questionPicture){
       fD.append('picture_mystery_question_url', this.questionPicture!, this.questionPicture?.name);
     }
@@ -392,11 +446,12 @@ export class AddMysteriesComponent implements OnInit {
       fD.append('option4', this.option4!, this.option4?.name);
     }
     fD.append('correct', this.correctOption);
-    this.api.postImageData('pictureMystery/createPictureMystery', fD)
+    
+    this.api.patch('pictureMystery/' + this.Id, fD)
       .then((response: any) => {
           this.sp.hide();
           setTimeout(() => {
-            this.helper.successToast("Picture Mystery Created Successfully");
+            this.helper.successToast("Picture Mystery Updated Successfully");
           }, 1000);
           setTimeout(() => {
             this.router.navigate(['mystery/list-mystery']);

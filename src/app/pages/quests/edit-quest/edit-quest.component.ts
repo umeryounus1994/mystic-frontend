@@ -31,7 +31,7 @@ export class EditQuestComponent implements OnInit {
   option5: File | undefined = undefined;
   questimg = '';
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    private router: Router, private fb: FormBuilder, private route: ActivatedRoute, private auth: AuthService) {
+    public router: Router, private fb: FormBuilder, private route: ActivatedRoute, private auth: AuthService) {
       this.route.queryParams.subscribe(params => {
         if (params && Object.keys(params).length > 0) {
           this.Id = params['Id'];
@@ -209,7 +209,13 @@ export class EditQuestComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Quest!", "There is an error, please try again", "error");
+        // Don't logout on non-401 errors
+        if (error?.status === 401) {
+          // Session expired - handleUnauthorized will handle logout
+          return;
+        }
+        const errorMessage = error?.error?.message || error?.error?.error || 'There is an error, please try again';
+        Swal.fire("Quest!", errorMessage, "error");
       });
   }
   onFileSelected(event: any, type: string) {

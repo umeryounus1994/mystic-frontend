@@ -69,34 +69,39 @@
                         <!-- Username and Email -->
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label for="username" class="form-label">Username</label>
+                                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('username') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
                                         <i class="bi bi-person-fill"></i>
                                     </span>
-                                    <input type="text" formControlName="username"
+                                    <input type="text" formControlName="username" maxlength="50"
                                         class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter username"
                                         id="username">
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('username')">
-                                    Username is required and must be at least 3 characters
+                                    <div *ngIf="familyForm.get('username')?.errors?.['required']">Username is required</div>
+                                    <div *ngIf="familyForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters</div>
+                                    <div *ngIf="familyForm.get('username')?.errors?.['maxlength']">Username cannot exceed 50 characters</div>
+                                    <div *ngIf="familyForm.get('username')?.errors?.['pattern']">Username can only contain letters, numbers, and underscores</div>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label for="email" class="form-label">Email address</label>
+                                <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('email') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
                                         <i class="bi bi-envelope-fill"></i>
                                     </span>
-                                    <input type="email" formControlName="email"
+                                    <input type="email" formControlName="email" maxlength="100"
                                         class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter email"
                                         id="email">
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
-                                    Please enter a valid email address
+                                    <div *ngIf="familyForm.get('email')?.errors?.['required']">Email is required</div>
+                                    <div *ngIf="familyForm.get('email')?.errors?.['email'] || familyForm.get('email')?.errors?.['invalidEmail']">Please enter a valid email address</div>
+                                    <div *ngIf="familyForm.get('email')?.errors?.['maxlength']">Email cannot exceed 100 characters</div>
                                 </div>
                             </div>
                         </div>
@@ -104,14 +109,14 @@
                         <!-- Password and Confirm Password -->
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label for="password" class="form-label">Password</label>
+                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('password') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
                                         <i class="fas fa-lock"></i>
                                     </span>
-                                    <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password"
-                                        class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter password"
+                                    <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" maxlength="10"
+                                        class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter password (max 10 chars, 1 capital, 1 number)"
                                         id="password">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
                                         (click)="showPassword()">
@@ -120,12 +125,17 @@
                                     </span>
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
-                                    Password is required and must be at least 6 characters
+                                    <div *ngIf="familyForm.get('password')?.errors?.['required']">Password is required</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['maxLength']">Password cannot exceed 10 characters</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['noCapital']">Password must contain at least one capital letter</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['noNumber']">Password must contain at least one number</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['invalidChars']">Password can only contain alphanumeric and special characters</div>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                <label for="confirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('confirm_password') || familyForm.hasError('passwordMismatch') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">

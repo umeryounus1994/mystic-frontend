@@ -6,6 +6,7 @@ import { PartnerRegistrationRequest } from '../../../models/PartnerRegistrationR
 import Swal from 'sweetalert2';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Observable, from } from 'rxjs';
 
 @Component({
   selector: 'app-partner-registration',
@@ -35,25 +36,58 @@ export class PartnerRegistrationComponent implements OnInit {
 
   initializeForm() {
     this.partnerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(100), this.validateEmailFormat]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10), this.validatePassword]],
       confirm_password: ['', Validators.required],
       user_type: ['partner'],
       partner_profile: this.fb.group({
-        business_name: ['', Validators.required],
-        business_description: ['', Validators.required],
-        phone: ['', Validators.required],
-        routing_number: ['', Validators.required],
+        business_name: ['', [Validators.required, Validators.maxLength(100)]],
+        business_description: ['', [Validators.required, Validators.maxLength(500)]],
+        phone: ['', [Validators.required, Validators.maxLength(20)]],
+        routing_number: ['', [Validators.required, Validators.maxLength(20)]],
         commission_rate: [15],
         bank_details: this.fb.group({
-          account_number: ['', Validators.required],
-          account_holder: ['', Validators.required]
+          account_number: ['', [Validators.required, Validators.maxLength(50)]],
+          account_holder: ['', [Validators.required, Validators.maxLength(100)]]
         }),
         approval_status: ['pending']
       }),
       agreeTerms: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
+  }
+
+  validateEmailFormat(control: any) {
+    if (!control.value) return null;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(control.value)) {
+      return { invalidEmail: true };
+    }
+    // Additional check for proper domain
+    const parts = control.value.split('@');
+    if (parts.length !== 2 || parts[1].split('.').length < 2) {
+      return { invalidEmail: true };
+    }
+    return null;
+  }
+
+  validatePassword(control: any) {
+    if (!control.value) return null;
+    const password = control.value;
+    // Password must be: alphanumeric + special chars, max 10 chars, 1 capital, 1 number
+    if (password.length > 10) {
+      return { maxLength: true };
+    }
+    if (!/[A-Z]/.test(password)) {
+      return { noCapital: true };
+    }
+    if (!/[0-9]/.test(password)) {
+      return { noNumber: true };
+    }
+    if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(password)) {
+      return { invalidChars: true };
+    }
+    return null;
   }
 
   passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
@@ -94,62 +128,196 @@ export class PartnerRegistrationComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.partnerForm?.valid) {
-      this.isSubmitting = true;
-      this.text = "Registering partner...";
-      this.sp.show();
-      
-      const formData = this.prepareFormData();
-      
-      this.auth.registerPartner(formData).subscribe({
-        next: (response) => {
-          this.sp.hide();
-          this.isSubmitting = false;
-          console.log('Partner registration successful', response);
-          
-          setTimeout(() => {
-            this.helper.successToast("Partner registration successful! Please wait for approval.");
-          }, 1000);
-          
-          setTimeout(() => {
-            this.router.navigate(['/auth/login']);
-          }, 2000);
-        },
-        error: (error) => {
-          this.sp.hide();
-          this.isSubmitting = false;
-          console.error('Registration failed', error);
-          
-          if (error?.status === 400) {
-            this.helper.failureToast(error?.error?.message || 'Registration failed. Please check your details.');
-          } else if (error?.status === 409) {
-            this.helper.failureToast('Email or username already exists.');
-          } else {
-            Swal.fire("Registration Failed!", error?.error?.message, "error");
-          }
-        }
-      });
-    } else {
+    // Mark all fields as touched to show validation errors
+    if (!this.partnerForm?.valid) {
       this.markFormGroupTouched();
       Swal.fire("Registration", "Please fill all required fields correctly", "error");
+      return;
     }
+
+    // Additional validation checks before submission
+    if (!this.validateFormData()) {
+      return;
+    }
+
+    // Prevent double submission
+    if (this.isSubmitting) {
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.text = "Registering partner...";
+    this.sp.show();
+    
+    const formData = this.prepareFormData();
+    
+    // Add timeout handling
+    const timeoutId = setTimeout(() => {
+      if (this.isSubmitting) {
+        this.sp.hide();
+        this.isSubmitting = false;
+        Swal.fire("Registration Timeout", "The registration request took too long. Please try again.", "error");
+      }
+    }, 30000); // 30 second timeout
+    
+    this.auth.registerPartner(formData).subscribe({
+      next: (response) => {
+        clearTimeout(timeoutId);
+        this.sp.hide();
+        this.isSubmitting = false;
+        console.log('Partner registration successful', response);
+        
+        setTimeout(() => {
+          this.helper.successToast("Partner registration successful! Please wait for approval.");
+        }, 1000);
+        
+        setTimeout(() => {
+          this.router.navigate(['/auth/login']);
+        }, 2000);
+      },
+      error: (error) => {
+        clearTimeout(timeoutId);
+        this.sp.hide();
+        this.isSubmitting = false;
+        console.error('Registration failed', error);
+        
+        // More comprehensive error handling
+        let errorMessage = 'Registration failed. Please try again.';
+        
+        if (error?.error?.message) {
+          errorMessage = error.error.message;
+        } else if (error?.message) {
+          errorMessage = error.message;
+        }
+        
+        // Handle specific error cases
+        if (error?.status === 0 || error?.status === undefined) {
+          // Network error or timeout
+          Swal.fire({
+            icon: 'error',
+            title: 'Connection Error',
+            text: 'Unable to connect to the server. Please check your internet connection and try again.',
+            confirmButtonText: 'OK'
+          });
+        } else if (error?.status === 400) {
+          // Bad request - validation errors
+          Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: errorMessage || 'Please check all required fields are filled correctly.',
+            confirmButtonText: 'OK'
+          });
+        } else if (error?.status === 409) {
+          // Conflict - duplicate email/username
+          Swal.fire({
+            icon: 'error',
+            title: 'Account Exists',
+            text: 'Email or username already exists. Please use different credentials.',
+            confirmButtonText: 'OK'
+          });
+        } else if (error?.status === 500) {
+          // Server error
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'An error occurred on the server. Please try again later.',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          // Generic error
+          Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            text: errorMessage,
+            confirmButtonText: 'OK'
+          });
+        }
+      }
+    });
+  }
+
+  private validateFormData(): boolean {
+    // Validate image file if provided
+    if (this.selectedImage) {
+      // Check file size (max 5MB)
+      if (this.selectedImage.size > 5 * 1024 * 1024) {
+        Swal.fire("Validation Error", "Profile image size must be less than 5MB", "error");
+        return false;
+      }
+      
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(this.selectedImage.type)) {
+        Swal.fire("Validation Error", "Profile image must be a JPEG, PNG, or GIF file", "error");
+        return false;
+      }
+    }
+
+    // Validate all required fields are not empty strings
+    const formValue = this.partnerForm.value;
+    
+    if (!formValue.username || formValue.username.trim() === '') {
+      Swal.fire("Validation Error", "Username is required", "error");
+      return false;
+    }
+    
+    if (!formValue.email || formValue.email.trim() === '') {
+      Swal.fire("Validation Error", "Email is required", "error");
+      return false;
+    }
+    
+    if (!formValue.password || formValue.password.trim() === '') {
+      Swal.fire("Validation Error", "Password is required", "error");
+      return false;
+    }
+    
+    if (!formValue.partner_profile?.business_name || formValue.partner_profile.business_name.trim() === '') {
+      Swal.fire("Validation Error", "Business name is required", "error");
+      return false;
+    }
+    
+    if (!formValue.partner_profile?.phone || formValue.partner_profile.phone.trim() === '') {
+      Swal.fire("Validation Error", "Phone number is required", "error");
+      return false;
+    }
+    
+    if (!formValue.partner_profile?.routing_number || formValue.partner_profile.routing_number.trim() === '') {
+      Swal.fire("Validation Error", "Routing number is required", "error");
+      return false;
+    }
+    
+    if (!formValue.partner_profile?.bank_details?.account_number || formValue.partner_profile.bank_details.account_number.trim() === '') {
+      Swal.fire("Validation Error", "Account number is required", "error");
+      return false;
+    }
+    
+    if (!formValue.partner_profile?.bank_details?.account_holder || formValue.partner_profile.bank_details.account_holder.trim() === '') {
+      Swal.fire("Validation Error", "Account holder name is required", "error");
+      return false;
+    }
+
+    return true;
   }
 
   private prepareFormData(): PartnerRegistrationRequest {
     const formValue = this.partnerForm?.value;
     
     const registrationData: PartnerRegistrationRequest = {
-      username: formValue.username,
-      email: formValue.email,
+      username: formValue.username?.trim(),
+      email: formValue.email?.trim(),
       password: formValue.password,
       confirm_password: formValue.confirm_password,
       user_type: 'partner',
       partner_profile: {
-        business_name: formValue.partner_profile.business_name,
-        business_description: formValue.partner_profile.business_description,
-        phone: formValue.partner_profile.phone,
-        commission_rate: formValue.partner_profile.commission_rate,
-        bank_details: formValue.partner_profile.bank_details,
+        business_name: formValue.partner_profile.business_name?.trim(),
+        business_description: formValue.partner_profile.business_description?.trim() || '',
+        phone: formValue.partner_profile.phone?.trim(),
+        commission_rate: formValue.partner_profile.commission_rate || 15,
+        bank_details: {
+          account_number: formValue.partner_profile.bank_details.account_number?.trim(),
+          routing_number: formValue.partner_profile.routing_number?.trim(), // Move routing_number here
+          account_holder: formValue.partner_profile.bank_details.account_holder?.trim()
+        },
         approval_status: 'pending'
       }
     };

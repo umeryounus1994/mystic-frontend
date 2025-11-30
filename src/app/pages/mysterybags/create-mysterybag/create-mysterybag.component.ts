@@ -21,7 +21,7 @@ export class CreateMysterybagComponent implements OnInit {
     private api: RestApiService,
     private sp: NgxSpinnerService,
     private helper: HelperService,
-    private router: Router
+    public router: Router
   ) {}
 
   ngOnInit() {

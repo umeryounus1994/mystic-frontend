@@ -28,7 +28,7 @@
 </div>
 <div class="card bg-transparent border">
     <div class="card-body mt-2">
-        <div class="table-responsive border-0 rounded-3" *ngIf="allQuests.length > 0">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allQuests.length > 0; else noQuestsTemplate">
             <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
                 id="dtable">
                 <thead>
@@ -83,6 +83,12 @@
                 </tbody>
             </table>
         </div>
+        <ng-template #noQuestsTemplate>
+            <div class="text-center p-5">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="text-muted mt-3 mb-0">No quests available</p>
+            </div>
+        </ng-template>
     </div>
 
 </div>

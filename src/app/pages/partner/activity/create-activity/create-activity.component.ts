@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../../services/api/rest-api.service';
 import { HelperService } from '../../../../services/helper/helper.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-activity',
@@ -34,19 +35,93 @@ export class CreateActivityComponent implements OnInit {
 
   ngOnInit() {
     this.activityForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       category: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
-      latitude: ['', Validators.required],
-      longitude: ['', Validators.required],
-      address: ['', Validators.required],
-      duration: ['', [Validators.required, Validators.min(15)]],
+      price: [1, [Validators.required, Validators.min(1)]],
+      latitude: ['', [Validators.required, this.validateLatitude.bind(this)]],
+      longitude: ['', [Validators.required, this.validateLongitude.bind(this)]],
+      address: ['', [Validators.required, Validators.maxLength(200)]],
+      duration: ['', [Validators.required, Validators.min(10)]],
       max_participants: ['', [Validators.required, Validators.min(1)]],
       slots: this.fb.array([])
     });
 
     this.addSlot();
+  }
+
+  validateLatitude(control: AbstractControl): ValidationErrors | null {
+    if (!control.value || control.value === '') {
+      return { required: true };
+    }
+    const latStr = String(control.value).trim();
+    // Check for zero variations
+    if (latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
+      return { invalidLatitude: true };
+    }
+    const lat = parseFloat(latStr);
+    if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0) {
+      return { invalidLatitude: true };
+    }
+    return null;
+  }
+
+  validateLongitude(control: AbstractControl): ValidationErrors | null {
+    if (!control.value || control.value === '') {
+      return { required: true };
+    }
+    const lngStr = String(control.value).trim();
+    // Check for zero variations
+    if (lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
+      return { invalidLongitude: true };
+    }
+    const lng = parseFloat(lngStr);
+    if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0) {
+      return { invalidLongitude: true };
+    }
+    return null;
+  }
+
+  onLatitudeInput(event: any) {
+    const value = String(event.target.value).trim();
+    if (value === '0' || value === '0000' || value === '00000' || /^0+$/.test(value)) {
+      event.target.value = '';
+      this.activityForm.patchValue({ latitude: '' });
+      this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
+      this.activityForm.get('latitude')?.markAsTouched();
+    }
+  }
+
+  onLongitudeInput(event: any) {
+    const value = String(event.target.value).trim();
+    if (value === '0' || value === '0000' || value === '00000' || /^0+$/.test(value)) {
+      event.target.value = '';
+      this.activityForm.patchValue({ longitude: '' });
+      this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
+      this.activityForm.get('longitude')?.markAsTouched();
+    }
+  }
+
+  preventNegativeInput(event: KeyboardEvent) {
+    const invalidKeys = ['-', '+', 'e', 'E'];
+    if (invalidKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  validatePriceInput(event: any) {
+    const input = event.target;
+    let value = parseFloat(input.value);
+    
+    if (isNaN(value) || value < 1) {
+      input.value = 1;
+      this.activityForm.patchValue({ price: 1 });
+    } else {
+      // Round to 2 decimal places
+      value = Math.round(value * 100) / 100;
+      input.value = value.toFixed(2);
+      this.activityForm.patchValue({ price: value });
+    }
   }
 
   get f() { return this.activityForm?.controls; }
@@ -57,20 +132,143 @@ export class CreateActivityComponent implements OnInit {
 
   createSlot(): FormGroup {
     return this.fb.group({
-      start_time: ['', Validators.required],
-      end_time: ['', Validators.required],
+      start_time: ['', [Validators.required, this.validateFutureDate.bind(this)]],
+      end_time: ['', [Validators.required, this.validateFutureDate.bind(this)]],
       available_spots: ['', [Validators.required, Validators.min(1)]]
+    }, { validators: this.validateSlotDates.bind(this) });
+  }
+
+  validateAvailableSpots(control: AbstractControl): ValidationErrors | null {
+    // Only validate if control has a value
+    if (!control.value || control.value === '') {
+      return null;
+    }
+    
+    const maxParticipants = this.activityForm?.get('max_participants')?.value;
+    
+    // Only validate if max_participants has a value
+    if (!maxParticipants || maxParticipants === '' || isNaN(parseInt(maxParticipants, 10))) {
+      return null; // Don't validate if max_participants is not set yet
+    }
+    
+    const availableSpots = parseInt(control.value, 10);
+    const maxParticipantsNum = parseInt(maxParticipants, 10);
+    
+    if (isNaN(availableSpots) || isNaN(maxParticipantsNum)) {
+      return null;
+    }
+    
+    // Available spots should not exceed max participants (can be equal)
+    if (availableSpots > maxParticipantsNum) {
+      return { exceedsMaxParticipants: true };
+    }
+    
+    return null;
+  }
+
+  // Add method to update available_spots validation when max_participants changes
+  onMaxParticipantsChange() {
+    // Re-validate all slots' available_spots when max_participants changes
+    this.slots.controls.forEach(slot => {
+      const availableSpotsControl = slot.get('available_spots');
+      if (availableSpotsControl) {
+        availableSpotsControl.setValidators([
+          Validators.required,
+          Validators.min(1),
+          this.validateAvailableSpots.bind(this)
+        ]);
+        availableSpotsControl.updateValueAndValidity({ emitEvent: false });
+      }
     });
   }
 
+  // Method to validate available spots when input changes
+  onAvailableSpotsChange(slotIndex: number) {
+    const slot = this.slots.at(slotIndex);
+    const availableSpotsControl = slot.get('available_spots');
+    if (availableSpotsControl) {
+      availableSpotsControl.updateValueAndValidity();
+    }
+  }
+
+  validateFutureDate(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    const selectedDate = new Date(control.value);
+    const now = new Date();
+    // Set seconds and milliseconds to 0 for comparison
+    now.setSeconds(0, 0);
+    selectedDate.setSeconds(0, 0);
+    
+    if (selectedDate <= now) {
+      return { pastDate: true };
+    }
+    return null;
+  }
+
+  validateSlotDates(group: AbstractControl): ValidationErrors | null {
+    const formGroup = group as FormGroup;
+    const startTime = formGroup.get('start_time')?.value;
+    const endTime = formGroup.get('end_time')?.value;
+    
+    if (!startTime || !endTime) return null;
+    
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    const now = new Date();
+    now.setSeconds(0, 0);
+    
+    // Check if start is in the past
+    if (start <= now) {
+      formGroup.get('start_time')?.setErrors({ pastDate: true });
+      return { pastDate: true };
+    }
+    
+    // Check if end is in the past
+    if (end < now) {
+      formGroup.get('end_time')?.setErrors({ pastDate: true });
+      return { pastDate: true };
+    }
+    
+    // Check if end is before start
+    if (end <= start) {
+      formGroup.get('end_time')?.setErrors({ endBeforeStart: true });
+      return { endBeforeStart: true };
+    }
+    
+    // Clear errors if validation passes
+    formGroup.get('start_time')?.setErrors(null);
+    formGroup.get('end_time')?.setErrors(null);
+    
+    return null;
+  }
+
   addSlot() {
-    this.slots.push(this.createSlot());
+    const newSlot = this.createSlot();
+    this.slots.push(newSlot);
+    
+    // Add available_spots validator after slot is created
+    const availableSpotsControl = newSlot.get('available_spots');
+    if (availableSpotsControl) {
+      availableSpotsControl.setValidators([
+        Validators.required,
+        Validators.min(1),
+        this.validateAvailableSpots.bind(this)
+      ]);
+      // Trigger initial validation
+      availableSpotsControl.updateValueAndValidity({ emitEvent: false });
+    }
   }
 
   removeSlot(index: number) {
     if (this.slots.length > 1) {
       this.slots.removeAt(index);
     }
+  }
+
+  getMinDateTime(): string {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
   }
 
   onImageSelected(event: any) {
@@ -82,9 +280,186 @@ export class CreateActivityComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    if (this.activityForm?.valid) {
-      this._sendSaveRequest(this.activityForm.value);
+    
+    // First, validate price - must be >= 1
+    const formValue = this.activityForm.value;
+    const price = parseFloat(formValue.price);
+    if (isNaN(price) || price < 1) {
+      Swal.fire("Validation Error!", "Price must be at least $1.00", "error");
+      this.activityForm.get('price')?.setErrors({ min: true });
+      this.activityForm.get('price')?.markAsTouched();
+      return;
     }
+    
+    // Validate category
+    if (!formValue.category || formValue.category === '') {
+      Swal.fire("Validation Error!", "Category is required", "error");
+      this.activityForm.get('category')?.setErrors({ required: true });
+      this.activityForm.get('category')?.markAsTouched();
+      return;
+    }
+    
+    // Validate address
+    if (!formValue.address || formValue.address.trim() === '') {
+      Swal.fire("Validation Error!", "Address is required", "error");
+      this.activityForm.get('address')?.setErrors({ required: true });
+      this.activityForm.get('address')?.markAsTouched();
+      return;
+    }
+    
+    // Validate duration - must be at least 10 minutes
+    const duration = parseInt(formValue.duration, 10);
+    if (isNaN(duration) || duration < 10) {
+      Swal.fire("Validation Error!", "Duration must be at least 10 minutes", "error");
+      this.activityForm.get('duration')?.setErrors({ min: true });
+      this.activityForm.get('duration')?.markAsTouched();
+      return;
+    }
+    
+    // Validate max_participants - must be at least 1
+    const maxParticipants = parseInt(formValue.max_participants, 10);
+    if (isNaN(maxParticipants) || maxParticipants < 1) {
+      Swal.fire("Validation Error!", "Max Participants must be at least 1", "error");
+      this.activityForm.get('max_participants')?.setErrors({ min: true });
+      this.activityForm.get('max_participants')?.markAsTouched();
+      return;
+    }
+    
+    // Validate latitude and longitude for "0" and "0000" values BEFORE form validation
+    const latStr = String(formValue.latitude || '').trim();
+    const lngStr = String(formValue.longitude || '').trim();
+    
+    if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
+      Swal.fire("Validation Error!", "Please enter a valid Latitude (cannot be 0 or empty)", "error");
+      this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
+      this.activityForm.get('latitude')?.markAsTouched();
+      return;
+    }
+    
+    if (!lngStr || lngStr === '' || lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
+      Swal.fire("Validation Error!", "Please enter a valid Longitude (cannot be 0 or empty)", "error");
+      this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
+      this.activityForm.get('longitude')?.markAsTouched();
+      return;
+    }
+    
+    // Validate latitude and longitude ranges
+    const lat = parseFloat(latStr);
+    const lng = parseFloat(lngStr);
+    
+    if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0 || Math.abs(lat) < 0.0001) {
+      Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+      this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
+      this.activityForm.get('latitude')?.markAsTouched();
+      return;
+    }
+    
+    if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0 || Math.abs(lng) < 0.0001) {
+      Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+      this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
+      this.activityForm.get('longitude')?.markAsTouched();
+      return;
+    }
+    
+    // Validate all time slots
+    for (let i = 0; i < formValue.slots.length; i++) {
+      const slot = formValue.slots[i];
+      const startTime = new Date(slot.start_time);
+      const endTime = new Date(slot.end_time);
+      const now = new Date();
+      now.setSeconds(0, 0);
+      
+      // Validate start time is greater than current time
+      if (startTime <= now) {
+        Swal.fire("Validation Error!", `Slot ${i + 1}: Start time must be greater than current time`, "error");
+        const slotControl = this.slots.at(i);
+        slotControl.get('start_time')?.setErrors({ pastDate: true });
+        slotControl.get('start_time')?.markAsTouched();
+        return;
+      }
+      
+      // Validate end time is not in the past
+      if (endTime < now) {
+        Swal.fire("Validation Error!", `Slot ${i + 1}: End time cannot be in the past`, "error");
+        const slotControl = this.slots.at(i);
+        slotControl.get('end_time')?.setErrors({ pastDate: true });
+        slotControl.get('end_time')?.markAsTouched();
+        return;
+      }
+      
+      // Validate end time is not less than start time
+      if (endTime <= startTime) {
+        Swal.fire("Validation Error!", `Slot ${i + 1}: End time must be after start time`, "error");
+        const slotControl = this.slots.at(i);
+        slotControl.get('end_time')?.setErrors({ endBeforeStart: true });
+        slotControl.get('end_time')?.markAsTouched();
+        return;
+      }
+      
+      // Validate available_spots is not greater than max_participants
+      const availableSpots = parseInt(slot.available_spots, 10);
+      if (isNaN(availableSpots) || availableSpots < 1) {
+        Swal.fire("Validation Error!", `Slot ${i + 1}: Available spots must be at least 1`, "error");
+        const slotControl = this.slots.at(i);
+        slotControl.get('available_spots')?.setErrors({ min: true });
+        slotControl.get('available_spots')?.markAsTouched();
+        return;
+      }
+      
+      // Check if available_spots exceeds max_participants
+      if (availableSpots > maxParticipants) {
+        Swal.fire("Validation Error!", `Slot ${i + 1}: Available spots (${availableSpots}) cannot exceed Max Participants (${maxParticipants})`, "error");
+        const slotControl = this.slots.at(i);
+        slotControl.get('available_spots')?.setErrors({ exceedsMaxParticipants: true });
+        slotControl.get('available_spots')?.markAsTouched();
+        return;
+      }
+    }
+    
+    // Check form validity AFTER all custom validations
+    if (!this.activityForm?.valid) {
+      const errors = [];
+      if (this.f['title']?.errors) errors.push('Title');
+      if (this.f['description']?.errors) errors.push('Description');
+      if (this.f['price']?.errors) errors.push('Price');
+      if (this.f['category']?.errors) errors.push('Category');
+      if (this.f['address']?.errors) errors.push('Address');
+      if (this.f['latitude']?.errors) {
+        if (this.f['latitude'].errors['invalidLatitude']) {
+          Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+        } else {
+          errors.push('Latitude');
+        }
+        return;
+      }
+      if (this.f['longitude']?.errors) {
+        if (this.f['longitude'].errors['invalidLongitude']) {
+          Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+        } else {
+          errors.push('Longitude');
+        }
+        return;
+      }
+      if (this.f['duration']?.errors) errors.push('Duration');
+      if (this.f['max_participants']?.errors) errors.push('Max Participants');
+      
+      // Check for slot errors
+      for (let i = 0; i < this.slots.length; i++) {
+        const slot = this.slots.at(i);
+        if (slot.get('available_spots')?.errors?.['exceedsMaxParticipants']) {
+          Swal.fire("Validation Error!", `Slot ${i + 1}: Available spots cannot exceed Max Participants`, "error");
+          return;
+        }
+      }
+      
+      if (errors.length > 0) {
+        Swal.fire("Validation Error!", `Please fix errors in: ${errors.join(', ')}`, "error");
+      }
+      return; // Don't proceed if form is invalid
+    }
+    
+    // All validations passed, submit the form
+    this._sendSaveRequest(this.activityForm.value);
   }
 
   _sendSaveRequest(formData: any) {

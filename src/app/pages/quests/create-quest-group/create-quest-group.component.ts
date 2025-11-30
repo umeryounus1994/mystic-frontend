@@ -21,7 +21,7 @@ export class CreateQuestGroupComponent implements OnInit {
   reward: File | undefined = undefined;
 
   constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+    public router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
       this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
   }
   onChangeURL(url: SafeUrl) {

@@ -3,9 +3,9 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { HelperService } from '../helper/helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AuthService } from '../auth/auth.service';
 import { StorageService } from '../storage/storage.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +14,33 @@ export class RestApiService {
   httpOptions: any;
   local_user: any
   constructor(private http: HttpClient, private helper: HelperService,
-    private sanitizer: DomSanitizer, private storage: StorageService, private router: Router) {
+    private sanitizer: DomSanitizer, private storage: StorageService, private router: Router,
+    private spinner: NgxSpinnerService) {
       if(!(Object.keys(this.storage.userDetails).length === 0 && this.storage.userDetails.constructor === Object)) {
       this.local_user = this.storage.userDetails;
       }
      }
+
+  private handleUnauthorized() {
+    // Hide spinner immediately to prevent loading state
+    this.spinner.hide();
+    
+    // Reset auth state directly to avoid circular dependency
+    // Clear storage but keep remembered credentials
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const rememberedPassword = localStorage.getItem('rememberedPassword');
+    localStorage.clear();
+    if (rememberedEmail) localStorage.setItem('rememberedEmail', rememberedEmail);
+    if (rememberedPassword) localStorage.setItem('rememberedPassword', rememberedPassword);
+    
+    this.storage.removeUserDetails();
+    
+    // Navigate to login - the login component will handle resetting auth state
+    // Only navigate if not already on login page
+    if (this.router.url !== '/auth/login') {
+      this.router.navigateByUrl('/auth/login', { skipLocationChange: false });
+    }
+  }
 
 
   setHeader() {
@@ -76,9 +98,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -96,9 +117,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -130,9 +150,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -152,9 +171,8 @@ setHeaderWithTokenWithoutContentType() {
           },
           error: (error) => {
             if(error?.status === 401) {
-              localStorage.clear();
-              this.storage.removeUserDetails();
-              this.router.navigateByUrl('/auth/login');
+              this.handleUnauthorized();
+              reject(error);
               return;
             }
             reject(error)
@@ -174,9 +192,8 @@ setHeaderWithTokenWithoutContentType() {
           },
           error: (error) => {
             if(error?.status === 401) {
-              localStorage.clear();
-              this.storage.removeUserDetails();
-              this.router.navigateByUrl('/auth/login');
+              this.handleUnauthorized();
+              reject(error);
               return;
             }
             reject(error)
@@ -196,9 +213,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -217,9 +233,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -238,9 +253,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -260,9 +274,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -281,9 +294,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            localStorage.clear();
-            this.storage.removeUserDetails();
-            this.router.navigateByUrl('/auth/login');
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)
@@ -306,8 +318,8 @@ setHeaderWithTokenWithoutContentType() {
         },
         error: (error) => {
           if(error?.status === 401) {
-            this.storage.removeUserDetails();
-            this.router.navigate(['/auth/login']);
+            this.handleUnauthorized();
+            reject(error);
             return;
           }
           reject(error)

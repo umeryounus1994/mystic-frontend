@@ -7,9 +7,10 @@ import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddMysteriesComponent } from './add-mysteries/add-mysteries.component';
 import { ListMysteriesComponent } from './list-mysteries/list-mysteries.component';
+import { EditMysteriesComponent } from './edit-mysteries/edit-mysteries.component';
 
 @NgModule({
-  declarations: [AddMysteriesComponent,ListMysteriesComponent],
+  declarations: [AddMysteriesComponent,ListMysteriesComponent,EditMysteriesComponent],
   imports: [
     CommonModule,
     MysteriesRoutingModule,

@@ -130,8 +130,22 @@ export class ListQuestComponent implements OnInit {
     $("#assignGroup").modal("show");
   }
   assignGroupBtn(){
+    const groupId = $("#groupId").val();
+    if (!groupId) {
+      Swal.fire("Error!", "Please select a quest group", "error");
+      return;
+    }
+    
+    // Validate group exists
+    const groupExists = this.allQuestsGroups.some((g: any) => g.id === groupId || g._id === groupId);
+    if (!groupExists) {
+      Swal.fire("Error!", "Selected quest group does not exist", "error");
+      return;
+    }
+    
+    this.sp.show();
     const data = {
-      quest_group_id: $("#groupId").val(),
+      quest_group_id: groupId,
       quest_id: this.questId
     }
     this.api.post('Quest/addQuestToGroup', data)
@@ -142,7 +156,7 @@ export class ListQuestComponent implements OnInit {
      this.getAllAnalytics()
      $("#assignGroup").modal("hide");
     }, err => {
-      this.helper.failureToast(err?.error?.message);
+      this.helper.failureToast(err?.error?.message || 'Failed to assign group');
       this.sp.hide();
     });
   }
@@ -155,7 +169,8 @@ export class ListQuestComponent implements OnInit {
     $("#level_increase").html(quest.level_increase)
     this.mythicaURL = quest.mythica;
     this.mythicaModel = quest.mythica_model;
-    this.questions = quest.options;
+    // Fix: Check multiple possible field names for answers
+    this.questions = quest.options || quest.questions || quest.answers || quest.quiz || [];
     this.qrCode = quest.qr_code;
     this.quest_image = quest.quest_image
   }

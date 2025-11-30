@@ -167,37 +167,38 @@ export class ListBookingsComponent implements OnInit {
   }
 
   cancelBooking(bookingId: any) {
-    Swal.fire({
-      title: "Are you sure you want to cancel this booking?",
-      input: 'textarea',
-      inputLabel: 'Cancellation Reason',
-      inputPlaceholder: 'Enter reason for cancellation...',
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonText: "Reject",
-      denyButtonText: `Cancel`,
-      inputValidator: (value) => {
-        if (!value) {
-          return 'You need to provide a reason for cancellation!';
-        }
-        return null;
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.sp.show();
-        const data = { booking_id: bookingId, cancellation_reason: result.value };
-        this.api.post(`booking/cancel-booking`, data)
-          .then((response: any) => {
-            this.sp.hide();
-            Swal.fire("Booking!", "Cancellation Successfully", "success");
-            this.getAllBookings();
-          })
-          .catch((error: any) => {
-            this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to cancel booking');
-          });
-      }
-    });
+    this.helper.failureToast('Booking already paid and can not be cancellled.');
+    // Swal.fire({
+    //   title: "Are you sure you want to cancel this booking?",
+    //   input: 'textarea',
+    //   inputLabel: 'Cancellation Reason',
+    //   inputPlaceholder: 'Enter reason for cancellation...',
+    //   showDenyButton: true,
+    //   showCancelButton: false,
+    //   confirmButtonText: "Reject",
+    //   denyButtonText: `Cancel`,
+    //   inputValidator: (value) => {
+    //     if (!value) {
+    //       return 'You need to provide a reason for cancellation!';
+    //     }
+    //     return null;
+    //   }
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     this.sp.show();
+    //     const data = { booking_id: bookingId, cancellation_reason: result.value };
+    //     this.api.post(`booking/cancel-booking`, data)
+    //       .then((response: any) => {
+    //         this.sp.hide();
+    //         Swal.fire("Booking!", "Cancellation Successfully", "success");
+    //         this.getAllBookings();
+    //       })
+    //       .catch((error: any) => {
+    //         this.sp.hide();
+    //         this.helper.failureToast(error?.error?.message || 'Failed to cancel booking');
+    //       });
+    //   }
+    // });
   }
 
   rejectBooking(bookingId: any) {
@@ -228,6 +229,11 @@ export class ListBookingsComponent implements OnInit {
         })
         .catch((error: any) => {
           this.sp.hide();
+          // Don't logout on non-401 errors
+          if (error?.status === 401) {
+            // Session expired - handleUnauthorized will handle logout
+            return;
+          }
           this.helper.failureToast(error?.error?.message || 'Failed to reject booking');
         });
     }

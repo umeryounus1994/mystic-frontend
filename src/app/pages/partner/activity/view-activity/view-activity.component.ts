@@ -176,12 +176,28 @@ deleteActivity() {
       return;
     }
 
+    // Calculate total amount
+    const totalAmount = this.activity.price * parseInt(this.bookingData.participants);
+    
+    // Validate minimum amount based on payment method
+    // Stripe minimum is $0.50, PayPal minimum is $0.01, but we'll use $0.50 for consistency
+    const MINIMUM_AMOUNT = 0.50;
+    if (totalAmount < MINIMUM_AMOUNT) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Amount',
+        text: `The total amount ($${totalAmount.toFixed(2)}) is below the minimum payment amount of $${MINIMUM_AMOUNT}. Please contact the activity provider.`,
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
     const bookingPayload = {
       activity_id: this.activity._id,
       slot_id: this.selectedSlot._id,
       participants: parseInt(this.bookingData.participants),
       special_requests: this.bookingData.special_requests || '',
-      payment_method: this.selectedPaymentMethod // Add this line
+      payment_method: this.selectedPaymentMethod
     };
 
     this.sp.show();
@@ -207,7 +223,10 @@ deleteActivity() {
   }
 
   calculateTotalAmount(): number {
-    const pricePerPerson = this.activity.price_per_person || 0;
+    if (!this.activity.price || !this.bookingData.participants) {
+      return 0;
+    }
+    const pricePerPerson = parseFloat(this.activity.price) || 0;
     const participants = parseInt(this.bookingData.participants) || 0;
     return pricePerPerson * participants;
   }
@@ -238,6 +257,21 @@ deleteActivity() {
 
   async processStripePayment(bookingId: string) {
     try {
+      // Double-check the amount before creating payment intent
+      const totalAmount = this.calculateTotalAmount();
+      const STRIPE_MINIMUM_AMOUNT = 0.50;
+      
+      if (totalAmount < STRIPE_MINIMUM_AMOUNT) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Amount',
+          text: `The total amount ($${totalAmount.toFixed(2)}) is below Stripe's minimum payment amount of $${STRIPE_MINIMUM_AMOUNT}.`,
+          confirmButtonText: 'OK'
+        });
+        this.showStripePaymentForm = false;
+        this.paymentProcessing = false;
+        return;
+      }
       
       const response: any = await this.paymentService.createStripePaymentIntent(bookingId);
       
@@ -286,6 +320,19 @@ deleteActivity() {
       console.error('Stripe Payment Process Error:', error);
       this.showStripePaymentForm = false;
       this.paymentProcessing = false;
+      
+      // Check if error is about minimum amount
+      if (error?.error?.message?.includes('minimum charge amount') || 
+          error?.message?.includes('minimum charge amount')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Amount Too Small',
+          text: 'The payment amount is below Stripe\'s minimum charge amount of $0.50. Please contact support.',
+          confirmButtonText: 'OK'
+        });
+      } else {
+        this.helper.failureToast(error?.error?.message || error?.message || 'Payment processing failed');
+      }
       throw error;
     }
   }
@@ -397,6 +444,34 @@ deleteActivity() {
 
   async processPayPalPayment(bookingId: string) {
     try {
+      // Validate minimum amount for PayPal (PayPal minimum is $0.01, but we use $0.50 for consistency)
+      const totalAmount = this.calculateTotalAmount();
+      const PAYPAL_MINIMUM_AMOUNT = 0.01; // PayPal's actual minimum
+      const PRACTICAL_MINIMUM = 0.50; // Practical minimum for both payment methods
+      
+      if (totalAmount < PRACTICAL_MINIMUM) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Amount',
+          text: `The total amount ($${totalAmount.toFixed(2)}) is below the minimum payment amount of $${PRACTICAL_MINIMUM}. Please contact support.`,
+          confirmButtonText: 'OK'
+        });
+        this.paymentProcessing = false;
+        return;
+      }
+      
+      // Additional check for PayPal's absolute minimum (though unlikely to trigger)
+      if (totalAmount < PAYPAL_MINIMUM_AMOUNT) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Amount Too Small',
+          text: `The total amount ($${totalAmount.toFixed(2)}) is below PayPal's minimum payment amount of $${PAYPAL_MINIMUM_AMOUNT}.`,
+          confirmButtonText: 'OK'
+        });
+        this.paymentProcessing = false;
+        return;
+      }
+      
       console.log('🟡 Creating PayPal Order for booking:', bookingId);
       console.log('🟡 Selected payment method:', this.selectedPaymentMethod);
       
@@ -418,13 +493,29 @@ deleteActivity() {
       localStorage.setItem('pendingBooking', JSON.stringify({
         bookingId: bookingId,
         activityId: this.activityId,
-        paymentMethod: 'paypal' // Add this to track payment method
+        paymentMethod: 'paypal'
       }));
       
       // Redirect to PayPal
       window.location.href = response.data.approval_url;
     } catch (error: any) {
       console.error('🟡 PayPal Payment Process Error:', error);
+      this.paymentProcessing = false;
+      
+      // Check if error is about minimum amount or invalid amount
+      if (error?.error?.message?.toLowerCase().includes('minimum') || 
+          error?.error?.message?.toLowerCase().includes('amount') ||
+          error?.message?.toLowerCase().includes('minimum') ||
+          error?.message?.toLowerCase().includes('amount')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Amount Error',
+          text: error?.error?.message || error?.message || 'The payment amount is invalid. Please contact support.',
+          confirmButtonText: 'OK'
+        });
+      } else {
+        this.helper.failureToast(error?.error?.message || error?.message || 'PayPal payment processing failed');
+      }
       throw error;
     }
   }
@@ -461,5 +552,12 @@ deleteActivity() {
     console.log('Manually resetting payment state');
     this.paymentProcessing = false;
     this.helper.infoToast('Payment state reset. Please try again or check your payment status.');
+  }
+
+  // Add this method to open image in modal
+  openImageModal(imageUrl: string) {
+    // You can implement a modal or lightbox here
+    // For now, opening in new tab
+    window.open(imageUrl, '_blank');
   }
 }

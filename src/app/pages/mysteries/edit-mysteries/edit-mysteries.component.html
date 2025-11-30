@@ -1,5 +1,5 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Creating Picture Mystery.....</p>
+    <p style="font-size: 30px; color: white">Updating Picture Mystery.....</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
@@ -7,7 +7,7 @@
             <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['mystery/list-mystery'])">
                 <i class="bi bi-arrow-left me-2"></i>Back
             </button>
-            <h1 class="h3 mb-0 d-inline">Create Picture Mystery</h1>
+            <h1 class="h3 mb-0 d-inline">Edit Picture Mystery</h1>
         </div>
     </div>
 </div>
@@ -39,6 +39,9 @@
                                     formControlName="picture_mystery_question_url"
                                     (change)="onFileSelected($event, 'questionPicture')"
                                     [ngClass]="{ 'is-invalid': submitted && f['picture_mystery_question_url'].errors }">
+                                <small class="text-muted" *ngIf="existingQuestionPicture">
+                                    Current: <a [href]="existingQuestionPicture" target="_blank">View Image</a>
+                                </small>
                             </div>
                             
                             <div class="col-lg-3">
@@ -141,6 +144,18 @@
                                                     <div class="invalid-feedback" *ngIf="submitted && quantity.get('answer')?.errors">
                                                         Answer file is required
                                                     </div>
+                                                    <small class="text-muted" *ngIf="i === 0 && existingOption1">
+                                                        Current: <a [href]="existingOption1" target="_blank">View File</a>
+                                                    </small>
+                                                    <small class="text-muted" *ngIf="i === 1 && existingOption2">
+                                                        Current: <a [href]="existingOption2" target="_blank">View File</a>
+                                                    </small>
+                                                    <small class="text-muted" *ngIf="i === 2 && existingOption3">
+                                                        Current: <a [href]="existingOption3" target="_blank">View File</a>
+                                                    </small>
+                                                    <small class="text-muted" *ngIf="i === 3 && existingOption4">
+                                                        Current: <a [href]="existingOption4" target="_blank">View File</a>
+                                                    </small>
                                                 </div>
                                                 <div class="col-lg-4 mb-2">
                                                     <label class="form-label">Correct Option <span class="text-danger">*</span></label>
@@ -177,7 +192,7 @@
                             </div>
 
                             <div class="d-sm-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary mb-0">Create</button>
+                                <button type="submit" class="btn btn-primary mb-0">Update</button>
                             </div>
                         </form>
 

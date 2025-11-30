@@ -1,9 +1,14 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
     <p style="font-size: 30px; color: white">Creating Treasure Hunt.....</p>
 </ngx-spinner>
-<div class="row">
-    <div class="col-12 mb-3">
-        <h1 class="h3 mb-2 mb-sm-0">Create Treasure Hunt</h1>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['hunt/list-hunt'])">
+                <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+            <h1 class="h3 mb-0 d-inline">Create Treasure Hunt</h1>
+        </div>
     </div>
 </div>
 
@@ -17,57 +22,119 @@
                             (ngSubmit)="onSubmit()">
 
                             <div class="col-12 mb-2">
-                                <label class="form-label">Treasure Hunt Title</label>
-                                <input type="text" class="form-control" placeholder="Title" formControlName="treasure_hunt_title"
-                                [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
+                                <label class="form-label">Treasure Hunt Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Title" maxlength="100"
+                                    formControlName="treasure_hunt_title"
+                                    [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['treasure_hunt_title']?.errors">
+                                    <div *ngIf="f['treasure_hunt_title'].errors['required']">Treasure Hunt Title is required</div>
+                                    <div *ngIf="f['treasure_hunt_title'].errors['minlength']">Title must be at least 5 characters</div>
+                                    <div *ngIf="f['treasure_hunt_title'].errors['maxlength']">Title cannot exceed 100 characters</div>
+                                </div>
                             </div>
+                            
                             <div class="col-lg-3">
-                                <label class="form-label">No of XP</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="no_of_xp"
+                                <label class="form-label">No of XP <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Enter XP" formControlName="no_of_xp"
+                                    min="1" step="1" required
+                                    (keydown)="preventNegativeInput($event)"
+                                    (input)="validateNumberInput($event, 'no_of_xp', 1)"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_xp']?.errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['no_of_xp']?.errors">
+                                    <div *ngIf="f['no_of_xp'].errors['required']">No of XP is required</div>
+                                    <div *ngIf="f['no_of_xp'].errors['min']">No of XP must be greater than 0</div>
+                                </div>
+                                <small class="text-muted">Must be at least 1</small>
                             </div>
+                            
                             <div class="col-lg-3">
-                                <label class="form-label">No of Crypes</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="no_of_crypes"
+                                <label class="form-label">No of Crypes <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Enter Crypes" formControlName="no_of_crypes"
+                                    min="0" step="1" required
+                                    (keydown)="preventNegativeInput($event)"
+                                    (input)="validateNumberInput($event, 'no_of_crypes', 0)"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_crypes']?.errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['no_of_crypes']?.errors">
+                                    <div *ngIf="f['no_of_crypes'].errors['required']">No of Crypes is required</div>
+                                    <div *ngIf="f['no_of_crypes'].errors['min']">No of Crypes cannot be negative</div>
+                                </div>
+                                <small class="text-muted">Cannot be negative</small>
                             </div>
+                            
                             <div class="col-lg-3">
-                                <label class="form-label">Level Increase Points</label>
-                                <input type="text" class="form-control" placeholder="0" formControlName="level_increase"
+                                <label class="form-label">Level Increase Points <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Enter points" formControlName="level_increase"
+                                    min="0" step="1" required
+                                    (keydown)="preventNegativeInput($event)"
+                                    (input)="validateNumberInput($event, 'level_increase', 0)"
                                     [ngClass]="{ 'is-invalid': submitted && f['level_increase']?.errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['level_increase']?.errors">
+                                    <div *ngIf="f['level_increase'].errors['required']">Level Increase is required</div>
+                                    <div *ngIf="f['level_increase'].errors['min']">Level Increase cannot be negative</div>
+                                </div>
+                                <small class="text-muted">Cannot be negative</small>
                             </div>
+                            
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica ID</label>
+                                <label class="form-label">Mythica ID <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_ID"
-                                [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
                                     <option value="">Select Mythica</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
+                                <div class="invalid-feedback" *ngIf="submitted && f['mythica_ID']?.errors">
+                                    Mythica is required
+                                </div>
                             </div>
+                            
                             <div class="col-lg-3">
-                                <label class="form-label">Start Date</label>
-                                <input type="date" class="form-control" placeholder="e.g. https://www.google.com"
+                                <label class="form-label">Start Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" 
+                                    [min]="today"
                                     formControlName="treasure_hunt_start_date"
-                                    [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_start_date']?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && (f['treasure_hunt_start_date']?.errors || questForm.errors?.['pastStartDate'] || questForm.errors?.['endBeforeStart']) }">
+                                <div class="invalid-feedback" *ngIf="submitted && (f['treasure_hunt_start_date']?.errors || questForm.errors?.['pastStartDate'])">
+                                    <div *ngIf="f['treasure_hunt_start_date'].errors?.['required']">Start Date is required</div>
+                                    <div *ngIf="questForm.errors?.['pastStartDate']">Start date cannot be in the past</div>
+                                </div>
                             </div>
+                            
                             <div class="col-lg-3">
-                                <label class="form-label">End Date</label>
-                                <input type="date" class="form-control" placeholder="e.g. https://www.google.com"
+                                <label class="form-label">End Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" 
+                                    [min]="questForm.get('treasure_hunt_start_date')?.value || today"
                                     formControlName="treasure_hunt_end_date"
-                                    [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_end_date']?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && (f['treasure_hunt_end_date']?.errors || questForm.errors?.['endBeforeStart']) }">
+                                <div class="invalid-feedback" *ngIf="submitted && (f['treasure_hunt_end_date']?.errors || questForm.errors?.['endBeforeStart'])">
+                                    <div *ngIf="f['treasure_hunt_end_date'].errors?.['required']">End Date is required</div>
+                                    <div *ngIf="questForm.errors?.['endBeforeStart']">End date cannot be before start date</div>
+                                </div>
                             </div>
+                            
                             <div class="col-lg-3">
-                                <label class="form-label">Hunt Longitude</label>
-                                <input type="text" class="form-control" placeholder="Hunt Longitude"
-                                    formControlName="hunt_longitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['hunt_longitude']?.errors }">
-                            </div>
-                            <div class="col-lg-3">
-                                <label class="form-label">Hunt Latitude</label>
-                                <input type="text" class="form-control" placeholder="Hunt Latitude"
+                                <label class="form-label">Hunt Latitude <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Hunt Latitude" step="any"
                                     formControlName="hunt_latitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['hunt_latitude']?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && (f['hunt_latitude']?.errors || questForm.errors?.['pastStartDate'] || questForm.errors?.['endBeforeStart']) }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['hunt_latitude']?.errors">
+                                    <div *ngIf="f['hunt_latitude'].errors['required']">Latitude is required</div>
+                                    <div *ngIf="f['hunt_latitude'].errors['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
+                                </div>
+                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
                             </div>
+                            
+                            <div class="col-lg-3">
+                                <label class="form-label">Hunt Longitude <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="Hunt Longitude" step="any"
+                                    formControlName="hunt_longitude"
+                                    [ngClass]="{ 'is-invalid': submitted && (f['hunt_longitude']?.errors || questForm.errors?.['pastStartDate'] || questForm.errors?.['endBeforeStart']) }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['hunt_longitude']?.errors">
+                                    <div *ngIf="f['hunt_longitude'].errors['required']">Longitude is required</div>
+                                    <div *ngIf="f['hunt_longitude'].errors['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
+                                </div>
+                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
+                            </div>
+                            
                             <div class="col-lg-3">
                                 <label class="form-label">Premium Hunt?</label>
                                 <select class="form-select js-choice z-index-9" 
@@ -90,11 +157,13 @@
                                     <option value='Silver'>Silver</option>
                                 </select>
                             </div>
+                            
                             <div class="col-lg-3">
                                 <label class="form-label">Reward PDF</label>
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
                                 (change)="onFileSelected($event, 'reward')">
                             </div>
+                            
                             <div class="col-lg-3">
                                 <label class="form-label">Have QR?</label>
                                 <select class="form-select js-choice z-index-9" 
@@ -107,74 +176,104 @@
                             </div>
 
                             <hr />
-                           <h3>Create Quiz Options</h3>
-                           <hr />
+                            <h3>Create Quiz Options</h3>
+                            <hr />
+                            
                             <div formArrayName="questions">
-                                <div class="row mb-3" *ngFor="let questionGroup of questForm.get('questions').controls; let i=index"
+                                <div class="card mb-4" *ngFor="let questionGroup of questForm.get('questions').controls; let i=index"
                                     [formGroupName]="i">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Quiz {{i+1}}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-12 mb-3">
+                                                <label class="form-label">Quiz Title <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Quiz Title"
+                                                    formControlName="treasure_hunt_title"
+                                                    [ngClass]="{ 'is-invalid': submitted && questionGroup.get('treasure_hunt_title')?.errors }">
+                                                <div class="invalid-feedback" *ngIf="submitted && questionGroup.get('treasure_hunt_title')?.errors">
+                                                    Quiz Title is required
+                                                </div>
+                                            </div>
 
-                                    <div class="col-lg-3 mb-2">
-                                        <label class="form-label">Quiz {{i+1}} Title</label>
-                                        <input type="text" class="form-control" placeholder="Quiz Title"
-                                    formControlName="treasure_hunt_title"
-                                    [ngClass]="{ 'is-invalid': submitted && f['treasure_hunt_title']?.errors }">
-                                    </div>
-                              
-                                    <div class="col-lg-2 mb-2">
-                                        <label class="form-label">Latitude</label>
-                                        <input type="text" class="form-control" placeholder=""
-                                    formControlName="latitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
-                                    </div>
-                                    <div class="col-lg-2 mb-2">
-                                        <label class="form-label">Longitude</label>
-                                        <input type="text" class="form-control" placeholder=""
-                                    formControlName="longitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['longitude']?.errors }">
-                                    </div>
-                                    <div class="col-lg-3 mb-2">
-                                        <label class="form-label">Mythica</label>
-                                        <select class="form-control" formControlName="mythica"
-                                [ngClass]="{ 'is-invalid': submitted && f['mythica']?.errors }">
-                                    <option value="" selected disabled>Select Mythica</option>
-                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
-                                </select>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <label class="form-label">Attach File</label>
-                                        <input type="file" class="form-control" placeholder=""
-                                        accept="image/*, video/mp4"
-                                            (change)="onFileSelected($event, 'option'+(i+1))">
-                                    </div>
-                                    <div formArrayName="options">
-                                        <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j">
-                                          <div class="row mb-4">
-                                            <div class="col-lg-3 mb-2">
-                                              <label class="form-label">Option</label>
-                                              <input type="text" class="form-control" formControlName="option">
+                                            <div class="col-lg-3 mb-3">
+                                                <label class="form-label">Latitude <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control" placeholder="Latitude" step="any"
+                                                    formControlName="latitude"
+                                                    [ngClass]="{ 'is-invalid': submitted && questionGroup.get('latitude')?.errors }">
+                                                <div class="invalid-feedback" *ngIf="submitted && questionGroup.get('latitude')?.errors">
+                                                    <div *ngIf="questionGroup.get('latitude')?.errors?.['required']">Latitude is required</div>
+                                                    <div *ngIf="questionGroup.get('latitude')?.errors?.['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
+                                                </div>
+                                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
                                             </div>
-                                            <div class="col-lg-3 mb-2">
-                                              <label class="form-label">Correct Option</label>
-                                              <select class="form-select js-choice z-index-9" formControlName="correct" aria-label=".form-select-sm">
-                                                <option value="" selected disabled>Select Correct Option</option>
-                                                <option [value]="true">Yes</option>
-                                                <option [value]="false">No</option>
-                                              </select>
+                                            
+                                            <div class="col-lg-3 mb-3">
+                                                <label class="form-label">Longitude <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control" placeholder="Longitude" step="any"
+                                                    formControlName="longitude"
+                                                    [ngClass]="{ 'is-invalid': submitted && questionGroup.get('longitude')?.errors }">
+                                                <div class="invalid-feedback" *ngIf="submitted && questionGroup.get('longitude')?.errors">
+                                                    <div *ngIf="questionGroup.get('longitude')?.errors?.['required']">Longitude is required</div>
+                                                    <div *ngIf="questionGroup.get('longitude')?.errors?.['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
+                                                </div>
+                                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
                                             </div>
-                                          </div>
+                                            
+                                            <div class="col-lg-3 mb-3">
+                                                <label class="form-label">Mythica <span class="text-danger">*</span></label>
+                                                <select class="form-control" formControlName="mythica"
+                                                    [ngClass]="{ 'is-invalid': submitted && questionGroup.get('mythica')?.errors }">
+                                                    <option value="" selected disabled>Select Mythica</option>
+                                                    <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
+                                                </select>
+                                                <div class="invalid-feedback" *ngIf="submitted && questionGroup.get('mythica')?.errors">
+                                                    Mythica is required
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-lg-3 mb-3">
+                                                <label class="form-label">Attach File</label>
+                                                <input type="file" class="form-control" placeholder=""
+                                                accept="image/*, video/mp4"
+                                                    (change)="onFileSelected($event, 'option'+(i+1))">
+                                            </div>
+                                            
+                                            <div class="col-12">
+                                                <label class="form-label mb-3">Options <span class="text-danger">*</span></label>
+                                                <div formArrayName="options">
+                                                    <div class="row mb-3" *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j">
+                                                        <div class="col-lg-6 mb-2">
+                                                            <label class="form-label">Option {{j+1}}</label>
+                                                            <input type="text" class="form-control" formControlName="option"
+                                                                [ngClass]="{ 'is-invalid': submitted && option.get('option')?.errors }"
+                                                                placeholder="Enter option text">
+                                                            <div class="invalid-feedback" *ngIf="submitted && option.get('option')?.errors">
+                                                                Option is required
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 mb-2">
+                                                            <label class="form-label">Correct Option</label>
+                                                            <select class="form-select" formControlName="correct" aria-label=".form-select-sm">
+                                                                <option [value]="false">No</option>
+                                                                <option [value]="true">Yes</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    <br />
-                                    <br />
-                                    <hr />  
-                                </div>
+                                    </div>
                                 </div>
                             </div>
+                            
                             <div>
                                 <qrcode (qrCodeURL)="onChangeURL($event)" [qrdata]="QrCode" [width]="256"
                                     [errorCorrectionLevel]="'M'"></qrcode>
                                 <a [href]="qrCodeDownloadLink" download="qrcode">Download</a>
                             </div>
-                        
+
                             <div class="d-sm-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary mb-0">Create</button>
                             </div>

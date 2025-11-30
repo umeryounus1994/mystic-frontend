@@ -2,9 +2,14 @@
     <p style="font-size: 30px; color: white">Creating Activity Drop.....</p>
 </ngx-spinner>
 
-<div class="row">
-    <div class="col-12 mb-3">
-        <h1 class="h3 mb-2 mb-sm-0">Create Activity Drop</h1>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['partner/list-activities'])">
+                <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+            <h1 class="h3 mb-0 d-inline">Create Activity Drop</h1>
+        </div>
     </div>
 </div>
 
@@ -18,35 +23,56 @@
                             (ngSubmit)="onSubmit()">
                             
                             <div class="col-lg-3 mb-2">
-                                <label class="form-label">Drop Name</label>
-                                <input type="text" class="form-control" placeholder="Enter drop name"
+                                <label class="form-label">Drop Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Enter drop name" maxlength="100"
                                 formControlName="drop_name"
-                                [ngClass]="{ 'is-invalid': submitted && f['drop_name'].errors }">
+                                [ngClass]="{ 'is-invalid': (submitted || f['drop_name']?.touched) && f['drop_name'].errors }">
+                                <div class="invalid-feedback" *ngIf="(submitted || f['drop_name']?.touched) && f['drop_name'].errors">
+                                    <div *ngIf="f['drop_name'].errors['required']">Drop Name is required</div>
+                                    <div *ngIf="f['drop_name'].errors['minlength']">Drop Name must be at least 5 characters</div>
+                                    <div *ngIf="f['drop_name'].errors['maxlength']">Drop Name cannot exceed 100 characters</div>
+                                </div>
+                                <small class="text-muted">5-100 characters</small>
                             </div>
 
                             <div class="col-lg-3">
-                                <label class="form-label">Select Activity</label>
+                                <label class="form-label">Select Activity <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="activity_id"
-                                [ngClass]="{ 'is-invalid': submitted && f['activity_id']?.errors }">
+                                [ngClass]="{ 'is-invalid': (submitted || f['activity_id']?.touched) && f['activity_id']?.errors }">
                                     <option value="" selected disabled>Select Activity</option>
                                     <option *ngFor="let activity of allActivities" [value]="activity._id">
                                         {{activity.title}}
                                     </option>
                                 </select>
+                                <div class="invalid-feedback" *ngIf="(submitted || f['activity_id']?.touched) && f['activity_id']?.errors">
+                                    Activity is required
+                                </div>
                             </div>
 
                             <div class="col-lg-3">
-                                <label class="form-label">Latitude</label>
-                                <input type="number" step="any" class="form-control" placeholder="Enter latitude" 
+                                <label class="form-label">Latitude <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" placeholder="-90 to 90" 
                                 formControlName="latitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
+                                (input)="onLatitudeInput($event)"
+                                    [ngClass]="{ 'is-invalid': (submitted || f['latitude']?.touched) && f['latitude'].errors }">
+                                <div class="invalid-feedback" *ngIf="(submitted || f['latitude']?.touched) && f['latitude'].errors">
+                                    <div *ngIf="f['latitude'].errors['required']">Latitude is required</div>
+                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
+                                </div>
+                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
                             </div>
 
                             <div class="col-lg-3">
-                                <label class="form-label">Longitude</label>
-                                <input type="number" step="any" class="form-control" placeholder="Enter longitude" 
+                                <label class="form-label">Longitude <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" placeholder="-180 to 180" 
                                 formControlName="longitude"
-                                    [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
+                                (input)="onLongitudeInput($event)"
+                                    [ngClass]="{ 'is-invalid': (submitted || f['longitude']?.touched) && f['longitude'].errors }">
+                                <div class="invalid-feedback" *ngIf="(submitted || f['longitude']?.touched) && f['longitude'].errors">
+                                    <div *ngIf="f['longitude'].errors['required']">Longitude is required</div>
+                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
+                                </div>
+                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
                             </div>
 
                             <div class="col-lg-3">
@@ -56,10 +82,16 @@
                             </div>
 
                             <div class="col-lg-12">
-                                <label class="form-label">Description</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter drop description"
+                                <label class="form-label">Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="3" placeholder="Enter drop description" maxlength="500"
                                 formControlName="drop_description"
-                                [ngClass]="{ 'is-invalid': submitted && f['drop_description'].errors }"></textarea>
+                                [ngClass]="{ 'is-invalid': (submitted || f['drop_description']?.touched) && f['drop_description'].errors }"></textarea>
+                                <div class="invalid-feedback" *ngIf="(submitted || f['drop_description']?.touched) && f['drop_description'].errors">
+                                    <div *ngIf="f['drop_description'].errors['required']">Description is required</div>
+                                    <div *ngIf="f['drop_description'].errors['minlength']">Description must be at least 5 characters</div>
+                                    <div *ngIf="f['drop_description'].errors['maxlength']">Description cannot exceed 500 characters</div>
+                                </div>
+                                <small class="text-muted">5-500 characters</small>
                             </div>
 
                             <div class="d-sm-flex justify-content-end">

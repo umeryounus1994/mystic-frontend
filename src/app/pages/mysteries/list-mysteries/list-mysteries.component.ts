@@ -63,6 +63,10 @@ export class ListMysteriesComponent implements OnInit {
     this.router.navigate(['/exam/edit-exam'], { queryParams: { examId: examId} });
   }
   
+  edit(Id: any) {
+    this.router.navigate(['mystery/edit-mystery'], { queryParams: { Id: Id} });
+  }
+  
   deleteExamModal(userId: any, status: any) {
     Swal.fire({
       title: `Are you sure You want to delete this Mystery?`,

@@ -1,9 +1,14 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
     <p style="font-size: 30px; color: white">Creating Drop.....</p>
 </ngx-spinner>
-<div class="row">
-    <div class="col-12 mb-3">
-        <h1 class="h3 mb-2 mb-sm-0">Create Drop</h1>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['management/list-drop'])">
+                <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+            <h1 class="h3 mb-0 d-inline">Create Drop</h1>
+        </div>
     </div>
 </div>
 
@@ -16,14 +21,18 @@
                         <form class="row g-4 align-items-center" [formGroup]="questForm" *ngIf="questForm"
                             (ngSubmit)="onSubmit()">
                             <div class="col-lg-3 mb-2">
-                                <label class="form-label">Drop Name</label>
-                                <input type="text" class="form-control" placeholder="Name"
+                                <label class="form-label">Drop Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Name" maxlength="100"
                                 formControlName="drop_name"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_name'].errors }">
-                                
+                                <div class="invalid-feedback" *ngIf="submitted && f['drop_name'].errors">
+                                    <div *ngIf="f['drop_name'].errors['required']">Drop Name is required</div>
+                                    <div *ngIf="f['drop_name'].errors['minlength']">Drop Name must be at least 5 characters</div>
+                                    <div *ngIf="f['drop_name'].errors['maxlength']">Drop Name cannot exceed 100 characters</div>
+                                </div>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica (Reward)</label>
+                                <label class="form-label">Mythica (Reward) <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_reward"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica_reward']?.errors }">
                                     <option value="" selected disabled>Select Mythica</option>
@@ -31,7 +40,7 @@
                                 </select>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica</label>
+                                <label class="form-label">Mythica <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_ID"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
                                     <option value="" selected disabled>Select Mythica</option>
@@ -39,7 +48,7 @@
                                 </select>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Drop Type</label>
+                                <label class="form-label">Drop Type <span class="text-danger">*</span></label>
                                 <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
                                 formControlName="drop_type"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_type']?.errors }">
@@ -51,19 +60,39 @@
                             </div>
                           
                             <div class="col-lg-3">
-                                <label class="form-label">Latitude</label>
-                                <input type="text" class="form-control" placeholder="" formControlName="latitude"
+                                <label class="form-label">Latitude <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" placeholder="-90 to 90" formControlName="latitude"
+                                    (input)="onLatitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['latitude'].errors">
+                                    <div *ngIf="f['latitude'].errors['required']">Latitude is required</div>
+                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
+                                </div>
+                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Longitude</label>
-                                <input type="text" class="form-control" placeholder="" formControlName="longitude"
+                                <label class="form-label">Longitude <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" placeholder="-180 to 180" formControlName="longitude"
+                                    (input)="onLongitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['longitude'].errors">
+                                    <div *ngIf="f['longitude'].errors['required']">Longitude is required</div>
+                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
+                                </div>
+                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">No of XP</label>
-                                <input type="text" class="form-control" placeholder="No of XP" formControlName="no_of_xp"
+                                <label class="form-label">No of XP <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="No of XP" formControlName="no_of_xp" 
+                                    min="1" step="1" required
+                                    (keydown)="preventNegativeInput($event)"
+                                    (input)="validateNumberInput($event, 'no_of_xp', 1)"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_xp'].errors }">
+                                <div class="invalid-feedback" *ngIf="submitted && f['no_of_xp'].errors">
+                                    <div *ngIf="f['no_of_xp'].errors['required']">No of XP is required</div>
+                                    <div *ngIf="f['no_of_xp'].errors['min']">No of XP must be greater than 0</div>
+                                </div>
+                                <small class="text-muted">Must be at least 1</small>
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Reward PDF</label>
@@ -71,46 +100,60 @@
                                 (change)="onFileSelected($event, 'reward')">
                             </div>
                             <div class="col-lg-12">
-                                <label class="form-label">Description</label>
-                                <textarea class="form-control" rows="3" formControlName="drop_description"
+                                <label class="form-label">Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="3" formControlName="drop_description" maxlength="500"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_description'].errors }"></textarea>
+                                <div class="invalid-feedback" *ngIf="submitted && f['drop_description'].errors">
+                                    <div *ngIf="f['drop_description'].errors['required']">Description is required</div>
+                                    <div *ngIf="f['drop_description'].errors['minlength']">Description must be at least 5 characters</div>
+                                    <div *ngIf="f['drop_description'].errors['maxlength']">Description cannot exceed 500 characters</div>
+                                </div>
                             </div>
                             <label class="form-label">Answers (Optional)</label>
                             <div formArrayName="questions">
-                                <div class="row mb-3" *ngFor="let quantity of questions().controls; let i=index"
+                                <div class="card mb-3" *ngFor="let quantity of questions().controls; let i=index"
                                     [formGroupName]="i">
-
-                                    <div class="col-lg-4 mb-1">
-                                        <input type="text" class="form-control" formControlName="answer"
-                                            placeholder="Answer">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-4 mb-2">
+                                                <label class="form-label">Answer {{i + 1}}</label>
+                                                <input type="text" class="form-control" formControlName="answer"
+                                                    placeholder="Answer">
+                                            </div>
+                                            <div class="col-lg-3 mb-2">
+                                                <label class="form-label">Answer File</label>
+                                                <input type="file" class="form-control" formControlName="answer_image"
+                                                    accept="image/*, video/*"
+                                                    (change)="onFileSelectedOptions($event, 'option'+(i+1))"
+                                                    placeholder="Answer">
+                                            </div>
+                                            <div class="col-lg-3 mb-2">
+                                                <label class="form-label">Correct Option</label>
+                                                <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
+                                                    formControlName="correct_option">
+                                                    <option value="" selected disabled>Select Correct Option</option>
+                                                    <option value='true'>Yes</option>
+                                                    <option value='false'>No</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-2 mb-2 d-flex align-items-end">
+                                                <button type="button" class="btn btn-danger-soft btn-round"
+                                                    (click)="removeQuestion(i)"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Answer">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-3 mb-1">
-                                        <input type="file" class="form-control" formControlName="answer_image"
-                                        (change)="onFileSelectedOptions($event, 'option'+(i+1))"
-                                            placeholder="Answer">
-                                    </div>
-                                    <div class="col-lg-2 mb-1">
-                                        <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
-                                            formControlName="correct_option"
-                                            [ngClass]="{ 'is-invalid': submitted && f['correct_option']?.errors }">
-                                            <option value="" selected disabled>Select Correct Option</option>
-                                            <option value='true'>Yes</option>
-                                            <option value='false'>No</option>
-
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-2">
-
-                                        <a href="javascript:;" *ngIf="i == questions().controls.length -1"
+                                </div>
+                                
+                                <!-- Always visible Add Answer button -->
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-success-soft btn-round"
                                             (click)="addQuestion()"
-                                            class="btn btn-success-soft btn-round me-1 mb-1 mb-md-0"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                            data-bs-original-title="Edit">
+                                            data-bs-toggle="tooltip" title="Add Answer">
                                             <i class="bi bi-plus"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
-                                            (click)="removeQuestion(i)">
-                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
                                 </div>

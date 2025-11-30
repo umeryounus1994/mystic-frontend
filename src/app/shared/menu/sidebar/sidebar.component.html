@@ -59,6 +59,12 @@
             <li class="nav-item">
               <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']" (click)="closeSidebar()">Create Quest</a>
             </li>
+            <li class="nav-item" *ngIf="auth.isAdmin">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/list-quest-group'" [routerLink]="['/quest/list-quest-group']" (click)="closeSidebar()">List Quest Groups</a>
+            </li>
+            <li class="nav-item" *ngIf="auth.isAdmin">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest-group'" [routerLink]="['/quest/create-quest-group']" (click)="closeSidebar()">Create Quest Groups</a>
+            </li>
           </ul>
         </li>
 

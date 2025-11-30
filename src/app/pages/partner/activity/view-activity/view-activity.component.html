@@ -22,25 +22,9 @@
     </div>
 </div>
 
-<!-- Activity Images -->
-<div class="row mb-4" *ngIf="activity.images && activity.images.length > 0">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Images</h5>
-                <div class="row g-3">
-                    <div *ngFor="let image of activity.images" class="col-md-4 col-lg-3">
-                        <img [src]="image" class="img-fluid rounded shadow-sm" alt="Activity Image">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Main Content -->
-<div class="row g-4">
-    <!-- Basic Information -->
+<!-- Main Content with Image on Right Top -->
+<div class="row g-4 mb-4">
+    <!-- Activity Details - Left Side -->
     <div class="col-lg-8">
         <div class="card h-100">
             <div class="card-body">
@@ -92,10 +76,57 @@
         </div>
     </div>
     
-    <!-- Sidebar Information -->
+    <!-- Activity Images - Right Top -->
     <div class="col-lg-4">
+        <div class="card" *ngIf="activity.images && activity.images.length > 0">
+            <div class="card-body">
+                <h5 class="card-title">Images <span class="badge bg-secondary ms-2">{{activity.images.length}}</span></h5>
+                
+                <!-- Single Image -->
+                <div *ngIf="activity.images.length === 1">
+                    <img [src]="activity.images[0]" 
+                         class="img-fluid rounded shadow-sm" 
+                         alt="Activity Image" 
+                         style="max-height: 300px; object-fit: cover; width: 100%; cursor: pointer;"
+                         (click)="openImageModal(activity.images[0])">
+                </div>
+                
+                <!-- Multiple Images - Carousel -->
+                <div id="activityImageCarousel" class="carousel slide" data-bs-ride="carousel" *ngIf="activity.images.length > 1">
+                    <div class="carousel-inner rounded">
+                        <div *ngFor="let image of activity.images; let i = index" 
+                             class="carousel-item" 
+                             [class.active]="i === 0">
+                            <img [src]="image" 
+                                 class="d-block w-100" 
+                                 alt="Activity Image {{i + 1}}" 
+                                 style="max-height: 300px; object-fit: cover; cursor: pointer;"
+                                 (click)="openImageModal(image)">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#activityImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#activityImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    <!-- Carousel Indicators -->
+                    <div class="carousel-indicators" *ngIf="activity.images.length > 1">
+                        <button *ngFor="let image of activity.images; let i = index" 
+                                type="button" 
+                                data-bs-target="#activityImageCarousel" 
+                                [attr.data-bs-slide-to]="i"
+                                [class.active]="i === 0"
+                                [attr.aria-label]="'Slide ' + (i + 1)"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Partner Information -->
-        <div class="card mb-4" *ngIf="activity.partner_id">
+        <div class="card mt-4" *ngIf="activity.partner_id">
             <div class="card-body">
                 <h5 class="card-title">Partner Information</h5>
                 <div class="d-flex align-items-center mb-3">
@@ -113,7 +144,7 @@
         </div>
         
         <!-- Activity Stats -->
-        <div class="card">
+        <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title">Activity Information</h5>
                 <div class="row g-3">

@@ -2,9 +2,14 @@
     <p style="font-size: 30px; color: white">Creating Activity.....</p>
 </ngx-spinner>
 
-<div class="row">
-    <div class="col-12 mb-3">
-        <h1 class="h3 mb-2 mb-sm-0">Create Activity</h1>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['partner/list-activities'])">
+                <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+            <h1 class="h3 mb-0 d-inline">Create Activity</h1>
+        </div>
     </div>
 </div>
 
@@ -23,14 +28,16 @@
                             </div>
 
                             <div class="col-lg-6">
-                                <label class="form-label">Activity Title *</label>
-                                <input type="text" class="form-control" placeholder="Enter activity title"
+                                <label class="form-label">Activity Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Enter activity title" maxlength="100"
                                     formControlName="title"
                                     [ngClass]="{ 'is-invalid': submitted && f['title'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['title'].errors">
                                     <div *ngIf="f['title'].errors['required']">Title is required</div>
-                                    <div *ngIf="f['title'].errors['minlength']">Title must be at least 3 characters</div>
+                                    <div *ngIf="f['title'].errors['minlength']">Title must be at least 5 characters</div>
+                                    <div *ngIf="f['title'].errors['maxlength']">Title cannot exceed 100 characters</div>
                                 </div>
+                                <small class="text-muted">5-100 characters</small>
                             </div>
 
                             <div class="col-lg-6">
@@ -46,14 +53,16 @@
                             </div>
 
                             <div class="col-12">
-                                <label class="form-label">Description *</label>
-                                <textarea class="form-control" rows="4" placeholder="Enter activity description"
+                                <label class="form-label">Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="4" placeholder="Enter activity description" maxlength="500"
                                     formControlName="description"
                                     [ngClass]="{ 'is-invalid': submitted && f['description'].errors }"></textarea>
                                 <div class="invalid-feedback" *ngIf="submitted && f['description'].errors">
                                     <div *ngIf="f['description'].errors['required']">Description is required</div>
                                     <div *ngIf="f['description'].errors['minlength']">Description must be at least 10 characters</div>
+                                    <div *ngIf="f['description'].errors['maxlength']">Description cannot exceed 500 characters</div>
                                 </div>
+                                <small class="text-muted">10-500 characters</small>
                             </div>
 
                             <!-- Pricing & Duration -->
@@ -62,36 +71,42 @@
                             </div>
 
                             <div class="col-lg-4">
-                                <label class="form-label">Price ($) *</label>
-                                <input type="number" class="form-control" placeholder="0.00" min="0" step="0.01"
+                                <label class="form-label">Price ($) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="1.00" min="1" step="0.01"
                                     formControlName="price"
+                                    (keydown)="preventNegativeInput($event)"
+                                    (input)="validatePriceInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['price'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['price'].errors">
                                     <div *ngIf="f['price'].errors['required']">Price is required</div>
-                                    <div *ngIf="f['price'].errors['min']">Price must be 0 or greater</div>
+                                    <div *ngIf="f['price'].errors['min']">Price must be at least $1.00</div>
                                 </div>
+                                <small class="text-muted">Minimum: $1.00</small>
                             </div>
 
                             <div class="col-lg-4">
-                                <label class="form-label">Duration (minutes) *</label>
-                                <input type="number" class="form-control" placeholder="60" min="15"
+                                <label class="form-label">Duration (minutes) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="10" min="10"
                                     formControlName="duration"
                                     [ngClass]="{ 'is-invalid': submitted && f['duration'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['duration'].errors">
                                     <div *ngIf="f['duration'].errors['required']">Duration is required</div>
-                                    <div *ngIf="f['duration'].errors['min']">Duration must be at least 15 minutes</div>
+                                    <div *ngIf="f['duration'].errors['min']">Duration must be at least 10 minutes</div>
                                 </div>
+                                <small class="text-muted">Minimum: 10 minutes</small>
                             </div>
 
                             <div class="col-lg-4">
-                                <label class="form-label">Max Participants *</label>
-                                <input type="number" class="form-control" placeholder="10" min="1"
+                                <label class="form-label">Max Participants <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="1" min="1"
                                     formControlName="max_participants"
-                                    [ngClass]="{ 'is-invalid': submitted && f['max_participants'].errors }">
-                                <div class="invalid-feedback" *ngIf="submitted && f['max_participants'].errors">
+                                    (input)="onMaxParticipantsChange()"
+                                    [ngClass]="{ 'is-invalid': (submitted || f['max_participants']?.touched) && f['max_participants'].errors }">
+                                <div class="invalid-feedback" *ngIf="(submitted || f['max_participants']?.touched) && f['max_participants'].errors">
                                     <div *ngIf="f['max_participants'].errors['required']">Max participants is required</div>
                                     <div *ngIf="f['max_participants'].errors['min']">Must allow at least 1 participant</div>
                                 </div>
+                                <small class="text-muted">Minimum: 1 participant</small>
                             </div>
 
                             <!-- Location -->
@@ -110,23 +125,29 @@
                             </div>
 
                             <div class="col-lg-6">
-                                <label class="form-label">Latitude *</label>
+                                <label class="form-label">Latitude <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" placeholder="40.7128" step="any"
                                     formControlName="latitude"
+                                    (input)="onLatitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['latitude'].errors">
-                                    Latitude is required
+                                    <div *ngIf="f['latitude'].errors['required']">Latitude is required</div>
+                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
                                 </div>
+                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
                             </div>
 
                             <div class="col-lg-6">
-                                <label class="form-label">Longitude *</label>
+                                <label class="form-label">Longitude <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" placeholder="-74.0060" step="any"
                                     formControlName="longitude"
+                                    (input)="onLongitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['longitude'].errors">
-                                    Longitude is required
+                                    <div *ngIf="f['longitude'].errors['required']">Longitude is required</div>
+                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
                                 </div>
+                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
                             </div>
 
                             <!-- Images -->
@@ -159,32 +180,46 @@
                                     <div class="card-body">
                                         <div class="row g-3">
                                             <div class="col-lg-4">
-                                                <label class="form-label">Start Time *</label>
+                                                <label class="form-label">Start Time <span class="text-danger">*</span></label>
                                                 <input type="datetime-local" class="form-control"
                                                     formControlName="start_time"
-                                                    [ngClass]="{ 'is-invalid': submitted && slot.get('start_time')?.errors }">
-                                                <div class="invalid-feedback" *ngIf="submitted && slot.get('start_time')?.errors">
-                                                    Start time is required
+                                                    [min]="getMinDateTime()"
+                                                    (change)="validateSlotDates(slot)"
+                                                    [ngClass]="{ 'is-invalid': submitted && (slot.get('start_time')?.errors || slot.errors?.['pastDate']) }">
+                                                <div class="invalid-feedback" *ngIf="submitted && (slot.get('start_time')?.errors || slot.errors?.['pastDate'])">
+                                                    <div *ngIf="slot.get('start_time')?.errors?.['required']">Start time is required</div>
+                                                    <div *ngIf="slot.get('start_time')?.errors?.['pastDate'] || slot.errors?.['pastDate']">Start time cannot be in the past</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
-                                                <label class="form-label">End Time *</label>
+                                                <label class="form-label">End Time <span class="text-danger">*</span></label>
                                                 <input type="datetime-local" class="form-control"
                                                     formControlName="end_time"
-                                                    [ngClass]="{ 'is-invalid': submitted && slot.get('end_time')?.errors }">
-                                                <div class="invalid-feedback" *ngIf="submitted && slot.get('end_time')?.errors">
-                                                    End time is required
+                                                    [min]="slot.get('start_time')?.value || getMinDateTime()"
+                                                    (change)="validateSlotDates(slot)"
+                                                    [ngClass]="{ 'is-invalid': submitted && (slot.get('end_time')?.errors || slot.errors?.['endBeforeStart'] || slot.errors?.['pastDate']) }">
+                                                <div class="invalid-feedback" *ngIf="submitted && (slot.get('end_time')?.errors || slot.errors?.['endBeforeStart'] || slot.errors?.['pastDate'])">
+                                                    <div *ngIf="slot.get('end_time')?.errors?.['required']">End time is required</div>
+                                                    <div *ngIf="slot.get('end_time')?.errors?.['pastDate'] || slot.errors?.['pastDate']">End time cannot be in the past</div>
+                                                    <div *ngIf="slot.get('end_time')?.errors?.['endBeforeStart'] || slot.errors?.['endBeforeStart']">End time must be after start time</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
-                                                <label class="form-label">Available Spots *</label>
-                                                <input type="number" class="form-control" placeholder="10" min="1"
+                                                <label class="form-label">Available Spots <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control" placeholder="1" min="1"
                                                     formControlName="available_spots"
-                                                    [ngClass]="{ 'is-invalid': submitted && slot.get('available_spots')?.errors }">
-                                                <div class="invalid-feedback" *ngIf="submitted && slot.get('available_spots')?.errors">
+                                                    [max]="activityForm.get('max_participants')?.value || 999"
+                                                    (input)="onAvailableSpotsChange(i)"
+                                                    (blur)="onAvailableSpotsChange(i)"
+                                                    [ngClass]="{ 'is-invalid': (submitted || slot.get('available_spots')?.touched) && slot.get('available_spots')?.errors }">
+                                                <div class="invalid-feedback" *ngIf="(submitted || slot.get('available_spots')?.touched) && slot.get('available_spots')?.errors">
                                                     <div *ngIf="slot.get('available_spots')?.errors?.['required']">Available spots is required</div>
                                                     <div *ngIf="slot.get('available_spots')?.errors?.['min']">Must have at least 1 spot</div>
+                                                    <div *ngIf="slot.get('available_spots')?.errors?.['exceedsMaxParticipants']">
+                                                        Available spots ({{slot.get('available_spots')?.value}}) cannot exceed Max Participants ({{activityForm.get('max_participants')?.value || 0}})
+                                                    </div>
                                                 </div>
+                                                <small class="text-muted">Maximum: {{activityForm.get('max_participants')?.value || 0}} participants</small>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +237,7 @@
                                 <hr class="my-4">
                                 <div class="d-sm-flex justify-content-end">
                                     <button type="button" class="btn btn-secondary me-2" 
-                                            (click)="router.navigate(['partner/activity/list'])">
+                                            (click)="router.navigate(['partner/list-activities'])">
                                         Cancel
                                     </button>
                                     <button type="submit" class="btn btn-primary">

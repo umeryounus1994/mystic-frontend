@@ -71,18 +71,25 @@ export class AuthService {
   }
 
   logout() {
-    // Reset:
+    // Reset all auth state:
     this.isLoggedIn = false;
     this.isAdmin = false;
     this.isSubAdmin = false;
     this.isPartner = false;
     this.isFamily = false;
     this.user = undefined;
+    
+    // Clear storage but keep remembered credentials
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const rememberedPassword = localStorage.getItem('rememberedPassword');
     localStorage.clear();
+    if (rememberedEmail) localStorage.setItem('rememberedEmail', rememberedEmail);
+    if (rememberedPassword) localStorage.setItem('rememberedPassword', rememberedPassword);
+    
     this.storage.removeUserDetails();
-
-    // Redirect:
-    this.router.navigate(['/auth/login']);
+    
+    // Navigate to login page immediately
+    this.router.navigateByUrl('/auth/login', { skipLocationChange: false });
   }
 
   roleCheck() {
@@ -115,30 +122,37 @@ export class AuthService {
   registerPartner(partnerData: PartnerRegistrationRequest): Observable<any> {
     const formData = new FormData();
     
-    // Append basic fields
-    formData.append('username', partnerData.username);
-    formData.append('email', partnerData.email);
-    formData.append('password', partnerData.password);
-    formData.append('confirm_password', partnerData.confirm_password);
-    formData.append('user_type', partnerData.user_type);
+    // Append basic fields with trimming
+    formData.append('username', partnerData.username?.trim() || '');
+    formData.append('email', partnerData.email?.trim() || '');
+    formData.append('password', partnerData.password || '');
+    formData.append('confirm_password', partnerData.confirm_password || '');
+    formData.append('user_type', partnerData.user_type || 'partner');
     
     // Append image if provided
     if (partnerData.image) {
-      formData.append('image', partnerData.image);
+      formData.append('image', partnerData.image, partnerData.image.name);
     }
     
-    // Append partner profile as JSON
+    // Append partner profile as JSON - include routing_number in bank_details
     formData.append('partner_profile', JSON.stringify({
-      business_name: partnerData.partner_profile.business_name,
-      business_description: partnerData.partner_profile.business_description,
-      phone: partnerData.partner_profile.phone,
-      commission_rate: partnerData.partner_profile.commission_rate,
-      bank_details: partnerData.partner_profile.bank_details,
-      approval_status: partnerData.partner_profile.approval_status
+      business_name: partnerData.partner_profile.business_name?.trim() || '',
+      business_description: partnerData.partner_profile.business_description?.trim() || '',
+      phone: partnerData.partner_profile.phone?.trim() || '',
+      commission_rate: partnerData.partner_profile.commission_rate || 15,
+      bank_details: {
+        account_number: partnerData.partner_profile.bank_details.account_number?.trim() || '',
+        routing_number: partnerData.partner_profile.bank_details.routing_number?.trim() || '', // Move routing_number here
+        account_holder: partnerData.partner_profile.bank_details.account_holder?.trim() || ''
+      },
+      approval_status: partnerData.partner_profile.approval_status || 'pending'
     }));
-    
 
-    return from(this.api.postData('user/partner-signup', formData));
+    return from(this.api.postData('user/partner-signup', formData).catch(error => {
+      // Ensure error is properly propagated
+      console.error('Partner registration API error:', error);
+      throw error;
+    }));
   }
 
   registerFamily(familyData: any): Observable<any> {

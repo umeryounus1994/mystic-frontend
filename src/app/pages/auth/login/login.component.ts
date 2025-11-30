@@ -25,9 +25,18 @@ export class LoginComponent implements OnInit {
 
 
   ngOnInit() {
+    // Always hide spinner when login component loads (especially after session expiry)
+    this.sp.hide();
+    this.isSubmitted = false;
+    
+    // Check for remembered credentials
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const rememberedPassword = localStorage.getItem('rememberedPassword');
+    
     this.submissionForm = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
+      email: [rememberedEmail || '', Validators.required],
+      password: [rememberedPassword || '', Validators.required],
+      rememberMe: [!!rememberedEmail]
     });
   }
 
@@ -36,6 +45,17 @@ export class LoginComponent implements OnInit {
       this.isSubmitted = true;
       this.text = "Logging in...";
       this.sp.show()
+      
+      // Handle remember me
+      const rememberMe = this.submissionForm.get('rememberMe')?.value;
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', this.submissionForm.value.email);
+        localStorage.setItem('rememberedPassword', this.submissionForm.value.password);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('rememberedPassword');
+      }
+      
       this.auth.login(this.submissionForm.value).then((data: any) => {
         this.isSubmitted = false;
         this.sp.hide();
