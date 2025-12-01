@@ -101,8 +101,8 @@
                                 <input type="number" class="form-control" placeholder="1" min="1"
                                     formControlName="max_participants"
                                     (input)="onMaxParticipantsChange()"
-                                    [ngClass]="{ 'is-invalid': (submitted || f['max_participants']?.touched) && f['max_participants'].errors }">
-                                <div class="invalid-feedback" *ngIf="(submitted || f['max_participants']?.touched) && f['max_participants'].errors">
+                                    [ngClass]="{ 'is-invalid': (submitted || f['max_participants'].touched) && f['max_participants'].errors }">
+                                <div class="invalid-feedback" *ngIf="(submitted || f['max_participants'].touched) && f['max_participants'].errors">
                                     <div *ngIf="f['max_participants'].errors['required']">Max participants is required</div>
                                     <div *ngIf="f['max_participants'].errors['min']">Must allow at least 1 participant</div>
                                 </div>

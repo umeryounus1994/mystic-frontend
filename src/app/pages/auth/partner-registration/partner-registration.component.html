@@ -82,8 +82,8 @@
                                 <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
                                     <i class="fas fa-lock"></i>
                                 </span>
-                                <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" maxlength="10"
-                                    class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter password (max 10 chars, 1 capital, 1 number)"
+                                <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" maxlength="15"
+                                    class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter password (max 15 chars, 1 capital, 1 number)"
                                     id="password">
                                 <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
                                     (click)="showPassword()">
@@ -94,7 +94,7 @@
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
                                 <div *ngIf="partnerForm.get('password')?.errors?.['required']">Password is required</div>
                                 <div *ngIf="partnerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['maxLength']">Password cannot exceed 10 characters</div>
+                                <div *ngIf="partnerForm.get('password')?.errors?.['maxLength']">Password cannot exceed 15 characters</div>
                                 <div *ngIf="partnerForm.get('password')?.errors?.['noCapital']">Password must contain at least one capital letter</div>
                                 <div *ngIf="partnerForm.get('password')?.errors?.['noNumber']">Password must contain at least one number</div>
                                 <div *ngIf="partnerForm.get('password')?.errors?.['invalidChars']">Password can only contain alphanumeric and special characters</div>

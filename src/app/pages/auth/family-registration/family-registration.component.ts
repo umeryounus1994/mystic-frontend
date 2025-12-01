@@ -35,7 +35,7 @@ export class FamilyRegistrationComponent implements OnInit {
     this.familyForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100), this.validateEmailFormat]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10), this.validatePassword]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15), this.validatePassword]],
       confirm_password: ['', Validators.required],
       user_type: ['family'],
       agreeTerms: [false, Validators.requiredTrue]
@@ -60,7 +60,7 @@ export class FamilyRegistrationComponent implements OnInit {
     if (!control.value) return null;
     const password = control.value;
     // Password must be: alphanumeric + special chars, max 10 chars, 1 capital, 1 number
-    if (password.length > 10) {
+    if (password.length > 15) {
       return { maxLength: true };
     }
     if (!/[A-Z]/.test(password)) {
