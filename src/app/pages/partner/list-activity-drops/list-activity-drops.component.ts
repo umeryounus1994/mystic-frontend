@@ -4,6 +4,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 declare var $: any;
 
@@ -25,7 +26,8 @@ export class ListActivityDropsComponent implements OnInit {
     private api: RestApiService,
     private helper: HelperService,
     private router: Router,
-    public auth: AuthService
+    public auth: AuthService,
+    public translate: TranslateService
   ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
@@ -48,7 +50,7 @@ export class ListActivityDropsComponent implements OnInit {
         this.allActivityDrops = response?.data || [];
       }).catch((error: any) => {
         this.sp.hide();
-        this.helper.failureToast(error?.error?.message || 'Failed to load activity drops');
+        this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITY_DROPS'));
       });
   }
 
@@ -70,23 +72,23 @@ export class ListActivityDropsComponent implements OnInit {
 
   deleteActivityDrop(dropId: any) {
     Swal.fire({
-      title: `Are you sure you want to delete this Activity Drop?`,
+      title: this.translate.instant('POPUPS.DELETE_ACTIVITY_DROP_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
         this.api.delete('activity-drop/' + dropId)
           .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Activity Drop!", "Deleted Successfully", "success");
+            Swal.fire(this.translate.instant('ACTIVITY_DROPS.ACTIVITY_DROP'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
             this.getAllActivityDrops();
           })
           .catch((error: any) => {
             this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to delete activity drop');
+            this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_DELETE_ACTIVITY_DROP'));
           });
       }
     });

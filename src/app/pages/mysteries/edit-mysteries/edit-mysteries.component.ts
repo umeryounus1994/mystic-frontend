@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -31,8 +32,15 @@ export class EditMysteriesComponent implements OnInit {
   existingOption3 = '';
   existingOption4 = '';
   
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    public router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    public router: Router, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute,
+    public translate: TranslateService
+  ) {
     this.route.queryParams.subscribe(params => {
       if (params && Object.keys(params).length > 0) {
         this.Id = params['Id'];

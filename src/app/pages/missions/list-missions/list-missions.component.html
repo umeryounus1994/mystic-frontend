@@ -1,9 +1,9 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'LIST.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Missions</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.MISSIONS' | translate }}</h1>
     </div>
 </div>
 <div class="card bg-transparent border">
@@ -14,11 +14,11 @@
                 <thead>
                     <tr>
 
-                        <th scope="col" class="border-0 rounded-start">Title</th>
-                        <th scope="col" class="border-0">No of XP</th>
-                        <th scope="col" class="border-0">No of Crypes</th>
-                        <th scope="col" class="border-0">Status</th>
-                        <th scope="col" class="border-0 rounded-end">Action</th>
+                        <th scope="col" class="border-0 rounded-start">{{ 'COMMON.TITLE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.NO_OF_XP' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.NO_OF_CRYPES' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.STATUS' | translate }}</th>
+                        <th scope="col" class="border-0 rounded-end">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,11 +29,11 @@
                         <td>{{q.no_of_crypes}}</td>
 
                         <td>
-                            <div *ngIf="q.status == 'draft'" class="badge bg-info bg-opacity-10 text-info">Draft
+                            <div *ngIf="q.status == 'draft'" class="badge bg-info bg-opacity-10 text-info">{{ 'LIST.DRAFT' | translate }}
                             </div>
-                            <div *ngIf="q.status == 'active'" class="badge bg-success bg-opacity-10 text-success">Active
+                            <div *ngIf="q.status == 'active'" class="badge bg-success bg-opacity-10 text-success">{{ 'LIST.ACTIVE' | translate }}
                             </div>
-                            <div *ngIf="q.status == 'blocked'" class="badge bg-danger bg-opacity-10 text-danger">Blocked
+                            <div *ngIf="q.status == 'blocked'" class="badge bg-danger bg-opacity-10 text-danger">{{ 'LIST.BLOCKED' | translate }}
                             </div>
                         </td>
                         <td>
@@ -55,7 +55,7 @@
         <ng-template #noMissionsTemplate>
             <div class="text-center p-5">
                 <i class="bi bi-inbox fs-1 text-muted"></i>
-                <p class="text-muted mt-3 mb-0">No missions available</p>
+                <p class="text-muted mt-3 mb-0">{{ 'LIST.NO_MISSIONS_AVAILABLE' | translate }}</p>
             </div>
         </ng-template>
     </div>
@@ -66,33 +66,33 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title text-white" id="appDetaillabel">Mission Details</h5>
+                <h5 class="modal-title text-white" id="appDetaillabel">{{ 'SIDEBAR.MISSIONS' | translate }} {{ 'COMMON.DETAILS' | translate }}</h5>
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
                         class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">
                 <div class="row">
                     <div class="col-md-10">
-                        <label class="form-label">Mission Title</label>
+                        <label class="form-label">{{ 'FORMS.MISSION_TITLE' | translate }}</label>
                         <p id="question"></p>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">No of XP</label>
+                        <label class="form-label">{{ 'FORMS.NO_OF_XP' | translate }}</label>
                         <p id="no_of_xp"></p>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">No of Crypes</label>
+                        <label class="form-label">{{ 'FORMS.NO_OF_CRYPES' | translate }}</label>
                         <p id="no_of_crypes"></p>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Level Points</label>
+                        <label class="form-label">{{ 'FORMS.LEVEL_INCREASE_POINTS' | translate }}</label>
                         <p id="level_increase"></p>
                     </div>
                     <div class="col-md-5">
-                        <label class="form-label">Mythica ID</label>
+                        <label class="form-label">{{ 'FORMS.MYTHICA' | translate }}</label>
                         <p>{{mythicaURL}}</p>
                     </div>
 
@@ -103,9 +103,9 @@
                         <table class="table table-responsive table-dark-gray">
                             <thead>
                                 <tr>
-                                    <th>Quiz Title</th>
-                                    <th>Mythica</th>
-                                    <th>View Options</th>
+                                    <th>{{ 'FORMS.QUIZ_TITLE' | translate }}</th>
+                                    <th>{{ 'FORMS.MYTHICA' | translate }}</th>
+                                    <th>{{ 'COMMON.VIEW' | translate }} {{ 'FORMS.ANSWERS' | translate }}</th>
                                 </tr>
 
                             </thead>

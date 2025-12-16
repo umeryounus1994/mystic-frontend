@@ -1,9 +1,9 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Quest Group</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'QUEST_GROUP.QUEST_GROUP' | translate }}</h1>
     </div>
 </div>
 <div class="card bg-transparent border">
@@ -14,10 +14,10 @@
                 <thead>
                     <tr>
 
-                        <th scope="col" class="border-0 rounded-start">Group Name</th>
-                        <th scope="col" class="border-0">Package</th>
-                        <th scope="col" class="border-0">Crypes</th>
-                        <th scope="col" class="border-0 rounded-end">Status</th>
+                        <th scope="col" class="border-0 rounded-start">{{ 'QUEST_GROUP.GROUP_NAME' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'QUEST_GROUP.PACKAGE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.NO_OF_CRYPES' | translate }}</th>
+                        <th scope="col" class="border-0 rounded-end">{{ 'COMMON.STATUS' | translate }}</th>
                         <!-- <th scope="col" class="border-0 rounded-end">Action</th> -->
                     </tr>
                 </thead>
@@ -30,9 +30,9 @@
                         
                         <td>
                             <div *ngIf="q.status == 'active'"
-                                class="badge bg-success bg-opacity-10 text-success">Active</div>
+                                class="badge bg-success bg-opacity-10 text-success">{{ 'COMMON.ACTIVE' | translate }}</div>
                             <div *ngIf="q.status == 'deleted'"
-                                class="badge bg-danger bg-opacity-10 text-danger">Deleted</div>
+                                class="badge bg-danger bg-opacity-10 text-danger">{{ 'COMMON.DELETED' | translate }}</div>
                         </td>
                   
                     </tr>

@@ -5,8 +5,9 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
-declare var $: any;
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+declare var $: any;
 
 @Component({
   selector: 'app-reset-password',
@@ -21,8 +22,15 @@ export class ResetPasswordComponent implements OnInit {
   id: any;
   linkExpired = true;
   resetId: any;
-  constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute, private sp: NgxSpinnerService,
-    private helper: HelperService, private api: RestApiService) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private route: ActivatedRoute, 
+    private sp: NgxSpinnerService,
+    private helper: HelperService, 
+    private api: RestApiService,
+    public translate: TranslateService
+  ) {
   }
 
 
@@ -40,7 +48,7 @@ export class ResetPasswordComponent implements OnInit {
         this.linkExpired = false;
     }).catch((error: any) => {
       this.sp.hide();
-      Swal.fire("Reset Password!", error?.error?.message, "error");
+      Swal.fire(this.translate.instant('AUTH.RESET_PASSWORD'), error?.error?.message, "error");
     });
   }
 
@@ -57,14 +65,14 @@ export class ResetPasswordComponent implements OnInit {
       this.api.post('admin/change-password', data)
         .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Reset Password!", response?.message, "info");
+            Swal.fire(this.translate.instant('AUTH.RESET_PASSWORD'), response?.message, "info");
             setTimeout(() => {
               this.router.navigate(['auth/login']);
             }, 2000);
         })
         .catch((error) => {
           this.sp.hide();
-          Swal.fire("Reset Password!", error?.error?.message, "error");
+          Swal.fire(this.translate.instant('AUTH.RESET_PASSWORD'), error?.error?.message, "error");
         });
     }
   }

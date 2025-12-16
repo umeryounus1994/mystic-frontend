@@ -1,10 +1,10 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Rewards</h1>
-        <button class="btn btn-primary" (click)="showRewardDialog()">Add Reward</button>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.REWARDS' | translate }}</h1>
+        <button class="btn btn-primary" (click)="showRewardDialog()">{{ 'REWARDS.ADD_REWARD' | translate }}</button>
     </div>
 </div>
 <div class="card bg-transparent border">
@@ -14,10 +14,10 @@
                 id="dtable">
                 <thead>
                     <tr>
-                        <th scope="col" class="border-0">Reward Limit</th>
-                        <th scope="col" class="border-0">Reward File</th>
-                        <th scope="col" class="border-0">Crypes</th>
-                        <th scope="col" class="border-0">Action</th>
+                        <th scope="col" class="border-0">{{ 'REWARDS.REWARD_LIMIT' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'REWARDS.REWARD_FILE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.NO_OF_CRYPES' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +25,7 @@
 
                         <td>{{q.reward_name}}</td>
                         
-                        <td><a href="{{q.reward_file}}" target="_blank">View File</a></td>
+                        <td><a href="{{q.reward_file}}" target="_blank">{{ 'REWARDS.VIEW_FILE' | translate }}</a></td>
                         <td>{{q.reward_crypes}}</td>
                         <td>
     
@@ -47,23 +47,23 @@
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title text-white" id="appDetaillabel">Add Reward</h5>
+                <h5 class="modal-title text-white" id="appDetaillabel">{{ 'REWARDS.ADD_REWARD' | translate }}</h5>
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">
-                <span class="small">Limit <span class="error-message"></span></span>
-                <input type="text" class="form-control" id="reward_limit" placeholder="Limit" required>
+                <span class="small">{{ 'REWARDS.LIMIT' | translate }} <span class="error-message"></span></span>
+                <input type="text" class="form-control" id="reward_limit" [placeholder]="'REWARDS.LIMIT' | translate" required>
                 <br />
-                <span class="small">Crypes <span class="error-message"></span></span>
-                <input type="text" class="form-control" id="reward_crypes" placeholder="Crypes" required>
+                <span class="small">{{ 'FORMS.NO_OF_CRYPES' | translate }} <span class="error-message"></span></span>
+                <input type="text" class="form-control" id="reward_crypes" [placeholder]="'FORMS.NO_OF_CRYPES' | translate" required>
                 <br />
-                <span class="small">Reward File <span class="error-message"></span></span>
-                <input type="file" class="form-control" id="reward_limit" placeholder="Limit" 
+                <span class="small">{{ 'REWARDS.REWARD_FILE' | translate }} <span class="error-message"></span></span>
+                <input type="file" class="form-control" id="reward_limit" [placeholder]="'REWARDS.LIMIT' | translate" 
                 (change)="onFileSelected($event, 'reward')" accept="application/pdf">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-soft my-0" (click)="_SaveRequest()">Save</button>
-                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary-soft my-0" (click)="_SaveRequest()">{{ 'COMMON.SAVE' | translate }}</button>
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">{{ 'COMMON.CLOSE' | translate }}</button>
             </div>
         </div>
     </div>

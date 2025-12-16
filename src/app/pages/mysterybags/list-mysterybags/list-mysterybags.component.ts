@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
@@ -25,7 +26,8 @@ export class ListMysterybagsComponent implements OnInit {
     private api: RestApiService, 
     private helper: HelperService,
     private router: Router, 
-    public auth: AuthService
+    public auth: AuthService,
+    public translate: TranslateService
   ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
@@ -66,18 +68,18 @@ export class ListMysterybagsComponent implements OnInit {
 
   deleteMysteryBag(bagId: any) {
     Swal.fire({
-      title: `Are you sure You want to delete this Mystery Bag?`,
+      title: this.translate.instant('POPUPS.DELETE_MYSTERY_BAG_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
         this.api.delete('mysteryBag/delete/' + bagId)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("Mystery Bag!", "Deleted Successfully", "success");
+          Swal.fire(this.translate.instant('SIDEBAR.MYSTERY_BAGS'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
           this.getAllMysteryBags();
         }, err => {
           this.helper.failureToast(err?.error?.message);

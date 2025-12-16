@@ -1,13 +1,13 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Updating Picture Mystery.....</p>
+    <p style="font-size: 30px; color: white">{{ 'FORMS.UPDATING_PICTURE_MYSTERY' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
         <div>
             <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['mystery/list-mystery'])">
-                <i class="bi bi-arrow-left me-2"></i>Back
+                <i class="bi bi-arrow-left me-2"></i>{{ 'COMMON.BACK' | translate }}
             </button>
-            <h1 class="h3 mb-0 d-inline">Edit Picture Mystery</h1>
+            <h1 class="h3 mb-0 d-inline">{{ 'COMMON.EDIT' | translate }} {{ 'SIDEBAR.PICTURE_MYSTERIES' | translate }}</h1>
         </div>
     </div>
 </div>
@@ -22,166 +22,166 @@
                             (ngSubmit)="onSubmit()">
 
                             <div class="col-12 mb-2">
-                                <label class="form-label">Question <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'FORMS.QUESTION' | translate }} <span class="text-danger">*</span></label>
                                 <textarea class="form-control" rows="3" formControlName="picture_mystery_question" maxlength="500"
                                     [ngClass]="{ 'is-invalid': submitted && f['picture_mystery_question'].errors }"></textarea>
                                 <div class="invalid-feedback" *ngIf="submitted && f['picture_mystery_question']?.errors">
-                                    <div *ngIf="f['picture_mystery_question'].errors['required']">Question is required</div>
-                                    <div *ngIf="f['picture_mystery_question'].errors['minlength']">Question must be at least 5 characters</div>
-                                    <div *ngIf="f['picture_mystery_question'].errors['maxlength']">Question cannot exceed 500 characters</div>
+                                    <div *ngIf="f['picture_mystery_question'].errors['required']">{{ 'VALIDATION.QUEST_QUESTION_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['picture_mystery_question'].errors['minlength']">{{ 'VALIDATION.QUEST_QUESTION_MIN' | translate }}</div>
+                                    <div *ngIf="f['picture_mystery_question'].errors['maxlength']">{{ 'VALIDATION.QUEST_QUESTION_MAX' | translate }}</div>
                                 </div>
                             </div>
                             
                             <div class="col-lg-5">
-                                <label class="form-label">Picture</label>
-                                <input type="file" class="form-control" placeholder="Title"
+                                <label class="form-label">{{ 'FORMS.PICTURE' | translate }}</label>
+                                <input type="file" class="form-control" [placeholder]="'COMMON.TITLE' | translate"
                                 accept="image/*"
                                     formControlName="picture_mystery_question_url"
                                     (change)="onFileSelected($event, 'questionPicture')"
                                     [ngClass]="{ 'is-invalid': submitted && f['picture_mystery_question_url'].errors }">
                                 <small class="text-muted" *ngIf="existingQuestionPicture">
-                                    Current: <a [href]="existingQuestionPicture" target="_blank">View Image</a>
+                                    {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingQuestionPicture" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
                                 </small>
                             </div>
                             
                             <div class="col-lg-3">
-                                <label class="form-label">No of XP <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" placeholder="Enter XP" formControlName="no_of_xp"
+                                <label class="form-label">{{ 'FORMS.NO_OF_XP' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [placeholder]="'FORMS.ENTER_XP' | translate" formControlName="no_of_xp"
                                     min="1" step="1" required
                                     (keydown)="preventNegativeInput($event)"
                                     (input)="validateNumberInput($event, 'no_of_xp', 1)"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_xp']?.errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['no_of_xp']?.errors">
-                                    <div *ngIf="f['no_of_xp'].errors['required']">No of XP is required</div>
-                                    <div *ngIf="f['no_of_xp'].errors['min']">No of XP must be greater than 0</div>
+                                    <div *ngIf="f['no_of_xp'].errors['required']">{{ 'VALIDATION.XP_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['no_of_xp'].errors['min']">{{ 'VALIDATION.XP_MIN' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Must be at least 1</small>
+                                <small class="text-muted">{{ 'FORMS.MUST_BE_AT_LEAST_1' | translate }}</small>
                             </div>
                             
                             <div class="col-lg-3">
-                                <label class="form-label">No of Crypes <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" placeholder="Enter Crypes" formControlName="no_of_crypes"
+                                <label class="form-label">{{ 'FORMS.NO_OF_CRYPES' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [placeholder]="'FORMS.ENTER_CRYPES' | translate" formControlName="no_of_crypes"
                                     min="0" step="1" required
                                     (keydown)="preventNegativeInput($event)"
                                     (input)="validateNumberInput($event, 'no_of_crypes', 0)"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_crypes']?.errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['no_of_crypes']?.errors">
-                                    <div *ngIf="f['no_of_crypes'].errors['required']">No of Crypes is required</div>
-                                    <div *ngIf="f['no_of_crypes'].errors['min']">No of Crypes cannot be negative</div>
+                                    <div *ngIf="f['no_of_crypes'].errors['required']">{{ 'VALIDATION.CRYPES_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['no_of_crypes'].errors['min']">{{ 'VALIDATION.CRYPES_MIN' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Cannot be negative</small>
+                                <small class="text-muted">{{ 'FORMS.CANNOT_BE_NEGATIVE' | translate }}</small>
                             </div>
                             
                             <div class="col-lg-3">
-                                <label class="form-label">Level Increase Points <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" placeholder="Enter points" formControlName="level_increase"
+                                <label class="form-label">{{ 'FORMS.LEVEL_INCREASE_POINTS' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [placeholder]="'FORMS.ENTER_POINTS' | translate" formControlName="level_increase"
                                     min="0" step="1" required
                                     (keydown)="preventNegativeInput($event)"
                                     (input)="validateNumberInput($event, 'level_increase', 0)"
                                     [ngClass]="{ 'is-invalid': submitted && f['level_increase']?.errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['level_increase']?.errors">
-                                    <div *ngIf="f['level_increase'].errors['required']">Level Increase is required</div>
-                                    <div *ngIf="f['level_increase'].errors['min']">Level Increase cannot be negative</div>
+                                    <div *ngIf="f['level_increase'].errors['required']">{{ 'VALIDATION.LEVEL_INCREASE_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['level_increase'].errors['min']">{{ 'VALIDATION.LEVEL_INCREASE_MIN' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Cannot be negative</small>
+                                <small class="text-muted">{{ 'FORMS.CANNOT_BE_NEGATIVE' | translate }}</small>
                             </div>
                             
                             <div class="col-lg-3">
-                                <label class="form-label">Latitude <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" placeholder="Latitude" step="any"
+                                <label class="form-label">{{ 'FORMS.LATITUDE' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [placeholder]="'FORMS.LATITUDE' | translate" step="any"
                                     formControlName="latitude"
                                     (input)="onLatitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['latitude']?.errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['latitude']?.errors">
-                                    <div *ngIf="f['latitude'].errors['required']">Latitude is required</div>
-                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
+                                    <div *ngIf="f['latitude'].errors['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">{{ 'VALIDATION.INVALID_LATITUDE' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
+                                <small class="text-muted">{{ 'VALIDATION.INVALID_LATITUDE' | translate }}</small>
                             </div>
                             
                             <div class="col-lg-3">
-                                <label class="form-label">Longitude <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" placeholder="Longitude" step="any"
+                                <label class="form-label">{{ 'FORMS.LONGITUDE' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [placeholder]="'FORMS.LONGITUDE' | translate" step="any"
                                     formControlName="longitude"
                                     (input)="onLongitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude']?.errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['longitude']?.errors">
-                                    <div *ngIf="f['longitude'].errors['required']">Longitude is required</div>
-                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
+                                    <div *ngIf="f['longitude'].errors['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">{{ 'VALIDATION.INVALID_LONGITUDE' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
+                                <small class="text-muted">{{ 'VALIDATION.INVALID_LONGITUDE' | translate }}</small>
                             </div>
                             
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'FORMS.MYTHICA' | translate }} <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_ID"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
-                                    <option value="" selected disabled>Select Mythica</option>
+                                    <option value="" selected disabled>{{ 'FORMS.SELECT_MYTHICA' | translate }}</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                                 <div class="invalid-feedback" *ngIf="submitted && f['mythica_ID']?.errors">
-                                    Mythica is required
+                                    {{ 'VALIDATION.MYTHICA_REQUIRED' | translate }}
                                 </div>
                             </div>
             
                             <div class="col-12">
-                                <label class="form-label">Answers <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'FORMS.ANSWERS' | translate }} <span class="text-danger">*</span></label>
                                 <div formArrayName="questions">
                                     <div class="card mb-3" *ngFor="let quantity of questions().controls; let i=index; trackBy: trackByIndex"
                                         [formGroupName]="i">
                                         <div class="card-header">
-                                            <h6 class="mb-0">Answer {{i+1}}</h6>
+                                            <h6 class="mb-0">{{ 'FORMS.ANSWERS' | translate }} {{i+1}}</h6>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-lg-6 mb-2">
-                                                    <label class="form-label">Answer File <span class="text-danger">*</span></label>
+                                                    <label class="form-label">{{ 'FORMS.ANSWER_FILE' | translate }} <span class="text-danger">*</span></label>
                                                     <input type="file" class="form-control" formControlName="answer"
                                                     accept="image/*, video/mp4"
                                                     (change)="onFileSelected($event, 'option'+(i+1))"
-                                                        placeholder="Answer"
+                                                        [placeholder]="'FORMS.ANSWERS' | translate"
                                                         [ngClass]="{ 'is-invalid': submitted && quantity.get('answer')?.errors }">
                                                     <div class="invalid-feedback" *ngIf="submitted && quantity.get('answer')?.errors">
-                                                        Answer file is required
+                                                        {{ 'VALIDATION.REQUIRED' | translate }}
                                                     </div>
                                                     <small class="text-muted" *ngIf="i === 0 && existingOption1">
-                                                        Current: <a [href]="existingOption1" target="_blank">View File</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption1" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
                                                     </small>
                                                     <small class="text-muted" *ngIf="i === 1 && existingOption2">
-                                                        Current: <a [href]="existingOption2" target="_blank">View File</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption2" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
                                                     </small>
                                                     <small class="text-muted" *ngIf="i === 2 && existingOption3">
-                                                        Current: <a [href]="existingOption3" target="_blank">View File</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption3" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
                                                     </small>
                                                     <small class="text-muted" *ngIf="i === 3 && existingOption4">
-                                                        Current: <a [href]="existingOption4" target="_blank">View File</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption4" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
                                                     </small>
                                                 </div>
                                                 <div class="col-lg-4 mb-2">
-                                                    <label class="form-label">Correct Option <span class="text-danger">*</span></label>
+                                                    <label class="form-label">{{ 'FORMS.CORRECT_OPTION' | translate }} <span class="text-danger">*</span></label>
                                                     <select class="form-select" aria-label=".form-select-sm"
                                                         formControlName="correct_option"
                                                         (change)="onOptionSelected($event,'option'+(i+1))"
                                                         [ngClass]="{ 'is-invalid': submitted && quantity.get('correct_option')?.errors }">
-                                                        <option value="" selected disabled>Select Correct Option</option>
-                                                        <option [value]="false">No</option>
-                                                        <option [value]="true">Yes</option>
+                                                        <option value="" selected disabled>{{ 'FORMS.SELECT_CORRECT_OPTION' | translate }}</option>
+                                                        <option [value]="false">{{ 'COMMON.NO' | translate }}</option>
+                                                        <option [value]="true">{{ 'COMMON.YES' | translate }}</option>
                                                     </select>
                                                     <div class="invalid-feedback" *ngIf="submitted && quantity.get('correct_option')?.errors">
-                                                        Please select if this is the correct option
+                                                        {{ 'VALIDATION.REQUIRED' | translate }}
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-2 text-end">
                                                     <a href="javascript:;" *ngIf="i == questions().controls.length -1"
                                                         (click)="addQuestion()"
                                                         class="btn btn-success-soft btn-round me-1 mb-1 mb-md-0"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Add Answer">
+                                                        data-bs-toggle="tooltip" data-bs-placement="top" [attr.title]="'FORMS.ADD_ANSWER' | translate">
                                                         <i class="bi bi-plus"></i>
                                                     </a>
                                                     <button type="button" class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
                                                         (click)="removeQuestion(i)"
                                                         [disabled]="questions().length === 1"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Answer">
+                                                        data-bs-toggle="tooltip" data-bs-placement="top" [attr.title]="'FORMS.DELETE_ANSWER' | translate">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
@@ -192,7 +192,7 @@
                             </div>
 
                             <div class="d-sm-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary mb-0">Update</button>
+                                <button type="submit" class="btn btn-primary mb-0">{{ 'COMMON.UPDATE' | translate }}</button>
                             </div>
                         </form>
 

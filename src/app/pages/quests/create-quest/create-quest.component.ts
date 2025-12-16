@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-quest',
@@ -27,8 +28,16 @@ export class CreateQuestComponent implements OnInit {
   option3: File | undefined = undefined;
   option4: File | undefined = undefined;
   option5: File | undefined = undefined;
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    public router: Router, private fb: FormBuilder, public auth: AuthService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    public router: Router, 
+    private fb: FormBuilder, 
+    public auth: AuthService, 
+    private cdr: ChangeDetectorRef,
+    public translate: TranslateService
+  ) {
       this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
   }
   onChangeURL(url: SafeUrl) {

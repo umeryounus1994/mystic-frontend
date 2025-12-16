@@ -3,6 +3,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { HelperService } from '../../../services/helper/helper.service';
+import { TranslateService } from '@ngx-translate/core';
 import Chart from 'chart.js/auto';
 
 @Component({
@@ -41,7 +42,8 @@ export class PartnerDashboardComponent implements OnInit {
     private api: RestApiService,
     private sp: NgxSpinnerService,
     private router: Router,
-    private helper: HelperService
+    private helper: HelperService,
+    public translate: TranslateService
   ) {}
 
   async ngOnInit() {

@@ -1,9 +1,9 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Drops</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.DROPS' | translate }}</h1>
     </div>
 </div>
 <div class="card bg-transparent border">
@@ -13,9 +13,9 @@
                 id="dtable">
                 <thead>
                     <tr>
-                        <th scope="col" class="border-0">Drop Name</th>
-                        <th scope="col" class="border-0">Mythica (Reward)</th>
-                        <th scope="col" class="border-0">Action</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.DROP_NAME' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'DROPS.MYTHICA_REWARD' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,30 +45,30 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title text-white" id="appDetaillabel">Drop Details</h5>
+                <h5 class="modal-title text-white" id="appDetaillabel">{{ 'DROPS.DROP_DETAILS' | translate }}</h5>
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
                         class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{ 'COMMON.NAME' | translate }}</label>
                         <p id="drop_name"></p>
                     </div>
                     <div class="col-md-9">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                         <p id="drop_description"></p>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label">Mythica</label>
+                        <label class="form-label">{{ 'FORMS.MYTHICA' | translate }}</label>
                         <br/>
                         <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6" id="mythica_ID"></div>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Reward Mythica</label>
+                        <label class="form-label">{{ 'DROPS.REWARD_MYTHICA' | translate }}</label>
                         <br/>
                         <div class="badge bg-info bg-opacity-10 text-info me-2 fs-6" id="mythica_reward"></div>
                     </div>
@@ -76,7 +76,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">{{ 'COMMON.CLOSE' | translate }}</button>
             </div>
         </div>
     </div>

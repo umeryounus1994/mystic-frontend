@@ -1,22 +1,22 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'LIST.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Users</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.USERS' | translate }}</h1>
         <div class="d-flex gap-2">
             <select class="form-select" [(ngModel)]="selectedStatusFilter" (change)="applyStatusFilter()" style="width: auto;">
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="blocked">Blocked</option>
-                <option value="pending">Pending</option>
+                <option value="">{{ 'LIST.ALL_STATUS' | translate }}</option>
+                <option value="active">{{ 'LIST.ACTIVE' | translate }}</option>
+                <option value="blocked">{{ 'LIST.BLOCKED' | translate }}</option>
+                <option value="pending">{{ 'LIST.PENDING' | translate }}</option>
             </select>
             <select class="form-select" [(ngModel)]="selectedFilter" (change)="applyFilter()" style="width: auto;">
                 <option *ngFor="let option of filterOptions" [value]="option.value">
-                    {{option.label}}
+                    {{ option.label | translate }}
                 </option>
             </select>
-            <button class="btn btn-primary" (click)="showRewardDialog()">Add Sub Admin</button>
+            <button class="btn btn-primary" (click)="showRewardDialog()">{{ 'LIST.ADD_SUB_ADMIN' | translate }}</button>
         </div>
     </div>
 </div>
@@ -24,19 +24,19 @@
 <div class="row g-4 mb-4">
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4 bg-primary bg-opacity-10 border border-primary rounded-3">
-            <h6>Total Users</h6>
+            <h6>{{ 'LIST.TOTAL_USERS' | translate }}</h6>
             <h2 class="mb-0 fs-1 text-primary">{{counters.users}}</h2>
         </div>
     </div>
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4 bg-success bg-opacity-10 border border-success rounded-3">
-            <h6>Active</h6>
+            <h6>{{ 'LIST.ACTIVE' | translate }}</h6>
             <h2 class="mb-0 fs-1 text-success">{{counters.active}}</h2>
         </div>
     </div>
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4  bg-warning bg-opacity-15 border border-warning rounded-3">
-            <h6>Inactive</h6>
+            <h6>{{ 'LIST.INACTIVE' | translate }}</h6>
             <h2 class="mb-0 fs-1 text-warning">{{counters.inactive}}</h2>
         </div>
     </div>
@@ -49,22 +49,22 @@
                 <thead class="table-header">
                     <tr>
                         <th scope="col" class="border-0 fw-bold text-uppercase">
-                            <i class="bi bi-hash me-2"></i>S.No
+                            <i class="bi bi-hash me-2"></i>{{ 'LIST.SERIAL_NO' | translate }}
                         </th>
                         <th scope="col" class="border-0 fw-bold text-uppercase">
-                            <i class="bi bi-person me-2"></i>Username
+                            <i class="bi bi-person me-2"></i>{{ 'FORMS.USERNAME' | translate }}
                         </th>
                         <th scope="col" class="border-0 fw-bold text-uppercase">
-                            <i class="bi bi-circle-fill me-2"></i>Status
+                            <i class="bi bi-circle-fill me-2"></i>{{ 'COMMON.STATUS' | translate }}
                         </th>
                         <th scope="col" class="border-0 fw-bold text-uppercase">
-                            <i class="bi bi-tag me-2"></i>Type
+                            <i class="bi bi-tag me-2"></i>{{ 'LIST.TYPE' | translate }}
                         </th>
                         <th scope="col" class="border-0 fw-bold text-uppercase text-center">
-                            <i class="bi bi-gear me-2"></i>Actions
+                            <i class="bi bi-gear me-2"></i>{{ 'COMMON.ACTIONS' | translate }}
                         </th>
                         <th scope="col" class="border-0 fw-bold text-uppercase text-center rounded-end">
-                            <i class="bi bi-lock me-2"></i>Status Control
+                            <i class="bi bi-lock me-2"></i>{{ 'LIST.STATUS_CONTROL' | translate }}
                         </th>
                     </tr>
                 </thead>
@@ -89,34 +89,34 @@
                                 <!-- Normal Status -->
                                 <div *ngIf="q.status == 'active'"
                                     class="badge bg-success bg-opacity-15 text-success px-2 py-1 rounded-pill">
-                                    <i class="bi bi-check-circle me-1"></i>Active
+                                    <i class="bi bi-check-circle me-1"></i>{{ 'LIST.ACTIVE' | translate }}
                                 </div>
                                 <div *ngIf="q.status == 'blocked'"
                                     class="badge bg-danger bg-opacity-15 text-danger px-2 py-1 rounded-pill">
-                                    <i class="bi bi-x-circle me-1"></i>Blocked
+                                    <i class="bi bi-x-circle me-1"></i>{{ 'LIST.BLOCKED' | translate }}
                                 </div>
                                 <div *ngIf="q.status == 'pending'"
                                     class="badge bg-warning bg-opacity-15 text-warning px-2 py-1 rounded-pill">
-                                    <i class="bi bi-clock me-1"></i>Pending
+                                    <i class="bi bi-clock me-1"></i>{{ 'LIST.PENDING' | translate }}
                                 </div>
                                 
                                 <!-- Approval Status Badge -->
                                 <div *ngIf="q.approval_status && q.approval_status !== q.status" class="ms-1">
                                     <div *ngIf="q.approval_status == 'pending'"
                                         class="badge bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-pill small">
-                                        <i class="bi bi-clock me-1"></i>App: Pending
+                                        <i class="bi bi-clock me-1"></i>{{ 'LIST.APP' | translate }}: {{ 'LIST.PENDING' | translate }}
                                     </div>
                                     <div *ngIf="q.approval_status == 'approved'"
                                         class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small">
-                                        <i class="bi bi-check-circle me-1"></i>App: Approved
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'LIST.APP' | translate }}: {{ 'LIST.APPROVED' | translate }}
                                     </div>
                                     <div *ngIf="q.approval_status == 'rejected'"
                                         class="badge bg-danger bg-opacity-10 text-danger px-2 py-1 rounded-pill small">
-                                        <i class="bi bi-x-circle me-1"></i>App: Rejected
+                                        <i class="bi bi-x-circle me-1"></i>{{ 'LIST.APP' | translate }}: {{ 'LIST.REJECTED' | translate }}
                                     </div>
                                     <div *ngIf="q.approval_status == 'blocked'"
                                         class="badge bg-danger bg-opacity-10 text-danger px-2 py-1 rounded-pill small">
-                                        <i class="bi bi-lock me-1"></i>App: Blocked
+                                        <i class="bi bi-lock me-1"></i>{{ 'LIST.APP' | translate }}: {{ 'LIST.BLOCKED' | translate }}
                                     </div>
                                 </div>
                             </div>
@@ -124,23 +124,23 @@
                         <td>
                             <div *ngIf="q?.user_role === 'admin' || q?.type === 'admin'" 
                                  class="badge bg-primary bg-opacity-15 text-primary px-3 py-2 rounded-pill">
-                                <i class="bi bi-shield-check me-1"></i>Admin
+                                <i class="bi bi-shield-check me-1"></i>{{ 'LIST.ADMIN' | translate }}
                             </div>
                             <div *ngIf="q?.user_role === 'subadmin' || q?.type === 'subadmin'" 
                                  class="badge bg-secondary bg-opacity-15 text-secondary px-3 py-2 rounded-pill">
-                                <i class="bi bi-person-gear me-1"></i>Sub Admin
+                                <i class="bi bi-person-gear me-1"></i>{{ 'LIST.SUB_ADMIN' | translate }}
                             </div>
                             <div *ngIf="q?.user_role === 'user' || q?.type === 'user'" 
                                  class="badge bg-info bg-opacity-15 text-info px-3 py-2 rounded-pill">
-                                <i class="bi bi-person me-1"></i>User
+                                <i class="bi bi-person me-1"></i>{{ 'LIST.USER' | translate }}
                             </div>
                             <div *ngIf="q?.user_role === 'family' || q?.type === 'family'" 
                                  class="badge bg-success bg-opacity-15 text-success px-3 py-2 rounded-pill">
-                                <i class="bi bi-house-heart me-1"></i>Family
+                                <i class="bi bi-house-heart me-1"></i>{{ 'LIST.FAMILY' | translate }}
                             </div>
                             <div *ngIf="q?.user_role === 'partner' || q?.type === 'partner'" 
                                  class="badge bg-warning bg-opacity-15 text-warning px-3 py-2 rounded-pill">
-                                <i class="bi bi-handshake me-1"></i>Partner
+                                <i class="bi bi-handshake me-1"></i>{{ 'LIST.PARTNER' | translate }}
                             </div>
                         </td>
                         <td class="text-center">
@@ -179,8 +179,8 @@
                                     (click)="blockUser(q.id, 'block')"
                                     data-bs-toggle="tooltip" 
                                     data-bs-placement="top" 
-                                    data-bs-title="Block User">
-                                <i class="bi bi-lock me-1"></i>Block
+                                    [attr.data-bs-title]="'LIST.BLOCK' | translate">
+                                <i class="bi bi-lock me-1"></i>{{ 'LIST.BLOCK' | translate }}
                             </button>
                             
                             <!-- Show Activate button if user is blocked (by status or approval_status) -->
@@ -189,8 +189,8 @@
                                     (click)="blockUser(q.id, 'unblock')"
                                     data-bs-toggle="tooltip" 
                                     data-bs-placement="top" 
-                                    data-bs-title="Activate User">
-                                <i class="bi bi-unlock me-1"></i>Activate
+                                    [attr.data-bs-title]="'LIST.UNBLOCK' | translate">
+                                <i class="bi bi-unlock me-1"></i>{{ 'LIST.UNBLOCK' | translate }}
                             </button>
                         </td>
                     </tr>
@@ -210,7 +210,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title text-white" id="appDetaillabel">Add SubAdmin</h5>
+                <h5 class="modal-title text-white" id="appDetaillabel">{{ 'LIST.ADD_SUB_ADMIN' | translate }}</h5>
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">

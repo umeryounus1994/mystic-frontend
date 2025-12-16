@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 declare var $: any;
 
@@ -21,8 +22,13 @@ export class RewardsComponent implements OnInit {
   reward: File | undefined = undefined;
 
 
-  constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router) {
+  constructor(
+    private sp: NgxSpinnerService, 
+    private api: RestApiService, 
+    private helper: HelperService,
+    private router: Router,
+    public translate: TranslateService
+  ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
@@ -56,11 +62,11 @@ export class RewardsComponent implements OnInit {
   }
   deletee(userId: any) {
     Swal.fire({
-      title: `Are you sure You want to delete this Reward?`,
+      title: this.translate.instant('POPUPS.DELETE_REWARD_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
@@ -72,7 +78,7 @@ export class RewardsComponent implements OnInit {
         this.api.patch('drop/updateReward/'+userId, data)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("Reward!", "Deleted Successfully", "success");
+          Swal.fire(this.translate.instant('SIDEBAR.REWARDS'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
          this.getAllUsers()
         }, err => {
           this.helper.failureToast(err?.error?.message);
@@ -101,7 +107,7 @@ export class RewardsComponent implements OnInit {
       .then((response: any) => {
           this.sp.hide();
           setTimeout(() => {
-            this.helper.successToast("Reward Added Successfully");
+            this.helper.successToast(this.translate.instant('REWARDS.ADDED_SUCCESSFULLY'));
             $("#addProfession").modal("hide");
             $('#reward_limit').val('')
             $('#reward_crypes').val('')
@@ -110,7 +116,7 @@ export class RewardsComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Reward!", "There is an error, please try again", "error");
+        Swal.fire(this.translate.instant('SIDEBAR.REWARDS'), this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'), "error");
       });
   }
   onFileSelected(event: any, type: string) {

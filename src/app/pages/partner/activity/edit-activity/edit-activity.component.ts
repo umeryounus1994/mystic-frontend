@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../../services/api/rest-api.service';
 import { HelperService } from '../../../../services/helper/helper.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -35,6 +36,7 @@ export class EditActivityComponent implements OnInit {
     private router: Router,
     private api: RestApiService,
     private sp: NgxSpinnerService,
+    public translate: TranslateService,
     private helper: HelperService
   ) {}
 
@@ -253,7 +255,7 @@ export class EditActivityComponent implements OnInit {
       })
       .catch((error: any) => {
         this.sp.hide();
-        this.helper.failureToast(error?.error?.message || 'Failed to load activity details');
+        this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITY'));
         this.router.navigate(['/partner/list-activities']);
       });
   }
@@ -366,7 +368,7 @@ export class EditActivityComponent implements OnInit {
     const formValue = this.activityForm.value;
     const price = parseFloat(formValue.price);
     if (isNaN(price) || price < 1) {
-      Swal.fire("Validation Error!", "Price must be at least $1.00", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.PRICE_MIN'), "error");
       this.activityForm.get('price')?.setErrors({ min: true });
       this.activityForm.get('price')?.markAsTouched();
       return;
@@ -374,7 +376,7 @@ export class EditActivityComponent implements OnInit {
     
     // Validate category
     if (!formValue.category || formValue.category === '') {
-      Swal.fire("Validation Error!", "Category is required", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.REQUIRED'), "error");
       this.activityForm.get('category')?.setErrors({ required: true });
       this.activityForm.get('category')?.markAsTouched();
       return;
@@ -382,7 +384,7 @@ export class EditActivityComponent implements OnInit {
     
     // Validate address
     if (!formValue.address || formValue.address.trim() === '') {
-      Swal.fire("Validation Error!", "Address is required", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.REQUIRED'), "error");
       this.activityForm.get('address')?.setErrors({ required: true });
       this.activityForm.get('address')?.markAsTouched();
       return;
@@ -391,7 +393,7 @@ export class EditActivityComponent implements OnInit {
     // Validate duration - must be at least 10 minutes
     const duration = parseInt(formValue.duration, 10);
     if (isNaN(duration) || duration < 10) {
-      Swal.fire("Validation Error!", "Duration must be at least 10 minutes", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.DURATION_MIN'), "error");
       this.activityForm.get('duration')?.setErrors({ min: true });
       this.activityForm.get('duration')?.markAsTouched();
       return;
@@ -400,7 +402,7 @@ export class EditActivityComponent implements OnInit {
     // Validate max_participants - must be at least 1
     const maxParticipants = parseInt(formValue.max_participants, 10);
     if (isNaN(maxParticipants) || maxParticipants < 1) {
-      Swal.fire("Validation Error!", "Max Participants must be at least 1", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.MAX_PARTICIPANTS_MIN'), "error");
       this.activityForm.get('max_participants')?.setErrors({ min: true });
       this.activityForm.get('max_participants')?.markAsTouched();
       return;
@@ -411,14 +413,14 @@ export class EditActivityComponent implements OnInit {
     const lngStr = String(formValue.longitude || '').trim();
     
     if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Latitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_VALID_NOT_ZERO'), "error");
       this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.activityForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (!lngStr || lngStr === '' || lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Longitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_VALID_NOT_ZERO'), "error");
       this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.activityForm.get('longitude')?.markAsTouched();
       return;
@@ -429,14 +431,14 @@ export class EditActivityComponent implements OnInit {
     const lng = parseFloat(lngStr);
     
     if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0 || Math.abs(lat) < 0.0001) {
-      Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
       this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.activityForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0 || Math.abs(lng) < 0.0001) {
-      Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
       this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.activityForm.get('longitude')?.markAsTouched();
       return;
@@ -452,7 +454,7 @@ export class EditActivityComponent implements OnInit {
       
       // Validate start time is greater than current time
       if (startTime <= now) {
-        Swal.fire("Validation Error!", `Slot ${i + 1}: Start time must be greater than current time`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.START_TIME_PAST')}`, "error");
         const slotControl = this.slots.at(i);
         slotControl.get('start_time')?.setErrors({ pastDate: true });
         slotControl.get('start_time')?.markAsTouched();
@@ -461,7 +463,7 @@ export class EditActivityComponent implements OnInit {
       
       // Validate end time is not in the past
       if (endTime < now) {
-        Swal.fire("Validation Error!", `Slot ${i + 1}: End time cannot be in the past`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.END_TIME_PAST')}`, "error");
         const slotControl = this.slots.at(i);
         slotControl.get('end_time')?.setErrors({ pastDate: true });
         slotControl.get('end_time')?.markAsTouched();
@@ -470,7 +472,7 @@ export class EditActivityComponent implements OnInit {
       
       // Validate end time is not less than start time
       if (endTime <= startTime) {
-        Swal.fire("Validation Error!", `Slot ${i + 1}: End time must be after start time`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.END_TIME_BEFORE_START')}`, "error");
         const slotControl = this.slots.at(i);
         slotControl.get('end_time')?.setErrors({ endBeforeStart: true });
         slotControl.get('end_time')?.markAsTouched();
@@ -480,7 +482,7 @@ export class EditActivityComponent implements OnInit {
       // Validate available_spots is not greater than max_participants
       const availableSpots = parseInt(slot.available_spots, 10);
       if (isNaN(availableSpots) || availableSpots < 1) {
-        Swal.fire("Validation Error!", `Slot ${i + 1}: Available spots must be at least 1`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.AVAILABLE_SPOTS_MIN')}`, "error");
         const slotControl = this.slots.at(i);
         slotControl.get('available_spots')?.setErrors({ min: true });
         slotControl.get('available_spots')?.markAsTouched();
@@ -489,7 +491,7 @@ export class EditActivityComponent implements OnInit {
       
       // Check if available_spots exceeds max_participants
       if (availableSpots > maxParticipants) {
-        Swal.fire("Validation Error!", `Slot ${i + 1}: Available spots (${availableSpots}) cannot exceed Max Participants (${maxParticipants})`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.AVAILABLE_SPOTS_EXCEED')}`, "error");
         const slotControl = this.slots.at(i);
         slotControl.get('available_spots')?.setErrors({ exceedsMaxParticipants: true });
         slotControl.get('available_spots')?.markAsTouched();
@@ -500,41 +502,41 @@ export class EditActivityComponent implements OnInit {
     // Check form validity AFTER all custom validations
     if (!this.activityForm?.valid) {
       const errors = [];
-      if (this.f['title']?.errors) errors.push('Title');
-      if (this.f['description']?.errors) errors.push('Description');
-      if (this.f['price']?.errors) errors.push('Price');
-      if (this.f['category']?.errors) errors.push('Category');
-      if (this.f['address']?.errors) errors.push('Address');
+      if (this.f['title']?.errors) errors.push(this.translate.instant('FORMS.ACTIVITY_TITLE'));
+      if (this.f['description']?.errors) errors.push(this.translate.instant('COMMON.DESCRIPTION'));
+      if (this.f['price']?.errors) errors.push(this.translate.instant('TABLES.PRICE'));
+      if (this.f['category']?.errors) errors.push(this.translate.instant('COMMON.CATEGORY'));
+      if (this.f['address']?.errors) errors.push(this.translate.instant('FORMS.ACTIVITY_ADDRESS'));
       if (this.f['latitude']?.errors) {
         if (this.f['latitude'].errors['invalidLatitude']) {
-          Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Latitude');
+          errors.push(this.translate.instant('FORMS.LATITUDE'));
         }
         return;
       }
       if (this.f['longitude']?.errors) {
         if (this.f['longitude'].errors['invalidLongitude']) {
-          Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Longitude');
+          errors.push(this.translate.instant('FORMS.LONGITUDE'));
         }
         return;
       }
-      if (this.f['duration']?.errors) errors.push('Duration');
-      if (this.f['max_participants']?.errors) errors.push('Max Participants');
+      if (this.f['duration']?.errors) errors.push(this.translate.instant('FORMS.ACTIVITY_DURATION'));
+      if (this.f['max_participants']?.errors) errors.push(this.translate.instant('FORMS.MAX_PARTICIPANTS'));
       
       // Check for slot errors
       for (let i = 0; i < this.slots.length; i++) {
         const slot = this.slots.at(i);
         if (slot.get('available_spots')?.errors?.['exceedsMaxParticipants']) {
-          Swal.fire("Validation Error!", `Slot ${i + 1}: Available spots cannot exceed Max Participants`, "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.AVAILABLE_SPOTS_EXCEED')}`, "error");
           return;
         }
       }
       
       if (errors.length > 0) {
-        Swal.fire("Validation Error!", `Please fix errors in: ${errors.join(', ')}`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('VALIDATION.PLEASE_FIX_ERRORS')}: ${errors.join(', ')}`, "error");
       }
       return; // Don't proceed if form is invalid
     }
@@ -567,14 +569,14 @@ export class EditActivityComponent implements OnInit {
     this.api.postImageData(`activity/${this.activityId}`, fD)
       .then((response: any) => {
         this.sp.hide();
-        this.helper.successToast("Activity Updated Successfully");
+        this.helper.successToast(this.translate.instant('MESSAGES.ACTIVITY_UPDATED_SUCCESS'));
         setTimeout(() => {
           this.router.navigate(['/partner/view-activity'], { queryParams: { activityId: this.activityId } });
         }, 1000);
       })
       .catch((error: any) => {
         this.sp.hide();
-        this.helper.failureToast(error?.error?.message || "Failed to update activity");
+        this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_UPDATE_ACTIVITY'));
       });
   }
 

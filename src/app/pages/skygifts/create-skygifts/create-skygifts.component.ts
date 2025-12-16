@@ -4,6 +4,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2'; 
 
 @Component({
@@ -23,7 +24,8 @@ export class CreateSkygiftsComponent implements OnInit {
     private helper: HelperService,
     public router: Router,
     private fb: FormBuilder, 
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public translate: TranslateService
   ) {
   }
 

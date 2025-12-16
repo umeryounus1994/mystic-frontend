@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-search-activities',
@@ -14,14 +15,14 @@ export class SearchActivitiesComponent implements OnInit {
   
   activities: any[] = [];
   categories = [
-    { value: '', label: 'All Categories' },
-    { value: 'outdoor', label: 'Outdoor' },
-    { value: 'indoor', label: 'Indoor' },
-    { value: 'educational', label: 'Educational' },
-    { value: 'sports', label: 'Sports' },
-    { value: 'arts', label: 'Arts' },
-    { value: 'adventure', label: 'Adventure' },
-    { value: 'others', label: 'Others' }
+    { value: '', label: 'SEARCH_ACTIVITIES.ALL_CATEGORIES' },
+    { value: 'outdoor', label: 'SEARCH_ACTIVITIES.OUTDOOR' },
+    { value: 'indoor', label: 'SEARCH_ACTIVITIES.INDOOR' },
+    { value: 'educational', label: 'SEARCH_ACTIVITIES.EDUCATIONAL' },
+    { value: 'sports', label: 'SEARCH_ACTIVITIES.SPORTS' },
+    { value: 'arts', label: 'SEARCH_ACTIVITIES.ARTS' },
+    { value: 'adventure', label: 'SEARCH_ACTIVITIES.ADVENTURE' },
+    { value: 'others', label: 'SEARCH_ACTIVITIES.OTHERS' }
   ];
 
   filters = {
@@ -47,7 +48,8 @@ export class SearchActivitiesComponent implements OnInit {
     private sp: NgxSpinnerService,
     private api: RestApiService,
     private helper: HelperService,
-    public router: Router
+    public router: Router,
+    public translate: TranslateService
   ) {}
 
   async ngOnInit() {
@@ -75,7 +77,7 @@ export class SearchActivitiesComponent implements OnInit {
       this.pagination = response?.data?.pagination || this.pagination;
     } catch (error: any) {
       this.sp.hide();
-      this.helper.failureToast(error?.error?.message || 'Failed to load activities');
+      this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITIES'));
     }
   }
 
@@ -121,11 +123,11 @@ export class SearchActivitiesComponent implements OnInit {
         },
         (error) => {
           this.sp.hide();
-          this.helper.failureToast('Unable to get your location');
+          this.helper.failureToast(this.translate.instant('SEARCH_ACTIVITIES.UNABLE_TO_GET_LOCATION'));
         }
       );
     } else {
-      this.helper.failureToast('Geolocation is not supported by this browser');
+      this.helper.failureToast(this.translate.instant('SEARCH_ACTIVITIES.GEOLOCATION_NOT_SUPPORTED'));
     }
   }
 

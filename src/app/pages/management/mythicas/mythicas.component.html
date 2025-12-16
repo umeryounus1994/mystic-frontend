@@ -1,8 +1,8 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">{{spinnerTitle}}</p>
+    <p style="font-size: 30px; color: white">{{spinnerTitle | translate}}</p>
 </ngx-spinner>
 
-<h4>Mythicas</h4>
+<h4>{{ 'SIDEBAR.MYTHICAS' | translate }}</h4>
 <div class="row g-4">
     <!-- Card item START -->
     <div class="col-sm-6 col-lg-4 col-xl-3" *ngFor="let m of mythicas">
@@ -31,45 +31,45 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title text-white" id="appDetaillabel">Mythica Details</h5>
+                <h5 class="modal-title text-white" id="appDetaillabel">{{ 'MYTHICAS.MYTHICA_DETAILS' | translate }}</h5>
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
                         class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{ 'COMMON.NAME' | translate }}</label>
                         <p id="creature_name"></p>
                     </div>
                     <div class="col-md-9">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                         <p id="creature_description"></p>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">Gender</label>
+                        <label class="form-label">{{ 'MYTHICAS.GENDER' | translate }}</label>
                         <p id="creature_gender"></p>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Element</label>
+                        <label class="form-label">{{ 'MYTHICAS.ELEMENT' | translate }}</label>
                         <p id="creature_element"></p>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Rarity</label>
+                        <label class="form-label">{{ 'MYTHICAS.RARITY' | translate }}</label>
                         <p id="creature_rarity"></p>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Height</label>
+                        <label class="form-label">{{ 'MYTHICAS.HEIGHT' | translate }}</label>
                         <p id="creature_height"></p>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Weight</label>
+                        <label class="form-label">{{ 'MYTHICAS.WEIGHT' | translate }}</label>
                         <p id="creature_weight"></p>
                     </div>
                 </div>
-                <h4>Skills</h4>
+                <h4>{{ 'MYTHICAS.SKILLS' | translate }}</h4>
                 <br/>
                 <div class="row">
                     <div class="col-md-12">
@@ -82,7 +82,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">{{ 'COMMON.CLOSE' | translate }}</button>
             </div>
         </div>
     </div>
@@ -93,18 +93,18 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title text-white" id="appDetaillabel">Edit Mythica</h5>
+                <h5 class="modal-title text-white" id="appDetaillabel">{{ 'MYTHICAS.EDIT_MYTHICA' | translate }}</h5>
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i
                         class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{ 'COMMON.NAME' | translate }}</label>
                         <input type="text" class="form-control" id="creature_name1">
                     </div>
                     <div class="col-md-9">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                         <input type="text" class="form-control" id="creature_description1">
                     </div>
 
@@ -112,24 +112,24 @@
                 <br/>
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">Gender</label>
+                        <label class="form-label">{{ 'MYTHICAS.GENDER' | translate }}</label>
                         <select class="form-control" id="creature_gender1">
-                            <option value="" selected disabled>Select</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
+                            <option value="" selected disabled>{{ 'COMMON.SELECT' | translate }}</option>
+                            <option value="Male">{{ 'MYTHICAS.MALE' | translate }}</option>
+                            <option value="Female">{{ 'MYTHICAS.FEMALE' | translate }}</option>
+                            <option value="Other">{{ 'MYTHICAS.OTHER' | translate }}</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Element</label>
+                        <label class="form-label">{{ 'MYTHICAS.ELEMENT' | translate }}</label>
                         <input type="text" class="form-control" id="creature_element1">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Rarity</label>
+                        <label class="form-label">{{ 'MYTHICAS.RARITY' | translate }}</label>
                         <input type="text" class="form-control" id="creature_rarity1">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Height</label>
+                        <label class="form-label">{{ 'MYTHICAS.HEIGHT' | translate }}</label>
                         <input type="text" class="form-control" id="creature_height1">
                     </div>
  
@@ -137,20 +137,20 @@
                 <br/>
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">Weight</label>
+                        <label class="form-label">{{ 'MYTHICAS.WEIGHT' | translate }}</label>
                         <input type="text" class="form-control" id="creature_weight1">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Skill1</label>
+                        <label class="form-label">{{ 'MYTHICAS.SKILL1' | translate }}</label>
                         <select class="form-control" id="creature_skill1">
-                            <option value="" selected disabled>Select</option>
+                            <option value="" selected disabled>{{ 'COMMON.SELECT' | translate }}</option>
                             <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Skill2</label>
+                        <label class="form-label">{{ 'MYTHICAS.SKILL2' | translate }}</label>
                         <select class="form-control" id="creature_skill2">
-                            <option value="" selected disabled>Select</option>
+                            <option value="" selected disabled>{{ 'COMMON.SELECT' | translate }}</option>
                             <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
                         </select>
                     </div>
@@ -158,24 +158,24 @@
                 <br />
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label">Skill3</label>
+                        <label class="form-label">{{ 'MYTHICAS.SKILL3' | translate }}</label>
                         <select class="form-control" id="creature_skill3">
-                            <option value="" selected disabled>Select</option>
+                            <option value="" selected disabled>{{ 'COMMON.SELECT' | translate }}</option>
                             <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
                         </select>
                     </div>
                     <div class="col-md-4 mt-1">
-                        <label class="form-label">Skill4</label>
+                        <label class="form-label">{{ 'MYTHICAS.SKILL4' | translate }}</label>
                         <select class="form-control" id="creature_skill4">
-                            <option value="" selected disabled>Select</option>
+                            <option value="" selected disabled>{{ 'COMMON.SELECT' | translate }}</option>
                             <option *ngFor="let s of skills" value="{{s?._id}}">{{s?.skill_name}}</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info my-0" (click)="updateMythica()">Update</button>
-                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-info my-0" (click)="updateMythica()">{{ 'COMMON.UPDATE' | translate }}</button>
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">{{ 'COMMON.CLOSE' | translate }}</button>
             </div>
         </div>
     </div>

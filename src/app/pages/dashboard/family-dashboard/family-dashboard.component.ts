@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/api/rest-api.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-family-dashboard',
@@ -32,7 +33,8 @@ export class FamilyDashboardComponent implements OnInit {
     private api: RestApiService,
     private sp: NgxSpinnerService,
     private router: Router,
-    private helper: HelperService
+    private helper: HelperService,
+    public translate: TranslateService
   ) {}
 
   async ngOnInit() {

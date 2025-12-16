@@ -2,6 +2,8 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../../services/language/language.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,9 +16,13 @@ export class SidebarComponent implements OnInit {
   sidebarOpen = false;
   collapseStates: { [key: string]: boolean } = {};
   
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute, 
-    public auth: AuthService) {
+    public auth: AuthService,
+    public translate: TranslateService,
+    public languageService: LanguageService
+  ) {
     
     if(this.auth.isSubAdmin){this.login_role = "subadmin"}
     

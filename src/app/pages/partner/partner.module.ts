@@ -5,6 +5,7 @@ import { PartnerRoutingModule } from './partner-routing.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { CreateActivityComponent } from './activity/create-activity/create-activity.component';
 import { ListActivityComponent } from './activity/list-activity/list-activity.component';
 import { ViewActivityComponent } from './activity/view-activity/view-activity.component';
@@ -24,7 +25,8 @@ import { ListActivityDropsComponent } from './list-activity-drops/list-activity-
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ]
 })
 export class PartnerModule { }

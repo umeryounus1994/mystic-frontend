@@ -3,6 +3,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 declare var $: any;
 
 @Component({
@@ -19,14 +20,19 @@ export class MythicasComponent implements OnInit {
   skill3 : any;
   skill4 : any;
   creatureId: any;
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    private auth: AuthService) {
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    private auth: AuthService,
+    public translate: TranslateService
+  ) {
 
   }
 
   async ngOnInit() {
 
-    this.spinnerTitle = 'Fetching Data';
+    this.spinnerTitle = this.translate.instant('COMMON.FETCHING_DATA');
     this.sp.show();
     await this.getSingleUser();
     this.getAllSKills()
@@ -81,27 +87,27 @@ export class MythicasComponent implements OnInit {
   }
   updateMythica() {
     if ($('#creature_element1').val() == '' || $('#creature_element1').val() == undefined) {
-      this.helper.infoToast('Element is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.ELEMENT_REQUIRED'));
       return;
     }
     if ($('#creature_gender1').val() == '' || $('#creature_gender1').val() == undefined) {
-      this.helper.infoToast('Gender is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.GENDER_REQUIRED'));
       return;
     }
     if ($('#creature_height1').val() == '' || $('#creature_height1').val() == undefined) {
-      this.helper.infoToast('Height is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.HEIGHT_REQUIRED'));
       return;
     }
     if ($('#creature_name1').val() == '' || $('#creature_name1').val() == undefined) {
-      this.helper.infoToast('Name is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.NAME_REQUIRED'));
       return;
     }
     if ($('#creature_skill1').val() == '' || $('#creature_skill1').val() == undefined) {
-      this.helper.infoToast('Skill1 is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.SKILL1_REQUIRED'));
       return;
     }
     if ($('#creature_skill2').val() == '' || $('#creature_skill2').val() == undefined) {
-      this.helper.infoToast('Skill2 is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.SKILL2_REQUIRED'));
       return;
     }
     const data = {
@@ -123,7 +129,7 @@ export class MythicasComponent implements OnInit {
       .then(async (response: any) => {
         this.sp.hide()
         $('#editMythica').modal('hide');
-        this.helper.successToast('Mythica updated Successfully');
+        this.helper.successToast(this.translate.instant('MYTHICAS.UPDATED_SUCCESSFULLY'));
         this.getSingleUser();
       }, err => {
         this.helper.failureToast(err?.error?.message);

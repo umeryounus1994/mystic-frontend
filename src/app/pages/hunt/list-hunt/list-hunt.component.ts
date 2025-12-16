@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth/auth.service';
 declare var $: any;
@@ -31,8 +32,14 @@ export class ListHuntComponent implements OnInit {
   qrCode: any = 'Hello';
 
 
-  constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router, public auth: AuthService) {
+  constructor(
+    private sp: NgxSpinnerService, 
+    private api: RestApiService, 
+    private helper: HelperService,
+    private router: Router, 
+    public auth: AuthService,
+    public translate: TranslateService
+  ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
@@ -104,11 +111,11 @@ export class ListHuntComponent implements OnInit {
   }
   deletee(userId: any) {
     Swal.fire({
-      title: `Are you sure You want to delete this Hunt?`,
+      title: this.translate.instant('POPUPS.DELETE_HUNT_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
@@ -120,7 +127,7 @@ export class ListHuntComponent implements OnInit {
         this.api.patch('hunt/'+userId, data)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("Hunt!", "Deleted Successfully", "success");
+          Swal.fire(this.translate.instant('SIDEBAR.TREASURE_HUNTS'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
          this.getAllUsers()
         }, err => {
           this.helper.failureToast(err?.error?.message);

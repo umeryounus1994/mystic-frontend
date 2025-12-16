@@ -5,6 +5,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
+import { TranslateService } from '@ngx-translate/core';
 declare var $: any;
 import Swal from 'sweetalert2';
 
@@ -19,8 +20,15 @@ export class LoginComponent implements OnInit {
   fieldTextType: boolean = false;
   text = "";
 
-  constructor(private fb: FormBuilder, private router: Router, private auth: AuthService, private sp: NgxSpinnerService,
-    private helper: HelperService, private api: RestApiService) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private auth: AuthService, 
+    private sp: NgxSpinnerService,
+    private helper: HelperService, 
+    private api: RestApiService,
+    public translate: TranslateService
+  ) {
   }
 
 
@@ -43,7 +51,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.submissionForm.valid) {
       this.isSubmitted = true;
-      this.text = "Logging in...";
+      this.text = 'AUTH.LOGGING_IN';
       this.sp.show()
       
       // Handle remember me
@@ -84,7 +92,9 @@ export class LoginComponent implements OnInit {
         }
       });
     } else {
-      Swal.fire("Login", "Email/Password is required", "error");
+      this.translate.get(['MESSAGES.ERROR', 'AUTH.EMAIL_PASSWORD_REQUIRED']).subscribe((res: any) => {
+        Swal.fire(res['MESSAGES.ERROR'], res['AUTH.EMAIL_PASSWORD_REQUIRED'], "error");
+      });
     }
   }
   showPassword(){
@@ -92,10 +102,12 @@ export class LoginComponent implements OnInit {
   }
   resetPassword(){
     if($("#forgotemail").val() == "" || $("#forgotemail").val() == undefined){
-      Swal.fire("Email", "Email is required", "error");
+      this.translate.get(['AUTH.EMAIL_REQUIRED', 'VALIDATION.REQUIRED']).subscribe((res: any) => {
+        Swal.fire(res['AUTH.EMAIL_REQUIRED'], res['VALIDATION.REQUIRED'], "error");
+      });
       return;
     }
-    this.text = "Sending Password reset link...";
+    this.text = 'AUTH.SENDING_RESET_LINK';
     this.sp.show();
     let data = {
       "email": $("#forgotemail").val()

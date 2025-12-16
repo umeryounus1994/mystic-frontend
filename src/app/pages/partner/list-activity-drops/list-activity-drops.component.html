@@ -1,12 +1,12 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Activity Drops</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'ACTIVITY_DROPS.ACTIVITY_DROPS' | translate }}</h1>
         <a [routerLink]="['/partner/create-activity-drop']" class="btn btn-sm btn-primary mb-0" *ngIf="auth.isPartner || auth.isAdmin">
-            <i class="bi bi-plus-circle me-2"></i>Create Activity Drop
+            <i class="bi bi-plus-circle me-2"></i>{{ 'ACTIVITY_DROPS.CREATE_ACTIVITY_DROP' | translate }}
         </a>
     </div>
 </div>
@@ -17,11 +17,11 @@
             <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover" id="dtable">
                 <thead>
                     <tr>
-                        <th scope="col" class="border-0">Drop Name</th>
-                        <th scope="col" class="border-0">Activity</th>
-                        <th scope="col" class="border-0">Location</th>
-                        <th scope="col" class="border-0">Created Date</th>
-                        <th scope="col" class="border-0">Action</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.DROP_NAME' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'SIDEBAR.ACTIVITIES' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'VIEW_ACTIVITY.LOCATION' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'ACTIVITY_DROPS.CREATED_DATE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,10 +66,10 @@
         
         <div class="text-center py-5" *ngIf="allActivityDrops.length === 0">
             <i class="bi bi-box-seam display-1 text-muted"></i>
-            <h5 class="mt-3">No Activity Drops Found</h5>
-            <p class="text-muted">Create your first activity drop to get started.</p>
+            <h5 class="mt-3">{{ 'ACTIVITY_DROPS.NO_ACTIVITY_DROPS_FOUND' | translate }}</h5>
+            <p class="text-muted">{{ 'ACTIVITY_DROPS.CREATE_FIRST_DROP' | translate }}</p>
             <a [routerLink]="['/partner/create-activity-drop']" class="btn btn-primary" *ngIf="auth.isPartner || auth.isAdmin">
-                <i class="bi bi-plus-circle me-2"></i>Create Activity Drop
+                <i class="bi bi-plus-circle me-2"></i>{{ 'ACTIVITY_DROPS.CREATE_ACTIVITY_DROP' | translate }}
             </a>
         </div>
     </div>
@@ -80,31 +80,31 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewActivityDropLabel">Activity Drop Details</h5>
+                <h5 class="modal-title" id="viewActivityDropLabel">{{ 'ACTIVITY_DROPS.ACTIVITY_DROP_DETAILS' | translate }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <strong>Drop Name:</strong>
+                        <strong>{{ 'FORMS.DROP_NAME' | translate }}:</strong>
                         <p id="drop_name"></p>
                     </div>
                     <div class="col-md-6">
-                        <strong>Activity:</strong>
+                        <strong>{{ 'SIDEBAR.ACTIVITIES' | translate }}:</strong>
                         <p id="activity_title"></p>
                     </div>
                     <div class="col-md-12">
-                        <strong>Description:</strong>
+                        <strong>{{ 'COMMON.DESCRIPTION' | translate }}:</strong>
                         <p id="drop_description"></p>
                     </div>
                     <div class="col-md-12">
-                        <strong>Location:</strong>
+                        <strong>{{ 'VIEW_ACTIVITY.LOCATION' | translate }}:</strong>
                         <p id="drop_location"></p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'COMMON.CLOSE' | translate }}</button>
             </div>
         </div>
     </div>

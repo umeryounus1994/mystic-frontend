@@ -5,6 +5,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,7 +25,8 @@ export class CreateActivityDropComponent implements OnInit {
     private helper: HelperService,
     public router: Router,
     private fb: FormBuilder,
-    private auth: AuthService
+    private auth: AuthService,
+    public translate: TranslateService
   ) {}
 
   // Custom validators
@@ -109,7 +111,7 @@ export class CreateActivityDropComponent implements OnInit {
         this.allActivities = response?.data?.activities || response?.data || [];
       }).catch((error: any) => {
         console.error('Error loading activities:', error);
-        this.helper.failureToast('Failed to load activities');
+        this.helper.failureToast(this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITIES'));
       });
   }
 
@@ -119,13 +121,13 @@ export class CreateActivityDropComponent implements OnInit {
       // Validate file type
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
       if (!allowedTypes.includes(file.type)) {
-        this.helper.failureToast('Please select a valid image file (JPEG, PNG, GIF)');
+        this.helper.failureToast(this.translate.instant('MESSAGES.INVALID_IMAGE_FILE'));
         return;
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        this.helper.failureToast('Image size should be less than 5MB');
+        this.helper.failureToast(this.translate.instant('MESSAGES.IMAGE_SIZE_TOO_LARGE'));
         return;
       }
 
@@ -143,14 +145,14 @@ export class CreateActivityDropComponent implements OnInit {
     
     // Check for all zero variations (0, 0000, 00000, etc.)
     if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Latitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_VALID_NOT_ZERO'), "error");
       this.dropForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.dropForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (!lngStr || lngStr === '' || lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Longitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_VALID_NOT_ZERO'), "error");
       this.dropForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.dropForm.get('longitude')?.markAsTouched();
       return;
@@ -161,14 +163,14 @@ export class CreateActivityDropComponent implements OnInit {
     const lng = parseFloat(lngStr);
     
     if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0 || Math.abs(lat) < 0.0001) {
-      Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
       this.dropForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.dropForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0 || Math.abs(lng) < 0.0001) {
-      Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
       this.dropForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.dropForm.get('longitude')?.markAsTouched();
       return;
@@ -177,28 +179,28 @@ export class CreateActivityDropComponent implements OnInit {
     // Check form validity AFTER all custom validations
     if (!this.dropForm?.valid) {
       const errors = [];
-      if (this.f['drop_name']?.errors) errors.push('Drop Name');
-      if (this.f['drop_description']?.errors) errors.push('Drop Description');
-      if (this.f['activity_id']?.errors) errors.push('Activity');
+      if (this.f['drop_name']?.errors) errors.push(this.translate.instant('FORMS.DROP_NAME'));
+      if (this.f['drop_description']?.errors) errors.push(this.translate.instant('COMMON.DESCRIPTION'));
+      if (this.f['activity_id']?.errors) errors.push(this.translate.instant('SIDEBAR.ACTIVITIES'));
       if (this.f['latitude']?.errors) {
         if (this.f['latitude'].errors['invalidLatitude']) {
-          Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Latitude');
+          errors.push(this.translate.instant('FORMS.LATITUDE'));
         }
         return;
       }
       if (this.f['longitude']?.errors) {
         if (this.f['longitude'].errors['invalidLongitude']) {
-          Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Longitude');
+          errors.push(this.translate.instant('FORMS.LONGITUDE'));
         }
         return;
       }
       
       if (errors.length > 0) {
-        Swal.fire("Validation Error!", `Please fix errors in: ${errors.join(', ')}`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('VALIDATION.PLEASE_FIX_ERRORS')}: ${errors.join(', ')}`, "error");
       }
       return; // Don't proceed if form is invalid
     }
@@ -224,7 +226,7 @@ export class CreateActivityDropComponent implements OnInit {
       .then((response: any) => {
         this.sp.hide();
         setTimeout(() => {
-          this.helper.successToast("Activity Drop Created Successfully");
+          this.helper.successToast(this.translate.instant('MESSAGES.ACTIVITY_DROP_CREATED_SUCCESS'));
         }, 1000);
         setTimeout(() => {
           this.router.navigate(['partner/list-activity-drops']);
@@ -233,7 +235,7 @@ export class CreateActivityDropComponent implements OnInit {
       .catch((error) => {
         this.sp.hide();
         console.error('Create activity drop error:', error);
-        Swal.fire("Activity Drop!", "There is an error, please try again", "error");
+        Swal.fire(this.translate.instant('ACTIVITY_DROPS.ACTIVITY_DROP'), this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'), "error");
       });
   }
 }

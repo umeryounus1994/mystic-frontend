@@ -5,6 +5,7 @@ import { SkygiftsRoutingModule } from './skygifts-routing.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { CreateSkygiftsComponent } from './create-skygifts/create-skygifts.component';
 import { ListSkygiftsComponent } from './list-skygifts/list-skygifts.component';
 import { EditSkygiftsComponent } from './edit-skygifts/edit-skygifts.component';
@@ -18,7 +19,8 @@ import { EditSkygiftsComponent } from './edit-skygifts/edit-skygifts.component';
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ]
 })
 export class SkygiftsModule { }

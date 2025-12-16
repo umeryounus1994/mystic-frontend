@@ -6,6 +6,7 @@ import { BookingRoutingModule } from './booking-routing.module';
 import { ListBookingsComponent } from './list-bookings/list-bookings.component';
 import { DataTablesModule } from 'angular-datatables';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     BookingRoutingModule,
     FormsModule,
     DataTablesModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    TranslateModule
   ]
 })
 export class BookingModule { }

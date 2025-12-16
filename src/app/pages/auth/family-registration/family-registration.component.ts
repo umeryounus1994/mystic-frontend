@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,7 +25,8 @@ export class FamilyRegistrationComponent implements OnInit {
     private auth: AuthService,
     private router: Router, 
     private helper: HelperService,
-    private sp: NgxSpinnerService
+    private sp: NgxSpinnerService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -129,13 +131,13 @@ export class FamilyRegistrationComponent implements OnInit {
           } else if (error?.status === 409) {
             this.helper.failureToast('Email or username already exists.');
           } else {
-            Swal.fire("Registration Failed!", error?.error?.message, "error");
+            Swal.fire(this.translate.instant('MESSAGES.REGISTRATION_FAILED'), error?.error?.message, "error");
           }
         }
       });
     } else {
       this.markFormGroupTouched();
-      Swal.fire("Registration", "Please fill all required fields correctly", "error");
+      Swal.fire(this.translate.instant('AUTH.REGISTRATION'), this.translate.instant('POPUPS.FILL_ALL_REQUIRED_FIELDS'), "error");
     }
   }
 

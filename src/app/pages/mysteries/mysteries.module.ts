@@ -5,6 +5,7 @@ import { MysteriesRoutingModule } from './mysteries-routing.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AddMysteriesComponent } from './add-mysteries/add-mysteries.component';
 import { ListMysteriesComponent } from './list-mysteries/list-mysteries.component';
 import { EditMysteriesComponent } from './edit-mysteries/edit-mysteries.component';
@@ -18,7 +19,8 @@ import { EditMysteriesComponent } from './edit-mysteries/edit-mysteries.componen
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ]
 })
 export class MysteriesModule { }

@@ -9,6 +9,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ResetUserPasswordComponent } from './reset-user-password/reset-user-password.component';
 import { PartnerRegistrationComponent } from './partner-registration/partner-registration.component';
 import { FamilyRegistrationComponent } from './family-registration/family-registration.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { FamilyRegistrationComponent } from './family-registration/family-regist
     AuthRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    TranslateModule
   ]
 })
 export class AuthModule { }

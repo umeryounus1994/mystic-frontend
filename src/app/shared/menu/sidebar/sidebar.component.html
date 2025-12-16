@@ -9,7 +9,7 @@
   <!-- Sidebar -->
   <nav class="sidebar" [class.show]="sidebarOpen" id="offcanvasSidebar">
     <div class="sidebar-header d-xl-none">
-      <h5 class="sidebar-title text-white">Menu</h5>
+      <h5 class="sidebar-title text-white">{{ 'SIDEBAR.MENU' | translate }}</h5>
       <button type="button" class="btn-close btn-close-white" (click)="closeSidebar()"></button>
     </div>
     
@@ -17,53 +17,53 @@
       <ul class="navbar-nav flex-column">
         
         <!-- Dashboard Section Header -->
-        <li class="nav-item ms-2 my-2 mt-3" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
-          <span class="text-white-50 small text-uppercase fw-bold"><i class="bi bi-grid-3x3-gap me-2"></i>Dashboard</span>
+        <li class="nav-item ms-2 my-2 mt-3" *ngIf="auth.isPartner || auth.isAdmin || auth.isSubAdmin || auth.isFamily">
+          <span class="text-white-50 small text-uppercase fw-bold"><i class="bi bi-grid-3x3-gap me-2"></i>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
         </li>
         
         <!-- Admin Dashboard -->
-        <li class="nav-item" *ngIf="auth.isAdmin">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.isSubAdmin">
           <a [routerLink]="['/dashboard/admin']" class="nav-link text-white" [class.active]="routeURL === '/dashboard/admin'" (click)="closeSidebar()">
-            <i class="bi bi-house fa-fw me-2"></i>Admin Dashboard
+            <i class="bi bi-house fa-fw me-2"></i>{{ 'SIDEBAR.ADMIN_DASHBOARD' | translate }}
           </a>
         </li>
         
         <!-- Partner Dashboard -->
         <li class="nav-item" *ngIf="auth.isPartner">
           <a [routerLink]="['/dashboard/partner']" class="nav-link text-white" [class.active]="routeURL === '/dashboard/partner'" (click)="closeSidebar()">
-            <i class="bi bi-speedometer2 fa-fw me-2"></i>Partner Dashboard
+            <i class="bi bi-speedometer2 fa-fw me-2"></i>{{ 'SIDEBAR.PARTNER_DASHBOARD' | translate }}
           </a>
         </li>
         
         <!-- Family Dashboard -->
         <li class="nav-item" *ngIf="auth.isFamily">
           <a [routerLink]="['/dashboard/family']" class="nav-link text-white" [class.active]="routeURL === '/dashboard/family'" (click)="closeSidebar()">
-            <i class="bi bi-speedometer2 fa-fw me-2"></i>Family Dashboard
+            <i class="bi bi-speedometer2 fa-fw me-2"></i>{{ 'SIDEBAR.FAMILY_DASHBOARD' | translate }}
           </a>
         </li>
 
         <li class="nav-item ms-2 my-2">
-          <span class="text-white-50 small text-uppercase fw-bold">Content Management</span>
+          <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.CONTENT_MANAGEMENT' | translate }}</span>
         </li>
 
         <!-- Quests -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.isPartner || auth.user?.permissions?.includes('Quest')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsequest')">
-            <i class="bi bi-puzzle fa-fw me-2"></i>Digital Quests
+            <i class="bi bi-puzzle fa-fw me-2"></i>{{ 'SIDEBAR.DIGITAL_QUESTS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsequest']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']" (click)="closeSidebar()">All Quests</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/list-quest'" [routerLink]="['/quest/list-quest']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_QUESTS' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']" (click)="closeSidebar()">Create Quest</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_QUEST' | translate }}</a>
             </li>
             <li class="nav-item" *ngIf="auth.isAdmin">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/list-quest-group'" [routerLink]="['/quest/list-quest-group']" (click)="closeSidebar()">List Quest Groups</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/list-quest-group'" [routerLink]="['/quest/list-quest-group']" (click)="closeSidebar()">{{ 'SIDEBAR.LIST_QUEST_GROUPS' | translate }}</a>
             </li>
             <li class="nav-item" *ngIf="auth.isAdmin">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest-group'" [routerLink]="['/quest/create-quest-group']" (click)="closeSidebar()">Create Quest Groups</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest-group'" [routerLink]="['/quest/create-quest-group']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_QUEST_GROUPS' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -71,15 +71,15 @@
         <!-- Missions -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Missions')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsemissions')">
-            <i class="bi bi-bullseye fa-fw me-2"></i>Missions
+            <i class="bi bi-bullseye fa-fw me-2"></i>{{ 'SIDEBAR.MISSIONS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsemissions']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/mission/list-mission'" [routerLink]="['/mission/list-mission']" (click)="closeSidebar()">All Mission</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mission/list-mission'" [routerLink]="['/mission/list-mission']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_MISSION' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/mission/create-mission'" [routerLink]="['/mission/create-mission']" (click)="closeSidebar()">Create Mission</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mission/create-mission'" [routerLink]="['/mission/create-mission']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_MISSION' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -87,15 +87,15 @@
         <!-- Treasure Hunts -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Hunts')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsehunts')">
-            <i class="bi bi-gem fa-fw me-2"></i>Treasure Hunts
+            <i class="bi bi-gem fa-fw me-2"></i>{{ 'SIDEBAR.TREASURE_HUNTS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsehunts']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/hunt/list-hunt'" [routerLink]="['/hunt/list-hunt']" (click)="closeSidebar()">All Treasure Hunt</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/hunt/list-hunt'" [routerLink]="['/hunt/list-hunt']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_TREASURE_HUNT' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/hunt/create-hunt'" [routerLink]="['/hunt/create-hunt']" (click)="closeSidebar()">Create Treasure Hunt</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/hunt/create-hunt'" [routerLink]="['/hunt/create-hunt']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_TREASURE_HUNT' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -103,15 +103,15 @@
         <!-- Picture Mysteries -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Picture Mysteries')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsemysteries')">
-            <i class="bi bi-camera fa-fw me-2"></i>Picture Mysteries
+            <i class="bi bi-camera fa-fw me-2"></i>{{ 'SIDEBAR.PICTURE_MYSTERIES' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsemysteries']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/mystery/list-mystery'" [routerLink]="['/mystery/list-mystery']" (click)="closeSidebar()">All Picture Mysteries</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mystery/list-mystery'" [routerLink]="['/mystery/list-mystery']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_PICTURE_MYSTERIES' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/mystery/add-mystery'" [routerLink]="['/mystery/add-mystery']" (click)="closeSidebar()">Add Mystery</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/mystery/add-mystery'" [routerLink]="['/mystery/add-mystery']" (click)="closeSidebar()">{{ 'SIDEBAR.ADD_MYSTERY' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -119,18 +119,18 @@
         <!-- Activities -->
         <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
           <a class="nav-link text-white" (click)="toggleCollapse('collapseactivity')">
-            <i class="bi bi-calendar-event fa-fw me-2"></i>Activities
+            <i class="bi bi-calendar-event fa-fw me-2"></i>{{ 'SIDEBAR.ACTIVITIES' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapseactivity']">
             <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/list-activities'" [routerLink]="['/partner/list-activities']" (click)="closeSidebar()">All Activities</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/list-activities'" [routerLink]="['/partner/list-activities']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_ACTIVITIES' | translate }}</a>
             </li>
             <li class="nav-item" *ngIf="auth.isPartner">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/create-activity'" [routerLink]="['/partner/create-activity']" (click)="closeSidebar()">Create Activity</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/create-activity'" [routerLink]="['/partner/create-activity']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_ACTIVITY' | translate }}</a>
             </li>
             <li class="nav-item" *ngIf="auth.isFamily">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/search-activities'" [routerLink]="['/partner/search-activities']" (click)="closeSidebar()">Browse Activities</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/search-activities'" [routerLink]="['/partner/search-activities']" (click)="closeSidebar()">{{ 'SIDEBAR.BROWSE_ACTIVITIES' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -138,15 +138,15 @@
         <!-- Activity Drops -->
         <li class="nav-item" *ngIf="auth.isPartner">
           <a class="nav-link text-white" (click)="toggleCollapse('collapseactivitydrops')">
-            <i class="bi bi-box-seam fa-fw me-2"></i>Activity Drops
+            <i class="bi bi-box-seam fa-fw me-2"></i>{{ 'SIDEBAR.ACTIVITY_DROPS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapseactivitydrops']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/list-activity-drops'" [routerLink]="['/partner/list-activity-drops']" (click)="closeSidebar()">All Activity Drops</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/list-activity-drops'" [routerLink]="['/partner/list-activity-drops']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_ACTIVITY_DROPS' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/create-activity-drop'" [routerLink]="['/partner/create-activity-drop']" (click)="closeSidebar()">Create Activity Drop</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/partner/create-activity-drop'" [routerLink]="['/partner/create-activity-drop']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_ACTIVITY_DROP' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -154,30 +154,30 @@
         <!-- Bookings -->
         <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsebookings')">
-            <i class="bi bi-calendar-event fa-fw me-2"></i>Bookings
+            <i class="bi bi-calendar-event fa-fw me-2"></i>{{ 'SIDEBAR.BOOKINGS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsebookings']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/bookings/list-bookings'" [routerLink]="['/bookings/list-bookings']" (click)="closeSidebar()">All Bookings</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/bookings/list-bookings'" [routerLink]="['/bookings/list-bookings']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_BOOKINGS' | translate }}</a>
             </li>
           </ul>
         </li>
 
         <!-- Management Section Header -->
         <li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin">
-          <span class="text-white-50 small text-uppercase fw-bold">Management</span>
+          <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.MANAGEMENT' | translate }}</span>
         </li>
 
         <!-- User Management -->
         <li class="nav-item" *ngIf="auth.isAdmin">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsemanagement')">
-            <i class="bi bi-people fa-fw me-2"></i>Users
+            <i class="bi bi-people fa-fw me-2"></i>{{ 'SIDEBAR.USERS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsemanagement']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']" (click)="closeSidebar()">All Users</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_USERS' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -185,18 +185,18 @@
         <!-- Drops -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsedrops')">
-            <i class="bi bi-box fa-fw me-2"></i>Drops
+            <i class="bi bi-box fa-fw me-2"></i>{{ 'SIDEBAR.DROPS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsedrops']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-drop'" [routerLink]="['/management/list-drop']" (click)="closeSidebar()">All Drops</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-drop'" [routerLink]="['/management/list-drop']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_DROPS' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/add-drop'" [routerLink]="['/management/add-drop']" (click)="closeSidebar()">Add Drop</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/add-drop'" [routerLink]="['/management/add-drop']" (click)="closeSidebar()">{{ 'SIDEBAR.ADD_DROP' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-rewards'" [routerLink]="['/management/list-rewards']" (click)="closeSidebar()">Drop Rewards</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-rewards'" [routerLink]="['/management/list-rewards']" (click)="closeSidebar()">{{ 'SIDEBAR.DROP_REWARDS' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -204,15 +204,15 @@
         <!-- Sky Dropped Gifts -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapseskygifts')">
-            <i class="bi bi-gift fa-fw me-2"></i>Sky Dropped Gifts
+            <i class="bi bi-gift fa-fw me-2"></i>{{ 'SIDEBAR.SKY_DROPPED_GIFTS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapseskygifts']">
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/skygifts/list-skygifts'" [routerLink]="['/skygifts/list-skygifts']" (click)="closeSidebar()">All Gifts</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/skygifts/list-skygifts'" [routerLink]="['/skygifts/list-skygifts']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_GIFTS' | translate }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white-50" [class.active]="routeURL === '/skygifts/add-skygifts'" [routerLink]="['/skygifts/add-skygifts']" (click)="closeSidebar()">Add Gifts</a>
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/skygifts/add-skygifts'" [routerLink]="['/skygifts/add-skygifts']" (click)="closeSidebar()">{{ 'SIDEBAR.ADD_GIFTS' | translate }}</a>
             </li>
           </ul>
         </li>
@@ -220,7 +220,7 @@
         <!-- Mythicas -->
         <li class="nav-item" *ngIf="auth.isAdmin">
           <a [routerLink]="['/management/mythicas']" class="nav-link text-white" [class.active]="routeURL === '/management/mythicas'" (click)="closeSidebar()">
-            <i class="bi bi-star fa-fw me-2"></i>Mythicas
+            <i class="bi bi-star fa-fw me-2"></i>{{ 'SIDEBAR.MYTHICAS' | translate }}
           </a>
         </li>
 

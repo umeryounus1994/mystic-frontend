@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HelperService } from '../../services/helper/helper.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-paypal-cancel',
@@ -11,10 +12,10 @@ import { HelperService } from '../../services/helper/helper.service';
           <div class="card">
             <div class="card-body">
               <i class="bi bi-x-circle text-danger" style="font-size: 3rem;"></i>
-              <h3 class="mt-3">Payment Cancelled</h3>
-              <p>Your PayPal payment was cancelled. You can try again.</p>
+              <h3 class="mt-3">{{ 'PAYMENT.PAYMENT_CANCELLED' | translate }}</h3>
+              <p>{{ 'PAYMENT.PAYPAL_PAYMENT_CANCELLED' | translate }}</p>
               <button class="btn btn-primary" (click)="goBack()">
-                Go Back to Activities
+                {{ 'PAYMENT.GO_BACK_TO_ACTIVITIES' | translate }}
               </button>
             </div>
           </div>
@@ -27,11 +28,12 @@ export class PaypalCancelComponent implements OnInit {
   
   constructor(
     private router: Router,
-    private helper: HelperService
+    private helper: HelperService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit() {
-    this.helper.infoToast('PayPal payment was cancelled');
+    this.helper.infoToast(this.translate.instant('PAYMENT.PAYPAL_PAYMENT_CANCELLED'));
     
     // Clean up pending booking
     localStorage.removeItem('pendingBooking');

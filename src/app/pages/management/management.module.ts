@@ -5,6 +5,7 @@ import { ManagementRoutingModule } from './management-routing.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { ListUserComponent } from './list-user/list-user.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MythicasComponent } from './mythicas/mythicas.component';
@@ -21,7 +22,8 @@ import { RewardsComponent } from './rewards/rewards.component';
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ]
 })
 export class ManagementModule { }

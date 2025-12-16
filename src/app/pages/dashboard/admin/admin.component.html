@@ -6,11 +6,11 @@
         color="#fff"
         type="ball-scale-multiple"
         [fullScreen]="true">
-        <p style="font-size: 30px; color: white">Fetching Data....</p>
+        <p style="font-size: 30px; color: white">{{ 'LIST.FETCHING_DATA' | translate }}</p>
     </ngx-spinner>
     <div class="col-12 mb-3">
-        <h1 class="h3 mb-2 mb-sm-0">Admin Dashboard</h1>
-        <p class="text-muted">Welcome back! Here's what's happening with your platform today.</p>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.ADMIN_DASHBOARD' | translate }}</h1>
+        <p class="text-muted">{{ 'DASHBOARD.WELCOME_ADMIN' | translate }}</p>
     </div>
 </div>
 
@@ -22,7 +22,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-primary">{{counters.users}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Users</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_USERS' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-primary text-white mb-0">
                     <i class="bi bi-people fa-fw"></i>
@@ -37,7 +37,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-info">{{counters.partners}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Partners</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_PARTNERS' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-info text-white mb-0">
                     <i class="bi bi-building fa-fw"></i>
@@ -52,7 +52,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-warning">{{counters.activities}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Activities</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_ACTIVITIES' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-warning text-white mb-0">
                     <i class="bi bi-calendar-event fa-fw"></i>
@@ -67,7 +67,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-orange">{{counters.pendingActivities}}</h2>
-                    <span class="mb-0 h6 fw-light">Pending Activities</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.PENDING_ACTIVITIES' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-orange text-white mb-0">
                     <i class="bi bi-clock fa-fw"></i>
@@ -85,7 +85,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-purple">{{counters.quests}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Quests</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_QUESTS' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-purple text-white mb-0">
                     <i class="bi bi-puzzle fa-fw"></i>
@@ -100,7 +100,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-success">{{counters.missions}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Missions</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_MISSIONS' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-success text-white mb-0">
                     <i class="bi bi-bullseye fa-fw"></i>
@@ -115,7 +115,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-danger">{{counters.hunts}}</h2>
-                    <span class="mb-0 h6 fw-light">Treasure Hunts</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_HUNTS' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-danger text-white mb-0">
                     <i class="bi bi-gem fa-fw"></i>
@@ -136,23 +136,23 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title mb-3">
-                    <i class="bi bi-lightning-charge me-2"></i>Quick Actions
+                    <i class="bi bi-lightning-charge me-2"></i>{{ 'DASHBOARD.QUICK_ACTIONS' | translate }}
                 </h5>
                 <div class="d-flex flex-wrap gap-2">
                     <button class="btn btn-primary btn-sm" routerLink="/management/list-user">
-                        <i class="bi bi-people me-1"></i>Manage Users
+                        <i class="bi bi-people me-1"></i>{{ 'DASHBOARD.MANAGE_USERS' | translate }}
                     </button>
                     <button class="btn btn-outline-primary btn-sm" routerLink="/quest/create-quest">
-                        <i class="bi bi-plus-circle me-1"></i>Create Quest
+                        <i class="bi bi-plus-circle me-1"></i>{{ 'SIDEBAR.CREATE_QUEST' | translate }}
                     </button>
                     <button class="btn btn-outline-success btn-sm" routerLink="/mission/create-mission">
-                        <i class="bi bi-plus-circle me-1"></i>Create Mission
+                        <i class="bi bi-plus-circle me-1"></i>{{ 'SIDEBAR.CREATE_MISSION' | translate }}
                     </button>
                     <button class="btn btn-outline-warning btn-sm" routerLink="/hunt/create-hunt">
-                        <i class="bi bi-plus-circle me-1"></i>Create Hunt
+                        <i class="bi bi-plus-circle me-1"></i>{{ 'SIDEBAR.CREATE_TREASURE_HUNT' | translate }}
                     </button>
                     <button class="btn btn-outline-info btn-sm" routerLink="/management/mythicas">
-                        <i class="bi bi-star me-1"></i>Mythicas
+                        <i class="bi bi-star me-1"></i>{{ 'SIDEBAR.MYTHICAS' | translate }}
                     </button>
                 </div>
             </div>
@@ -166,7 +166,7 @@
         <div class="card shadow h-100">
             <div class="card-header p-4 border-bottom">
                 <h5 class="card-header-title">
-                    <i class="bi bi-bar-chart me-2"></i>Platform Overview
+                    <i class="bi bi-bar-chart me-2"></i>{{ 'DASHBOARD.PLATFORM_OVERVIEW' | translate }}
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -177,8 +177,8 @@
                                 <i class="bi bi-people"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">User Engagement</h6>
-                                <small class="text-muted">{{counters.users}} registered users</small>
+                                <h6 class="mb-0">{{ 'DASHBOARD.USER_ENGAGEMENT' | translate }}</h6>
+                                <small class="text-muted">{{counters.users}} {{ 'DASHBOARD.REGISTERED_USERS' | translate }}</small>
                             </div>
                         </div>
                     </div>
@@ -188,8 +188,8 @@
                                 <i class="bi bi-calendar-event"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">Content Library</h6>
-                                <small class="text-muted">{{counters.activities + counters.quests + counters.missions + counters.hunts}} total items</small>
+                                <h6 class="mb-0">{{ 'DASHBOARD.CONTENT_LIBRARY' | translate }}</h6>
+                                <small class="text-muted">{{counters.activities + counters.quests + counters.missions + counters.hunts}} {{ 'DASHBOARD.TOTAL_ITEMS' | translate }}</small>
                             </div>
                         </div>
                     </div>
@@ -199,8 +199,8 @@
                                 <i class="bi bi-building"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">Partner Network</h6>
-                                <small class="text-muted">{{counters.partners}} active partners</small>
+                                <h6 class="mb-0">{{ 'DASHBOARD.PARTNER_NETWORK' | translate }}</h6>
+                                <small class="text-muted">{{counters.partners}} {{ 'DASHBOARD.ACTIVE_PARTNERS' | translate }}</small>
                             </div>
                         </div>
                     </div>
@@ -210,8 +210,8 @@
                                 <i class="bi bi-graph-up"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">Platform Growth</h6>
-                                <small class="text-muted">Expanding ecosystem</small>
+                                <h6 class="mb-0">{{ 'DASHBOARD.PLATFORM_GROWTH' | translate }}</h6>
+                                <small class="text-muted">{{ 'DASHBOARD.EXPANDING_ECOSYSTEM' | translate }}</small>
                             </div>
                         </div>
                     </div>

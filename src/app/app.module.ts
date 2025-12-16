@@ -11,16 +11,22 @@ import { HelperService } from './services/helper/helper.service';
 import { AuthService } from './services/auth/auth.service';
 import { StorageService } from './services/storage/storage.service';
 import { WebStorageModule } from 'ngx-store';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { PaypalSuccessComponent } from './components/paypal-success/paypal-success.component';
+import { PaypalCancelComponent } from './components/paypal-cancel/paypal-cancel.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ContentComponent,
-    FullWidthComponent
+    FullWidthComponent,
+    PaypalSuccessComponent,
+    PaypalCancelComponent
   ],
   imports: [
     BrowserModule,
@@ -28,10 +34,23 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserAnimationsModule,
     SharedModule,
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    TranslateModule.forRoot({
+      defaultLanguage: 'en'
+    }),
+    TranslateModule
   ],
-  providers: [RestApiService, HelperService, AuthService, StorageService,
-    WebStorageModule],
+  providers: [
+    RestApiService, 
+    HelperService, 
+    AuthService, 
+    StorageService,
+    WebStorageModule,
+    provideTranslateHttpLoader({
+      prefix: './assets/i18n/',
+      suffix: '.json'
+    })
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

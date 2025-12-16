@@ -15,26 +15,26 @@
                             <i class="bi bi-house-heart text-success" style="font-size: 2.5rem;"></i>
                         </div>
                     </div>
-                    <h2 class="fw-bold text-dark mb-3">Join Our Family!</h2>
-                    <p class="text-dark fs-5 mb-4">Create amazing memories with your loved ones</p>
+                    <h2 class="fw-bold text-dark mb-3">{{ 'AUTH.JOIN_FAMILY' | translate }}</h2>
+                    <p class="text-dark fs-5 mb-4">{{ 'AUTH.CREATE_MEMORIES' | translate }}</p>
                     <div class="d-flex justify-content-center gap-3 mb-4">
                         <div class="text-center">
                             <div class="feature-icon bg-success bg-opacity-10">
                                 <i class="bi bi-heart text-success"></i>
                             </div>
-                            <small class="d-block text-dark">Family Fun</small>
+                            <small class="d-block text-dark">{{ 'AUTH.FAMILY_FUN' | translate }}</small>
                         </div>
                         <div class="text-center">
                             <div class="feature-icon bg-info bg-opacity-10">
                                 <i class="bi bi-map text-primary"></i>
                             </div>
-                            <small class="d-block text-dark">Adventures</small>
+                            <small class="d-block text-dark">{{ 'AUTH.ADVENTURES' | translate }}</small>
                         </div>
                         <div class="text-center">
                             <div class="feature-icon bg-warning bg-opacity-10">
                                 <i class="bi bi-gift text-warning"></i>
                             </div>
-                            <small class="d-block text-dark">Rewards</small>
+                            <small class="d-block text-dark">{{ 'AUTH.REWARDS' | translate }}</small>
                         </div>
                     </div>
                 </div>
@@ -55,53 +55,53 @@
                         <div class="mb-3">
                             <span class="fs-1">👨‍👩‍👧‍👦</span>
                         </div>
-                        <h1 class="h3 fw-bold text-dark mb-2">Family Registration</h1>
-                        <p class="text-dark mb-0">Join our community and start your family adventure</p>
+                        <h1 class="h3 fw-bold text-dark mb-2">{{ 'AUTH.FAMILY_REGISTRATION' | translate }}</h1>
+                        <p class="text-dark mb-0">{{ 'AUTH.START_FAMILY_ADVENTURE' | translate }}</p>
                     </div>
 
                     <!-- Form START -->
                     <form [formGroup]="familyForm" (ngSubmit)="onSubmit()">
                         <!-- Basic Information -->
                         <div class="mb-3">
-                            <h6 class="text-muted fw-bold">Basic Information</h6>
+                            <h6 class="text-muted fw-bold">{{ 'AUTH.BASIC_INFORMATION' | translate }}</h6>
                         </div>
 
                         <!-- Username and Email -->
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                                <label for="username" class="form-label">{{ 'FORMS.USERNAME' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('username') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
                                         <i class="bi bi-person-fill"></i>
                                     </span>
                                     <input type="text" formControlName="username" maxlength="50"
-                                        class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter username"
+                                        class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.ENTER_USERNAME' | translate"
                                         id="username">
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('username')">
-                                    <div *ngIf="familyForm.get('username')?.errors?.['required']">Username is required</div>
-                                    <div *ngIf="familyForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters</div>
-                                    <div *ngIf="familyForm.get('username')?.errors?.['maxlength']">Username cannot exceed 50 characters</div>
-                                    <div *ngIf="familyForm.get('username')?.errors?.['pattern']">Username can only contain letters, numbers, and underscores</div>
+                                    <div *ngIf="familyForm.get('username')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="familyForm.get('username')?.errors?.['minlength']">{{ 'VALIDATION.USERNAME_MIN' | translate }}</div>
+                                    <div *ngIf="familyForm.get('username')?.errors?.['maxlength']">{{ 'VALIDATION.USERNAME_MAX' | translate }}</div>
+                                    <div *ngIf="familyForm.get('username')?.errors?.['pattern']">{{ 'VALIDATION.USERNAME_PATTERN' | translate }}</div>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
+                                <label for="email" class="form-label">{{ 'AUTH.EMAIL_ADDRESS' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('email') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
                                         <i class="bi bi-envelope-fill"></i>
                                     </span>
                                     <input type="email" formControlName="email" maxlength="100"
-                                        class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter email"
+                                        class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.ENTER_EMAIL' | translate"
                                         id="email">
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
-                                    <div *ngIf="familyForm.get('email')?.errors?.['required']">Email is required</div>
-                                    <div *ngIf="familyForm.get('email')?.errors?.['email'] || familyForm.get('email')?.errors?.['invalidEmail']">Please enter a valid email address</div>
-                                    <div *ngIf="familyForm.get('email')?.errors?.['maxlength']">Email cannot exceed 100 characters</div>
+                                    <div *ngIf="familyForm.get('email')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="familyForm.get('email')?.errors?.['email'] || familyForm.get('email')?.errors?.['invalidEmail']">{{ 'VALIDATION.EMAIL_INVALID' | translate }}</div>
+                                    <div *ngIf="familyForm.get('email')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 100} }}</div>
                                 </div>
                             </div>
                         </div>
@@ -109,14 +109,14 @@
                         <!-- Password and Confirm Password -->
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                <label for="password" class="form-label">{{ 'COMMON.PASSWORD' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('password') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
                                         <i class="fas fa-lock"></i>
                                     </span>
                                     <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" maxlength="15"
-                                        class="form-control border-0 bg-light rounded-end ps-1" placeholder="Enter password (max 15 chars, 1 capital, 1 number)"
+                                        class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
                                         id="password">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
                                         (click)="showPassword()">
@@ -125,17 +125,17 @@
                                     </span>
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
-                                    <div *ngIf="familyForm.get('password')?.errors?.['required']">Password is required</div>
-                                    <div *ngIf="familyForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
-                                    <div *ngIf="familyForm.get('password')?.errors?.['maxLength']">Password cannot exceed 15 characters</div>
-                                    <div *ngIf="familyForm.get('password')?.errors?.['noCapital']">Password must contain at least one capital letter</div>
-                                    <div *ngIf="familyForm.get('password')?.errors?.['noNumber']">Password must contain at least one number</div>
-                                    <div *ngIf="familyForm.get('password')?.errors?.['invalidChars']">Password can only contain alphanumeric and special characters</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['minlength']">{{ 'VALIDATION.PASSWORD_MIN' | translate }}</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['maxLength']">{{ 'VALIDATION.PASSWORD_MAX' | translate }}</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['noCapital']">{{ 'VALIDATION.PASSWORD_CAPITAL' | translate }}</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['noNumber']">{{ 'VALIDATION.PASSWORD_NUMBER' | translate }}</div>
+                                    <div *ngIf="familyForm.get('password')?.errors?.['invalidChars']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label for="confirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                <label for="confirmPassword" class="form-label">{{ 'FORMS.CONFIRM_PASSWORD' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('confirm_password') || familyForm.hasError('passwordMismatch') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
@@ -144,7 +144,7 @@
                                     <input [type]="fieldTextTypeConfirm ? 'text' : 'password'"
                                         formControlName="confirm_password"
                                         class="form-control border-0 bg-light rounded-end ps-1"
-                                        placeholder="Confirm password" id="confirmPassword">
+                                        [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" id="confirmPassword">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
                                         (click)="showPasswordConfirm()">
                                         <i *ngIf="fieldTextTypeConfirm" class="fas fa-eye-slash"></i>
@@ -152,17 +152,17 @@
                                     </span>
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('confirm_password')">
-                                    Please confirm your password
+                                    {{ 'VALIDATION.REQUIRED' | translate }}
                                 </div>
                                 <div class="invalid-feedback" *ngIf="familyForm.hasError('passwordMismatch')">
-                                    Passwords do not match
+                                    {{ 'VALIDATION.PASSWORD_MISMATCH' | translate }}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Profile Image -->
                         <div class="mb-4">
-                            <label for="image" class="form-label">Profile Image (Optional)</label>
+                            <label for="image" class="form-label">{{ 'AUTH.UPLOAD_IMAGE' | translate }} ({{ 'COMMON.OPTIONAL' | translate }})</label>
                             <input type="file" class="form-control form-control-lg" id="image"
                                 (change)="onImageSelect($event)" accept="image/*">
                         </div>
@@ -173,12 +173,11 @@
                                 <input class="form-check-input" type="checkbox" id="agreeTerms" formControlName="agreeTerms"
                                     [class.is-invalid]="isFieldInvalid('agreeTerms')">
                                 <label class="form-check-label" for="agreeTerms">
-                                    I agree to the <a href="javascript:void(0);">Terms & Conditions</a> and
-                                    <a href="javascript:void(0);">Privacy Policy</a>
+                                    {{ 'AUTH.AGREE_TERMS' | translate }}
                                 </label>
                             </div>
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('agreeTerms')">
-                                You must agree to the terms and conditions
+                                {{ 'VALIDATION.REQUIRED' | translate }}
                             </div>
                         </div>
 
@@ -187,14 +186,14 @@
                             <button class="btn btn-success btn-lg py-3 fw-semibold" type="submit"
                                     [disabled]="isSubmitting">
                                 <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                                {{ isSubmitting ? 'Creating Account...' : 'Create Family Account' }}
+                                {{ isSubmitting ? ('AUTH.CREATING_ACCOUNT' | translate) : ('AUTH.CREATE_FAMILY_ACCOUNT' | translate) }}
                             </button>
                         </div>
 
                         <!-- Login Link -->
                         <div class="text-center">
-                            <p class="text-dark mb-0">Already have an account? 
-                                <a routerLink="/auth/login" class="text-success text-decoration-none fw-semibold">Sign In</a>
+                            <p class="text-dark mb-0">{{ 'AUTH.ALREADY_HAVE_ACCOUNT' | translate }} 
+                                <a routerLink="/auth/login" class="text-success text-decoration-none fw-semibold">{{ 'AUTH.SIGN_IN' | translate }}</a>
                             </p>
                         </div>
                     </form>

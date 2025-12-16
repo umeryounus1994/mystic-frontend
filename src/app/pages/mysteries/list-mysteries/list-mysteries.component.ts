@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 declare var $: any;
 
@@ -32,8 +33,13 @@ export class ListMysteriesComponent implements OnInit {
   mysteryImage = '';
 
 
-  constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router) {
+  constructor(
+    private sp: NgxSpinnerService, 
+    private api: RestApiService, 
+    private helper: HelperService,
+    private router: Router,
+    public translate: TranslateService
+  ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
@@ -69,11 +75,11 @@ export class ListMysteriesComponent implements OnInit {
   
   deleteExamModal(userId: any, status: any) {
     Swal.fire({
-      title: `Are you sure You want to delete this Mystery?`,
+      title: this.translate.instant('POPUPS.DELETE_MYSTERY_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
@@ -83,7 +89,7 @@ export class ListMysteriesComponent implements OnInit {
         this.api.delete('pictureMystery/'+userId)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("Mystery!", "Deleted Successfully", "success");
+          Swal.fire(this.translate.instant('SIDEBAR.PICTURE_MYSTERIES'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
          this.getAllUsers()
         }, err => {
           this.helper.failureToast(err?.error?.message);

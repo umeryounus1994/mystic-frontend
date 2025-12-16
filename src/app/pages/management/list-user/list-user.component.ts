@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 declare var $: any;
 
@@ -33,22 +34,22 @@ export class ListUserComponent implements OnInit {
 
   // Filter options
   filterOptions = [
-    { value: 'all', label: 'All Users' },
-    { value: 'admin', label: 'Admin' },
-    { value: 'subadmin', label: 'Sub Admin' },
-    { value: 'user', label: 'Users' },
-    { value: 'family', label: 'Family' },
-    { value: 'partner', label: 'Partner' }
+    { value: 'all', label: 'LIST.ALL_USERS' },
+    { value: 'admin', label: 'LIST.ADMIN' },
+    { value: 'subadmin', label: 'LIST.SUB_ADMIN' },
+    { value: 'user', label: 'LIST.USERS' },
+    { value: 'family', label: 'LIST.FAMILY' },
+    { value: 'partner', label: 'LIST.PARTNER' }
   ];
 
   // Your available permissions
   permissionList = [
-    { id: 'perm1', label: 'Quest' },
-    { id: 'perm2', label: 'Missions' },
-    { id: 'perm3', label: 'Hunts' },
-    { id: 'perm4', label: 'Picture Mysteries' },
-    { id: 'perm5', label: 'Drops' },
-    { id: 'perm6', label: 'All' }
+    { id: 'perm1', label: 'SIDEBAR.QUESTS' },
+    { id: 'perm2', label: 'SIDEBAR.MISSIONS' },
+    { id: 'perm3', label: 'SIDEBAR.TREASURE_HUNT' },
+    { id: 'perm4', label: 'SIDEBAR.MYSTERIES' },
+    { id: 'perm5', label: 'SIDEBAR.DROPS' },
+    { id: 'perm6', label: 'COMMON.ALL' }
   ];
 
 
@@ -57,7 +58,8 @@ export class ListUserComponent implements OnInit {
     private api: RestApiService, 
     private helper: HelperService,
     private router: Router,
-    private cdr: ChangeDetectorRef  // Add this
+    private cdr: ChangeDetectorRef,
+    public translate: TranslateService
   ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
@@ -296,11 +298,11 @@ export class ListUserComponent implements OnInit {
 
   deleteExamModal(userId: any) {
     Swal.fire({
-      title: "Are you sure You want to delete this User?",
+      title: this.translate.instant('POPUPS.DELETE_USER_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
@@ -308,12 +310,12 @@ export class ListUserComponent implements OnInit {
         this.api.delete('user/'+userId)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("User!", "Deleted Successfully", "success");
+          Swal.fire(this.translate.instant('COMMON.USER'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
           // Refresh data immediately
           this.getAllUsers();
           this.getAllAnalytics();
         }, err => {
-          this.helper.failureToast(err?.error?.message || 'Failed to delete user');
+          this.helper.failureToast(err?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_DELETE_USER'));
           this.sp.hide();
         });
       } else if (result.isDenied) {
@@ -322,12 +324,13 @@ export class ListUserComponent implements OnInit {
     });
   }
   blockUser(userId: any, status: any){
+    const statusText = status === 'block' ? this.translate.instant('COMMON.BLOCK') : this.translate.instant('COMMON.UNBLOCK');
     Swal.fire({
-      title: `Are you sure You want to ${status} this User?`,
+      title: this.translate.instant('POPUPS.BLOCK_USER_TITLE', { status: statusText }),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Yes",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.YES'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
@@ -345,7 +348,7 @@ export class ListUserComponent implements OnInit {
         this.api.patch('user/'+userId, d)
         .then((response: any) => {
           // Show success message
-          Swal.fire("User!", "Updated Successfully", "success");
+          Swal.fire(this.translate.instant('COMMON.USER'), this.translate.instant('MESSAGES.UPDATED_SUCCESS'), "success");
           
           // Refresh data - don't hide spinner, let getAllUsers handle it
           this.getAllUsers().then(() => {
@@ -357,7 +360,7 @@ export class ListUserComponent implements OnInit {
           });
         }, err => {
           this.sp.hide();
-          this.helper.failureToast(err?.error?.message || 'Failed to update user status');
+          this.helper.failureToast(err?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_UPDATE_USER'));
         });
       } else if (result.isDenied) {
        // Swal.fire("Exam not deleted", "", "info");
@@ -377,79 +380,79 @@ export class ListUserComponent implements OnInit {
     
     // Email validation
     if(!email || email === ''){
-      Swal.fire("Email!", "Email is required", "error");
+      Swal.fire(this.translate.instant('COMMON.EMAIL'), this.translate.instant('VALIDATION.EMAIL_REQUIRED'), "error");
       $('#email').focus();
       return;
     }
     if(email.length > 100){
-      Swal.fire("Email!", "Email cannot exceed 100 characters", "error");
+      Swal.fire(this.translate.instant('COMMON.EMAIL'), this.translate.instant('VALIDATION.EMAIL_MAX', { max: 100 }), "error");
       $('#email').focus();
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!emailRegex.test(email)){
-      Swal.fire("Email!", "Please enter a valid email address", "error");
+      Swal.fire(this.translate.instant('COMMON.EMAIL'), this.translate.instant('VALIDATION.EMAIL_INVALID'), "error");
       $('#email').focus();
       return;
     }
     
     // Password validation
     if(!password || password === ''){
-      Swal.fire("Password!", "Password is required", "error");
+      Swal.fire(this.translate.instant('COMMON.PASSWORD'), this.translate.instant('VALIDATION.PASSWORD_REQUIRED'), "error");
       $('#password').focus();
       return;
     }
     if(password.length < 6){
-      Swal.fire("Password!", "Password must be at least 6 characters", "error");
+      Swal.fire(this.translate.instant('COMMON.PASSWORD'), this.translate.instant('VALIDATION.PASSWORD_MIN', { min: 6 }), "error");
       $('#password').focus();
       return;
     }
     if(password.length > 50){
-      Swal.fire("Password!", "Password cannot exceed 50 characters", "error");
+      Swal.fire(this.translate.instant('COMMON.PASSWORD'), this.translate.instant('VALIDATION.PASSWORD_MAX', { max: 50 }), "error");
       $('#password').focus();
       return;
     }
     
     // Username validation
     if(!username || username === ''){
-      Swal.fire("Username!", "Username is required", "error");
+      Swal.fire(this.translate.instant('COMMON.USERNAME'), this.translate.instant('VALIDATION.USERNAME_REQUIRED'), "error");
       $('#username').focus();
       return;
     }
     if(username.length < 3){
-      Swal.fire("Username!", "Username must be at least 3 characters", "error");
+      Swal.fire(this.translate.instant('COMMON.USERNAME'), this.translate.instant('VALIDATION.USERNAME_MIN', { min: 3 }), "error");
       $('#username').focus();
       return;
     }
     if(username.length > 50){
-      Swal.fire("Username!", "Username cannot exceed 50 characters", "error");
+      Swal.fire(this.translate.instant('COMMON.USERNAME'), this.translate.instant('VALIDATION.USERNAME_MAX', { max: 50 }), "error");
       $('#username').focus();
       return;
     }
     // Username should only contain alphanumeric and underscore
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     if(!usernameRegex.test(username)){
-      Swal.fire("Username!", "Username can only contain letters, numbers, and underscores", "error");
+      Swal.fire(this.translate.instant('COMMON.USERNAME'), this.translate.instant('VALIDATION.USERNAME_PATTERN'), "error");
       $('#username').focus();
       return;
     }
     
     // Allowed Quest validation - must be positive integer >= 1
     if(isNaN(allowedQuest) || allowedQuest < 1 || !Number.isInteger(allowedQuest)){
-      Swal.fire("Quest!", "Allowed Quests must be a positive whole number (at least 1)", "error");
+      Swal.fire(this.translate.instant('SIDEBAR.DIGITAL_QUESTS'), this.translate.instant('VALIDATION.ALLOWED_QUESTS_POSITIVE'), "error");
       $('#allowed_quest').focus();
       return;
     }
     
     // Allowed Hunt validation - must be positive integer >= 1
     if(isNaN(allowedHunt) || allowedHunt < 1 || !Number.isInteger(allowedHunt)){
-      Swal.fire("Hunt!", "Allowed Hunts must be a positive whole number (at least 1)", "error");
+      Swal.fire(this.translate.instant('SIDEBAR.TREASURE_HUNTS'), this.translate.instant('VALIDATION.ALLOWED_HUNTS_POSITIVE'), "error");
       $('#allowed_hunt').focus();
       return;
     }
     
     if(this.permissions.length < 1){
-      Swal.fire("Permissions!", "At least one permission is required", "error");
+      Swal.fire(this.translate.instant('FORMS.PERMISSIONS'), this.translate.instant('VALIDATION.AT_LEAST_ONE_PERMISSION'), "error");
       return;
     }
    let data = {
@@ -484,7 +487,7 @@ export class ListUserComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Sub Admin!", error?.error?.message || "There is an error, please try again", "error");
+        Swal.fire(this.translate.instant('COMMON.SUB_ADMIN'), error?.error?.message || this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'), "error");
       });
   }
   showRewardDialog(){
@@ -551,11 +554,11 @@ export class ListUserComponent implements OnInit {
 
   approveUser(userId: any) {
     Swal.fire({
-      title: "Are you sure you want to approve this user?",
+      title: this.translate.instant('POPUPS.APPROVE_USER_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Approve",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.APPROVE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.updateApprovalStatus(userId, 'approved');
@@ -565,11 +568,11 @@ export class ListUserComponent implements OnInit {
 
   rejectUser(userId: any) {
     Swal.fire({
-      title: "Are you sure you want to reject this user?",
+      title: this.translate.instant('POPUPS.REJECT_USER_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Reject",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.REJECT'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.updateApprovalStatus(userId, 'rejected');
@@ -585,8 +588,8 @@ export class ListUserComponent implements OnInit {
     this.api.post(`user/partner/${userId}/approval-status`, data)
       .then((response: any) => {
         this.sp.hide();
-        const statusText = status === 'approved' ? 'Approved' : 'Rejected';
-        Swal.fire("User!", `${statusText} Successfully`, "success");
+        const statusText = status === 'approved' ? this.translate.instant('COMMON.APPROVED') : this.translate.instant('COMMON.REJECTED');
+        Swal.fire(this.translate.instant('COMMON.USER'), `${statusText} ${this.translate.instant('MESSAGES.SUCCESS')}`, "success");
         this.lastActionUserId = userId;
         this.lastActionType = status;
         this.getAllUsers();

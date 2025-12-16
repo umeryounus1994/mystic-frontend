@@ -1,13 +1,13 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Creating Drop.....</p>
+    <p style="font-size: 30px; color: white">{{ 'FORMS.CREATING_DROP' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
         <div>
             <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['management/list-drop'])">
-                <i class="bi bi-arrow-left me-2"></i>Back
+                <i class="bi bi-arrow-left me-2"></i>{{ 'COMMON.BACK' | translate }}
             </button>
-            <h1 class="h3 mb-0 d-inline">Create Drop</h1>
+            <h1 class="h3 mb-0 d-inline">{{ 'SIDEBAR.ADD_DROP' | translate }}</h1>
         </div>
     </div>
 </div>
@@ -21,125 +21,125 @@
                         <form class="row g-4 align-items-center" [formGroup]="questForm" *ngIf="questForm"
                             (ngSubmit)="onSubmit()">
                             <div class="col-lg-3 mb-2">
-                                <label class="form-label">Drop Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Name" maxlength="100"
+                                <label class="form-label">{{ 'FORMS.DROP_NAME' | translate }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" [placeholder]="'COMMON.NAME' | translate" maxlength="100"
                                 formControlName="drop_name"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_name'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['drop_name'].errors">
-                                    <div *ngIf="f['drop_name'].errors['required']">Drop Name is required</div>
-                                    <div *ngIf="f['drop_name'].errors['minlength']">Drop Name must be at least 5 characters</div>
-                                    <div *ngIf="f['drop_name'].errors['maxlength']">Drop Name cannot exceed 100 characters</div>
+                                    <div *ngIf="f['drop_name'].errors['required']">{{ 'VALIDATION.DROP_NAME_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['drop_name'].errors['minlength']">{{ 'VALIDATION.DROP_NAME_MIN' | translate }}</div>
+                                    <div *ngIf="f['drop_name'].errors['maxlength']">{{ 'VALIDATION.DROP_NAME_MAX' | translate }}</div>
                                 </div>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica (Reward) <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'DROPS.MYTHICA_REWARD' | translate }} <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_reward"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica_reward']?.errors }">
-                                    <option value="" selected disabled>Select Mythica</option>
+                                    <option value="" selected disabled>{{ 'FORMS.SELECT_MYTHICA' | translate }}</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'FORMS.MYTHICA' | translate }} <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_ID"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica_ID']?.errors }">
-                                    <option value="" selected disabled>Select Mythica</option>
+                                    <option value="" selected disabled>{{ 'FORMS.SELECT_MYTHICA' | translate }}</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Drop Type <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'FORMS.DROP_TYPE' | translate }} <span class="text-danger">*</span></label>
                                 <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
                                 formControlName="drop_type"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_type']?.errors }">
-                                    <option value="" selected disabled>Select Drop Type</option>
-                                    <option value='simple'>Simple</option>
-                                    <option value='image'>Picture</option>
-                                    <option value='video'>Video</option>
+                                    <option value="" selected disabled>{{ 'FORMS.SELECT_DROP_TYPE' | translate }}</option>
+                                    <option value='simple'>{{ 'FORMS.SIMPLE' | translate }}</option>
+                                    <option value='image'>{{ 'FORMS.PICTURE' | translate }}</option>
+                                    <option value='video'>{{ 'FORMS.VIDEO' | translate }}</option>
                             </select>
                             </div>
                           
                             <div class="col-lg-3">
-                                <label class="form-label">Latitude <span class="text-danger">*</span></label>
-                                <input type="number" step="any" class="form-control" placeholder="-90 to 90" formControlName="latitude"
+                                <label class="form-label">{{ 'FORMS.LATITUDE' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" [placeholder]="'FORMS.LATITUDE_PLACEHOLDER' | translate" formControlName="latitude"
                                     (input)="onLatitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['latitude'].errors">
-                                    <div *ngIf="f['latitude'].errors['required']">Latitude is required</div>
-                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
+                                    <div *ngIf="f['latitude'].errors['required']">{{ 'VALIDATION.LATITUDE_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">{{ 'VALIDATION.LATITUDE_REQUIRED_VALID' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
+                                <small class="text-muted">{{ 'FORMS.LATITUDE_RANGE' | translate }}</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Longitude <span class="text-danger">*</span></label>
-                                <input type="number" step="any" class="form-control" placeholder="-180 to 180" formControlName="longitude"
+                                <label class="form-label">{{ 'FORMS.LONGITUDE' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" [placeholder]="'FORMS.LONGITUDE_PLACEHOLDER' | translate" formControlName="longitude"
                                     (input)="onLongitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['longitude'].errors">
-                                    <div *ngIf="f['longitude'].errors['required']">Longitude is required</div>
-                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
+                                    <div *ngIf="f['longitude'].errors['required']">{{ 'VALIDATION.LONGITUDE_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">{{ 'VALIDATION.LONGITUDE_REQUIRED_VALID' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
+                                <small class="text-muted">{{ 'FORMS.LONGITUDE_RANGE' | translate }}</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">No of XP <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" placeholder="No of XP" formControlName="no_of_xp" 
+                                <label class="form-label">{{ 'FORMS.NO_OF_XP' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [placeholder]="'FORMS.NO_OF_XP' | translate" formControlName="no_of_xp" 
                                     min="1" step="1" required
                                     (keydown)="preventNegativeInput($event)"
                                     (input)="validateNumberInput($event, 'no_of_xp', 1)"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_xp'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['no_of_xp'].errors">
-                                    <div *ngIf="f['no_of_xp'].errors['required']">No of XP is required</div>
-                                    <div *ngIf="f['no_of_xp'].errors['min']">No of XP must be greater than 0</div>
+                                    <div *ngIf="f['no_of_xp'].errors['required']">{{ 'VALIDATION.XP_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['no_of_xp'].errors['min']">{{ 'VALIDATION.XP_MUST_BE_GREATER_THAN_ZERO' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Must be at least 1</small>
+                                <small class="text-muted">{{ 'FORMS.XP_MIN_HELPER' | translate }}</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Reward PDF</label>
+                                <label class="form-label">{{ 'FORMS.REWARD_PDF' | translate }}</label>
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
                                 (change)="onFileSelected($event, 'reward')">
                             </div>
                             <div class="col-lg-12">
-                                <label class="form-label">Description <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }} <span class="text-danger">*</span></label>
                                 <textarea class="form-control" rows="3" formControlName="drop_description" maxlength="500"
                                 [ngClass]="{ 'is-invalid': submitted && f['drop_description'].errors }"></textarea>
                                 <div class="invalid-feedback" *ngIf="submitted && f['drop_description'].errors">
-                                    <div *ngIf="f['drop_description'].errors['required']">Description is required</div>
-                                    <div *ngIf="f['drop_description'].errors['minlength']">Description must be at least 5 characters</div>
-                                    <div *ngIf="f['drop_description'].errors['maxlength']">Description cannot exceed 500 characters</div>
+                                    <div *ngIf="f['drop_description'].errors['required']">{{ 'VALIDATION.DESCRIPTION_REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['drop_description'].errors['minlength']">{{ 'VALIDATION.DESCRIPTION_MIN' | translate }}</div>
+                                    <div *ngIf="f['drop_description'].errors['maxlength']">{{ 'VALIDATION.DESCRIPTION_MAX' | translate }}</div>
                                 </div>
                             </div>
-                            <label class="form-label">Answers (Optional)</label>
+                            <label class="form-label">{{ 'FORMS.ANSWERS_OPTIONAL' | translate }}</label>
                             <div formArrayName="questions">
                                 <div class="card mb-3" *ngFor="let quantity of questions().controls; let i=index"
                                     [formGroupName]="i">
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-lg-4 mb-2">
-                                                <label class="form-label">Answer {{i + 1}}</label>
+                                                <label class="form-label">{{ 'FORMS.ANSWER' | translate }} {{i + 1}}</label>
                                                 <input type="text" class="form-control" formControlName="answer"
-                                                    placeholder="Answer">
+                                                    [placeholder]="'FORMS.ANSWER' | translate">
                                             </div>
                                             <div class="col-lg-3 mb-2">
-                                                <label class="form-label">Answer File</label>
+                                                <label class="form-label">{{ 'FORMS.ANSWER_FILE' | translate }}</label>
                                                 <input type="file" class="form-control" formControlName="answer_image"
                                                     accept="image/*, video/*"
                                                     (change)="onFileSelectedOptions($event, 'option'+(i+1))"
-                                                    placeholder="Answer">
+                                                    [placeholder]="'FORMS.ANSWER' | translate">
                                             </div>
                                             <div class="col-lg-3 mb-2">
-                                                <label class="form-label">Correct Option</label>
+                                                <label class="form-label">{{ 'FORMS.CORRECT_OPTION' | translate }}</label>
                                                 <select class="form-select js-choice z-index-9" aria-label=".form-select-sm"
                                                     formControlName="correct_option">
-                                                    <option value="" selected disabled>Select Correct Option</option>
-                                                    <option value='true'>Yes</option>
-                                                    <option value='false'>No</option>
+                                                    <option value="" selected disabled>{{ 'FORMS.SELECT_CORRECT_OPTION' | translate }}</option>
+                                                    <option value='true'>{{ 'COMMON.YES' | translate }}</option>
+                                                    <option value='false'>{{ 'COMMON.NO' | translate }}</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-2 mb-2 d-flex align-items-end">
                                                 <button type="button" class="btn btn-danger-soft btn-round"
                                                     (click)="removeQuestion(i)"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Answer">
+                                                    [attr.data-bs-toggle]="'tooltip'" data-bs-placement="top" [attr.title]="'FORMS.DELETE_ANSWER' | translate">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </div>
@@ -152,7 +152,7 @@
                                     <div class="col-lg-12">
                                         <button type="button" class="btn btn-success-soft btn-round"
                                             (click)="addQuestion()"
-                                            data-bs-toggle="tooltip" title="Add Answer">
+                                            [attr.data-bs-toggle]="'tooltip'" [attr.title]="'FORMS.ADD_ANSWER' | translate">
                                             <i class="bi bi-plus"></i>
                                         </button>
                                     </div>
@@ -161,7 +161,7 @@
                            
                
                             <div class="d-sm-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary mb-0">Create</button>
+                                <button type="submit" class="btn btn-primary mb-0">{{ 'COMMON.CREATE' | translate }}</button>
                             </div>
                         </form>
 

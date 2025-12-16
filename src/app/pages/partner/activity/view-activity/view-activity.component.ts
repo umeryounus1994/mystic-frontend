@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../../services/api/rest-api.service';
 import { HelperService } from '../../../../services/helper/helper.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { PaymentService } from '../../../../services/payment/payment.service';
@@ -34,7 +35,8 @@ export class ViewActivityComponent implements OnInit {
     private api: RestApiService,
     private helper: HelperService,
     public auth: AuthService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -68,23 +70,23 @@ export class ViewActivityComponent implements OnInit {
 
 deleteActivity() {
     Swal.fire({
-      title: 'Are you sure you want to delete this activity?',
+      title: this.translate.instant('POPUPS.DELETE_ACTIVITY_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
         this.api.delete(`activity/${this.activityId}`)
           .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Activity!", "Deleted Successfully", "success");
+            Swal.fire(this.translate.instant('SIDEBAR.ACTIVITIES'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
             this.router.navigate(['/partner/list-activities']);
           })
           .catch((error: any) => {
             this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to delete activity');
+            this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_DELETE_ACTIVITY'));
           });
       }
     });
@@ -185,9 +187,9 @@ deleteActivity() {
     if (totalAmount < MINIMUM_AMOUNT) {
       Swal.fire({
         icon: 'error',
-        title: 'Invalid Amount',
-        text: `The total amount ($${totalAmount.toFixed(2)}) is below the minimum payment amount of $${MINIMUM_AMOUNT}. Please contact the activity provider.`,
-        confirmButtonText: 'OK'
+        title: this.translate.instant('POPUPS.INVALID_AMOUNT'),
+        text: this.translate.instant('POPUPS.AMOUNT_BELOW_MINIMUM', { amount: totalAmount.toFixed(2), minimum: MINIMUM_AMOUNT }),
+        confirmButtonText: this.translate.instant('COMMON.OK')
       });
       return;
     }
@@ -264,9 +266,9 @@ deleteActivity() {
       if (totalAmount < STRIPE_MINIMUM_AMOUNT) {
         Swal.fire({
           icon: 'error',
-          title: 'Invalid Amount',
-          text: `The total amount ($${totalAmount.toFixed(2)}) is below Stripe's minimum payment amount of $${STRIPE_MINIMUM_AMOUNT}.`,
-          confirmButtonText: 'OK'
+          title: this.translate.instant('POPUPS.INVALID_AMOUNT'),
+          text: this.translate.instant('POPUPS.AMOUNT_BELOW_STRIPE_MINIMUM', { amount: totalAmount.toFixed(2), minimum: STRIPE_MINIMUM_AMOUNT }),
+          confirmButtonText: this.translate.instant('COMMON.OK')
         });
         this.showStripePaymentForm = false;
         this.paymentProcessing = false;
@@ -326,12 +328,12 @@ deleteActivity() {
           error?.message?.includes('minimum charge amount')) {
         Swal.fire({
           icon: 'error',
-          title: 'Payment Amount Too Small',
-          text: 'The payment amount is below Stripe\'s minimum charge amount of $0.50. Please contact support.',
-          confirmButtonText: 'OK'
+          title: this.translate.instant('POPUPS.PAYMENT_AMOUNT_TOO_SMALL'),
+          text: this.translate.instant('POPUPS.STRIPE_MINIMUM_CHARGE'),
+          confirmButtonText: this.translate.instant('COMMON.OK')
         });
       } else {
-        this.helper.failureToast(error?.error?.message || error?.message || 'Payment processing failed');
+        this.helper.failureToast(error?.error?.message || error?.message || this.translate.instant('MESSAGES.PAYMENT_PROCESSING_FAILED'));
       }
       throw error;
     }
@@ -452,9 +454,9 @@ deleteActivity() {
       if (totalAmount < PRACTICAL_MINIMUM) {
         Swal.fire({
           icon: 'error',
-          title: 'Invalid Amount',
-          text: `The total amount ($${totalAmount.toFixed(2)}) is below the minimum payment amount of $${PRACTICAL_MINIMUM}. Please contact support.`,
-          confirmButtonText: 'OK'
+          title: this.translate.instant('POPUPS.INVALID_AMOUNT'),
+          text: this.translate.instant('POPUPS.AMOUNT_BELOW_MINIMUM', { amount: totalAmount.toFixed(2), minimum: PRACTICAL_MINIMUM }),
+          confirmButtonText: this.translate.instant('COMMON.OK')
         });
         this.paymentProcessing = false;
         return;
@@ -464,9 +466,9 @@ deleteActivity() {
       if (totalAmount < PAYPAL_MINIMUM_AMOUNT) {
         Swal.fire({
           icon: 'error',
-          title: 'Amount Too Small',
-          text: `The total amount ($${totalAmount.toFixed(2)}) is below PayPal's minimum payment amount of $${PAYPAL_MINIMUM_AMOUNT}.`,
-          confirmButtonText: 'OK'
+          title: this.translate.instant('POPUPS.AMOUNT_TOO_SMALL'),
+          text: this.translate.instant('POPUPS.AMOUNT_BELOW_PAYPAL_MINIMUM', { amount: totalAmount.toFixed(2), minimum: PAYPAL_MINIMUM_AMOUNT }),
+          confirmButtonText: this.translate.instant('COMMON.OK')
         });
         this.paymentProcessing = false;
         return;
@@ -509,12 +511,12 @@ deleteActivity() {
           error?.message?.toLowerCase().includes('amount')) {
         Swal.fire({
           icon: 'error',
-          title: 'Payment Amount Error',
-          text: error?.error?.message || error?.message || 'The payment amount is invalid. Please contact support.',
-          confirmButtonText: 'OK'
+          title: this.translate.instant('POPUPS.PAYMENT_AMOUNT_ERROR'),
+          text: error?.error?.message || error?.message || this.translate.instant('POPUPS.PAYMENT_AMOUNT_INVALID'),
+          confirmButtonText: this.translate.instant('COMMON.OK')
         });
       } else {
-        this.helper.failureToast(error?.error?.message || error?.message || 'PayPal payment processing failed');
+        this.helper.failureToast(error?.error?.message || error?.message || this.translate.instant('MESSAGES.PAYPAL_PAYMENT_FAILED'));
       }
       throw error;
     }

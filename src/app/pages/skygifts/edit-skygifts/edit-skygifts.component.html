@@ -1,13 +1,13 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Updating Sky Gift.....</p>
+    <p style="font-size: 30px; color: white">{{ 'FORMS.UPDATING_SKY_GIFT' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
         <div>
             <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['skygifts/list-skygifts'])">
-                <i class="bi bi-arrow-left me-2"></i>Back
+                <i class="bi bi-arrow-left me-2"></i>{{ 'COMMON.BACK' | translate }}
             </button>
-            <h1 class="h3 mb-0 d-inline">Edit Sky Gift</h1>
+            <h1 class="h3 mb-0 d-inline">{{ 'COMMON.EDIT' | translate }} {{ 'SIDEBAR.SKY_DROPPED_GIFTS' | translate }}</h1>
         </div>
     </div>
 </div>
@@ -21,69 +21,69 @@
                         <form class="row g-4 align-items-center" [formGroup]="skyGiftForm" *ngIf="skyGiftForm"
                             (ngSubmit)="onSubmit()">
                             <div class="col-lg-3 mb-2">
-                                <label class="form-label">Gift Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Gift Name" maxlength="100"
+                                <label class="form-label">{{ 'FORMS.GIFT_NAME' | translate }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" [placeholder]="'FORMS.GIFT_NAME' | translate" maxlength="100"
                                 formControlName="gift_name"
                                 [ngClass]="{ 'is-invalid': submitted && f['gift_name'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['gift_name'].errors">
-                                    <div *ngIf="f['gift_name'].errors['required']">Gift Name is required</div>
-                                    <div *ngIf="f['gift_name'].errors['minlength']">Gift Name must be at least 5 characters</div>
-                                    <div *ngIf="f['gift_name'].errors['maxlength']">Gift Name cannot exceed 100 characters</div>
+                                    <div *ngIf="f['gift_name'].errors['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['gift_name'].errors['minlength']">{{ 'VALIDATION.QUEST_TITLE_MIN' | translate }}</div>
+                                    <div *ngIf="f['gift_name'].errors['maxlength']">{{ 'VALIDATION.QUEST_TITLE_MAX' | translate }}</div>
                                 </div>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Mythica (Reward) <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'FORMS.MYTHICA_REWARD' | translate }} <span class="text-danger">*</span></label>
                                 <select class="form-control" formControlName="mythica_reward"
                                 [ngClass]="{ 'is-invalid': submitted && f['mythica_reward']?.errors }">
-                                    <option value="" selected disabled>Select Mythica</option>
+                                    <option value="" selected disabled>{{ 'FORMS.SELECT_MYTHICA' | translate }}</option>
                                     <option *ngFor="let q of allCreatures" value="{{q._id}}">{{q.creature_name}}</option>
                                 </select>
                                 <div class="invalid-feedback" *ngIf="submitted && f['mythica_reward']?.errors">
-                                    Mythica Reward is required
+                                    {{ 'VALIDATION.MYTHICA_REQUIRED' | translate }}
                                 </div>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Latitude <span class="text-danger">*</span></label>
-                                <input type="number" step="any" class="form-control" placeholder="-90 to 90" formControlName="latitude"
+                                <label class="form-label">{{ 'FORMS.LATITUDE' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" [placeholder]="'FORMS.LATITUDE' | translate" formControlName="latitude"
                                     (input)="onLatitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['latitude'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['latitude'].errors">
-                                    <div *ngIf="f['latitude'].errors['required']">Latitude is required</div>
-                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">Latitude must be between -90 and 90 (cannot be 0)</div>
+                                    <div *ngIf="f['latitude'].errors['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['latitude'].errors['invalidLatitude']">{{ 'VALIDATION.INVALID_LATITUDE' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Range: -90 to 90 (cannot be 0)</small>
+                                <small class="text-muted">{{ 'VALIDATION.INVALID_LATITUDE' | translate }}</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Longitude <span class="text-danger">*</span></label>
-                                <input type="number" step="any" class="form-control" placeholder="-180 to 180" formControlName="longitude"
+                                <label class="form-label">{{ 'FORMS.LONGITUDE' | translate }} <span class="text-danger">*</span></label>
+                                <input type="number" step="any" class="form-control" [placeholder]="'FORMS.LONGITUDE' | translate" formControlName="longitude"
                                     (input)="onLongitudeInput($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f['longitude'].errors }">
                                 <div class="invalid-feedback" *ngIf="submitted && f['longitude'].errors">
-                                    <div *ngIf="f['longitude'].errors['required']">Longitude is required</div>
-                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">Longitude must be between -180 and 180 (cannot be 0)</div>
+                                    <div *ngIf="f['longitude'].errors['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['longitude'].errors['invalidLongitude']">{{ 'VALIDATION.INVALID_LONGITUDE' | translate }}</div>
                                 </div>
-                                <small class="text-muted">Range: -180 to 180 (cannot be 0)</small>
+                                <small class="text-muted">{{ 'VALIDATION.INVALID_LONGITUDE' | translate }}</small>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Reward File</label>
+                                <label class="form-label">{{ 'FORMS.REWARD_FILE' | translate }}</label>
                                 <input type="file" class="form-control" accept="image/*,video/*,application/pdf" placeholder=""
                                 (change)="onFileSelected($event, 'reward')">
-                                <small class="text-muted" *ngIf="existingRewardFile">Current: {{existingRewardFile}}</small>
+                                <small class="text-muted" *ngIf="existingRewardFile">{{ 'COMMON.CURRENT' | translate }}: {{existingRewardFile}}</small>
                             </div>
 
                             <div class="col-lg-12">
-                                <label class="form-label">Gift Description <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'FORMS.GIFT_DESCRIPTION' | translate }} <span class="text-danger">*</span></label>
                                 <textarea class="form-control" rows="3" formControlName="gift_description" maxlength="500"
                                 [ngClass]="{ 'is-invalid': submitted && f['gift_description'].errors }"></textarea>
                                 <div class="invalid-feedback" *ngIf="submitted && f['gift_description'].errors">
-                                    <div *ngIf="f['gift_description'].errors['required']">Gift Description is required</div>
-                                    <div *ngIf="f['gift_description'].errors['minlength']">Gift Description must be at least 5 characters</div>
-                                    <div *ngIf="f['gift_description'].errors['maxlength']">Gift Description cannot exceed 500 characters</div>
+                                    <div *ngIf="f['gift_description'].errors['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                    <div *ngIf="f['gift_description'].errors['minlength']">{{ 'VALIDATION.QUEST_QUESTION_MIN' | translate }}</div>
+                                    <div *ngIf="f['gift_description'].errors['maxlength']">{{ 'VALIDATION.QUEST_QUESTION_MAX' | translate }}</div>
                                 </div>
                             </div>
                             
                             <div class="d-sm-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary mb-0">Update</button>
+                                <button type="submit" class="btn btn-primary mb-0">{{ 'COMMON.UPDATE' | translate }}</button>
                             </div>
                         </form>
                     </div>

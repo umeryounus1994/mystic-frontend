@@ -4,6 +4,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -19,8 +20,15 @@ export class EditSkygiftsComponent implements OnInit {
   giftId = "";
   existingRewardFile = ""; 
 
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    public router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    public router: Router, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute,
+    public translate: TranslateService
+  ) {
       this.route.queryParams.subscribe(params => {
         if (params && Object.keys(params).length > 0) {
           this.giftId = params['giftId'];
@@ -112,7 +120,7 @@ export class EditSkygiftsComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Error!", "Failed to load sky gift details", "error");
+        Swal.fire(this.translate.instant('MESSAGES.ERROR'), this.translate.instant('MESSAGES.FAILED_TO_LOAD'), "error");
       });
   }
 
@@ -136,14 +144,14 @@ export class EditSkygiftsComponent implements OnInit {
     
     // Check for all zero variations (0, 0000, 00000, etc.)
     if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Latitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_VALID_NOT_ZERO'), "error");
       this.skyGiftForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.skyGiftForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (!lngStr || lngStr === '' || lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Longitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_VALID_NOT_ZERO'), "error");
       this.skyGiftForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.skyGiftForm.get('longitude')?.markAsTouched();
       return;
@@ -155,14 +163,14 @@ export class EditSkygiftsComponent implements OnInit {
     
     // Double check for zero after parsing
     if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0 || Math.abs(lat) < 0.0001) {
-      Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
       this.skyGiftForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.skyGiftForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0 || Math.abs(lng) < 0.0001) {
-      Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
       this.skyGiftForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.skyGiftForm.get('longitude')?.markAsTouched();
       return;
@@ -171,28 +179,28 @@ export class EditSkygiftsComponent implements OnInit {
     // Check form validity AFTER all custom validations
     if (!this.skyGiftForm?.valid) {
       const errors = [];
-      if (this.f['gift_name']?.errors) errors.push('Gift Name');
-      if (this.f['gift_description']?.errors) errors.push('Gift Description');
-      if (this.f['mythica_reward']?.errors) errors.push('Mythica Reward');
+      if (this.f['gift_name']?.errors) errors.push(this.translate.instant('FORMS.GIFT_NAME'));
+      if (this.f['gift_description']?.errors) errors.push(this.translate.instant('FORMS.GIFT_DESCRIPTION'));
+      if (this.f['mythica_reward']?.errors) errors.push(this.translate.instant('FORMS.MYTHICA_REWARD'));
       if (this.f['latitude']?.errors) {
         if (this.f['latitude'].errors['invalidLatitude']) {
-          Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Latitude');
+          errors.push(this.translate.instant('FORMS.LATITUDE'));
         }
         return;
       }
       if (this.f['longitude']?.errors) {
         if (this.f['longitude'].errors['invalidLongitude']) {
-          Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Longitude');
+          errors.push(this.translate.instant('FORMS.LONGITUDE'));
         }
         return;
       }
       
       if (errors.length > 0) {
-        Swal.fire("Validation Error!", `Please fix errors in: ${errors.join(', ')}`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('VALIDATION.PLEASE_FIX_ERRORS')}: ${errors.join(', ')}`, "error");
       }
       return; // Don't proceed if form is invalid
     }
@@ -218,7 +226,7 @@ export class EditSkygiftsComponent implements OnInit {
       .then((response: any) => {
           this.sp.hide();
           setTimeout(() => {
-            this.helper.successToast("Sky Gift Updated Successfully");
+            this.helper.successToast(this.translate.instant('MESSAGES.SKY_GIFT_UPDATED_SUCCESS'));
           }, 1000);
           setTimeout(() => {
             this.router.navigate(['skygifts/list-skygifts']);
@@ -226,7 +234,7 @@ export class EditSkygiftsComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Sky Gift!", "There is an error, please try again", "error");
+        Swal.fire(this.translate.instant('SIDEBAR.SKY_GIFTS'), this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'), "error");
       });
   }
 

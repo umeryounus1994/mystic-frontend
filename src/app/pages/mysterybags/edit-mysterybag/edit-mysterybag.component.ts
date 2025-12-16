@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
@@ -24,7 +25,8 @@ export class EditMysterybagComponent implements OnInit {
     private sp: NgxSpinnerService,
     private helper: HelperService,
     public router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public translate: TranslateService
   ) {
     this.route.queryParams.subscribe(params => {
       if (params && Object.keys(params).length > 0) {

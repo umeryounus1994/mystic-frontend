@@ -4,6 +4,7 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { RestApiService } from '../../../services/api/rest-api.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 declare var $: any;
@@ -52,7 +53,8 @@ export class ListBookingsComponent implements OnInit {
     private api: RestApiService,
     private helper: HelperService,
     private router: Router,
-    public auth: AuthService
+    public auth: AuthService,
+    public translate: TranslateService
   ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
@@ -144,23 +146,23 @@ export class ListBookingsComponent implements OnInit {
 
   approveBooking(bookingId: any) {
     Swal.fire({
-      title: "Are you sure you want to approve this booking?",
+      title: this.translate.instant('POPUPS.APPROVE_BOOKING_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Approve",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.APPROVE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
         this.api.post(`booking/confirm-booking`, {booking_id: bookingId})
           .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Booking!", "Approved Successfully", "success");
+            Swal.fire(this.translate.instant('LIST.MY_BOOKINGS'), this.translate.instant('POPUPS.APPROVED_SUCCESSFULLY'), "success");
             this.getAllBookings();
           })
           .catch((error: any) => {
             this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to approve booking');
+            this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_APPROVE_BOOKING'));
           });
       }
     });
@@ -203,17 +205,17 @@ export class ListBookingsComponent implements OnInit {
 
   rejectBooking(bookingId: any) {
   Swal.fire({
-    title: "Are you sure you want to reject this booking?",
+    title: this.translate.instant('POPUPS.REJECT_BOOKING_TITLE'),
     input: 'textarea',
-    inputLabel: 'Rejection Reason',
-    inputPlaceholder: 'Enter reason for rejection...',
+    inputLabel: this.translate.instant('POPUPS.REJECTION_REASON'),
+    inputPlaceholder: this.translate.instant('POPUPS.ENTER_REJECTION_REASON'),
     showDenyButton: true,
     showCancelButton: false,
-    confirmButtonText: "Reject",
-    denyButtonText: `Cancel`,
+    confirmButtonText: this.translate.instant('COMMON.REJECT'),
+    denyButtonText: this.translate.instant('COMMON.CANCEL'),
     inputValidator: (value) => {
       if (!value) {
-        return 'You need to provide a reason for rejection!';
+        return this.translate.instant('POPUPS.REJECTION_REASON_REQUIRED');
       }
       return null;
     }
@@ -224,7 +226,7 @@ export class ListBookingsComponent implements OnInit {
       this.api.post(`booking/${bookingId}/reject`, data)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("Booking!", "Rejected Successfully", "success");
+          Swal.fire(this.translate.instant('LIST.MY_BOOKINGS'), this.translate.instant('POPUPS.REJECTED_SUCCESSFULLY'), "success");
           this.getAllBookings();
         })
         .catch((error: any) => {
@@ -234,7 +236,7 @@ export class ListBookingsComponent implements OnInit {
             // Session expired - handleUnauthorized will handle logout
             return;
           }
-          this.helper.failureToast(error?.error?.message || 'Failed to reject booking');
+          this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_REJECT_BOOKING'));
         });
     }
   });

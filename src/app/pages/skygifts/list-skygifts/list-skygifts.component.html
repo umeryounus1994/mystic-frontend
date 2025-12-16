@@ -1,9 +1,9 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Sky Gifts</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.SKY_GIFTS' | translate }}</h1>
     </div>
 </div>
 <div class="card bg-transparent border">
@@ -13,12 +13,12 @@
                 id="dtable">
                 <thead>
                     <tr>
-                        <th scope="col" class="border-0">Gift Name</th>
-                        <th scope="col" class="border-0">Mythica (Reward)</th>
-                        <th scope="col" class="border-0">Location</th>
-                        <th scope="col" class="border-0">Status</th>
-                        <th scope="col" class="border-0">Created Date</th>
-                        <th scope="col" class="border-0">Action</th>
+                        <th scope="col" class="border-0">{{ 'SKY_GIFTS.GIFT_NAME' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'SKY_GIFTS.MYTHICA_REWARD' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'VIEW_ACTIVITY.LOCATION' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.STATUS' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'SKY_GIFTS.CREATED_DATE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,8 +27,8 @@
                         <td>{{gift.mythica_reward?.creature_name}}</td>
                         <td>{{gift.location?.coordinates[1]}}, {{gift.location?.coordinates[0]}}</td>
                         <td>
-                            <span class="badge bg-success" *ngIf="gift.status == 'active'">Active</span>
-                            <span class="badge bg-danger" *ngIf="gift.status == 'deleted'">Deleted</span>
+                            <span class="badge bg-success" *ngIf="gift.status == 'active'">{{ 'COMMON.ACTIVE' | translate }}</span>
+                            <span class="badge bg-danger" *ngIf="gift.status == 'deleted'">{{ 'COMMON.DELETED' | translate }}</span>
                         </td>
                         <td>{{getFormatedDate(gift.created_at)}}</td>
                         <td>
@@ -57,29 +57,29 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewSkyGiftLabel">Sky Gift Details</h5>
+                <h5 class="modal-title" id="viewSkyGiftLabel">{{ 'SKY_GIFTS.SKY_GIFT_DETAILS' | translate }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <strong>Gift Name:</strong>
+                        <strong>{{ 'SKY_GIFTS.GIFT_NAME' | translate }}:</strong>
                         <p id="gift_name"></p>
                     </div>
                     <div class="col-md-6">
-                        <strong>Mythica Reward:</strong>
+                        <strong>{{ 'SKY_GIFTS.MYTHICA_REWARD' | translate }}:</strong>
                         <p id="mythica_reward"></p>
                     </div>
                     <div class="col-md-6">
-                        <strong>Location:</strong>
+                        <strong>{{ 'VIEW_ACTIVITY.LOCATION' | translate }}:</strong>
                         <p id="location"></p>
                     </div>
                     <div class="col-md-6">
-                        <strong>Status:</strong>
+                        <strong>{{ 'COMMON.STATUS' | translate }}:</strong>
                         <p id="status"></p>
                     </div>
                     <div class="col-md-12">
-                        <strong>Gift Description:</strong>
+                        <strong>{{ 'SKY_GIFTS.GIFT_DESCRIPTION' | translate }}:</strong>
                         <p id="gift_description"></p>
                     </div>
                     <!-- <div class="col-md-12" *ngIf="selectedGift?.reward_file">

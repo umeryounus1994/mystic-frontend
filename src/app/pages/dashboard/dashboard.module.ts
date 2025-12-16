@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { AdminComponent } from './admin/admin.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 import { PartnerDashboardComponent } from './partner-dashboard/partner-dashboard.component';
 import { FamilyDashboardComponent } from './family-dashboard/family-dashboard.component';
 
@@ -13,7 +14,8 @@ import { FamilyDashboardComponent } from './family-dashboard/family-dashboard.co
   imports: [
     CommonModule,
     DashboardRoutingModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    TranslateModule
   ]
 })
 export class DashboardModule { }

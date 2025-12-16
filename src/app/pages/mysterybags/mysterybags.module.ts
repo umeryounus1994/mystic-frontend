@@ -8,6 +8,7 @@ import { ListMysterybagsComponent } from './list-mysterybags/list-mysterybags.co
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         NgxSpinnerModule,
         DataTablesModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        TranslateModule
   ]
 })
 export class MysterybagsModule { }

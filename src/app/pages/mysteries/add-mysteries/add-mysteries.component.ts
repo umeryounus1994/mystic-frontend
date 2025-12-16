@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -23,8 +24,15 @@ export class AddMysteriesComponent implements OnInit {
   option4: File | undefined = undefined;
   correctOption = '';
   
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    public router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    public router: Router, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute,
+    public translate: TranslateService
+  ) {
   }
 
   // Custom validators
@@ -198,7 +206,7 @@ export class AddMysteriesComponent implements OnInit {
     if (this.questions().length > 1) {
       this.questions().removeAt(i);
     } else {
-      Swal.fire("Warning!", "At least one answer is required", "warning");
+      Swal.fire(this.translate.instant('MESSAGES.WARNING'), this.translate.instant('VALIDATION.AT_LEAST_ONE_ANSWER'), "warning");
     }
   } 
 
@@ -230,7 +238,7 @@ export class AddMysteriesComponent implements OnInit {
     
     // More comprehensive check for zero values
     if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latNum === 0 || isNaN(latNum) || Math.abs(latNum) < 0.0001) {
-      Swal.fire("Validation Error!", "Please enter a valid Latitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
       latControl?.setErrors({ invalidLatitude: true });
       latControl?.markAsTouched();
       // Force form to be invalid
@@ -240,7 +248,7 @@ export class AddMysteriesComponent implements OnInit {
     }
     
     if (!lngStr || lngStr === '' || lngStr === '0' || lngStr === '0000' || lngNum === 0 || isNaN(lngNum) || Math.abs(lngNum) < 0.0001) {
-      Swal.fire("Validation Error!", "Please enter a valid Longitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
       lngControl?.setErrors({ invalidLongitude: true });
       lngControl?.markAsTouched();
       // Force form to be invalid
@@ -250,7 +258,7 @@ export class AddMysteriesComponent implements OnInit {
     }
     
     if (latNum < -90 || latNum > 90) {
-      Swal.fire("Validation Error!", "Latitude must be between -90 and 90", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.INVALID_LATITUDE'), "error");
       latControl?.setErrors({ invalidLatitude: true });
       latControl?.markAsTouched();
       this.questForm.setErrors({ ...this.questForm.errors, invalidLatitude: true });
@@ -259,7 +267,7 @@ export class AddMysteriesComponent implements OnInit {
     }
     
     if (lngNum < -180 || lngNum > 180) {
-      Swal.fire("Validation Error!", "Longitude must be between -180 and 180", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.INVALID_LONGITUDE'), "error");
       lngControl?.setErrors({ invalidLongitude: true });
       lngControl?.markAsTouched();
       this.questForm.setErrors({ ...this.questForm.errors, invalidLongitude: true });
@@ -285,42 +293,42 @@ export class AddMysteriesComponent implements OnInit {
       if (this.f['mythica_ID']?.errors) errors.push('Mythica');
       if (this.f['latitude']?.errors) {
         if (this.f['latitude'].errors['invalidLatitude']) {
-          Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.INVALID_LATITUDE'), "error");
         } else {
-          errors.push('Latitude');
+          errors.push(this.translate.instant('FORMS.LATITUDE'));
         }
         return;
       }
       if (this.f['longitude']?.errors) {
         if (this.f['longitude'].errors['invalidLongitude']) {
-          Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.INVALID_LONGITUDE'), "error");
         } else {
-          errors.push('Longitude');
+          errors.push(this.translate.instant('FORMS.LONGITUDE'));
         }
         return;
       }
       
       if (errors.length > 0) {
-        Swal.fire("Validation Error!", `Please fix errors in: ${errors.join(', ')}`, "error");
+        Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.PLEASE_FIX_ERRORS', { errors: errors.join(', ') }), "error");
       }
       return; // Don't proceed if form is invalid
     }
     
     // Additional validation for numeric fields
     if (formValue.no_of_xp <= 0 || isNaN(formValue.no_of_xp)) {
-      Swal.fire("Validation Error!", "No of XP must be greater than 0", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.XP_MUST_BE_GREATER_THAN_ZERO'), "error");
       this.questForm.patchValue({ no_of_xp: 1 });
       return;
     }
     
     if (formValue.no_of_crypes < 0 || isNaN(formValue.no_of_crypes)) {
-      Swal.fire("Validation Error!", "No of Crypes cannot be negative", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.CRYPES_MIN'), "error");
       this.questForm.patchValue({ no_of_crypes: 0 });
       return;
     }
     
     if (formValue.level_increase < 0 || isNaN(formValue.level_increase)) {
-      Swal.fire("Validation Error!", "Level Increase cannot be negative", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LEVEL_INCREASE_MIN'), "error");
       this.questForm.patchValue({ level_increase: 0 });
       return;
     }
@@ -340,25 +348,25 @@ export class AddMysteriesComponent implements OnInit {
       if (q.correct_option === true || q.correct_option === 'true') {
         hasCorrectAnswer = true;
         if (!optionFile) {
-          Swal.fire("Validation Error!", `Answer ${i + 1} is marked as correct but no file is uploaded`, "error");
+          Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.ANSWER_MARKED_CORRECT_NO_FILE', { index: i + 1 }), "error");
           return;
         }
       }
     }
     
     if (!hasAnswerFiles) {
-      Swal.fire("Validation Error!", "At least one answer file is required", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.AT_LEAST_ONE_ANSWER_FILE'), "error");
       return;
     }
     
     if (!hasCorrectAnswer) {
-      Swal.fire("Validation Error!", "At least one answer must be marked as correct", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.AT_LEAST_ONE_CORRECT_ANSWER'), "error");
       return;
     }
     
     // Final check - ensure form is still valid after all validations
     if (!this.questForm.valid) {
-      Swal.fire("Validation Error!", "Please fix all form errors before submitting", "error");
+      Swal.fire(this.translate.instant('MESSAGES.VALIDATION_ERROR'), this.translate.instant('VALIDATION.FIX_ALL_FORM_ERRORS'), "error");
       return;
     }
     
@@ -404,7 +412,7 @@ export class AddMysteriesComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Picture Mystery!", error?.error?.message || "There is an error, please try again", "error");
+        Swal.fire(this.translate.instant('SIDEBAR.PICTURE_MYSTERIES'), error?.error?.message || this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'), "error");
       });
   }
 

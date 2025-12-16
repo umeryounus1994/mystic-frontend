@@ -11,6 +11,7 @@ import { ListQuestComponent } from './list-quest/list-quest.component';
 import { EditQuestComponent } from './edit-quest/edit-quest.component';
 import { CreateQuestGroupComponent } from './create-quest-group/create-quest-group.component';
 import { ListQuestGroupComponent } from './list-quest-group/list-quest-group.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { ListQuestGroupComponent } from './list-quest-group/list-quest-group.com
     DataTablesModule,
     FormsModule,
     ReactiveFormsModule,
-    QRCodeModule
+    QRCodeModule,
+    TranslateModule
   ]
 })
 export class QuestsModule { }

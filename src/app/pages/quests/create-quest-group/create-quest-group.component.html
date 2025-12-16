@@ -1,13 +1,13 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Creating Quest Group.....</p>
+    <p style="font-size: 30px; color: white">{{ 'QUEST_GROUP.CREATING_QUEST_GROUP' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
         <div>
             <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['quest/list-quest'])">
-                <i class="bi bi-arrow-left me-2"></i>Back
+                <i class="bi bi-arrow-left me-2"></i>{{ 'COMMON.BACK' | translate }}
             </button>
-            <h1 class="h3 mb-0 d-inline">Create Quest Group</h1>
+            <h1 class="h3 mb-0 d-inline">{{ 'QUEST_GROUP.CREATE_QUEST_GROUP' | translate }}</h1>
         </div>
     </div>
 </div>
@@ -23,31 +23,31 @@
 
                   
                             <div class="col-lg-5">
-                                <label class="form-label">Quest Group Name</label>
-                                <input type="text" class="form-control" placeholder="Title"
+                                <label class="form-label">{{ 'QUEST_GROUP.QUEST_GROUP_NAME' | translate }}</label>
+                                <input type="text" class="form-control" [placeholder]="'COMMON.TITLE' | translate"
                                     formControlName="quest_group_name"
                                     [ngClass]="{ 'is-invalid': submitted && f['quest_group_name'].errors }">
                             </div>
                  
                             <div class="col-lg-3">
-                                <label class="form-label">No of Crypes</label>
+                                <label class="form-label">{{ 'FORMS.NO_OF_CRYPES' | translate }}</label>
                                 <input type="text" class="form-control" placeholder="0" formControlName="no_of_crypes"
                                     [ngClass]="{ 'is-invalid': submitted && f['no_of_crypes'].errors }">
                             </div>
                    
                             <div class="col-lg-3">
-                                <label class="form-label">Package</label>
+                                <label class="form-label">{{ 'QUEST_GROUP.PACKAGE' | translate }}</label>
                                 <select class="form-select js-choice z-index-9" 
                                 formControlName="group_package" aria-label=".form-select-sm"
                                 [ngClass]="{ 'is-invalid': submitted && f['group_package']?.errors }">
-                                    <option value="" selected disabled>Select Package?</option>
-                                    <option value='Bronze'>Bronze</option>
-                                    <option value='Gold'>Gold</option>
-                                    <option value='Silver'>Silver</option>
+                                    <option value="" selected disabled>{{ 'QUEST_GROUP.SELECT_PACKAGE' | translate }}</option>
+                                    <option value='Bronze'>{{ 'QUEST_GROUP.BRONZE' | translate }}</option>
+                                    <option value='Gold'>{{ 'QUEST_GROUP.GOLD' | translate }}</option>
+                                    <option value='Silver'>{{ 'QUEST_GROUP.SILVER' | translate }}</option>
                                 </select>
                             </div>
                             <div class="col-lg-3">
-                                <label class="form-label">Reward PDF</label>
+                                <label class="form-label">{{ 'FORMS.REWARD_PDF' | translate }}</label>
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
                                 (change)="onFileSelected($event, 'reward')">
                             </div>
@@ -55,10 +55,10 @@
                             <div>
                                 <qrcode (qrCodeURL)="onChangeURL($event)" [qrdata]="QrCode" [width]="256"
                                     [errorCorrectionLevel]="'M'"></qrcode>
-                                <a [href]="qrCodeDownloadLink" download="qrcode">Download</a>
+                                <a [href]="qrCodeDownloadLink" download="qrcode">{{ 'FORMS.DOWNLOAD' | translate }}</a>
                             </div>
                             <div class="d-sm-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary mb-0">Create</button>
+                                <button type="submit" class="btn btn-primary mb-0">{{ 'COMMON.CREATE' | translate }}</button>
                             </div>
                         </form>
 

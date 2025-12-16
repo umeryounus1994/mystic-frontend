@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../../services/api/rest-api.service';
 import { HelperService } from '../../../../services/helper/helper.service';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 declare var $: any;
 @Component({
@@ -62,7 +63,8 @@ export class ListActivityComponent implements OnInit {
     private api: RestApiService,
     private helper: HelperService,
     public router: Router,
-    public auth: AuthService
+    public auth: AuthService,
+    public translate: TranslateService
   ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
@@ -129,23 +131,23 @@ async getAllActivities() {
 
 deleteActivity(activityId: any) {
     Swal.fire({
-      title: 'Are you sure you want to delete this activity?',
+      title: this.translate.instant('POPUPS.DELETE_ACTIVITY_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
         this.api.delete(`activity/${activityId}`)
           .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Activity!", "Deleted Successfully", "success");
+            Swal.fire(this.translate.instant('SIDEBAR.ACTIVITIES'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
             this.getAllActivities();
           })
           .catch((error: any) => {
             this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to delete activity');
+            this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_DELETE_ACTIVITY'));
           });
       }
     });
@@ -153,23 +155,23 @@ deleteActivity(activityId: any) {
 
   approveActivity(activityId: any) {
     Swal.fire({
-      title: "Are you sure you want to approve this activity?",
+      title: this.translate.instant('POPUPS.APPROVE_ACTIVITY_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Approve",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.APPROVE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
         this.api.post(`activity/${activityId}/approve`, {})
           .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Activity!", "Approved Successfully", "success");
+            Swal.fire(this.translate.instant('SIDEBAR.ACTIVITIES'), this.translate.instant('POPUPS.APPROVED_SUCCESSFULLY'), "success");
             this.getAllActivities();
           })
           .catch((error: any) => {
             this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to approve activity');
+            this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_APPROVE_ACTIVITY'));
           });
       }
     });
@@ -177,17 +179,17 @@ deleteActivity(activityId: any) {
 
   rejectActivity(activityId: any) {
     Swal.fire({
-      title: "Are you sure you want to reject this activity?",
+      title: this.translate.instant('POPUPS.REJECT_ACTIVITY_TITLE'),
       input: 'textarea',
-      inputLabel: 'Rejection Reason',
-      inputPlaceholder: 'Enter reason for rejection...',
+      inputLabel: this.translate.instant('POPUPS.REJECTION_REASON'),
+      inputPlaceholder: this.translate.instant('POPUPS.ENTER_REJECTION_REASON'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Reject",
-      denyButtonText: `Cancel`,
+      confirmButtonText: this.translate.instant('COMMON.REJECT'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL'),
       inputValidator: (value) => {
         if (!value) {
-          return 'You need to provide a reason for rejection!';
+          return this.translate.instant('POPUPS.REJECTION_REASON_REQUIRED');
         }
         return null;
       }
@@ -200,12 +202,12 @@ deleteActivity(activityId: any) {
         this.api.post(`activity/${activityId}/reject`, data)
           .then((response: any) => {
             this.sp.hide();
-            Swal.fire("Activity!", "Rejected Successfully", "success");
+            Swal.fire(this.translate.instant('SIDEBAR.ACTIVITIES'), this.translate.instant('POPUPS.REJECTED_SUCCESSFULLY'), "success");
             this.getAllActivities();
           })
           .catch((error: any) => {
             this.sp.hide();
-            this.helper.failureToast(error?.error?.message || 'Failed to reject activity');
+            this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_REJECT_ACTIVITY'));
           });
       }
     });
@@ -219,8 +221,8 @@ deleteActivity(activityId: any) {
     this.api.patch(`activity/${activityId}`, data)
       .then((response: any) => {
         this.sp.hide();
-        const statusText = status === 'approved' ? 'Approved' : 'Rejected';
-        Swal.fire("Activity!", `${statusText} Successfully`, "success");
+        const statusText = status === 'approved' ? this.translate.instant('COMMON.APPROVED') : this.translate.instant('COMMON.REJECTED');
+        Swal.fire(this.translate.instant('SIDEBAR.ACTIVITIES'), `${statusText} ${this.translate.instant('MESSAGES.SUCCESS')}`, "success");
         this.getAllActivities();
       })
       .catch((error: any) => {

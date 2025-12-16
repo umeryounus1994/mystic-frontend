@@ -7,6 +7,7 @@ import { ListMissionsComponent } from './list-missions/list-missions.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { EditMissionComponent } from './edit-mission/edit-mission.component';
 
 
@@ -18,7 +19,8 @@ import { EditMissionComponent } from './edit-mission/edit-mission.component';
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ]
 })
 export class MissionsModule { }

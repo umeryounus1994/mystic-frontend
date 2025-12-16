@@ -1,13 +1,13 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Loading Dashboard...</p>
+    <p style="font-size: 30px; color: white">{{ 'DASHBOARD.LOADING_DASHBOARD' | translate }}</p>
 </ngx-spinner>
 
 <!-- Header -->
 <div class="row mb-4">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Partner Dashboard</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.PARTNER_DASHBOARD' | translate }}</h1>
         <button class="btn btn-primary" (click)="navigateToCreateActivity()">
-            <i class="bi bi-plus-circle me-2"></i>Create New Activity
+            <i class="bi bi-plus-circle me-2"></i>{{ 'COMMON.CREATE' | translate }} {{ 'DASHBOARD.NEW_ACTIVITY' | translate }}
         </button>
     </div>
 </div>
@@ -20,7 +20,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-primary">{{stats.activities.total}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Activities</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_ACTIVITIES' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-primary text-white mb-0">
                     <i class="bi bi-calendar-event fa-fw"></i>
@@ -35,7 +35,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-success">{{stats.activities.active}}</h2>
-                    <span class="mb-0 h6 fw-light">Active Activities</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.ACTIVE_ACTIVITIES' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-success text-white mb-0">
                     <i class="bi bi-check-circle fa-fw"></i>
@@ -50,7 +50,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-warning">{{stats.bookings.total}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Bookings</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_BOOKINGS' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-warning text-white mb-0">
                     <i class="bi bi-people fa-fw"></i>
@@ -65,7 +65,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="purecounter mb-0 fw-bold text-info">${{stats.revenue.partnerEarnings}}</h2>
-                    <span class="mb-0 h6 fw-light">Total Revenue</span>
+                    <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_REVENUE' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-info text-white mb-0">
                     <i class="bi bi-currency-dollar fa-fw"></i>

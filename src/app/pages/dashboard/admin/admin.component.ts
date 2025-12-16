@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslateService } from '@ngx-translate/core';
 import Chart from 'chart.js/auto';
 
 @Component({
@@ -22,7 +23,11 @@ export class AdminComponent implements OnInit {
     partners: 0,
     pendingActivities: 0
   }
-  constructor(private sp: NgxSpinnerService, private api: RestApiService) {
+  constructor(
+    private sp: NgxSpinnerService, 
+    private api: RestApiService,
+    public translate: TranslateService
+  ) {
   }
   async ngOnInit() {
     this.sp.show();

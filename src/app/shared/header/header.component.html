@@ -24,6 +24,11 @@
             <!-- Right side content -->
             <div class="ms-auto d-flex align-items-center">
   
+                <!-- Language Switcher -->
+                <button class="btn btn-sm btn-outline-secondary me-3 language-switcher-btn" (click)="toggleLanguage()" type="button" title="Switch Language" style="position: relative; z-index: 1000; cursor: pointer;">
+                    <i class="bi bi-translate me-1"></i>
+                    <span class="d-none d-sm-inline">{{ languageDisplay }}</span>
+                </button>
 
                 <!-- User role badge -->
                 <div class="me-3 d-none d-sm-block" *ngIf="auth.user">

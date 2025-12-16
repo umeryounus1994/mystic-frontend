@@ -1,14 +1,14 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">{{spinnerTitle}}</p>
+    <p style="font-size: 30px; color: white">{{spinnerTitle | translate}}</p>
 </ngx-spinner>
 
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
         <div>
             <button class="btn btn-light btn-sm me-3" (click)="goBack()">
-                <i class="bi bi-arrow-left me-2"></i>Back
+                <i class="bi bi-arrow-left me-2"></i>{{ 'COMMON.BACK' | translate }}
             </button>
-            <h1 class="h3 mb-0 d-inline">User Settings</h1>
+            <h1 class="h3 mb-0 d-inline">{{ 'PROFILE.USER_SETTINGS' | translate }}</h1>
         </div>
     </div>
 </div>
@@ -26,7 +26,7 @@
 
                     <!-- Card header -->
                     <div class="card-header border-bottom">
-                        <h5 class="card-header-title">User Settings</h5>
+                        <h5 class="card-header-title">{{ 'PROFILE.USER_SETTINGS' | translate }}</h5>
                     </div>
 
                     <!-- Card body START -->
@@ -35,19 +35,19 @@
 
                             <!-- Input item -->
                             <div class="col-lg-6">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                                <label class="form-label">{{ 'FORMS.FIRST_NAME' | translate }}</label>
+                                <input type="text" class="form-control" id="firstName" [placeholder]="'FORMS.FIRST_NAME' | translate">
                             </div>
 
                             <!-- Input item -->
                             <div class="col-lg-6">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                                <label class="form-label">{{ 'FORMS.LAST_NAME' | translate }}</label>
+                                <input type="text" class="form-control" id="lastName" [placeholder]="'FORMS.LAST_NAME' | translate">
                             </div>
 
                             <!-- Save button -->
                             <div class="d-sm-flex justify-content-end">
-                                <button type="button" class="btn btn-primary mb-0" (click)="onSubmitUserUpdate()">Update</button>
+                                <button type="button" class="btn btn-primary mb-0" (click)="onSubmitUserUpdate()">{{ 'COMMON.UPDATE' | translate }}</button>
                             </div>
                         </form>
                     </div>

@@ -1,5 +1,5 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Loading Activity Details....</p>
+    <p style="font-size: 30px; color: white">{{ 'VIEW_ACTIVITY.LOADING_ACTIVITY_DETAILS' | translate }}</p>
 </ngx-spinner>
 
 <!-- Header -->
@@ -7,16 +7,16 @@
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
         <div>
             <button class="btn btn-light btn-sm me-3" (click)="goBack()">
-                <i class="bi bi-arrow-left me-2"></i>Back to Activities
+                <i class="bi bi-arrow-left me-2"></i>{{ 'VIEW_ACTIVITY.BACK_TO_ACTIVITIES' | translate }}
             </button>
             <h1 class="h3 mb-0 d-inline">{{activity.title}}</h1>
         </div>
         <div class="mt-2 mt-sm-0">
             <button class="btn btn-outline-primary me-2" (click)="editActivity()">
-                <i class="bi bi-pencil me-2"></i>Edit
+                <i class="bi bi-pencil me-2"></i>{{ 'COMMON.EDIT' | translate }}
             </button>
             <button class="btn btn-outline-danger" (click)="deleteActivity()">
-                <i class="bi bi-trash me-2"></i>Delete
+                <i class="bi bi-trash me-2"></i>{{ 'COMMON.DELETE' | translate }}
             </button>
         </div>
     </div>
@@ -29,7 +29,7 @@
         <div class="card h-100">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start mb-3">
-                    <h5 class="card-title">Activity Details</h5>
+                    <h5 class="card-title">{{ 'VIEW_ACTIVITY.ACTIVITY_DETAILS' | translate }}</h5>
                     <span class="badge" [ngClass]="getStatusBadgeClass(activity.status)">
                         {{activity.status | titlecase}}
                     </span>
@@ -37,12 +37,12 @@
                 
                 <div class="row g-3">
                     <div class="col-12">
-                        <h6>Description</h6>
+                        <h6>{{ 'COMMON.DESCRIPTION' | translate }}</h6>
                         <p class="text-muted">{{activity.description}}</p>
                     </div>
                     
                     <div class="col-md-6">
-                        <h6>Category</h6>
+                        <h6>{{ 'COMMON.CATEGORY' | translate }}</h6>
                         <span class="badge bg-light text-dark">
                             <i [class]="getCategoryIcon(activity.category)" class="me-1"></i>
                             {{activity.category | titlecase}}
@@ -50,25 +50,25 @@
                     </div>
                     
                     <div class="col-md-6">
-                        <h6>Price</h6>
+                        <h6>{{ 'TABLES.PRICE' | translate }}</h6>
                         <p class="mb-0">${{activity.price}}</p>
                     </div>
                     
                     <div class="col-md-6">
-                        <h6>Duration</h6>
-                        <p class="mb-0">{{activity.duration}} minutes</p>
+                        <h6>{{ 'TABLES.DURATION' | translate }}</h6>
+                        <p class="mb-0">{{activity.duration}} {{ 'COMMON.MINUTES' | translate }}</p>
                     </div>
                     
                     <div class="col-md-6">
-                        <h6>Max Participants</h6>
-                        <p class="mb-0">{{activity.max_participants}} people</p>
+                        <h6>{{ 'TABLES.MAX_PARTICIPANTS' | translate }}</h6>
+                        <p class="mb-0">{{activity.max_participants}} {{ 'VIEW_ACTIVITY.PEOPLE' | translate }}</p>
                     </div>
                     
                     <div class="col-12">
-                        <h6>Location</h6>
+                        <h6>{{ 'VIEW_ACTIVITY.LOCATION' | translate }}</h6>
                         <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{activity.address}}</p>
                         <small class="text-muted" *ngIf="activity.location?.coordinates">
-                            Coordinates: {{activity.location.coordinates[1]}}, {{activity.location.coordinates[0]}}
+                            {{ 'VIEW_ACTIVITY.COORDINATES' | translate }}: {{activity.location.coordinates[1]}}, {{activity.location.coordinates[0]}}
                         </small>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
     <div class="col-lg-4">
         <div class="card" *ngIf="activity.images && activity.images.length > 0">
             <div class="card-body">
-                <h5 class="card-title">Images <span class="badge bg-secondary ms-2">{{activity.images.length}}</span></h5>
+                <h5 class="card-title">{{ 'VIEW_ACTIVITY.IMAGES' | translate }} <span class="badge bg-secondary ms-2">{{activity.images.length}}</span></h5>
                 
                 <!-- Single Image -->
                 <div *ngIf="activity.images.length === 1">
@@ -106,11 +106,11 @@
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#activityImageCarousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
+                        <span class="visually-hidden">{{ 'COMMON.PREVIOUS' | translate }}</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#activityImageCarousel" data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
+                        <span class="visually-hidden">{{ 'COMMON.NEXT' | translate }}</span>
                     </button>
                     <!-- Carousel Indicators -->
                     <div class="carousel-indicators" *ngIf="activity.images.length > 1">
@@ -128,7 +128,7 @@
         <!-- Partner Information -->
         <div class="card mt-4" *ngIf="activity.partner_id">
             <div class="card-body">
-                <h5 class="card-title">Partner Information</h5>
+                <h5 class="card-title">{{ 'VIEW_ACTIVITY.PARTNER_INFORMATION' | translate }}</h5>
                 <div class="d-flex align-items-center mb-3">
                     <div class="avatar avatar-lg me-3">
                         <div class="avatar-img rounded-circle bg-primary d-flex align-items-center justify-content-center">
@@ -146,25 +146,25 @@
         <!-- Activity Stats -->
         <div class="card mt-4">
             <div class="card-body">
-                <h5 class="card-title">Activity Information</h5>
+                <h5 class="card-title">{{ 'VIEW_ACTIVITY.ACTIVITY_INFORMATION' | translate }}</h5>
                 <div class="row g-3">
                     <div class="col-6">
                         <div class="text-center">
                             <h4 class="text-primary mb-0">{{activity.slots?.length || 0}}</h4>
-                            <small class="text-muted">Time Slots</small>
+                            <small class="text-muted">{{ 'VIEW_ACTIVITY.TIME_SLOTS' | translate }}</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="text-center">
                             <h4 class="text-success mb-0">${{activity.price}}</h4>
-                            <small class="text-muted">Price</small>
+                            <small class="text-muted">{{ 'TABLES.PRICE' | translate }}</small>
                         </div>
                     </div>
                     <div class="col-12">
                         <hr>
                         <small class="text-muted">
-                            <strong>Created:</strong> {{getFormatedDate(activity.created_at)}}<br>
-                            <strong>Last Updated:</strong> {{getFormatedDate(activity.updated_at)}}
+                            <strong>{{ 'VIEW_ACTIVITY.CREATED' | translate }}:</strong> {{getFormatedDate(activity.created_at)}}<br>
+                            <strong>{{ 'VIEW_ACTIVITY.LAST_UPDATED' | translate }}:</strong> {{getFormatedDate(activity.updated_at)}}
                         </small>
                     </div>
                 </div>
@@ -178,39 +178,39 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Available Time Slots</h5>
+                <h5 class="card-title">{{ 'VIEW_ACTIVITY.AVAILABLE_TIME_SLOTS' | translate }}</h5>
                 <div class="row g-3">
                     <div *ngFor="let slot of activity.slots; let i = index" class="col-md-6 col-lg-4">
                         <div class="border rounded p-3">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0">Slot {{i + 1}}</h6>
+                                <h6 class="mb-0">{{ 'VIEW_ACTIVITY.SLOT' | translate }} {{i + 1}}</h6>
                                 <span class="badge" [ngClass]="getSlotStatusBadgeClass(slot, isSlotExpired(slot))">
-                                    {{isSlotExpired(slot) ? 'Expired' : (slot.status | titlecase)}}
+                                    {{isSlotExpired(slot) ? ('VIEW_ACTIVITY.EXPIRED' | translate) : (slot.status | titlecase)}}
                                 </span>
                             </div>
                             <p class="mb-1">
                                 <i class="bi bi-clock me-2"></i>
-                                <strong>Start:</strong> {{slot.start_time | date:'medium'}}
+                                <strong>{{ 'VIEW_ACTIVITY.START' | translate }}:</strong> {{slot.start_time | date:'medium'}}
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-clock-history me-2"></i>
-                                <strong>End:</strong> {{slot.end_time | date:'medium'}}
+                                <strong>{{ 'VIEW_ACTIVITY.END' | translate }}:</strong> {{slot.end_time | date:'medium'}}
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-people me-2"></i>
-                                <strong>Available:</strong> {{slot.available_spots}}
+                                <strong>{{ 'VIEW_ACTIVITY.AVAILABLE' | translate }}:</strong> {{slot.available_spots}}
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-person-check me-2"></i>
-                                <strong>Booked:</strong> {{slot.booked_spots}}
+                                <strong>{{ 'VIEW_ACTIVITY.BOOKED' | translate }}:</strong> {{slot.booked_spots}}
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-person-clock me-2"></i>
-                                <strong>Reserved:</strong> {{slot.reserved_spots || 0}}
+                                <strong>{{ 'VIEW_ACTIVITY.RESERVED' | translate }}:</strong> {{slot.reserved_spots || 0}}
                             </p>
                             <div class="mt-2">
                                 <small class="text-muted">
-                                    <strong>Remaining:</strong> {{slot.available_spots - slot.booked_spots - (slot.reserved_spots || 0)}} spots
+                                    <strong>{{ 'VIEW_ACTIVITY.REMAINING' | translate }}:</strong> {{slot.available_spots - slot.booked_spots - (slot.reserved_spots || 0)}} {{ 'VIEW_ACTIVITY.SPOTS' | translate }}
                                 </small>
                             </div>
                             
@@ -220,7 +220,7 @@
                                         [disabled]="slot.status !== 'available' || (slot.available_spots - slot.booked_spots - (slot.reserved_spots || 0)) <= 0 || isSlotExpired(slot)"
                                         (click)="openBookingModal(slot)">
                                     <i class="bi bi-calendar-check me-2"></i>
-                                    {{isSlotExpired(slot) ? 'Expired' : 'Book Now'}}
+                                    {{isSlotExpired(slot) ? ('VIEW_ACTIVITY.EXPIRED' | translate) : ('VIEW_ACTIVITY.BOOK_NOW' | translate)}}
                                 </button>
                             </div>
                         </div>
@@ -236,35 +236,35 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">{{auth.isFamily ? 'Your Booking History' : 'Booking History'}}</h5>
+                <h5 class="card-title">{{auth.isFamily ? ('VIEW_ACTIVITY.YOUR_BOOKING_HISTORY' | translate) : ('VIEW_ACTIVITY.BOOKING_HISTORY' | translate)}}</h5>
                 <div class="row g-3">
                     <div *ngFor="let booking of activity.user_booked_slots" class="col-md-6 col-lg-4">
                         <div class="border rounded p-3 booking-card">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0">Booking</h6>
+                                <h6 class="mb-0">{{ 'VIEW_ACTIVITY.BOOKING' | translate }}</h6>
                                 <span class="badge" [ngClass]="getBookingStatusBadgeClass(booking.booking_status)">
                                     {{booking.booking_status | titlecase}}
                                 </span>
                             </div>
                             <p class="mb-1">
                                 <i class="bi bi-people me-2"></i>
-                                <strong>Participants: </strong> {{booking.participants}}
+                                <strong>{{ 'TABLES.PARTICIPANTS' | translate }}: </strong> {{booking.participants}}
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-credit-card me-2"></i>
-                                <strong>Payment: </strong> 
+                                <strong>{{ 'VIEW_ACTIVITY.PAYMENT' | translate }}: </strong> 
                                 <span class="badge badge-sm" [ngClass]="getPaymentStatusBadgeClass(booking.payment_status)">
                                     {{booking.payment_status | titlecase}}
                                 </span>
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-calendar me-2"></i>
-                                <strong>Booked:</strong> {{booking.booked_at | date:'medium'}}
+                                <strong>{{ 'VIEW_ACTIVITY.BOOKED' | translate }}:</strong> {{booking.booked_at | date:'medium'}}
                             </p>
                             <div class="cancellation-reason-container">
                                 <div *ngIf="booking.cancellation_reason" class="mt-2">
                                     <small class="text-muted">
-                                        <strong>Cancellation Reason:</strong> {{booking.cancellation_reason}}
+                                        <strong>{{ 'VIEW_ACTIVITY.CANCELLATION_REASON' | translate }}:</strong> {{booking.cancellation_reason}}
                                     </small>
                                 </div>
                             </div>
@@ -281,7 +281,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Book Activity</h5>
+                <h5 class="modal-title">{{ 'VIEW_ACTIVITY.BOOK_ACTIVITY' | translate }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" *ngIf="selectedSlot">
@@ -295,40 +295,40 @@
                         </p>
                         <p class="text-muted">
                             <i class="bi bi-people me-2"></i>
-                            {{selectedSlot.available_spots - selectedSlot.booked_spots - (selectedSlot.reserved_spots || 0)}} spots remaining
+                            {{selectedSlot.available_spots - selectedSlot.booked_spots - (selectedSlot.reserved_spots || 0)}} {{ 'VIEW_ACTIVITY.SPOTS_REMAINING' | translate }}
                         </p>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">Number of Participants *</label>
+                        <label class="form-label">{{ 'VIEW_ACTIVITY.NUMBER_OF_PARTICIPANTS' | translate }} *</label>
                         <select class="form-select" [(ngModel)]="bookingData.participants">
-                            <option value="">Select participants</option>
+                            <option value="">{{ 'VIEW_ACTIVITY.SELECT_PARTICIPANTS' | translate }}</option>
                             <option *ngFor="let i of getParticipantOptions(selectedSlot)" [value]="i">
-                                {{i}} participant{{i > 1 ? 's' : ''}}
+                                {{i}} {{ 'VIEW_ACTIVITY.PARTICIPANT' | translate }}{{i > 1 ? 's' : ''}}
                             </option>
                         </select>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">Special Requests (Optional)</label>
+                        <label class="form-label">{{ 'VIEW_ACTIVITY.SPECIAL_REQUESTS' | translate }} ({{ 'COMMON.OPTIONAL' | translate }})</label>
                         <textarea class="form-control" rows="3" 
                                   [(ngModel)]="bookingData.special_requests"
-                                  placeholder="Any special requirements or requests..."></textarea>
+                                  [placeholder]="'VIEW_ACTIVITY.SPECIAL_REQUESTS_PLACEHOLDER' | translate"></textarea>
                     </div>
                     
                     <div class="mb-3" *ngIf="bookingData.participants">
                         <div class="bg-light p-3 rounded">
                             <div class="d-flex justify-content-between">
-                                <span>Price per person:</span>
+                                <span>{{ 'VIEW_ACTIVITY.PRICE_PER_PERSON' | translate }}:</span>
                                 <span>${{activity.price}}</span>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <span>Participants:</span>
+                                <span>{{ 'TABLES.PARTICIPANTS' | translate }}:</span>
                                 <span>{{bookingData.participants}}</span>
                             </div>
                             <hr class="my-2">
                             <div class="d-flex justify-content-between fw-bold">
-                                <span>Total Amount:</span>
+                                <span>{{ 'TABLES.TOTAL_AMOUNT' | translate }}:</span>
                                 <span>${{activity.price * (+bookingData.participants)}}</span>
                             </div>
                         </div>
@@ -337,14 +337,14 @@
                 
                 <!-- Add this payment method selection section in your booking modal, before the Stripe payment form -->
                 <div *ngIf="!showStripePaymentForm" class="mb-3">
-                    <label class="form-label">Payment Method</label>
+                    <label class="form-label">{{ 'VIEW_ACTIVITY.PAYMENT_METHOD' | translate }}</label>
                     <div class="row">
                         <div class="col-6">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="paymentMethod" 
                                        id="stripe" value="stripe" [(ngModel)]="selectedPaymentMethod">
                                 <label class="form-check-label" for="stripe">
-                                    <i class="bi bi-credit-card me-2"></i>Credit Card (Stripe)
+                                    <i class="bi bi-credit-card me-2"></i>{{ 'VIEW_ACTIVITY.CREDIT_CARD_STRIPE' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -353,7 +353,7 @@
                                 <input class="form-check-input" type="radio" name="paymentMethod" 
                                        id="paypal" value="paypal" [(ngModel)]="selectedPaymentMethod">
                                 <label class="form-check-label" for="paypal">
-                                    <i class="bi bi-paypal me-2"></i>PayPal
+                                    <i class="bi bi-paypal me-2"></i>{{ 'VIEW_ACTIVITY.PAYPAL' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -362,11 +362,11 @@
                 
                 <!-- Stripe payment form (show when processing Stripe payment) -->
                 <div *ngIf="showStripePaymentForm" class="stripe-payment-form">
-                    <h5 class="mb-3">Complete Payment</h5>
+                    <h5 class="mb-3">{{ 'VIEW_ACTIVITY.COMPLETE_PAYMENT' | translate }}</h5>
                     <div class="mb-3">
                         <div class="bg-light p-3 rounded">
                             <div class="d-flex justify-content-between fw-bold">
-                                <span>Total Amount:</span>
+                                <span>{{ 'TABLES.TOTAL_AMOUNT' | translate }}:</span>
                                 <span>${{activity.price * (+bookingData.participants)}}</span>
                             </div>
                         </div>
@@ -376,27 +376,27 @@
                     </div>
                     <div class="d-flex gap-2">
                         <button class="btn btn-secondary" (click)="cancelStripePayment()" [disabled]="paymentProcessing">
-                            Cancel
+                            {{ 'COMMON.CANCEL' | translate }}
                         </button>
                         <button class="btn btn-primary" (click)="confirmStripePayment()" [disabled]="paymentProcessing">
                             <span *ngIf="paymentProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                            {{paymentProcessing ? 'Processing...' : 'Complete Payment'}}
+                            {{paymentProcessing ? ('VIEW_ACTIVITY.PROCESSING' | translate) : ('VIEW_ACTIVITY.COMPLETE_PAYMENT' | translate)}}
                         </button>
                         <!-- Emergency reset button (only show when stuck) -->
                         <button *ngIf="paymentProcessing" class="btn btn-outline-warning btn-sm" (click)="resetPaymentState()">
-                            Reset
+                            {{ 'COMMON.RESET' | translate }}
                         </button>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" *ngIf="!showStripePaymentForm">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'COMMON.CANCEL' | translate }}</button>
                 <button type="button" class="btn btn-primary" 
                         [disabled]="!bookingData.participants"
                         (click)="createBooking()">
                     <i class="bi bi-credit-card me-2" *ngIf="selectedPaymentMethod === 'stripe'"></i>
                     <i class="bi bi-paypal me-2" *ngIf="selectedPaymentMethod === 'paypal'"></i>
-                    Book & Pay with {{selectedPaymentMethod === 'stripe' ? 'Card' : 'PayPal'}}
+                    {{ 'VIEW_ACTIVITY.BOOK_PAY_WITH' | translate }} {{selectedPaymentMethod === 'stripe' ? ('VIEW_ACTIVITY.CARD' | translate) : ('VIEW_ACTIVITY.PAYPAL' | translate)}}
                 </button>
             </div>
         </div>

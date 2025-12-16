@@ -3,6 +3,7 @@ import { RestApiService } from '../../../services/api/rest-api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 declare var $: any;
 
 @Component({
@@ -13,14 +14,19 @@ declare var $: any;
 export class ProfileComponent implements OnInit {
   spinnerTitle = '';
 
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    public router: Router) {
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    public router: Router,
+    public translate: TranslateService
+  ) {
 
   }
 
   async ngOnInit() {
 
-    this.spinnerTitle = 'Fetching Data';
+    this.spinnerTitle = this.translate.instant('COMMON.FETCHING_DATA');
     this.sp.show();
     await this.getSingleUser();
     setTimeout(() => {
@@ -45,11 +51,11 @@ export class ProfileComponent implements OnInit {
 
   onSubmitUserUpdate() {
     if ($('#firstName').val() == '' || $('#firstName').val() == undefined) {
-      this.helper.infoToast('First Name is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.FIRST_NAME_REQUIRED'));
       return;
     }
     if ($('#lastName').val() == '' || $('#lastName').val() == undefined) {
-      this.helper.infoToast('Last Name is required');
+      this.helper.infoToast(this.translate.instant('VALIDATION.LAST_NAME_REQUIRED'));
       return;
     }
     let data = null;
@@ -62,7 +68,7 @@ export class ProfileComponent implements OnInit {
     if (jsonString !== null) {
       storageUser = JSON.parse(jsonString);
     }
-    this.spinnerTitle = "Updating Profile"
+    this.spinnerTitle = this.translate.instant('PROFILE.UPDATING_PROFILE')
     this.sp.show()
     
     // Determine correct endpoint based on user type
@@ -81,7 +87,7 @@ export class ProfileComponent implements OnInit {
       .then(async (response: any) => {
         setTimeout(() => {
           this.sp.hide()
-          this.helper.successToast('Profile Updated Successfully');
+          this.helper.successToast(this.translate.instant('PROFILE.UPDATED_SUCCESSFULLY'));
           // Update local storage with new data
           if (response?.data) {
             localStorage.setItem('mystic9834!@', JSON.stringify(response.data));
@@ -95,7 +101,7 @@ export class ProfileComponent implements OnInit {
           // Session expired - handleUnauthorized will handle logout
           return;
         }
-        this.helper.failureToast(err?.error?.message || 'Failed to update profile');
+        this.helper.failureToast(err?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_UPDATE_PROFILE'));
       });
   }
 

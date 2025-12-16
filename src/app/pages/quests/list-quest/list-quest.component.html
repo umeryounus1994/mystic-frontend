@@ -1,27 +1,27 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'LIST.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Quests</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.DIGITAL_QUESTS' | translate }}</h1>
     </div>
 </div>
 <div class="row g-4 mb-4" *ngIf="auth.isAdmin">
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4 bg-primary bg-opacity-10 border border-primary rounded-3">
-            <h6>Total Quests</h6>
+            <h6>{{ 'LIST.TOTAL_QUESTS' | translate }}</h6>
             <h2 class="mb-0 fs-1 text-primary">{{counters.quests}}</h2>
         </div>
     </div>
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4 bg-success bg-opacity-10 border border-success rounded-3">
-            <h6>Active</h6>
+            <h6>{{ 'LIST.ACTIVE' | translate }}</h6>
             <h2 class="mb-0 fs-1 text-success">{{counters.active}}</h2>
         </div>
     </div>
     <div class="col-sm-4 col-lg-4">
         <div class="text-center p-4  bg-warning bg-opacity-15 border border-warning rounded-3">
-            <h6>Deleted</h6>
+            <h6>{{ 'LIST.DELETED' | translate }}</h6>
             <h2 class="mb-0 fs-1 text-warning">{{counters.deleted}}</h2>
         </div>
     </div>

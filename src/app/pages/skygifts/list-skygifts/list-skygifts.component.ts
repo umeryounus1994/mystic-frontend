@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth/auth.service';
 declare var $: any;
@@ -26,7 +27,8 @@ export class ListSkygiftsComponent implements OnInit {
     private api: RestApiService, 
     private helper: HelperService,
     private router: Router, 
-    public auth: AuthService
+    public auth: AuthService,
+    public translate: TranslateService
   ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
@@ -87,18 +89,18 @@ export class ListSkygiftsComponent implements OnInit {
 
   deletee(giftId: any) {
     Swal.fire({
-      title: `Are you sure You want to delete this Sky Gift?`,
+      title: this.translate.instant('POPUPS.DELETE_SKY_GIFT_TITLE'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: "Delete",
-      denyButtonText: `Cancel`
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      denyButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sp.show();
         this.api.delete('skygift/delete/'+giftId)
         .then((response: any) => {
           this.sp.hide();
-          Swal.fire("Sky Gift!", "Deleted Successfully", "success");
+          Swal.fire(this.translate.instant('SIDEBAR.SKY_GIFTS'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
           // Refresh list based on user type
           if(this.auth.isAdmin){
             this.getAllSkyGifts();
@@ -112,7 +114,7 @@ export class ListSkygiftsComponent implements OnInit {
             // Session expired - handleUnauthorized will handle logout
             return;
           }
-          this.helper.failureToast(err?.error?.message || 'Failed to delete gift');
+          this.helper.failureToast(err?.error?.message || this.translate.instant('MESSAGES.FAILED_TO_DELETE_GIFT'));
         });
       }
     });

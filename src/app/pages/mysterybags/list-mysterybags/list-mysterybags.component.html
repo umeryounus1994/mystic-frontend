@@ -1,9 +1,9 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Data....</p>
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Mystery Bags</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.MYSTERY_BAGS' | translate }}</h1>
     </div>
 </div>
 <div class="card bg-transparent border">
@@ -13,11 +13,11 @@
                 id="dtable">
                 <thead>
                     <tr>
-                        <th scope="col" class="border-0 rounded-start">Bag Title</th>
-                        <th scope="col" class="border-0">Bag Type</th>
-                        <th scope="col" class="border-0">Visibility Radius</th> 
-                        <th scope="col" class="border-0">Status</th>
-                        <th scope="col" class="border-0 rounded-end">Action</th>
+                        <th scope="col" class="border-0 rounded-start">{{ 'MYSTERY_BAGS.BAG_TITLE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'MYSTERY_BAGS.BAG_TYPE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'MYSTERY_BAGS.VISIBILITY_RADIUS' | translate }}</th> 
+                        <th scope="col" class="border-0">{{ 'COMMON.STATUS' | translate }}</th>
+                        <th scope="col" class="border-0 rounded-end">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,18 +25,18 @@
                         <td>{{bag.bag_title?.toString().substring(0,30)}}...</td>
                         <td>
                             <span class="badge bg-info bg-opacity-10 text-info" *ngIf="bag.bag_type == 'collectible'">
-                                Collectible
+                                {{ 'MYSTERY_BAGS.COLLECTIBLE' | translate }}
                             </span>
                             <span class="badge bg-secondary bg-opacity-10 text-secondary" *ngIf="bag.bag_type == 'view-only'">
-                                View Only
+                                {{ 'MYSTERY_BAGS.VIEW_ONLY' | translate }}
                             </span>
                         </td>
                         <td>{{bag.visibility_radius}} km</td>
                         <td>
                             <div *ngIf="bag.status == 'active'"
-                                class="badge bg-success bg-opacity-10 text-success">Active</div>
+                                class="badge bg-success bg-opacity-10 text-success">{{ 'COMMON.ACTIVE' | translate }}</div>
                             <div *ngIf="bag.status == 'deleted'"
-                                class="badge bg-danger bg-opacity-10 text-danger">Deleted</div>
+                                class="badge bg-danger bg-opacity-10 text-danger">{{ 'COMMON.DELETED' | translate }}</div>
                         </td>
                         <td>
                             <button class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0" (click)="viewMysteryBag(bag)">
@@ -62,41 +62,41 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewMysteryBagLabel">Mystery Bag Details</h5>
+                <h5 class="modal-title" id="viewMysteryBagLabel">{{ 'MYSTERY_BAGS.MYSTERY_BAG_DETAILS' | translate }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="form-label">Bag Title</label>
+                        <label class="form-label">{{ 'MYSTERY_BAGS.BAG_TITLE' | translate }}</label>
                         <p>{{selectedBag?.bag_title}}</p>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Bag Type</label>
+                        <label class="form-label">{{ 'MYSTERY_BAGS.BAG_TYPE' | translate }}</label>
                         <p>{{selectedBag?.bag_type}}</p>
                     </div>
                     <div class="col-md-12">
-                        <label class="form-label">Description</label>
-                        <p>{{selectedBag?.bag_description || 'No description'}}</p>
+                        <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+                        <p>{{selectedBag?.bag_description || ('MYSTERY_BAGS.NO_DESCRIPTION' | translate)}}</p>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Clue Text</label>
-                        <p>{{selectedBag?.clue_text || 'No clue'}}</p>
+                        <label class="form-label">{{ 'MYSTERY_BAGS.CLUE_TEXT' | translate }}</label>
+                        <p>{{selectedBag?.clue_text || ('MYSTERY_BAGS.NO_CLUE' | translate)}}</p>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Reward Text</label>
-                        <p>{{selectedBag?.reward_text || 'No reward text'}}</p>
+                        <label class="form-label">{{ 'MYSTERY_BAGS.REWARD_TEXT' | translate }}</label>
+                        <p>{{selectedBag?.reward_text || ('MYSTERY_BAGS.NO_REWARD_TEXT' | translate)}}</p>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Latitude</label>
+                        <label class="form-label">{{ 'FORMS.LATITUDE' | translate }}</label>
                         <p>{{selectedBag?.location?.coordinates[1]}}</p>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Longitude</label>
+                        <label class="form-label">{{ 'FORMS.LONGITUDE' | translate }}</label>
                         <p>{{selectedBag?.location?.coordinates[0]}}</p>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Visibility Radius</label>
+                        <label class="form-label">{{ 'MYSTERY_BAGS.VISIBILITY_RADIUS' | translate }}</label>
                         <p>{{selectedBag?.visibility_radius}} km</p>
                     </div>
                 </div>

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RestApiService } from '../../services/api/rest-api.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-paypal-success',
@@ -13,8 +14,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
           <div class="card">
             <div class="card-body">
               <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
-              <h3 class="mt-3">Processing Payment...</h3>
-              <p>Please wait while we confirm your PayPal payment.</p>
+              <h3 class="mt-3">{{ 'PAYMENT.PROCESSING_PAYMENT' | translate }}</h3>
+              <p>{{ 'PAYMENT.PLEASE_WAIT_PAYPAL' | translate }}</p>
             </div>
           </div>
         </div>
@@ -29,7 +30,8 @@ export class PaypalSuccessComponent implements OnInit {
     private router: Router,
     private api: RestApiService,
     private helper: HelperService,
-    private sp: NgxSpinnerService
+    private sp: NgxSpinnerService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -40,7 +42,7 @@ export class PaypalSuccessComponent implements OnInit {
       if (paymentId && payerId) {
         this.executePayPalPayment(paymentId, payerId);
       } else {
-        this.helper.failureToast('Invalid PayPal response');
+        this.helper.failureToast(this.translate.instant('PAYMENT.INVALID_PAYPAL_RESPONSE'));
         this.router.navigate(['/partner/list-activities']);
       }
     });
@@ -58,7 +60,7 @@ export class PaypalSuccessComponent implements OnInit {
       this.sp.hide();
       
       if (response?.data?.booking_id) {
-        this.helper.successToast('Payment successful! Booking confirmed.');
+        this.helper.successToast(this.translate.instant('PAYMENT.PAYMENT_SUCCESSFUL_BOOKING_CONFIRMED'));
         
         // Get pending booking info from localStorage
         const pendingBooking = localStorage.getItem('pendingBooking');
@@ -74,13 +76,13 @@ export class PaypalSuccessComponent implements OnInit {
           this.router.navigate(['/booking/list-bookings']);
         }
       } else {
-        throw new Error('No booking ID received');
+        throw new Error(this.translate.instant('PAYMENT.NO_BOOKING_ID'));
       }
       
     } catch (error: any) {
       this.sp.hide();
       console.error('PayPal execution error:', error);
-      this.helper.failureToast(error?.error?.message || 'Payment execution failed');
+      this.helper.failureToast(error?.error?.message || this.translate.instant('MESSAGES.PAYMENT_EXECUTION_FAILED'));
       this.router.navigate(['/partner/list-activities']);
     }
   }

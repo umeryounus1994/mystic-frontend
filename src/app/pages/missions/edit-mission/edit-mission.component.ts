@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
@@ -24,8 +25,15 @@ export class EditMissionComponent implements OnInit {
   Id="";
   rewardFile ='';
 
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    public router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    public router: Router, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute,
+    public translate: TranslateService
+  ) {
       this.route.queryParams.subscribe(params => {
         if (params && Object.keys(params).length > 0) {
           this.Id = params['Id'];
@@ -440,7 +448,7 @@ export class EditMissionComponent implements OnInit {
       .then((response: any) => {
         this.sp.hide();
         setTimeout(() => {
-          this.helper.successToast("Mission Updated Successfully");
+          this.helper.successToast(this.translate.instant('MESSAGES.MISSION_UPDATED_SUCCESS'));
         }, 1000);
         setTimeout(() => {
           this.router.navigate(['mission/list-mission']);
@@ -448,7 +456,7 @@ export class EditMissionComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Mission!", error?.error?.message || "There is an error, please try again", "error");
+        Swal.fire(this.translate.instant('SIDEBAR.MISSIONS'), error?.error?.message || this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'), "error");
       });
   }
 

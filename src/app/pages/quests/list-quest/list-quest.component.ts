@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth/auth.service';
 declare var $: any;
@@ -33,8 +34,14 @@ export class ListQuestComponent implements OnInit {
   questId = '';
   quest_image = '';
 
-  constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router, public auth:AuthService) {
+  constructor(
+    private sp: NgxSpinnerService, 
+    private api: RestApiService, 
+    private helper: HelperService,
+    private router: Router, 
+    public auth: AuthService,
+    public translate: TranslateService
+  ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);

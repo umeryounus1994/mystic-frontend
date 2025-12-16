@@ -1,12 +1,12 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Fetching Activities....</p>
+    <p style="font-size: 30px; color: white">{{ 'LIST.FETCHING_ACTIVITIES' | translate }}</p>
 </ngx-spinner>
 
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Activities</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.ACTIVITIES' | translate }}</h1>
         <button class="btn btn-primary" (click)="router.navigate(['/partner/activity/create'])">
-            <i class="bi bi-plus-circle me-2"></i>Create Activity
+            <i class="bi bi-plus-circle me-2"></i>{{ 'COMMON.CREATE' | translate }} {{ 'SIDEBAR.ACTIVITIES' | translate }}
         </button>
     </div>
 </div>
@@ -16,19 +16,19 @@
     <div class="card-body">
         <div class="row g-3">
             <div class="col-md-4">
-                <label class="form-label">Category</label>
+                <label class="form-label">{{ 'COMMON.CATEGORY' | translate }}</label>
                 <select class="form-select" [(ngModel)]="filters.category" (change)="onFilterChange()">
-                    <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label}}</option>
+                    <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label | translate}}</option>
                 </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Status</label>
+                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                 <select class="form-select" [(ngModel)]="filters.status" (change)="onFilterChange()">
-                    <option *ngFor="let status of statuses" [value]="status.value">{{status.label}}</option>
+                    <option *ngFor="let status of statuses" [value]="status.value">{{status.label | translate}}</option>
                 </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Items per page</label>
+                <label class="form-label">{{ 'LIST.ITEMS_PER_PAGE' | translate }}</label>
                 <select class="form-select" [(ngModel)]="filters.limit" (change)="onFilterChange()">
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -46,14 +46,14 @@
             <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover" id="dtable">
                 <thead>
                     <tr>
-                        <th scope="col" class="border-0 rounded-start">Activity</th>
-                        <th scope="col" class="border-0">Category</th>
-                        <th scope="col" class="border-0">Price</th>
-                        <th scope="col" class="border-0">Duration</th>
-                        <th scope="col" class="border-0">Max Participants</th>
-                        <th scope="col" class="border-0">Status</th>
-                        <th scope="col" class="border-0">Created Date</th>
-                        <th scope="col" class="border-0 rounded-end">Action</th>
+                        <th scope="col" class="border-0 rounded-start">{{ 'SIDEBAR.ACTIVITIES' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.CATEGORY' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'TABLES.PRICE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'TABLES.DURATION' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'TABLES.MAX_PARTICIPANTS' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.STATUS' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'LIST.CREATED_DATE' | translate }}</th>
+                        <th scope="col" class="border-0 rounded-end">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,28 +109,28 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <button class="dropdown-item" (click)="viewActivity(activity)">
-                                            <i class="bi bi-eye me-2"></i>View Details
+                                            <i class="bi bi-eye me-2"></i>{{ 'COMMON.VIEW_DETAILS' | translate }}
                                         </button>
                                     </li>
                                     <li *ngIf="auth.isPartner">
                                         <button class="dropdown-item" (click)="editActivity(activity._id)">
-                                            <i class="bi bi-pencil me-2"></i>Edit
+                                            <i class="bi bi-pencil me-2"></i>{{ 'COMMON.EDIT' | translate }}
                                         </button>
                                     </li>
                                     <li *ngIf="auth.isAdmin && activity.status === 'pending'">
                                         <button class="dropdown-item" (click)="approveActivity(activity._id)">
-                                            <i class="bi bi-check-circle me-2"></i>Approve
+                                            <i class="bi bi-check-circle me-2"></i>{{ 'LIST.APPROVE' | translate }}
                                         </button>
                                     </li>
                                     <li *ngIf="auth.isAdmin && activity.status === 'pending'">
                                         <button class="dropdown-item" (click)="rejectActivity(activity._id)">
-                                            <i class="bi bi-x-circle me-2"></i>Reject
+                                            <i class="bi bi-x-circle me-2"></i>{{ 'LIST.REJECT' | translate }}
                                         </button>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <button class="dropdown-item text-danger" (click)="deleteActivity(activity._id)">
-                                            <i class="bi bi-trash me-2"></i>Delete
+                                            <i class="bi bi-trash me-2"></i>{{ 'COMMON.DELETE' | translate }}
                                         </button>
                                     </li>
                                 </ul>
@@ -163,10 +163,10 @@
         <!-- No Data Message -->
         <div *ngIf="allActivities.length === 0" class="text-center py-5">
             <i class="bi bi-calendar-x display-1 text-muted"></i>
-            <h4 class="mt-3">No Activities Found</h4>
-            <p class="text-muted">Create your first activity to get started</p>
+            <h4 class="mt-3">{{ 'LIST.NO_ACTIVITIES_FOUND' | translate }}</h4>
+            <p class="text-muted">{{ 'LIST.CREATE_FIRST_ACTIVITY' | translate }}</p>
             <button class="btn btn-primary" (click)="router.navigate(['/partner/activity/create'])">
-                <i class="bi bi-plus-circle me-2"></i>Create Activity
+                <i class="bi bi-plus-circle me-2"></i>{{ 'SIDEBAR.CREATE_ACTIVITY' | translate }}
             </button>
         </div>
 
@@ -174,22 +174,22 @@
         <div *ngIf="pagination.total_pages > 1" class="d-flex justify-content-between align-items-center mt-4">
             <div>
                 <small class="text-muted">
-                    Showing {{((pagination.current_page - 1) * filters.limit) + 1}} to 
+                    {{ 'COMMON.SHOWING' | translate }} {{((pagination.current_page - 1) * filters.limit) + 1}} {{ 'COMMON.TO' | translate }} 
                     {{Math.min(pagination.current_page * filters.limit, pagination.total_items)}} 
-                    of {{pagination.total_items}} activities
+                    {{ 'COMMON.OF' | translate }} {{pagination.total_items}} {{ 'SIDEBAR.ACTIVITIES' | translate }}
                 </small>
             </div>
             <nav>
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item" [class.disabled]="pagination.current_page === 1">
-                        <button class="page-link" (click)="onPageChange(pagination.current_page - 1)">Previous</button>
+                        <button class="page-link" (click)="onPageChange(pagination.current_page - 1)">{{ 'COMMON.PREVIOUS' | translate }}</button>
                     </li>
                     <li *ngFor="let page of [].constructor(pagination.total_pages); let i = index" 
                         class="page-item" [class.active]="pagination.current_page === i + 1">
                         <button class="page-link" (click)="onPageChange(i + 1)">{{i + 1}}</button>
                     </li>
                     <li class="page-item" [class.disabled]="pagination.current_page === pagination.total_pages">
-                        <button class="page-link" (click)="onPageChange(pagination.current_page + 1)">Next</button>
+                        <button class="page-link" (click)="onPageChange(pagination.current_page + 1)">{{ 'COMMON.NEXT' | translate }}</button>
                     </li>
                 </ul>
             </nav>
@@ -202,7 +202,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title text-white" id="viewActivityLabel">Activity Details</h5>
+                <h5 class="modal-title text-white" id="viewActivityLabel">{{ 'COMMON.VIEW_DETAILS' | translate }}</h5>
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close">
                     <i class="bi bi-x-lg"></i>
                 </button>
@@ -225,56 +225,56 @@
                         
                         <div class="row g-3 mt-2">
                             <div class="col-6">
-                                <strong>Category:</strong>
+                                <strong>{{ 'COMMON.CATEGORY' | translate }}:</strong>
                                 <span class="badge bg-light text-dark ms-2">
                                     <i [class]="getCategoryIcon(selectedActivity.category)" class="me-1"></i>
                                     {{selectedActivity.category | titlecase}}
                                 </span>
                             </div>
                             <div class="col-6">
-                                <strong>Status:</strong>
+                                <strong>{{ 'COMMON.STATUS' | translate }}:</strong>
                                 <span class="badge ms-2" [ngClass]="getStatusBadgeClass(selectedActivity.status)">
                                     {{selectedActivity.status | titlecase}}
                                 </span>
                             </div>
                             <div class="col-6">
-                                <strong>Price:</strong> ${{selectedActivity.price}}
+                                <strong>{{ 'COMMON.PRICE' | translate }}:</strong> ${{selectedActivity.price}}
                             </div>
                             <div class="col-6">
-                                <strong>Duration:</strong> {{selectedActivity.duration}} minutes
+                                <strong>{{ 'TABLES.DURATION' | translate }}:</strong> {{selectedActivity.duration}} {{ 'COMMON.MINUTES_SHORT' | translate }}
                             </div>
                             <div class="col-6">
-                                <strong>Max Participants:</strong> {{selectedActivity.max_participants}}
+                                <strong>{{ 'TABLES.MAX_PARTICIPANTS' | translate }}:</strong> {{selectedActivity.max_participants}}
                             </div>
                             <div class="col-6">
-                                <strong>Created:</strong> {{getFormatedDate(selectedActivity.created_at)}}
+                                <strong>{{ 'COMMON.CREATED' | translate }}:</strong> {{getFormatedDate(selectedActivity.created_at)}}
                             </div>
                         </div>
                     </div>
 
                     <!-- Location -->
                     <div class="col-12">
-                        <h6>Location</h6>
+                        <h6>{{ 'TABLES.LOCATION' | translate }}</h6>
                         <p><i class="bi bi-geo-alt me-2"></i>{{selectedActivity.address}}</p>
                         <small class="text-muted">
-                            Coordinates: {{selectedActivity.location?.coordinates[1]}}, {{selectedActivity.location?.coordinates[0]}}
+                            {{ 'COMMON.COORDINATES' | translate }}: {{selectedActivity.location?.coordinates[1]}}, {{selectedActivity.location?.coordinates[0]}}
                         </small>
                     </div>
 
                     <!-- Partner Info -->
                     <div class="col-12" *ngIf="selectedActivity.partner_id">
-                        <h6>Partner Information</h6>
+                        <h6>{{ 'COMMON.PARTNER_INFORMATION' | translate }}</h6>
                         <p>
-                            <strong>Name:</strong> {{selectedActivity.partner_id.first_name}} {{selectedActivity.partner_id.last_name}}<br>
-                            <strong>Business:</strong> {{selectedActivity.partner_id.partner_profile?.business_name || 'N/A'}}
+                            <strong>{{ 'COMMON.NAME' | translate }}:</strong> {{selectedActivity.partner_id.first_name}} {{selectedActivity.partner_id.last_name}}<br>
+                            <strong>{{ 'FORMS.BUSINESS_NAME' | translate }}:</strong> {{selectedActivity.partner_id.partner_profile?.business_name || 'N/A'}}
                         </p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'COMMON.CLOSE' | translate }}</button>
                 <button type="button" class="btn btn-primary" (click)="editActivity(selectedActivity._id)" data-bs-dismiss="modal">
-                    <i class="bi bi-pencil me-2"></i>Edit Activity
+                    <i class="bi bi-pencil me-2"></i>{{ 'COMMON.EDIT' | translate }} {{ 'SIDEBAR.ACTIVITIES' | translate }}
                 </button>
             </div>
         </div>

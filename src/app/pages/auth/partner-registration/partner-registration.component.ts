@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, from } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-partner-registration',
@@ -27,7 +28,8 @@ export class PartnerRegistrationComponent implements OnInit {
     private auth: AuthService,
     private router: Router, 
     private helper: HelperService,
-    private sp: NgxSpinnerService
+    private sp: NgxSpinnerService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -195,41 +197,41 @@ export class PartnerRegistrationComponent implements OnInit {
           // Network error or timeout
           Swal.fire({
             icon: 'error',
-            title: 'Connection Error',
-            text: 'Unable to connect to the server. Please check your internet connection and try again.',
-            confirmButtonText: 'OK'
+            title: this.translate.instant('POPUPS.CONNECTION_ERROR'),
+            text: this.translate.instant('POPUPS.CONNECTION_ERROR_MESSAGE'),
+            confirmButtonText: this.translate.instant('COMMON.OK')
           });
         } else if (error?.status === 400) {
           // Bad request - validation errors
           Swal.fire({
             icon: 'error',
-            title: 'Validation Error',
-            text: errorMessage || 'Please check all required fields are filled correctly.',
-            confirmButtonText: 'OK'
+            title: this.translate.instant('MESSAGES.VALIDATION_ERROR'),
+            text: errorMessage || this.translate.instant('POPUPS.CHECK_REQUIRED_FIELDS'),
+            confirmButtonText: this.translate.instant('COMMON.OK')
           });
         } else if (error?.status === 409) {
           // Conflict - duplicate email/username
           Swal.fire({
             icon: 'error',
-            title: 'Account Exists',
-            text: 'Email or username already exists. Please use different credentials.',
-            confirmButtonText: 'OK'
+            title: this.translate.instant('POPUPS.ACCOUNT_EXISTS'),
+            text: this.translate.instant('POPUPS.ACCOUNT_EXISTS_MESSAGE'),
+            confirmButtonText: this.translate.instant('COMMON.OK')
           });
         } else if (error?.status === 500) {
           // Server error
           Swal.fire({
             icon: 'error',
-            title: 'Server Error',
-            text: errorMessage || 'An error occurred on the server. Please try again later.',
-            confirmButtonText: 'OK'
+            title: this.translate.instant('POPUPS.SERVER_ERROR'),
+            text: errorMessage || this.translate.instant('POPUPS.SERVER_ERROR_MESSAGE'),
+            confirmButtonText: this.translate.instant('COMMON.OK')
           });
         } else {
           // Generic error
           Swal.fire({
             icon: 'error',
-            title: 'Registration Failed',
+            title: this.translate.instant('MESSAGES.REGISTRATION_FAILED'),
             text: errorMessage,
-            confirmButtonText: 'OK'
+            confirmButtonText: this.translate.instant('COMMON.OK')
           });
         }
       }

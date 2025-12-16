@@ -32,6 +32,8 @@
     "@ckeditor/ckeditor5-utils": "^41.1.0",
     "@ckeditor/ckeditor5-watchdog": "^41.1.0",
     "@microsoft/signalr": "^8.0.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "@stripe/stripe-js": "^2.4.0",
     "angular-datatables": "^17.0.0",

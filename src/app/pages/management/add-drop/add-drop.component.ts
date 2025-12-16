@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,9 +25,15 @@ export class AddDropComponent implements OnInit {
   option5: File | undefined = undefined;
   option6: File | undefined = undefined;
 
-  constructor(private api: RestApiService, private sp: NgxSpinnerService, private helper: HelperService,
-    public router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
-
+  constructor(
+    private api: RestApiService, 
+    private sp: NgxSpinnerService, 
+    private helper: HelperService,
+    public router: Router, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute,
+    public translate: TranslateService
+  ) {
   }
   onChangeURL(url: SafeUrl) {
   }
@@ -164,14 +171,14 @@ export class AddDropComponent implements OnInit {
     
     // Check for all zero variations (0, 0000, 00000, etc.)
     if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Latitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_VALID_NOT_ZERO'), "error");
       this.questForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.questForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (!lngStr || lngStr === '' || lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
-      Swal.fire("Validation Error!", "Please enter a valid Longitude (cannot be 0 or empty)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_VALID_NOT_ZERO'), "error");
       this.questForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.questForm.get('longitude')?.markAsTouched();
       return;
@@ -180,7 +187,7 @@ export class AddDropComponent implements OnInit {
     // Additional validation
     const formValue = this.questForm.value;
     if (formValue.no_of_xp <= 0 || isNaN(formValue.no_of_xp)) {
-      Swal.fire("Validation Error!", "No of XP must be greater than 0", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.XP_MUST_BE_GREATER_THAN_ZERO'), "error");
       this.questForm.patchValue({ no_of_xp: 1 });
       return;
     }
@@ -191,14 +198,14 @@ export class AddDropComponent implements OnInit {
     
     // Double check for zero after parsing
     if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0 || Math.abs(lat) < 0.0001) {
-      Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
       this.questForm.get('latitude')?.setErrors({ invalidLatitude: true });
       this.questForm.get('latitude')?.markAsTouched();
       return;
     }
     
     if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0 || Math.abs(lng) < 0.0001) {
-      Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
       this.questForm.get('longitude')?.setErrors({ invalidLongitude: true });
       this.questForm.get('longitude')?.markAsTouched();
       return;
@@ -207,31 +214,31 @@ export class AddDropComponent implements OnInit {
     // Check form validity AFTER all custom validations
     if (!this.questForm?.valid) {
       const errors = [];
-      if (this.f['drop_name']?.errors) errors.push('Drop Name');
-      if (this.f['drop_description']?.errors) errors.push('Drop Description');
-      if (this.f['no_of_xp']?.errors) errors.push('No of XP');
+      if (this.f['drop_name']?.errors) errors.push(this.translate.instant('FORMS.DROP_NAME'));
+      if (this.f['drop_description']?.errors) errors.push(this.translate.instant('COMMON.DESCRIPTION'));
+      if (this.f['no_of_xp']?.errors) errors.push(this.translate.instant('FORMS.NO_OF_XP'));
       if (this.f['latitude']?.errors) {
         if (this.f['latitude'].errors['invalidLatitude']) {
-          Swal.fire("Validation Error!", "Latitude must be between -90 and 90 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Latitude');
+          errors.push(this.translate.instant('FORMS.LATITUDE'));
         }
         return;
       }
       if (this.f['longitude']?.errors) {
         if (this.f['longitude'].errors['invalidLongitude']) {
-          Swal.fire("Validation Error!", "Longitude must be between -180 and 180 (cannot be 0)", "error");
+          Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
         } else {
-          errors.push('Longitude');
+          errors.push(this.translate.instant('FORMS.LONGITUDE'));
         }
         return;
       }
-      if (this.f['mythica_reward']?.errors) errors.push('Mythica Reward');
-      if (this.f['mythica_ID']?.errors) errors.push('Mythica');
-      if (this.f['drop_type']?.errors) errors.push('Drop Type');
+      if (this.f['mythica_reward']?.errors) errors.push(this.translate.instant('DROPS.MYTHICA_REWARD'));
+      if (this.f['mythica_ID']?.errors) errors.push(this.translate.instant('FORMS.MYTHICA'));
+      if (this.f['drop_type']?.errors) errors.push(this.translate.instant('FORMS.DROP_TYPE'));
       
       if (errors.length > 0) {
-        Swal.fire("Validation Error!", `Please fix errors in: ${errors.join(', ')}`, "error");
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('VALIDATION.PLEASE_FIX_ERRORS')}: ${errors.join(', ')}`, "error");
       }
       return; // Don't proceed if form is invalid
     }
@@ -279,7 +286,7 @@ export class AddDropComponent implements OnInit {
       .then((response: any) => {
           this.sp.hide();
           setTimeout(() => {
-            this.helper.successToast("Drop Created Successfully");
+            this.helper.successToast(this.translate.instant('MESSAGES.DROP_CREATED_SUCCESSFULLY'));
           }, 1000);
           setTimeout(() => {
             this.router.navigate(['management/list-drop']);
@@ -287,7 +294,7 @@ export class AddDropComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Drop!", "There is an error, please try again", "error");
+        Swal.fire(this.translate.instant('SIDEBAR.DROPS'), this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'), "error");
       });
   }
   onFileSelected(event: any, type: string) {
