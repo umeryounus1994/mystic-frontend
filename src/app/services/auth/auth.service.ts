@@ -148,7 +148,7 @@ export class AuthService {
       approval_status: partnerData.partner_profile.approval_status || 'pending'
     }));
 
-    return from(this.api.postData('user/partner-signup', formData).catch(error => {
+    return from(this.api.postImageData('user/partner-signup', formData).catch(error => {
       // Ensure error is properly propagated
       console.error('Partner registration API error:', error);
       throw error;
@@ -170,6 +170,6 @@ export class AuthService {
       formData.append('image', familyData.image);
     }
     
-    return from(this.api.postData('user/family-signup', formData));
+    return from(this.api.postImageData('user/family-signup', formData));
   }
 }

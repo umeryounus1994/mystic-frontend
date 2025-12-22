@@ -47,10 +47,10 @@
                                     id="username">
                             </div>
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('username')">
-                                <div *ngIf="partnerForm.get('username')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                                <div *ngIf="partnerForm.get('username')?.errors?.['minlength']">{{ 'VALIDATION.USERNAME_MIN' | translate }}</div>
-                                <div *ngIf="partnerForm.get('username')?.errors?.['maxlength']">{{ 'VALIDATION.USERNAME_MAX' | translate }}</div>
-                                <div *ngIf="partnerForm.get('username')?.errors?.['pattern']">{{ 'VALIDATION.USERNAME_PATTERN' | translate }}</div>
+                                <div *ngIf="partnerForm.get('username')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
+                                <div *ngIf="partnerForm.get('username')?.errors?.['minlength']">{{ getValidationMessage('VALIDATION.USERNAME_MIN') }}</div>
+                                <div *ngIf="partnerForm.get('username')?.errors?.['maxlength']">{{ getValidationMessage('VALIDATION.USERNAME_MAX') }}</div>
+                                <div *ngIf="partnerForm.get('username')?.errors?.['pattern']">{{ getValidationMessage('VALIDATION.USERNAME_PATTERN') }}</div>
                             </div>
                         </div>
 
@@ -66,9 +66,9 @@
                                     id="email">
                             </div>
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
-                                <div *ngIf="partnerForm.get('email')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                                <div *ngIf="partnerForm.get('email')?.errors?.['email'] || partnerForm.get('email')?.errors?.['invalidEmail']">{{ 'VALIDATION.EMAIL_INVALID' | translate }}</div>
-                                <div *ngIf="partnerForm.get('email')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 100} }}</div>
+                                <div *ngIf="partnerForm.get('email')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
+                                <div *ngIf="partnerForm.get('email')?.errors?.['email'] || partnerForm.get('email')?.errors?.['invalidEmail']">{{ getValidationMessage('VALIDATION.EMAIL_INVALID') }}</div>
+                                <div *ngIf="partnerForm.get('email')?.errors?.['maxlength']">{{ getValidationMessage('VALIDATION.MAX_LENGTH').replace('{{max}}', '100') }}</div>
                             </div>
                         </div>
                     </div>
@@ -92,12 +92,12 @@
                                 </span>
                             </div>
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
-                                <div *ngIf="partnerForm.get('password')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['minlength']">{{ 'VALIDATION.PASSWORD_MIN' | translate }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['maxLength']">{{ 'VALIDATION.PASSWORD_MAX' | translate }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['noCapital']">{{ 'VALIDATION.PASSWORD_CAPITAL' | translate }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['noNumber']">{{ 'VALIDATION.PASSWORD_NUMBER' | translate }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['invalidChars']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                <div *ngIf="partnerForm.get('password')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
+                                <div *ngIf="partnerForm.get('password')?.errors?.['minlength']">{{ getValidationMessage('VALIDATION.PASSWORD_MIN') }}</div>
+                                <div *ngIf="partnerForm.get('password')?.errors?.['maxLength']">{{ getValidationMessage('VALIDATION.PASSWORD_MAX') }}</div>
+                                <div *ngIf="partnerForm.get('password')?.errors?.['noCapital']">{{ getValidationMessage('VALIDATION.PASSWORD_CAPITAL') }}</div>
+                                <div *ngIf="partnerForm.get('password')?.errors?.['noNumber']">{{ getValidationMessage('VALIDATION.PASSWORD_NUMBER') }}</div>
+                                <div *ngIf="partnerForm.get('password')?.errors?.['invalidChars']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
                             </div>
                         </div>
 
@@ -119,10 +119,10 @@
                                 </span>
                             </div>
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('confirm_password')">
-                                {{ 'VALIDATION.REQUIRED' | translate }}
+                                {{ getValidationMessage('VALIDATION.REQUIRED') }}
                             </div>
                             <div class="invalid-feedback" *ngIf="partnerForm.hasError('passwordMismatch')">
-                                {{ 'VALIDATION.PASSWORD_MISMATCH' | translate }}
+                                {{ getValidationMessage('VALIDATION.PASSWORD_MISMATCH') }}
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                         <!-- Business Name and Profile Image -->
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label for="businessName" class="form-label">{{ 'FORMS.BUSINESS_NAME' | translate }}</label>
+                                <label for="businessName" class="form-label">{{ 'FORMS.BUSINESS_NAME' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('business_name') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
@@ -147,7 +147,7 @@
                                         [placeholder]="'AUTH.ENTER_BUSINESS_NAME' | translate" id="businessName">
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('business_name')">
-                                    {{ 'VALIDATION.REQUIRED' | translate }}
+                                    {{ getValidationMessage('VALIDATION.REQUIRED') }}
                                 </div>
                             </div>
 
@@ -163,7 +163,7 @@
 
 
                             <div class="col-md-6 mb-4">
-                                <label for="phone" class="form-label">{{ 'FORMS.PHONE_NUMBER' | translate }}</label>
+                                <label for="phone" class="form-label">{{ 'FORMS.PHONE_NUMBER' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('phone') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
@@ -174,11 +174,11 @@
                                         [placeholder]="'AUTH.ENTER_PHONE' | translate" id="phone">
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('phone')">
-                                    {{ 'VALIDATION.REQUIRED' | translate }}
+                                    {{ getValidationMessage('VALIDATION.REQUIRED') }}
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
-                                <label for="routingNumber" class="form-label">{{ 'FORMS.ROUTING_NUMBER' | translate }}</label>
+                                <label for="routingNumber" class="form-label">{{ 'FORMS.ROUTING_NUMBER' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('routing_number') }">
                                     <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
@@ -189,20 +189,20 @@
                                         [placeholder]="'AUTH.ENTER_ROUTING_NUMBER' | translate" id="routingNumber">
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('routing_number')">
-                                    {{ 'VALIDATION.REQUIRED' | translate }}
+                                    {{ getValidationMessage('VALIDATION.REQUIRED') }}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Business Description -->
                         <div class="mb-4">
-                            <label for="businessDescription" class="form-label">{{ 'FORMS.BUSINESS_DESCRIPTION' | translate }}</label>
+                            <label for="businessDescription" class="form-label">{{ 'FORMS.BUSINESS_DESCRIPTION' | translate }} <span class="text-danger">*</span></label>
                             <textarea class="form-control form-control-lg bg-light border-0"
                                 formControlName="business_description" rows="3"
                                 [placeholder]="'AUTH.ENTER_BUSINESS_DESCRIPTION' | translate" id="businessDescription"
                                 [class.is-invalid]="isPartnerFieldInvalid('business_description')"></textarea>
                             <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('business_description')">
-                                {{ 'VALIDATION.REQUIRED' | translate }}
+                                {{ getValidationMessage('VALIDATION.REQUIRED') }}
                             </div>
                         </div>
 
@@ -215,7 +215,7 @@
                             <!-- Account Holder and Account Number -->
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-                                    <label for="accountHolder" class="form-label">{{ 'FORMS.ACCOUNT_HOLDER' | translate }}</label>
+                                    <label for="accountHolder" class="form-label">{{ 'FORMS.ACCOUNT_HOLDER' | translate }} <span class="text-danger">*</span></label>
                                     <div class="input-group input-group-lg"
                                         [ngClass]="{ 'is-invalid': isBankFieldInvalid('account_holder') }">
                                         <span
@@ -227,12 +227,12 @@
                                             [placeholder]="'AUTH.ENTER_ACCOUNT_HOLDER' | translate" id="accountHolder">
                                     </div>
                                     <div class="invalid-feedback" *ngIf="isBankFieldInvalid('account_holder')">
-                                        {{ 'VALIDATION.REQUIRED' | translate }}
+                                        {{ getValidationMessage('VALIDATION.REQUIRED') }}
                                     </div>
                                 </div>
 
                                 <div class="col-md-6 mb-4">
-                                    <label for="accountNumber" class="form-label">{{ 'FORMS.ACCOUNT_NUMBER' | translate }}</label>
+                                    <label for="accountNumber" class="form-label">{{ 'FORMS.ACCOUNT_NUMBER' | translate }} <span class="text-danger">*</span></label>
                                     <div class="input-group input-group-lg"
                                         [ngClass]="{ 'is-invalid': isBankFieldInvalid('account_number') }">
                                         <span
@@ -244,7 +244,7 @@
                                             [placeholder]="'AUTH.ENTER_ACCOUNT_NUMBER' | translate" id="accountNumber">
                                     </div>
                                     <div class="invalid-feedback" *ngIf="isBankFieldInvalid('account_number')">
-                                        {{ 'VALIDATION.REQUIRED' | translate }}
+                                        {{ getValidationMessage('VALIDATION.REQUIRED') }}
                                     </div>
                                 </div>
                             </div>
@@ -260,11 +260,11 @@
                             <input class="form-check-input" type="checkbox" id="agreeTerms" formControlName="agreeTerms"
                                 [class.is-invalid]="isFieldInvalid('agreeTerms')">
                             <label class="form-check-label" for="agreeTerms">
-                                {{ 'AUTH.AGREE_TERMS' | translate }}
+                                {{ 'AUTH.AGREE_TERMS' | translate }} <span class="text-danger">*</span>
                             </label>
                         </div>
                         <div class="invalid-feedback" *ngIf="isFieldInvalid('agreeTerms')">
-                            {{ 'VALIDATION.REQUIRED' | translate }}
+                            {{ getValidationMessage('VALIDATION.REQUIRED') }}
                         </div>
                     </div>
 
@@ -272,7 +272,7 @@
                     <div class="align-items-center mt-0">
                         <div class="d-grid">
                             <button class="btn btn-primary mb-0" type="submit"
-                                [disabled]="partnerForm.invalid || isSubmitting">
+                                [disabled]="isSubmitting">
                                 <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
                                 {{ isSubmitting ? ('AUTH.REGISTERING' | translate) : ('AUTH.REGISTER_AS_PARTNER' | translate) }}
                             </button>

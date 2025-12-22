@@ -117,6 +117,11 @@ export class PartnerRegistrationComponent implements OnInit {
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
+  // Translation getters for validation messages
+  getValidationMessage(key: string): string {
+    return this.translate.instant(key);
+  }
+
   onImageSelect(event: any) {
     const file = event.target.files[0];
     if (file) {

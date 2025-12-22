@@ -119,7 +119,7 @@ export class LoginComponent implements OnInit {
       })
       .catch((error) => {
         this.sp.hide();
-        Swal.fire("Reset Password!", error?.message, "error");
+        Swal.fire("Reset Password!", error?.error?.message, "error");
       });
   }
   showResetPasswordModal(){
