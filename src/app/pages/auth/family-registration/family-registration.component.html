@@ -1,40 +1,41 @@
 <div class="container-fluid p-0">
     <div class="row g-0">
         <!-- Left Side -->
-        <div class="col-12 col-lg-4 d-flex align-items-center justify-content-center bg-success bg-opacity-10 min-vh-100 left-side">
-            <!-- Floating Elements -->
-            <div class="position-absolute floating-element" style="top: 10%; left: 10%; width: 60px; height: 60px; background: rgba(25, 135, 84, 0.1); border-radius: 50%;"></div>
-            <div class="position-absolute floating-element reverse" style="top: 70%; right: 15%; width: 40px; height: 40px; background: rgba(25, 135, 84, 0.15); border-radius: 50%;"></div>
-            <div class="position-absolute floating-element delay" style="top: 30%; right: 20%; width: 20px; height: 20px; background: rgba(25, 135, 84, 0.2); border-radius: 50%;"></div>
+        <div class="col-12 col-lg-4 d-flex align-items-center justify-content-center min-vh-100 left-side">
+            <!-- Floating Elements - Nature Theme -->
+            <div class="position-absolute floating-element" style="top: 10%; left: 10%; width: 60px; height: 60px; background: rgba(16, 185, 129, 0.2); border-radius: 50%;"></div>
+            <div class="position-absolute floating-element reverse" style="top: 70%; right: 15%; width: 50px; height: 50px; background: rgba(20, 184, 166, 0.2); border-radius: 50%;"></div>
+            <div class="position-absolute floating-element delay" style="top: 30%; right: 20%; width: 30px; height: 30px; background: rgba(245, 158, 11, 0.25); border-radius: 50%;"></div>
+            <div class="position-absolute floating-element" style="top: 50%; left: 5%; width: 25px; height: 25px; background: rgba(16, 185, 129, 0.15); border-radius: 50%;"></div>
             
             <div class="p-4 p-lg-5 text-center welcome-content">
                 <!-- Welcome Content -->
                 <div class="mb-4">
                     <div class="mb-4">
                         <div class="main-icon">
-                            <i class="bi bi-house-heart text-success" style="font-size: 2.5rem;"></i>
+                            <span style="font-size: 3rem;">👨‍👩‍👧‍👦</span>
                         </div>
                     </div>
-                    <h2 class="fw-bold text-dark mb-3">{{ 'AUTH.JOIN_FAMILY' | translate }}</h2>
-                    <p class="text-dark fs-5 mb-4">{{ 'AUTH.CREATE_MEMORIES' | translate }}</p>
-                    <div class="d-flex justify-content-center gap-3 mb-4">
+                    <h2 class="fw-bold mb-3" style="color: #10B981; font-size: 2rem;">{{ 'AUTH.JOIN_FAMILY' | translate }}</h2>
+                    <p class="fs-5 mb-4" style="color: #4B5563;">{{ 'AUTH.CREATE_MEMORIES' | translate }}</p>
+                    <div class="d-flex justify-content-center gap-4 mb-4">
                         <div class="text-center">
-                            <div class="feature-icon bg-success bg-opacity-10">
-                                <i class="bi bi-heart text-success"></i>
+                            <div class="feature-icon" style="background: rgba(16, 185, 129, 0.15);">
+                                <span style="font-size: 1.8rem;">❤️</span>
                             </div>
-                            <small class="d-block text-dark">{{ 'AUTH.FAMILY_FUN' | translate }}</small>
+                            <small class="d-block mt-2" style="color: #374151; font-weight: 600;">{{ 'AUTH.FAMILY_FUN' | translate }}</small>
                         </div>
                         <div class="text-center">
-                            <div class="feature-icon bg-info bg-opacity-10">
-                                <i class="bi bi-map text-primary"></i>
+                            <div class="feature-icon" style="background: rgba(20, 184, 166, 0.15);">
+                                <span style="font-size: 1.8rem;">🗺️</span>
                             </div>
-                            <small class="d-block text-dark">{{ 'AUTH.ADVENTURES' | translate }}</small>
+                            <small class="d-block mt-2" style="color: #374151; font-weight: 600;">{{ 'AUTH.ADVENTURES' | translate }}</small>
                         </div>
                         <div class="text-center">
-                            <div class="feature-icon bg-warning bg-opacity-10">
-                                <i class="bi bi-gift text-warning"></i>
+                            <div class="feature-icon" style="background: rgba(245, 158, 11, 0.15);">
+                                <span style="font-size: 1.8rem;">🎁</span>
                             </div>
-                            <small class="d-block text-dark">{{ 'AUTH.REWARDS' | translate }}</small>
+                            <small class="d-block mt-2" style="color: #374151; font-weight: 600;">{{ 'AUTH.REWARDS' | translate }}</small>
                         </div>
                     </div>
                 </div>
@@ -112,17 +113,16 @@
                                 <label for="password" class="form-label">{{ 'COMMON.PASSWORD' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('password') }">
-                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                        <i class="fas fa-lock"></i>
+                                    <span class="input-group-text border-end-0">
+                                        <span style="font-size: 1.2rem;">🔒</span>
                                     </span>
                                     <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" maxlength="15"
-                                        class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
+                                        class="form-control border-start-0 border-end-0 ps-0" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
                                         id="password">
-                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
-                                        (click)="showPassword()">
-                                        <i *ngIf="fieldTextType" class="fas fa-eye-slash"></i>
-                                        <i *ngIf="!fieldTextType" class="fas fa-eye"></i>
-                                    </span>
+                                    <button class="btn border-start-0" type="button" (click)="showPassword()" style="background: #F9FAFB; border: 2px solid #E5E7EB; border-left: none; border-radius: 0 16px 16px 0;">
+                                        <span *ngIf="fieldTextType" style="font-size: 1.2rem;">👁️</span>
+                                        <span *ngIf="!fieldTextType" style="font-size: 1.2rem;">👁️‍🗨️</span>
+                                    </button>
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
                                     <div *ngIf="familyForm.get('password')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
@@ -138,18 +138,17 @@
                                 <label for="confirmPassword" class="form-label">{{ 'FORMS.CONFIRM_PASSWORD' | translate }} <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-lg"
                                     [ngClass]="{ 'is-invalid': isFieldInvalid('confirm_password') || familyForm.hasError('passwordMismatch') }">
-                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                        <i class="fas fa-lock"></i>
+                                    <span class="input-group-text border-end-0">
+                                        <span style="font-size: 1.2rem;">🔒</span>
                                     </span>
                                     <input [type]="fieldTextTypeConfirm ? 'text' : 'password'"
                                         formControlName="confirm_password"
-                                        class="form-control border-0 bg-light rounded-end ps-1"
+                                        class="form-control border-start-0 border-end-0 ps-0"
                                         [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" id="confirmPassword">
-                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
-                                        (click)="showPasswordConfirm()">
-                                        <i *ngIf="fieldTextTypeConfirm" class="fas fa-eye-slash"></i>
-                                        <i *ngIf="!fieldTextTypeConfirm" class="fas fa-eye"></i>
-                                    </span>
+                                    <button class="btn border-start-0" type="button" (click)="showPasswordConfirm()" style="background: #F9FAFB; border: 2px solid #E5E7EB; border-left: none; border-radius: 0 16px 16px 0;">
+                                        <span *ngIf="fieldTextTypeConfirm" style="font-size: 1.2rem;">👁️</span>
+                                        <span *ngIf="!fieldTextTypeConfirm" style="font-size: 1.2rem;">👁️‍🗨️</span>
+                                    </button>
                                 </div>
                                 <div class="invalid-feedback" *ngIf="isFieldInvalid('confirm_password')">
                                     {{ 'VALIDATION.REQUIRED' | translate }}

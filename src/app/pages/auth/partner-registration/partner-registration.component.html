@@ -4,16 +4,23 @@
     </ngx-spinner>
 
     <!-- left -->
-    <div
-        class="col-12 col-lg-4 d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 min-vh-100">
-        <div class="p-3 p-lg-4">
+    <div class="col-12 col-lg-4 d-md-flex align-items-center justify-content-center min-vh-100 left-side">
+        <!-- Floating Elements - Magic Theme -->
+        <div class="position-absolute floating-element" style="top: 10%; left: 10%; width: 60px; height: 60px; background: rgba(139, 92, 246, 0.2); border-radius: 50%;"></div>
+        <div class="position-absolute floating-element reverse" style="top: 70%; right: 15%; width: 50px; height: 50px; background: rgba(20, 184, 166, 0.2); border-radius: 50%;"></div>
+        <div class="position-absolute floating-element delay" style="top: 30%; right: 20%; width: 30px; height: 30px; background: rgba(245, 158, 11, 0.25); border-radius: 50%;"></div>
+        
+        <div class="p-3 p-lg-4 text-center" style="position: relative; z-index: 1;">
             <!-- Title -->
-            <div class="text-center">
-                <h4 class="fw-bold">Welcome to our largest community</h4>
-                <p class="mb-0 h6 fw-light">Let's learn something new today!</p>
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <span style="font-size: 3.5rem; display: inline-block; animation: bounce 2s ease-in-out infinite;">🚀</span>
+                </div>
+                <h4 class="fw-bold mb-3" style="color: #8B5CF6; font-size: 1.8rem;">Welcome to our largest community</h4>
+                <p class="mb-0 h5" style="color: #6B7280; font-weight: 500;">Let's learn something new today!</p>
             </div>
             <!-- SVG Image -->
-            <img src="assets/images/element/02.svg" class="mt-4 w-100" alt="" style="max-width: 250px;">
+            <img src="assets/images/element/02.svg" class="mt-4 w-100" alt="" style="max-width: 250px; filter: drop-shadow(0 15px 35px rgba(139, 92, 246, 0.2)); animation: float 8s ease-in-out infinite;">
         </div>
     </div>
 
@@ -22,9 +29,11 @@
         <div class="row my-4">
             <div class="col-sm-11 col-xl-9 mx-auto">
                 <!-- Title -->
-                <span class="mb-0 fs-1">🚀</span>
-                <h1 class="fs-2">{{ 'AUTH.PARTNER_REGISTRATION' | translate }}</h1>
-                <p class="lead mb-4">{{ 'AUTH.JOIN_PLATFORM' | translate }}</p>
+                <div class="text-center mb-4">
+                    <span class="mb-0 fs-1" style="display: inline-block; animation: bounce 2s ease-in-out infinite;">🏢</span>
+                    <h1 class="fs-2 fw-bold mb-2" style="color: #8B5CF6;">{{ 'AUTH.PARTNER_REGISTRATION' | translate }}</h1>
+                    <p class="lead mb-0" style="color: #6B7280; font-size: 1.1rem;">{{ 'AUTH.JOIN_PLATFORM' | translate }}</p>
+                </div>
 
                 <!-- Form START -->
                 <form [formGroup]="partnerForm" (ngSubmit)="onSubmit()">
@@ -79,17 +88,16 @@
                             <label for="password" class="form-label">{{ 'COMMON.PASSWORD' | translate }} <span class="text-danger">*</span></label>
                             <div class="input-group input-group-lg"
                                 [ngClass]="{ 'is-invalid': isFieldInvalid('password') }">
-                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                    <i class="fas fa-lock"></i>
+                                <span class="input-group-text border-end-0">
+                                    <span style="font-size: 1.2rem;">🔒</span>
                                 </span>
                                 <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" maxlength="15"
-                                    class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
+                                    class="form-control border-start-0 border-end-0 ps-0" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
                                     id="password">
-                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
-                                    (click)="showPassword()">
-                                    <i *ngIf="fieldTextType" class="fas fa-eye-slash"></i>
-                                    <i *ngIf="!fieldTextType" class="fas fa-eye"></i>
-                                </span>
+                                <button class="btn border-start-0" type="button" (click)="showPassword()" style="background: #F9FAFB; border: 2px solid #E5E7EB; border-left: none; border-radius: 0 16px 16px 0;">
+                                    <span *ngIf="fieldTextType" style="font-size: 1.2rem;">👁️</span>
+                                    <span *ngIf="!fieldTextType" style="font-size: 1.2rem;">👁️‍🗨️</span>
+                                </button>
                             </div>
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
                                 <div *ngIf="partnerForm.get('password')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
@@ -105,18 +113,17 @@
                             <label for="confirmPassword" class="form-label">{{ 'FORMS.CONFIRM_PASSWORD' | translate }} <span class="text-danger">*</span></label>
                             <div class="input-group input-group-lg"
                                 [ngClass]="{ 'is-invalid': isFieldInvalid('confirm_password') || partnerForm.hasError('passwordMismatch') }">
-                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                    <i class="fas fa-lock"></i>
+                                <span class="input-group-text border-end-0">
+                                    <span style="font-size: 1.2rem;">🔒</span>
                                 </span>
                                 <input [type]="fieldTextTypeConfirm ? 'text' : 'password'"
                                     formControlName="confirm_password"
-                                    class="form-control border-0 bg-light rounded-end ps-1"
+                                    class="form-control border-start-0 border-end-0 ps-0"
                                     [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" id="confirmPassword">
-                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"
-                                    (click)="showPasswordConfirm()">
-                                    <i *ngIf="fieldTextTypeConfirm" class="fas fa-eye-slash"></i>
-                                    <i *ngIf="!fieldTextTypeConfirm" class="fas fa-eye"></i>
-                                </span>
+                                <button class="btn border-start-0" type="button" (click)="showPasswordConfirm()" style="background: #F9FAFB; border: 2px solid #E5E7EB; border-left: none; border-radius: 0 16px 16px 0;">
+                                    <span *ngIf="fieldTextTypeConfirm" style="font-size: 1.2rem;">👁️</span>
+                                    <span *ngIf="!fieldTextTypeConfirm" style="font-size: 1.2rem;">👁️‍🗨️</span>
+                                </button>
                             </div>
                             <div class="invalid-feedback" *ngIf="isFieldInvalid('confirm_password')">
                                 {{ getValidationMessage('VALIDATION.REQUIRED') }}

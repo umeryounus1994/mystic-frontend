@@ -96,6 +96,11 @@ export class CreateActivityDropComponent implements OnInit {
 
   get f() { return this.dropForm?.controls; }
 
+  // Translation getter for validation messages
+  getValidationMessage(key: string): string {
+    return this.translate.instant(key);
+  }
+
   getAllActivities() {
     this.allActivities = [];
     
