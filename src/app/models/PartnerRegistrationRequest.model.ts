@@ -13,6 +13,15 @@ export interface PartnerRegistrationRequest {
     business_description: string;
     phone: string;
     commission_rate?: number;  // defaults to 15
+    payout_preference?: {
+      preferred_method: 'bank_transfer' | 'paypal' | 'stripe';
+    };
+    paypal_details?: {
+      paypal_email: string;
+    };
+    stripe_details?: {
+      stripe_account_id: string;
+    };
     bank_details: {
       account_number: string;
       routing_number: string;

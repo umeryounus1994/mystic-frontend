@@ -12,10 +12,11 @@ import { MythicasComponent } from './mythicas/mythicas.component';
 import { AddDropComponent } from './add-drop/add-drop.component';
 import { ListDropComponent } from './list-drop/list-drop.component';
 import { RewardsComponent } from './rewards/rewards.component';
+import { ListPayoutsComponent } from './payouts/list-payouts/list-payouts.component';
 
 
 @NgModule({
-  declarations: [ListUserComponent, ProfileComponent, MythicasComponent,AddDropComponent,ListDropComponent, RewardsComponent],
+  declarations: [ListUserComponent, ProfileComponent, MythicasComponent,AddDropComponent,ListDropComponent, RewardsComponent, ListPayoutsComponent],
   imports: [
     CommonModule,
     ManagementRoutingModule,

@@ -8,6 +8,8 @@ import { EditActivityComponent } from './activity/edit-activity/edit-activity.co
 import { SearchActivitiesComponent } from './search-activities/search-activities.component';
 import { CreateActivityDropComponent } from './create-activity-drop/create-activity-drop.component';
 import { ListActivityDropsComponent } from './list-activity-drops/list-activity-drops.component';
+import { PayoutSettingsComponent } from './payouts/payout-settings/payout-settings.component';
+import { PayoutHistoryComponent } from './payouts/payout-history/payout-history.component';
 
 const routes: Routes = [{
   path: '',
@@ -45,6 +47,16 @@ const routes: Routes = [{
     {
       path: 'list-activity-drops',
       component: ListActivityDropsComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'payout-settings',
+      component: PayoutSettingsComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'payout-history',
+      component: PayoutHistoryComponent,
       canActivate: [AuthGuard]
     }
   ]

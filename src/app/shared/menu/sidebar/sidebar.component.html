@@ -151,6 +151,25 @@
           </ul>
         </li>
 
+        <!-- Payouts Section for Partners -->
+        <li class="nav-item ms-2 my-2" *ngIf="auth.isPartner">
+          <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.PAYOUTS' | translate }}</span>
+        </li>
+
+        <!-- Payout Settings -->
+        <li class="nav-item" *ngIf="auth.isPartner">
+          <a [routerLink]="['/partner/payout-settings']" class="nav-link text-white" [class.active]="routeURL === '/partner/payout-settings' || routeURL.includes('/partner/payout-settings')" (click)="closeSidebar()">
+            <i class="bi bi-wallet2 fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUT_SETTINGS' | translate }}
+          </a>
+        </li>
+
+        <!-- Payout History -->
+        <li class="nav-item" *ngIf="auth.isPartner">
+          <a [routerLink]="['/partner/payout-history']" class="nav-link text-white" [class.active]="routeURL === '/partner/payout-history' || routeURL.includes('/partner/payout-history')" (click)="closeSidebar()">
+            <i class="bi bi-clock-history fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUT_HISTORY' | translate }}
+          </a>
+        </li>
+
         <!-- Bookings -->
         <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsebookings')">
@@ -221,6 +240,13 @@
         <li class="nav-item" *ngIf="auth.isAdmin">
           <a [routerLink]="['/management/mythicas']" class="nav-link text-white" [class.active]="routeURL === '/management/mythicas'" (click)="closeSidebar()">
             <i class="bi bi-star fa-fw me-2"></i>{{ 'SIDEBAR.MYTHICAS' | translate }}
+          </a>
+        </li>
+
+        <!-- Payouts Management -->
+        <li class="nav-item" *ngIf="auth.isAdmin">
+          <a [routerLink]="['/management/list-payouts']" class="nav-link text-white" [class.active]="routeURL === '/management/list-payouts' || routeURL.includes('/management/list-payouts')" (click)="closeSidebar()">
+            <i class="bi bi-cash-coin fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUTS_MANAGEMENT' | translate }}
           </a>
         </li>
 

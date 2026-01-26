@@ -1,0 +1,109 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Loading...</p>
+</ngx-spinner>
+
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Payouts Management</h1>
+        <div class="d-flex gap-2">
+            <select class="form-select" [(ngModel)]="selectedStatusFilter" (change)="applyStatusFilter()" style="width: auto;">
+                <option value="">All Status</option>
+                <option value="unpaid">Unpaid</option>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+                <option value="failed">Failed</option>
+            </select>
+            <select class="form-select" [(ngModel)]="selectedMethodFilter" (change)="applyMethodFilter()" style="width: auto;">
+                <option value="">All Methods</option>
+                <option value="stripe">Stripe</option>
+                <option value="paypal">PayPal</option>
+            </select>
+            <button class="btn btn-success" (click)="triggerAutomaticPayouts()">
+                <i class="bi bi-lightning-charge"></i> Trigger Automatic Payouts
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-sm-3 col-lg-3">
+        <div class="text-center p-4 bg-primary bg-opacity-10 border border-primary rounded-3">
+            <h6>Total Payouts</h6>
+            <h2 class="mb-0 fs-1 text-primary">{{stats.total}}</h2>
+        </div>
+    </div>
+    <div class="col-sm-3 col-lg-3">
+        <div class="text-center p-4 bg-warning bg-opacity-10 border border-warning rounded-3">
+            <h6>Unpaid</h6>
+            <h2 class="mb-0 fs-1 text-warning">{{stats.unpaid}}</h2>
+        </div>
+    </div>
+    <div class="col-sm-3 col-lg-3">
+        <div class="text-center p-4 bg-success bg-opacity-10 border border-success rounded-3">
+            <h6>Paid</h6>
+            <h2 class="mb-0 fs-1 text-success">{{stats.paid}}</h2>
+        </div>
+    </div>
+    <div class="col-sm-3 col-lg-3">
+        <div class="text-center p-4 bg-info bg-opacity-10 border border-info rounded-3">
+            <h6>Total Amount</h6>
+            <h2 class="mb-0 fs-1 text-info">${{stats.totalAmount.toFixed(2)}}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="filteredPayouts.length > 0; else noPayoutsTemplate">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover align-middle mb-0 modern-table" id="dtable">
+                <thead class="table-header">
+                    <tr>
+                        <th>Partner</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Transaction ID</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let payout of filteredPayouts">
+                        <td>{{payout.partner_id?.username || payout.partner_id?.email || payout.partner_id?.first_name || 'N/A'}}</td>
+                        <td>${{payout.net_amount?.toFixed(2) || '0.00'}}</td>
+                        <td>
+                            <span [ngClass]="getMethodBadgeClass(payout.payout_method)" *ngIf="payout.payout_method">
+                                {{payout.payout_method | titlecase}}
+                            </span>
+                            <span class="badge bg-secondary" *ngIf="!payout.payout_method">Not Set</span>
+                        </td>
+                        <td>
+                            <span [ngClass]="getStatusBadgeClass(payout.payout_status)">
+                                {{payout.payout_status | titlecase}}
+                            </span>
+                        </td>
+                        <td>{{payout.payout_date ? (payout.payout_date | date:'short') : (payout.transaction_date | date:'short')}}</td>
+                        <td>
+                            <small *ngIf="payout.payout_transaction_id">{{payout.payout_transaction_id}}</small>
+                            <span *ngIf="!payout.payout_transaction_id" class="text-muted">-</span>
+                        </td>
+                        <td>
+                            <button 
+                                *ngIf="payout.payout_status === 'unpaid' || payout.payout_status === 'failed'"
+                                class="btn btn-sm btn-primary" 
+                                (click)="processPayout(payout)"
+                                title="Process Payout">
+                                <i class="bi bi-send"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noPayoutsTemplate>
+            <div class="text-center p-5">
+                <p class="text-muted">No payouts found</p>
+            </div>
+        </ng-template>
+    </div>
+</div>

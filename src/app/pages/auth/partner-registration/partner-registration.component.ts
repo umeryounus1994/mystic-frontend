@@ -322,7 +322,7 @@ export class PartnerRegistrationComponent implements OnInit {
         commission_rate: formValue.partner_profile.commission_rate || 15,
         bank_details: {
           account_number: formValue.partner_profile.bank_details.account_number?.trim(),
-          routing_number: formValue.partner_profile.routing_number?.trim(), // Move routing_number here
+          routing_number: formValue.partner_profile.routing_number?.trim(),
           account_holder: formValue.partner_profile.bank_details.account_holder?.trim()
         },
         approval_status: 'pending'

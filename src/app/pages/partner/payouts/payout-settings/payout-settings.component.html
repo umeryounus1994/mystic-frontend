@@ -1,0 +1,216 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Loading...</p>
+</ngx-spinner>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-2">Payout Settings</h1>
+        <p class="text-muted">Configure how you receive your commission payouts</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Preferred Payout Method -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Preferred Payout Method</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Stripe Connect Card -->
+                    <div class="col-md-4">
+                        <div class="card border h-100" [class.border-primary]="preferredMethod === 'stripe'">
+                            <div class="card-body d-flex flex-column">
+                                <h6>Stripe Connect</h6>
+                                <p class="text-muted small">Receive payouts directly to your bank account via Stripe</p>
+                                <div class="mb-2">
+                                    <span class="badge" [ngClass]="stripeAccountId ? 'bg-success' : 'bg-warning'">
+                                        {{stripeAccountId ? 'Configured' : 'Not Configured'}}
+                                    </span>
+                                </div>
+                                <div class="mt-auto">
+                                    <button 
+                                        class="btn btn-sm w-100" 
+                                        [ngClass]="preferredMethod === 'stripe' ? 'btn-primary' : 'btn-outline-primary'"
+                                        [disabled]="!isMethodAvailable('stripe')"
+                                        (click)="updatePreferredMethod('stripe')">
+                                        {{preferredMethod === 'stripe' ? 'Selected' : 'Select'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PayPal Card -->
+                    <div class="col-md-4">
+                        <div class="card border h-100" [class.border-primary]="preferredMethod === 'paypal'">
+                            <div class="card-body d-flex flex-column">
+                                <h6>PayPal</h6>
+                                <p class="text-muted small">Receive payouts to your PayPal account</p>
+                                <div class="mb-2">
+                                    <span class="badge" [ngClass]="paypalEmail ? 'bg-success' : 'bg-warning'">
+                                        {{paypalEmail ? 'Configured' : 'Not Configured'}}
+                                    </span>
+                                </div>
+                                <div class="mt-auto">
+                                    <button 
+                                        class="btn btn-sm w-100" 
+                                        [ngClass]="preferredMethod === 'paypal' ? 'btn-primary' : 'btn-outline-primary'"
+                                        [disabled]="!isMethodAvailable('paypal')"
+                                        (click)="updatePreferredMethod('paypal')">
+                                        {{preferredMethod === 'paypal' ? 'Selected' : 'Select'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Transfer Card -->
+                    <div class="col-md-4">
+                        <div class="card border h-100" [class.border-primary]="preferredMethod === 'bank_transfer'">
+                            <div class="card-body d-flex flex-column">
+                                <h6>Bank Transfer</h6>
+                                <p class="text-muted small">Receive payouts via bank transfer (manual processing)</p>
+                                <div class="mb-2">
+                                    <span class="badge" [ngClass]="bankDetailsConfigured ? 'bg-success' : 'bg-warning'">
+                                        {{bankDetailsConfigured ? 'Configured' : 'Not Configured'}}
+                                    </span>
+                                </div>
+                                <div class="mt-auto">
+                                    <button 
+                                        class="btn btn-sm w-100" 
+                                        [ngClass]="preferredMethod === 'bank_transfer' ? 'btn-primary' : 'btn-outline-primary'"
+                                        [disabled]="!isMethodAvailable('bank_transfer')"
+                                        (click)="updatePreferredMethod('bank_transfer')">
+                                        {{preferredMethod === 'bank_transfer' ? 'Selected' : 'Select'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PayPal Email Configuration -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">PayPal Email</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label class="form-label">PayPal Email Address</label>
+                        <div class="input-group">
+                            <input 
+                                type="email" 
+                                class="form-control" 
+                                [(ngModel)]="newPaypalEmail"
+                                placeholder="your-email@paypal.com">
+                            <button 
+                                class="btn btn-primary" 
+                                (click)="updatePayPalEmail()"
+                                [disabled]="!newPaypalEmail || newPaypalEmail === paypalEmail">
+                                Update
+                            </button>
+                        </div>
+                        <small class="text-muted">Enter the PayPal email address where you want to receive payouts</small>
+                        <div *ngIf="paypalEmail" class="mt-2">
+                            <small class="text-success">Current: {{paypalEmail}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stripe Connect Account ID Configuration -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Stripe Connect Account ID</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label class="form-label">Stripe Connect Account ID</label>
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                [(ngModel)]="newStripeAccountId"
+                                placeholder="acct_xxxxx">
+                            <button 
+                                class="btn btn-primary" 
+                                (click)="updateStripeAccountId()"
+                                [disabled]="!newStripeAccountId || newStripeAccountId === stripeAccountId">
+                                Update
+                            </button>
+                        </div>
+                        <small class="text-muted">Enter your Stripe Connect account ID. You can find this in your Stripe Dashboard under Settings → Connect → Accounts. Format: acct_xxxxx</small>
+                        <div *ngIf="stripeAccountId" class="mt-2">
+                            <small class="text-success">Current: {{stripeAccountId}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Details Configuration -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Bank Account Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Account Holder Name <span class="text-danger">*</span></label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            [(ngModel)]="newBankDetails.account_holder"
+                            placeholder="John Doe"
+                            maxlength="100">
+                        <small class="text-muted">2-100 characters</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Account Number <span class="text-danger">*</span></label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            [(ngModel)]="newBankDetails.account_number"
+                            placeholder="1234567890"
+                            maxlength="20">
+                        <small class="text-muted">8-17 digits (spaces will be removed)</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Routing Number <span class="text-danger">*</span></label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            [(ngModel)]="newBankDetails.routing_number"
+                            placeholder="987654321"
+                            maxlength="9">
+                        <small class="text-muted">9 digits (spaces will be removed)</small>
+                    </div>
+                    <div class="col-md-12">
+                        <button 
+                            class="btn btn-primary" 
+                            (click)="updateBankDetails()"
+                            [disabled]="!newBankDetails.account_number || !newBankDetails.routing_number || !newBankDetails.account_holder ||
+                                       (newBankDetails.account_number === bankDetails.account_number && 
+                                        newBankDetails.routing_number === bankDetails.routing_number && 
+                                        newBankDetails.account_holder === bankDetails.account_holder)">
+                            Update Bank Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

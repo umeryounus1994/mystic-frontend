@@ -105,7 +105,11 @@
     "SKY_DROPPED_GIFTS": "Himmelsgeschenke",
     "ALL_GIFTS": "Alle Geschenke",
     "ADD_GIFTS": "Geschenk hinzufügen",
-    "MYTHICAS": "Mythicas"
+    "MYTHICAS": "Mythicas",
+    "PAYOUTS": "Auszahlungen",
+    "PAYOUT_SETTINGS": "Auszahlungseinstellungen",
+    "PAYOUT_HISTORY": "Auszahlungsverlauf",
+    "PAYOUTS_MANAGEMENT": "Auszahlungsverwaltung"
   },
   "FORMS": {
     "QUEST_SUMMARY_QUESTION": "Quest-Zusammenfassung/Frage",
@@ -413,7 +417,13 @@
     "REGISTER_AS_PARTNER": "Als Partner registrieren",
     "DESCRIBE_BUSINESS": "Beschreiben Sie Ihr Unternehmen und Ihre Dienstleistungen",
     "CREATING_ACCOUNT": "Konto wird erstellt...",
-    "CREATE_FAMILY_ACCOUNT": "Familienkonto erstellen"
+    "CREATE_FAMILY_ACCOUNT": "Familienkonto erstellen",
+    "PAYOUT_PREFERENCES": "Auszahlungspräferenzen",
+    "PAYOUT_METHOD_HELP": "Wählen Sie, wie Sie Ihre Einnahmen erhalten möchten. PayPal erfordert Ihre PayPal-E-Mail. Stripe erfordert Ihre Stripe Connect-Kontonummer.",
+    "ENTER_PAYPAL_EMAIL": "Geben Sie Ihre PayPal-E-Mail-Adresse ein",
+    "PAYPAL_EMAIL_HELP": "Geben Sie die PayPal-E-Mail-Adresse ein, an die Sie Auszahlungen erhalten möchten. Stellen Sie sicher, dass diese E-Mail in Ihrem PayPal-Konto verifiziert ist.",
+    "ENTER_STRIPE_ACCOUNT_ID": "Geben Sie Ihre Stripe Connect-Kontonummer ein (z.B. acct_...)",
+    "STRIPE_ACCOUNT_ID_HELP": "Geben Sie Ihre Stripe Connect-Kontonummer ein. Sie finden diese in Ihrem Stripe-Dashboard unter Einstellungen → Connect → Konten. Format: acct_xxxxx"
   },
   "LIST": {
     "FETCHING_DATA": "Daten werden abgerufen....",
@@ -556,7 +566,9 @@
     "ALLOWED_HUNTS_POSITIVE": "Erlaubte Schatzsuchen müssen eine positive ganze Zahl sein (mindestens 1)",
     "AT_LEAST_ONE_PERMISSION": "Mindestens eine Berechtigung ist erforderlich",
     "INVALID_LATITUDE": "Breitengrad muss zwischen -90 und 90 liegen (kann nicht 0 sein)",
-    "INVALID_LONGITUDE": "Längengrad muss zwischen -180 und 180 liegen (kann nicht 0 sein)"
+    "INVALID_LONGITUDE": "Längengrad muss zwischen -180 und 180 liegen (kann nicht 0 sein)",
+    "PAYPAL_EMAIL_REQUIRED": "PayPal-E-Mail ist erforderlich, wenn PayPal als Auszahlungsmethode ausgewählt wurde",
+    "STRIPE_ACCOUNT_ID_REQUIRED": "Stripe Connect-Kontonummer ist erforderlich, wenn Stripe als Auszahlungsmethode ausgewählt wurde"
   },
   "PAYMENT": {
     "PROCESSING_PAYMENT": "Zahlung wird verarbeitet...",

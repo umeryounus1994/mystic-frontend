@@ -1,0 +1,85 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">Loading...</p>
+</ngx-spinner>
+
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">Payout History</h1>
+        <div class="d-flex gap-2">
+            <select class="form-select" [(ngModel)]="selectedStatusFilter" (change)="applyStatusFilter()" style="width: auto;">
+                <option value="">All Status</option>
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+                <option value="failed">Failed</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="payouts.length > 0; else noPayoutsTemplate">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover align-middle mb-0 modern-table" id="dtable">
+                <thead class="table-header">
+                    <tr>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Transaction ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let payout of payouts">
+                        <td>${{payout.net_amount?.toFixed(2) || '0.00'}}</td>
+                        <td>
+                            <span [ngClass]="getMethodBadgeClass(payout.payout_method)" *ngIf="payout.payout_method">
+                                {{payout.payout_method | titlecase}}
+                            </span>
+                            <span class="badge bg-secondary" *ngIf="!payout.payout_method">-</span>
+                        </td>
+                        <td>
+                            <span [ngClass]="getStatusBadgeClass(payout.payout_status)">
+                                {{payout.payout_status | titlecase}}
+                            </span>
+                        </td>
+                        <td>{{payout.payout_date ? (payout.payout_date | date:'short') : (payout.transaction_date | date:'short')}}</td>
+                        <td>
+                            <small *ngIf="payout.payout_transaction_id">{{payout.payout_transaction_id}}</small>
+                            <span *ngIf="!payout.payout_transaction_id" class="text-muted">-</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noPayoutsTemplate>
+            <div class="text-center p-5">
+                <p class="text-muted">No payout history found</p>
+            </div>
+        </ng-template>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="pagination.pages > 1">
+            <div>
+                <small class="text-muted">
+                    Showing {{((pagination.page - 1) * pagination.limit) + 1}} to 
+                    {{getMinValue(pagination.page * pagination.limit, pagination.total)}} of 
+                    {{pagination.total}} entries
+                </small>
+            </div>
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item" [class.disabled]="pagination.page === 1">
+                        <a class="page-link" (click)="onPageChange(pagination.page - 1)" *ngIf="pagination.page > 1">Previous</a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === pagination.page">
+                        <a class="page-link" (click)="onPageChange(page)">{{page}}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="pagination.page === pagination.pages">
+                        <a class="page-link" (click)="onPageChange(pagination.page + 1)" *ngIf="pagination.page < pagination.pages">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

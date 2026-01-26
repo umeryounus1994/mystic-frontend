@@ -13,11 +13,13 @@ import { EditActivityComponent } from './activity/edit-activity/edit-activity.co
 import { SearchActivitiesComponent } from './search-activities/search-activities.component';
 import { CreateActivityDropComponent } from './create-activity-drop/create-activity-drop.component';
 import { ListActivityDropsComponent } from './list-activity-drops/list-activity-drops.component';
+import { PayoutSettingsComponent } from './payouts/payout-settings/payout-settings.component';
+import { PayoutHistoryComponent } from './payouts/payout-history/payout-history.component';
 
 
 @NgModule({
   declarations: [CreateActivityComponent, ListActivityComponent, ViewActivityComponent, EditActivityComponent, SearchActivitiesComponent,
-    CreateActivityDropComponent, ListActivityDropsComponent
+    CreateActivityDropComponent, ListActivityDropsComponent, PayoutSettingsComponent, PayoutHistoryComponent
   ],
   imports: [
     CommonModule,
