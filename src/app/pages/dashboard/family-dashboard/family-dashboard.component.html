@@ -62,7 +62,7 @@
         <div class="card card-body bg-info bg-opacity-10 p-4 h-100">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h2 class="purecounter mb-0 fw-bold text-info">${{stats.spending.totalSpent}}</h2>
+                    <h2 class="purecounter mb-0 fw-bold text-info">€{{stats.spending.totalSpent}}</h2>
                     <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_SPENT' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-info text-white mb-0">
@@ -109,7 +109,7 @@
                             <span class="badge me-2" [ngClass]="getStatusBadgeClass(booking.booking_status)">
                                 {{booking.booking_status | titlecase}}
                             </span>
-                            ${{booking.total_amount}}
+                            €{{booking.total_amount}}
                         </small>
                     </div>
                     <div class="text-end">
@@ -160,7 +160,7 @@
                             <span class="badge me-2" [ngClass]="getStatusBadgeClass(booking.booking_status)">
                                 {{booking.booking_status | titlecase}}
                             </span>
-                            ${{booking.total_amount}}
+                            €{{booking.total_amount}}
                         </small>
                     </div>
                     <div class="text-end">
@@ -214,7 +214,7 @@
                                 <i class="bi bi-calculator"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">${{stats.spending.averagePerBooking.toFixed(2)}}</h6>
+                                <h6 class="mb-0">€{{stats.spending.averagePerBooking.toFixed(2)}}</h6>
                                 <small class="text-muted">Avg per Booking</small>
                             </div>
                         </div>

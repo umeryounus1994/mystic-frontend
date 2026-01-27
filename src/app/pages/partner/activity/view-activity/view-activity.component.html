@@ -51,7 +51,7 @@
                     
                     <div class="col-md-6">
                         <h6>{{ 'TABLES.PRICE' | translate }}</h6>
-                        <p class="mb-0">${{activity.price}}</p>
+                        <p class="mb-0">€{{activity.price}}</p>
                     </div>
                     
                     <div class="col-md-6">
@@ -156,7 +156,7 @@
                     </div>
                     <div class="col-6">
                         <div class="text-center">
-                            <h4 class="text-success mb-0">${{activity.price}}</h4>
+                            <h4 class="text-success mb-0">€{{activity.price}}</h4>
                             <small class="text-muted">{{ 'TABLES.PRICE' | translate }}</small>
                         </div>
                     </div>
@@ -320,7 +320,7 @@
                         <div class="bg-light p-3 rounded">
                             <div class="d-flex justify-content-between">
                                 <span>{{ 'VIEW_ACTIVITY.PRICE_PER_PERSON' | translate }}:</span>
-                                <span>${{activity.price}}</span>
+                                <span>€{{activity.price}}</span>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span>{{ 'TABLES.PARTICIPANTS' | translate }}:</span>
@@ -329,7 +329,7 @@
                             <hr class="my-2">
                             <div class="d-flex justify-content-between fw-bold">
                                 <span>{{ 'TABLES.TOTAL_AMOUNT' | translate }}:</span>
-                                <span>${{activity.price * (+bookingData.participants)}}</span>
+                                <span>€{{activity.price * (+bookingData.participants)}}</span>
                             </div>
                         </div>
                     </div>
@@ -367,7 +367,7 @@
                         <div class="bg-light p-3 rounded">
                             <div class="d-flex justify-content-between fw-bold">
                                 <span>{{ 'TABLES.TOTAL_AMOUNT' | translate }}:</span>
-                                <span>${{activity.price * (+bookingData.participants)}}</span>
+                                <span>€{{activity.price * (+bookingData.participants)}}</span>
                             </div>
                         </div>
                     </div>

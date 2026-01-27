@@ -71,7 +71,7 @@
                             </div>
 
                             <div class="col-lg-4">
-                                <label class="form-label">{{ 'TABLES.PRICE' | translate }} ($) <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ 'TABLES.PRICE' | translate }} (€) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" placeholder="1.00" min="1" step="0.01"
                                     formControlName="price"
                                     (keydown)="preventNegativeInput($event)"
@@ -81,7 +81,7 @@
                                     <div *ngIf="f['price'].errors['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
                                     <div *ngIf="f['price'].errors['min']">{{ 'VALIDATION.PRICE_MIN' | translate }}</div>
                                 </div>
-                                <small class="text-muted">{{ 'VALIDATION.MINIMUM' | translate }}: $1.00</small>
+                                <small class="text-muted">{{ 'VALIDATION.MINIMUM' | translate }}: €1.00</small>
                             </div>
 
                             <div class="col-lg-4">

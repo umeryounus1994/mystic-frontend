@@ -146,7 +146,7 @@ export class ListPayoutsComponent implements OnInit {
   async processPayout(payout: any) {
     const result = await Swal.fire({
       title: 'Process Payout?',
-      text: `Send $${payout.net_amount?.toFixed(2)} to partner?`,
+      text: `Send €${payout.net_amount?.toFixed(2)} to partner?`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Yes, Process',
@@ -191,7 +191,7 @@ export class ListPayoutsComponent implements OnInit {
             html: `
               <p>Processed: ${data?.processed || 0}</p>
               <p>Failed: ${data?.failed || 0}</p>
-              <p>Total Amount: $${data?.totalAmount?.toFixed(2) || '0.00'}</p>
+              <p>Total Amount: €${data?.totalAmount?.toFixed(2) || '0.00'}</p>
             `,
             icon: 'success'
           });

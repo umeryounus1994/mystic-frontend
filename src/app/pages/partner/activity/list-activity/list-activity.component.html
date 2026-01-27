@@ -82,7 +82,7 @@
                                 {{activity.category | titlecase}}
                             </span>
                         </td>
-                        <td>${{activity.price}}</td>
+                        <td>€{{activity.price}}</td>
                         <td>{{activity.duration}} min</td>
                         <td>{{activity.max_participants}}</td>
                         <td>
@@ -238,7 +238,7 @@
                                 </span>
                             </div>
                             <div class="col-6">
-                                <strong>{{ 'COMMON.PRICE' | translate }}:</strong> ${{selectedActivity.price}}
+                                <strong>{{ 'COMMON.PRICE' | translate }}:</strong> €{{selectedActivity.price}}
                             </div>
                             <div class="col-6">
                                 <strong>{{ 'TABLES.DURATION' | translate }}:</strong> {{selectedActivity.duration}} {{ 'COMMON.MINUTES_SHORT' | translate }}

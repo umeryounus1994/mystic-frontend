@@ -64,7 +64,7 @@
         <div class="card card-body bg-info bg-opacity-10 p-4 h-100">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h2 class="purecounter mb-0 fw-bold text-info">${{stats.revenue.partnerEarnings}}</h2>
+                    <h2 class="purecounter mb-0 fw-bold text-info">€{{stats.revenue.partnerEarnings}}</h2>
                     <span class="mb-0 h6 fw-light">{{ 'DASHBOARD.TOTAL_REVENUE' | translate }}</span>
                 </div>
                 <div class="icon-lg rounded-circle bg-info text-white mb-0">
@@ -79,13 +79,13 @@
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="card text-center p-3">
-            <h4 class="text-primary mb-1">${{stats.revenue.totalEarnings || 0}}</h4>
+            <h4 class="text-primary mb-1">€{{stats.revenue.totalEarnings || 0}}</h4>
             <small class="text-muted">Total Earnings</small>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card text-center p-3">
-            <h4 class="text-warning mb-1">${{stats.revenue.pendingEarnings || 0}}</h4>
+            <h4 class="text-warning mb-1">€{{stats.revenue.pendingEarnings || 0}}</h4>
             <small class="text-muted">Pending Earnings</small>
         </div>
     </div>
@@ -97,7 +97,7 @@
     </div>
     <div class="col-md-3">
         <div class="card text-center p-3">
-            <h4 class="text-info mb-1">${{stats.revenue.monthlyEarnings || 0}}</h4>
+            <h4 class="text-info mb-1">€{{stats.revenue.monthlyEarnings || 0}}</h4>
             <small class="text-muted">This Month Earnings</small>
         </div>
     </div>
@@ -107,13 +107,13 @@
 <div class="row g-4 mb-4">
     <div class="col-md-4">
         <div class="card text-center p-3">
-            <h4 class="text-danger mb-1">${{stats.revenue.commissionStats?.totalCommissionPaid || 0}}</h4>
+            <h4 class="text-danger mb-1">€{{stats.revenue.commissionStats?.totalCommissionPaid || 0}}</h4>
             <small class="text-muted">Commission Paid</small>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card text-center p-3">
-            <h4 class="text-primary mb-1">${{stats.revenue.commissionStats?.totalGrossRevenue || 0}}</h4>
+            <h4 class="text-primary mb-1">€{{stats.revenue.commissionStats?.totalGrossRevenue || 0}}</h4>
             <small class="text-muted">Gross Revenue</small>
         </div>
     </div>
@@ -164,7 +164,7 @@
                             <span class="badge me-2" [ngClass]="getStatusBadgeClass(activity.status)">
                                 {{activity.status | titlecase}}
                             </span>
-                            ${{activity.price}} • {{activity.formatted_date}}
+                            €{{activity.price}} • {{activity.formatted_date}}
                         </small>
                     </div>
                 </div>
@@ -195,7 +195,7 @@
                     <div class="flex-grow-1">
                         <h6 class="mb-0">{{booking.user_id?.first_name}} {{booking.user_id?.last_name || 'Customer'}}</h6>
                         <small class="text-muted">
-                            {{booking.activity_title}} • ${{booking.total_amount}}
+                            {{booking.activity_title}} • €{{booking.total_amount}}
                             <br>
                             <span class="badge me-2" [ngClass]="getStatusBadgeClass(booking.status)">
                                 {{booking.status | titlecase}}

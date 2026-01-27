@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let payout of payouts">
-                        <td>${{payout.net_amount?.toFixed(2) || '0.00'}}</td>
+                        <td>€{{payout.net_amount?.toFixed(2) || '0.00'}}</td>
                         <td>
                             <span [ngClass]="getMethodBadgeClass(payout.payout_method)" *ngIf="payout.payout_method">
                                 {{payout.payout_method | titlecase}}
