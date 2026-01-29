@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-edit-mysteries',
@@ -33,13 +34,14 @@ export class EditMysteriesComponent implements OnInit {
   existingOption4 = '';
   
   constructor(
-    private api: RestApiService, 
-    private sp: NgxSpinnerService, 
+    private api: RestApiService,
+    private sp: NgxSpinnerService,
     private helper: HelperService,
-    public router: Router, 
-    private fb: FormBuilder, 
+    public router: Router,
+    private fb: FormBuilder,
     private route: ActivatedRoute,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private auth: AuthService
   ) {
     this.route.queryParams.subscribe(params => {
       if (params && Object.keys(params).length > 0) {
@@ -161,6 +163,13 @@ export class EditMysteriesComponent implements OnInit {
   }
 
   ngOnInit() {
+    const perms = this.auth.user?.permissions || [];
+    const canAccess = this.auth.isAdmin || this.auth.isPartner || perms.includes('All') || perms.includes('Picture Mysteries');
+    if (!canAccess) {
+      this.helper.warningToast('You do not have permission to access Picture Mysteries.');
+      this.router.navigate(['/dashboard/admin']);
+      return;
+    }
     this.questForm = this.fb.group({
       picture_mystery_question: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]],
       picture_mystery_question_url: [''],

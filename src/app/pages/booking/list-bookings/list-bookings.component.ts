@@ -78,7 +78,7 @@ export class ListBookingsComponent implements OnInit {
     queryParams.append('limit', this.filters.limit.toString());
 
     let endpoint;
-    if (this.auth.isAdmin) {
+    if (this.auth.isAdmin || this.auth.isSubAdmin) {
       endpoint = `booking/admin/all-bookings?${queryParams.toString()}`;
     } else if (this.auth.isPartner) {
       endpoint = `booking/partner/my-bookings?${queryParams.toString()}`;

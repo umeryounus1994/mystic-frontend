@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListSkygiftsComponent } from './list-skygifts/list-skygifts.component';
 import { AuthGuard } from '../../guards/auth/auth.guard';
+import { PermissionGuard } from '../../guards/permission/permission.guard';
 import { CreateSkygiftsComponent } from './create-skygifts/create-skygifts.component';
 import { EditSkygiftsComponent } from './edit-skygifts/edit-skygifts.component';
 
@@ -11,17 +12,20 @@ const routes: Routes = [{
     {
       path: 'list-skygifts',
       component: ListSkygiftsComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Sky Gifts' }
     },
     {
       path: 'add-skygifts',
       component: CreateSkygiftsComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Sky Gifts' }
     },
     {
       path: 'edit-skygifts',
       component: EditSkygiftsComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Sky Gifts' }
     }
   ]
 }];

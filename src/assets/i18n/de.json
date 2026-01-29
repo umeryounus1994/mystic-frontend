@@ -109,7 +109,8 @@
     "PAYOUTS": "Auszahlungen",
     "PAYOUT_SETTINGS": "Auszahlungseinstellungen",
     "PAYOUT_HISTORY": "Auszahlungsverlauf",
-    "PAYOUTS_MANAGEMENT": "Auszahlungsverwaltung"
+    "PAYOUTS_MANAGEMENT": "Auszahlungsverwaltung",
+    "COMMISSION_RATE": "Provisionssatz"
   },
   "FORMS": {
     "QUEST_SUMMARY_QUESTION": "Quest-Zusammenfassung/Frage",

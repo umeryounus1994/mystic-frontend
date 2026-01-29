@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListHuntComponent } from './list-hunt/list-hunt.component';
 import { AuthGuard } from '../../guards/auth/auth.guard';
+import { PermissionGuard } from '../../guards/permission/permission.guard';
 import { CreateHuntComponent } from './create-hunt/create-hunt.component';
 import { EditHuntComponent } from './edit-hunt/edit-hunt.component';
 const routes: Routes = [{
@@ -10,17 +11,20 @@ const routes: Routes = [{
     {
       path: 'list-hunt',
       component: ListHuntComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Hunts' }
     },
     {
       path: 'create-hunt',
       component: CreateHuntComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Hunts' }
     },
     {
       path: 'edit-hunt',
       component: EditHuntComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Hunts' }
     }
   ]
 }];

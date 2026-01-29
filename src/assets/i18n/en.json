@@ -123,7 +123,8 @@
     "PAYOUTS": "Payouts",
     "PAYOUT_SETTINGS": "Payout Settings",
     "PAYOUT_HISTORY": "Payout History",
-    "PAYOUTS_MANAGEMENT": "Payouts Management"
+    "PAYOUTS_MANAGEMENT": "Payouts Management",
+    "COMMISSION_RATE": "Commission Rate"
   },
   "FORMS": {
     "QUEST_SUMMARY_QUESTION": "Quest Summary/Question",

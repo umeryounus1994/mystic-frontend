@@ -213,10 +213,10 @@ export class PayoutSettingsComponent implements OnInit {
     return re.test(email);
   }
 
+  /** Backend accepts account_number as string (e.g. IBAN or numeric). Non-empty, spaces stripped when sending. */
   validateAccountNumber(accountNumber: string): boolean {
-    // Remove spaces and check if it's 8-17 digits
-    const cleaned = accountNumber.replace(/\s/g, '');
-    return /^\d{8,17}$/.test(cleaned);
+    const cleaned = (accountNumber || '').replace(/\s/g, '').trim();
+    return cleaned.length > 0;
   }
 
   validateRoutingNumber(routingNumber: string): boolean {
@@ -233,7 +233,7 @@ export class PayoutSettingsComponent implements OnInit {
   async updateBankDetails() {
     // Validate all fields
     if (!this.validateAccountNumber(this.newBankDetails.account_number)) {
-      this.helper.failureToast('Account number must be 8-17 digits');
+      this.helper.failureToast('Account number or IBAN is required');
       return;
     }
 

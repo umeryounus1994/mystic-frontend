@@ -5,6 +5,7 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth/auth.service';
 declare var $: any;
 
 
@@ -34,17 +35,25 @@ export class ListMysteriesComponent implements OnInit {
 
 
   constructor(
-    private sp: NgxSpinnerService, 
-    private api: RestApiService, 
+    private sp: NgxSpinnerService,
+    private api: RestApiService,
     private helper: HelperService,
     private router: Router,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private auth: AuthService
   ) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
   }
   async ngOnInit() {
+    const perms = this.auth.user?.permissions || [];
+    const canAccess = this.auth.isAdmin || this.auth.isPartner || perms.includes('All') || perms.includes('Picture Mysteries');
+    if (!canAccess) {
+      this.helper.warningToast('You do not have permission to access Picture Mysteries.');
+      this.router.navigate(['/dashboard/admin']);
+      return;
+    }
     this.sp.show()
     await this.getAllUsers();
     setTimeout(function () {
@@ -57,9 +66,13 @@ export class ListMysteriesComponent implements OnInit {
     this.api.get('pictureMystery/get_all_admin')
     .then((response: any) => {
         this.sp.hide();
-        this.allQuests = response?.data;
+        this.allQuests = response?.data ?? [];
     }).catch((error: any) => {
       this.sp.hide();
+      if (error?.status === 401) {
+        this.helper.failureToast(error?.error?.message || 'Not authorized to load Picture Mysteries.');
+        this.allQuests = [];
+      }
     });
   }
   getFormatedDate(date: any) {

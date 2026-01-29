@@ -179,14 +179,14 @@
                         <small class="text-muted">2-100 characters</small>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Account Number <span class="text-danger">*</span></label>
+                        <label class="form-label">Account Number / IBAN <span class="text-danger">*</span></label>
                         <input 
                             type="text" 
                             class="form-control" 
                             [(ngModel)]="newBankDetails.account_number"
-                            placeholder="1234567890"
-                            maxlength="20">
-                        <small class="text-muted">8-17 digits (spaces will be removed)</small>
+                            placeholder="e.g. 1234567890 or DE89370400440532013000"
+                            maxlength="40">
+                        <small class="text-muted">Account number or full IBAN (spaces will be removed when saving)</small>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Routing Number <span class="text-danger">*</span></label>

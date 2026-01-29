@@ -254,20 +254,20 @@
                         <br />
                     </div>
                     <div class="col-md-12">
-                        <label class="form-label">Permissions <span class="text-danger">*</span></label>
-                        <div class="d-sm-flex">
-                            <div class="form-check radio-bg-light me-4" *ngFor="let perm of permissionList">
+                        <label class="form-label">{{ 'FORMS.PERMISSIONS' | translate }} <span class="text-danger">*</span></label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="form-check radio-bg-light" *ngFor="let perm of permissionList">
                                 <input class="form-check-input"
                                        type="checkbox"
                                        [id]="perm.id"
-                                       [value]="perm.label"
+                                       [value]="perm.value"
                                        (change)="onPermissionChange($event)">
                                 <label class="form-check-label" [for]="perm.id">
-                                  {{ perm.label }}
+                                  {{ perm.label | translate }}
                                 </label>
-                              </div>
+                            </div>
                         </div>
-                        <small class="text-muted">At least one permission is required</small>
+                        <small class="text-muted">{{ 'VALIDATION.AT_LEAST_ONE_PERMISSION' | translate }}</small>
                         <br />
                     </div>
                     

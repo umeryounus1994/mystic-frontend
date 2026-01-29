@@ -42,14 +42,20 @@ export class ListUserComponent implements OnInit {
     { value: 'partner', label: 'LIST.PARTNER' }
   ];
 
-  // Your available permissions
+  // Permissions: label = translation key, value = string sent to backend (must match sidebar permission checks)
   permissionList = [
-    { id: 'perm1', label: 'SIDEBAR.QUESTS' },
-    { id: 'perm2', label: 'SIDEBAR.MISSIONS' },
-    { id: 'perm3', label: 'SIDEBAR.TREASURE_HUNT' },
-    { id: 'perm4', label: 'SIDEBAR.MYSTERIES' },
-    { id: 'perm5', label: 'SIDEBAR.DROPS' },
-    { id: 'perm6', label: 'COMMON.ALL' }
+    { id: 'perm1', label: 'SIDEBAR.DIGITAL_QUESTS', value: 'Quest' },
+    { id: 'perm2', label: 'SIDEBAR.MISSIONS', value: 'Missions' },
+    { id: 'perm3', label: 'SIDEBAR.TREASURE_HUNTS', value: 'Hunts' },
+    { id: 'perm4', label: 'SIDEBAR.PICTURE_MYSTERIES', value: 'Picture Mysteries' },
+    { id: 'perm5', label: 'SIDEBAR.DROPS', value: 'Drops' },
+    { id: 'perm6', label: 'SIDEBAR.SKY_DROPPED_GIFTS', value: 'Sky Gifts' },
+    { id: 'perm7', label: 'SIDEBAR.BOOKINGS', value: 'Bookings' },
+    { id: 'perm8', label: 'SIDEBAR.USERS', value: 'Users' },
+    { id: 'perm9', label: 'SIDEBAR.MYTHICAS', value: 'Mythicas' },
+    { id: 'perm10', label: 'SIDEBAR.PAYOUTS_MANAGEMENT', value: 'Payouts Management' },
+    { id: 'perm11', label: 'SIDEBAR.COMMISSION_RATE', value: 'Commission Rate' },
+    { id: 'perm12', label: 'COMMON.ALL', value: 'All' }
   ];
 
 
@@ -502,41 +508,33 @@ export class ListUserComponent implements OnInit {
     this.resetPermissionForm();
   }
   onPermissionChange(event: Event) {
-   
     const input = event.target as HTMLInputElement;
     const value = input.value;
-  
+
     if (value === 'All') {
       if (input.checked) {
-        // If 'All' is selected, clear other permissions and keep only 'All'
         this.permissions = ['All'];
-  
-        // Uncheck other checkboxes in the DOM manually
         this.permissionList.forEach(p => {
-          if (p.label !== 'All') {
+          if (p.value !== 'All') {
             const el = document.getElementById(p.id) as HTMLInputElement;
             if (el) el.checked = false;
           }
         });
       } else {
-        // If 'All' is deselected, clear permissions
         this.permissions = [];
       }
     } else {
       if (input.checked) {
-        // Remove 'All' if it's currently selected
         this.permissions = this.permissions.filter(p => p !== 'All');
-  
-        // Add the new permission if not already present
         if (!this.permissions.includes(value)) {
           this.permissions.push(value);
         }
-  
-        // Uncheck 'All' checkbox if needed
-        const allCheckbox = document.getElementById('perm6') as HTMLInputElement;
-        if (allCheckbox) allCheckbox.checked = false;
+        const allPerm = this.permissionList.find(p => p.value === 'All');
+        if (allPerm) {
+          const allCheckbox = document.getElementById(allPerm.id) as HTMLInputElement;
+          if (allCheckbox) allCheckbox.checked = false;
+        }
       } else {
-        // Remove permission on uncheck
         this.permissions = this.permissions.filter(p => p !== value);
       }
     }

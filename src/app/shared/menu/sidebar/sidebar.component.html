@@ -171,7 +171,7 @@
         </li>
 
         <!-- Bookings -->
-        <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily">
+        <li class="nav-item" *ngIf="auth.isPartner || auth.isAdmin || auth.isFamily || auth.user?.permissions?.includes('Bookings')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsebookings')">
             <i class="bi bi-calendar-event fa-fw me-2"></i>{{ 'SIDEBAR.BOOKINGS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
@@ -184,12 +184,12 @@
         </li>
 
         <!-- Management Section Header -->
-        <li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin">
+        <li class="nav-item ms-2 my-2" *ngIf="auth.isAdmin || auth.isSubAdmin">
           <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.MANAGEMENT' | translate }}</span>
         </li>
 
         <!-- User Management -->
-        <li class="nav-item" *ngIf="auth.isAdmin">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Users')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsemanagement')">
             <i class="bi bi-people fa-fw me-2"></i>{{ 'SIDEBAR.USERS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
@@ -221,7 +221,7 @@
         </li>
 
         <!-- Sky Dropped Gifts -->
-        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops') || auth.user?.permissions?.includes('Sky Gifts')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapseskygifts')">
             <i class="bi bi-gift fa-fw me-2"></i>{{ 'SIDEBAR.SKY_DROPPED_GIFTS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
@@ -237,16 +237,23 @@
         </li>
 
         <!-- Mythicas -->
-        <li class="nav-item" *ngIf="auth.isAdmin">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Mythicas')">
           <a [routerLink]="['/management/mythicas']" class="nav-link text-white" [class.active]="routeURL === '/management/mythicas'" (click)="closeSidebar()">
             <i class="bi bi-star fa-fw me-2"></i>{{ 'SIDEBAR.MYTHICAS' | translate }}
           </a>
         </li>
 
         <!-- Payouts Management -->
-        <li class="nav-item" *ngIf="auth.isAdmin">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Payouts Management')">
           <a [routerLink]="['/management/list-payouts']" class="nav-link text-white" [class.active]="routeURL === '/management/list-payouts' || routeURL.includes('/management/list-payouts')" (click)="closeSidebar()">
             <i class="bi bi-cash-coin fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUTS_MANAGEMENT' | translate }}
+          </a>
+        </li>
+
+        <!-- Commission Rate (Global) -->
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Commission Rate')">
+          <a [routerLink]="['/management/commission-rate']" class="nav-link text-white" [class.active]="routeURL === '/management/commission-rate' || routeURL.includes('/management/commission-rate')" (click)="closeSidebar()">
+            <i class="bi bi-percent fa-fw me-2"></i>{{ 'SIDEBAR.COMMISSION_RATE' | translate }}
           </a>
         </li>
 
