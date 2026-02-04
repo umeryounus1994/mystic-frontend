@@ -1,0 +1,102 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+  <p style="font-size: 30px; color: white">{{ 'COMMON.LOADING' | translate }}</p>
+</ngx-spinner>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="h3 mb-2">{{ 'SIDEBAR.PARTNER_PROFILE' | translate }}</h1>
+    <p class="text-muted">{{ 'PARTNER_PROFILE.DESCRIPTION' | translate }}</p>
+  </div>
+</div>
+
+<div class="row g-4" *ngIf="!loading && profile">
+  <!-- About -->
+  <div class="col-12">
+    <div class="card bg-transparent border">
+      <div class="card-header">
+        <h5 class="mb-0">{{ 'PARTNER_PROFILE.ABOUT' | translate }}</h5>
+      </div>
+      <div class="card-body">
+        <textarea class="form-control" rows="4" [(ngModel)]="about" placeholder="{{ 'PARTNER_PROFILE.ABOUT_PLACEHOLDER' | translate }}"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <div class="col-12">
+    <div class="card bg-transparent border">
+      <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5 class="mb-0">{{ 'PARTNER_PROFILE.GALLERY' | translate }}</h5>
+        <div>
+          <input type="file" id="galleryFileInput" accept="image/*" multiple class="d-none" (change)="onGalleryFilesSelected($event)">
+          <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="uploadingGallery" (click)="triggerGalleryUpload()">
+            <i class="bi bi-upload me-1"></i>{{ 'PARTNER_PROFILE.UPLOAD_IMAGES' | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-2">{{ 'PARTNER_PROFILE.GALLERY_URLS_HELP' | translate }}</p>
+        <textarea class="form-control font-monospace small" rows="3" [(ngModel)]="galleryUrlsText" placeholder="https://...&#10;https://..."></textarea>
+        <div class="mt-2" *ngIf="gallery.length > 0">
+          <span class="badge bg-secondary me-1">{{ gallery.length }} {{ 'PARTNER_PROFILE.IMAGES' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map location -->
+  <div class="col-12">
+    <div class="card bg-transparent border">
+      <div class="card-header">
+        <h5 class="mb-0">{{ 'PARTNER_PROFILE.MAP_LOCATION' | translate }}</h5>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">{{ 'PARTNER_PROFILE.MAP_HELP' | translate }}</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ 'PARTNER_PROFILE.LONGITUDE' | translate }}</label>
+            <input type="number" class="form-control" step="any" placeholder="-73.99" [(ngModel)]="longitude">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ 'PARTNER_PROFILE.LATITUDE' | translate }}</label>
+            <input type="number" class="form-control" step="any" placeholder="40.71" [(ngModel)]="latitude">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout / Background -->
+  <div class="col-12">
+    <div class="card bg-transparent border">
+      <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5 class="mb-0">{{ 'PARTNER_PROFILE.BACKGROUND' | translate }}</h5>
+        <div>
+          <input type="file" id="backgroundFileInput" accept="image/*" class="d-none" (change)="onBackgroundFileSelected($event)">
+          <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="uploadingBackground" (click)="triggerBackgroundUpload()">
+            <i class="bi bi-upload me-1"></i>{{ 'PARTNER_PROFILE.UPLOAD_BACKGROUND' | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-2">{{ 'PARTNER_PROFILE.BACKGROUND_HELP' | translate }}</p>
+        <input type="text" class="form-control" [(ngModel)]="backgroundValue" placeholder="https://... or #1a1a2e">
+      </div>
+    </div>
+  </div>
+
+  <!-- Save -->
+  <div class="col-12">
+    <button type="button" class="btn btn-primary" [disabled]="saving" (click)="saveProfile()">
+      <span *ngIf="saving">{{ 'COMMON.LOADING' | translate }}</span>
+      <span *ngIf="!saving"><i class="bi bi-check-lg me-2"></i>{{ 'COMMON.SAVE' | translate }}</span>
+    </button>
+  </div>
+</div>
+
+<div class="row" *ngIf="!loading && !profile">
+  <div class="col-12 text-center text-muted py-5">
+    <p>{{ 'PARTNER_PROFILE.LOAD_FAILED' | translate }}</p>
+    <button type="button" class="btn btn-outline-primary" (click)="loadProfile()">{{ 'COMMON.RESET' | translate }}</button>
+  </div>
+</div>

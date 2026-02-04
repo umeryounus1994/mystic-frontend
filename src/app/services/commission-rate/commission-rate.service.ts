@@ -22,5 +22,14 @@ export class CommissionRateService {
   updateCommissionRate(rate: number) {
     return this.api.put('commission-rate', { rate });
   }
+
+  /**
+   * Admin API: Set a partner's commission rate (per-partner).
+   * PATCH /api/v1/user/partner/:id/commission-rate
+   * commission_rate: 0–100 (percentage).
+   */
+  setPartnerCommissionRate(partnerId: string, commission_rate: number) {
+    return this.api.patch(`user/partner/${partnerId}/commission-rate`, { commission_rate });
+  }
 }
 

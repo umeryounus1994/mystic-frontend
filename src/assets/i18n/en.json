@@ -121,8 +121,10 @@
     "ADD_GIFTS": "Add Gifts",
     "MYTHICAS": "Mythicas",
     "PAYOUTS": "Payouts",
+    "PROFILE": "Profile",
     "PAYOUT_SETTINGS": "Payout Settings",
     "PAYOUT_HISTORY": "Payout History",
+    "PARTNER_PROFILE": "Partner profile",
     "PAYOUTS_MANAGEMENT": "Payouts Management",
     "COMMISSION_RATE": "Commission Rate"
   },
@@ -174,6 +176,9 @@
     "DROP_DESCRIPTION": "Drop Description",
     "MYTHICA_REWARD": "Mythica Reward",
     "DROP_TYPE": "Drop Type",
+    "SELECT_DROP_TYPE": "Select Drop Type",
+    "SIMPLE": "Simple",
+    "VIDEO": "Video",
     "ACTIVITY_TITLE": "Activity Title",
     "ACTIVITY_DESCRIPTION": "Activity Description",
     "ACTIVITY_CATEGORY": "Category",
@@ -444,6 +449,8 @@
     "VIEW": "View",
     "BLOCK": "Block",
     "UNBLOCK": "Unblock",
+    "SET_COMMISSION": "Set commission",
+    "VIEW_PROFILE": "View profile",
     "APPROVE": "Approve",
     "REJECT": "Reject",
     "TOTAL_QUESTS": "Total Quests",
@@ -560,7 +567,8 @@
     "VALIDATION_ERROR": "Validation Error",
     "PLEASE_FIX_ERRORS": "Please fix errors in",
     "PAYPAL_EMAIL_REQUIRED": "PayPal email is required when PayPal is selected as payout method",
-    "STRIPE_ACCOUNT_ID_REQUIRED": "Stripe Connect account ID is required when Stripe is selected as payout method"
+    "STRIPE_ACCOUNT_ID_REQUIRED": "Stripe Connect account ID is required when Stripe is selected as payout method",
+    "COMMISSION_RATE_RANGE": "Commission rate must be between 0 and 100"
   },
   "PAYMENT": {
     "PROCESSING_PAYMENT": "Processing Payment...",
@@ -629,6 +637,31 @@
     "FAILED_TO_UPDATE_ACTIVITY": "Failed to update activity",
     "FAILED_TO_LOAD_ACTIVITY": "Failed to load activity details"
   },
+  "PROFILE": {
+    "UPDATED_SUCCESSFULLY": "Profile updated successfully",
+    "NO_CHANGES": "No changes to save"
+  },
+  "PARTNER_PROFILE": {
+    "DESCRIPTION": "Edit your public profile: about text, gallery, map pin, and layout background.",
+    "BUSINESS_NAME": "Business name",
+    "BUSINESS_DESCRIPTION": "Business description",
+    "ABOUT": "About",
+    "ABOUT_PLACEHOLDER": "Tell visitors about yourself and your business...",
+    "GALLERY": "Gallery",
+    "UPLOAD_IMAGES": "Upload images",
+    "GALLERY_URLS_HELP": "One image URL per line, or use Upload to add images. New uploads are appended to the gallery.",
+    "IMAGES": "images",
+    "MAP_LOCATION": "Map location",
+    "MAP_HELP": "Longitude and latitude for your map pin (e.g. Google Maps order: lng, lat).",
+    "LONGITUDE": "Longitude",
+    "LATITUDE": "Latitude",
+    "BACKGROUND": "Background",
+    "UPLOAD_BACKGROUND": "Upload background",
+    "BACKGROUND_HELP": "Image URL or hex color (e.g. #1a1a2e) for your profile layout background.",
+    "LOAD_FAILED": "Could not load profile.",
+    "NO_ABOUT": "No about text set.",
+    "NO_GALLERY": "No gallery images."
+  },
   "QUEST_GROUP": {
     "QUEST_GROUP": "Quest Group",
     "CREATE_QUEST_GROUP": "Create Quest Group",
@@ -673,6 +706,7 @@
     "LAST_UPDATED": "Last Updated",
     "PEOPLE": "people",
     "COORDINATES": "Coordinates",
+    "OPEN_IN_GOOGLE_MAPS": "Open in Google Maps",
     "TIME_SLOTS": "Time Slots",
     "AVAILABLE_TIME_SLOTS": "Available Time Slots",
     "SLOT": "Slot",

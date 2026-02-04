@@ -1,3 +1,33 @@
+/* Carousel: indicators below images with dark band for visibility */
+.carousel-indicators-below {
+  display: flex;
+  flex-direction: column;
+
+  .carousel-inner {
+    flex: 0 0 auto;
+  }
+
+  .carousel-indicators {
+    position: relative;
+    bottom: auto;
+    margin: 0.5rem 0 0;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 0.25rem;
+
+    button {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+
+      &.active {
+        background-color: #fff;
+      }
+    }
+  }
+}
 
 .booking-card {
   min-height: 200px;

@@ -122,6 +122,7 @@
                             </div>
                         </td>
                         <td>
+                            <span *ngIf="isPartner(q) && getPartnerCommissionRate(q) !== null" class="badge bg-secondary bg-opacity-25 text-secondary me-1">{{ getPartnerCommissionRate(q) }}%</span>
                             <div *ngIf="q?.user_role === 'admin' || q?.type === 'admin'" 
                                  class="badge bg-primary bg-opacity-15 text-primary px-3 py-2 rounded-pill">
                                 <i class="bi bi-shield-check me-1"></i>{{ 'LIST.ADMIN' | translate }}
@@ -169,6 +170,22 @@
                                         data-bs-placement="top" 
                                         data-bs-title="Reject User">
                                     <i class="bi bi-x-circle"></i>
+                                </button>
+                                <button *ngIf="canSetPartnerCommission && isPartner(q)"
+                                        class="btn btn-outline-secondary btn-sm rounded-pill ms-1"
+                                        (click)="openSetCommissionModal(q)"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        [attr.data-bs-title]="'LIST.SET_COMMISSION' | translate">
+                                    <i class="bi bi-percent"></i>
+                                </button>
+                                <button *ngIf="isPartner(q)"
+                                        class="btn btn-outline-info btn-sm rounded-pill ms-1"
+                                        (click)="openViewPartnerProfile(q)"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        [attr.data-bs-title]="'LIST.VIEW_PROFILE' | translate">
+                                    <i class="bi bi-eye"></i>
                                 </button>
                             </div>
                         </td>
@@ -280,4 +297,113 @@
             </div>
         </div>
     </div>
-</div>  
+</div>
+
+<!-- Set Partner Commission Modal (Admin only) -->
+<div class="modal fade" id="setCommissionModal" tabindex="-1" aria-labelledby="setCommissionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h5 class="modal-title text-white" id="setCommissionModalLabel">{{ 'LIST.SET_COMMISSION' | translate }}</h5>
+        <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close" (click)="closeSetCommissionModal()"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="selectedPartnerForCommission" class="text-muted small mb-3">
+          {{ 'LIST.PARTNER' | translate }}: <strong>{{ selectedPartnerForCommission.username }}</strong>
+        </p>
+        <div class="mb-3">
+          <label class="form-label">{{ 'FORMS.COMMISSION_RATE' | translate }} (%)</label>
+          <input type="number" class="form-control" min="0" max="100" step="0.01" placeholder="15"
+                 [(ngModel)]="commissionRateInput"
+                 (keydown)="preventNegativeInput($event)">
+          <small class="text-muted">0–100</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" [disabled]="savingCommission" (click)="savePartnerCommission()">
+          <span *ngIf="savingCommission">{{ 'COMMON.LOADING' | translate }}</span>
+          <span *ngIf="!savingCommission">{{ 'COMMON.UPDATE' | translate }}</span>
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeSetCommissionModal()">{{ 'COMMON.CANCEL' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Partner Profile Modal (about, gallery, background) -->
+<div class="modal fade" id="viewPartnerProfileModal" tabindex="-1" aria-labelledby="viewPartnerProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h5 class="modal-title text-white" id="viewPartnerProfileModalLabel">
+          <i class="bi bi-person-badge me-2"></i>{{ 'LIST.VIEW_PROFILE' | translate }}
+          <span *ngIf="selectedPartnerForView" class="ms-2 text-white-50">— {{ selectedPartnerForView.username }}</span>
+        </h5>
+        <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close" (click)="closeViewPartnerProfile()"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="loadingProfileView" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 text-muted">{{ 'COMMON.LOADING' | translate }}</p>
+        </div>
+        <div *ngIf="partnerProfileViewError && !loadingProfileView" class="alert alert-warning mb-0">
+          {{ partnerProfileViewError }}
+        </div>
+        <div *ngIf="partnerProfileView && !loadingProfileView && !partnerProfileViewError" class="partner-profile-details">
+          <!-- Background preview -->
+          <div *ngIf="getPartnerProfileBackground()" class="mb-4 rounded overflow-hidden border" style="height: 100px;" [ngStyle]="getPartnerProfileBackgroundStyle()"></div>
+
+          <!-- Basic & business info -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <dl class="row mb-0 small">
+                <dt class="col-sm-4 text-muted">{{ 'COMMON.EMAIL' | translate }}</dt>
+                <dd class="col-sm-8">{{ getPartnerProfileEmail() }}</dd>
+                <dt class="col-sm-4 text-muted">{{ 'PARTNER_PROFILE.BUSINESS_NAME' | translate }}</dt>
+                <dd class="col-sm-8">{{ getPartnerProfileBusinessName() }}</dd>
+                <dt class="col-sm-4 text-muted">{{ 'COMMON.PHONE' | translate }}</dt>
+                <dd class="col-sm-8">{{ getPartnerProfilePhone() }}</dd>
+              </dl>
+            </div>
+            <div class="col-md-6">
+              <dl class="row mb-0 small">
+                <dt class="col-sm-4 text-muted">{{ 'FORMS.COMMISSION_RATE' | translate }}</dt>
+                <dd class="col-sm-8">{{ getPartnerProfileCommissionRate() !== null ? getPartnerProfileCommissionRate() + '%' : '—' }}</dd>
+                <dt class="col-sm-4 text-muted">{{ 'LIST.APPROVAL_STATUS' | translate }}</dt>
+                <dd class="col-sm-8"><span class="badge bg-secondary">{{ getPartnerProfileApprovalStatus() }}</span></dd>
+                <dt class="col-sm-4 text-muted">{{ 'PARTNER_PROFILE.MAP_LOCATION' | translate }}</dt>
+                <dd class="col-sm-8 font-monospace">{{ getPartnerProfileMapCoordinates() }}</dd>
+              </dl>
+            </div>
+          </div>
+
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.BUSINESS_DESCRIPTION' | translate }}</h6>
+          <p class="small text-break mb-4">{{ getPartnerProfileBusinessDescription() }}</p>
+
+          <!-- About -->
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.ABOUT' | translate }}</h6>
+          <div class="mb-4">
+            <p *ngIf="getPartnerProfileAbout()" class="mb-0 text-break">{{ getPartnerProfileAbout() }}</p>
+            <p *ngIf="!getPartnerProfileAbout()" class="text-muted mb-0 small">{{ 'PARTNER_PROFILE.NO_ABOUT' | translate }}</p>
+          </div>
+
+          <!-- Layout background (value) -->
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.BACKGROUND' | translate }}</h6>
+          <p class="small mb-4 font-monospace">{{ getPartnerProfileBackground() || '—' }}</p>
+
+          <!-- Gallery -->
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.GALLERY' | translate }}</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <div *ngFor="let url of getPartnerProfileGallery()" class="gallery-thumb-wrap">
+              <img [src]="url" alt="Gallery" class="rounded border" style="width: 80px; height: 80px; object-fit: cover;" onerror="this.style.display='none'">
+            </div>
+            <p *ngIf="getPartnerProfileGallery().length === 0" class="text-muted small mb-0">{{ 'PARTNER_PROFILE.NO_GALLERY' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" *ngIf="partnerProfileView || partnerProfileViewError">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeViewPartnerProfile()">{{ 'COMMON.CLOSE' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>

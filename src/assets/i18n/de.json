@@ -107,8 +107,10 @@
     "ADD_GIFTS": "Geschenk hinzufügen",
     "MYTHICAS": "Mythicas",
     "PAYOUTS": "Auszahlungen",
+    "PROFILE": "Profil",
     "PAYOUT_SETTINGS": "Auszahlungseinstellungen",
     "PAYOUT_HISTORY": "Auszahlungsverlauf",
+    "PARTNER_PROFILE": "Partner-Profil",
     "PAYOUTS_MANAGEMENT": "Auszahlungsverwaltung",
     "COMMISSION_RATE": "Provisionssatz"
   },
@@ -160,6 +162,9 @@
     "DROP_DESCRIPTION": "Tropfen-Beschreibung",
     "MYTHICA_REWARD": "Mythica-Belohnung",
     "DROP_TYPE": "Drop-Typ",
+    "SELECT_DROP_TYPE": "Drop-Typ auswählen",
+    "SIMPLE": "Einfach",
+    "VIDEO": "Video",
     "ACTIVITY_TITLE": "Aktivitäts-Titel",
     "ACTIVITY_DESCRIPTION": "Aktivitäts-Beschreibung",
     "ACTIVITY_CATEGORY": "Kategorie",
@@ -456,6 +461,8 @@
     "VIEW": "Anzeigen",
     "BLOCK": "Sperren",
     "UNBLOCK": "Entsperren",
+    "SET_COMMISSION": "Provisionssatz setzen",
+    "VIEW_PROFILE": "Profil anzeigen",
     "APPROVE": "Genehmigen",
     "REJECT": "Ablehnen",
     "DRAFT": "Entwurf",
@@ -569,7 +576,8 @@
     "INVALID_LATITUDE": "Breitengrad muss zwischen -90 und 90 liegen (kann nicht 0 sein)",
     "INVALID_LONGITUDE": "Längengrad muss zwischen -180 und 180 liegen (kann nicht 0 sein)",
     "PAYPAL_EMAIL_REQUIRED": "PayPal-E-Mail ist erforderlich, wenn PayPal als Auszahlungsmethode ausgewählt wurde",
-    "STRIPE_ACCOUNT_ID_REQUIRED": "Stripe Connect-Kontonummer ist erforderlich, wenn Stripe als Auszahlungsmethode ausgewählt wurde"
+    "STRIPE_ACCOUNT_ID_REQUIRED": "Stripe Connect-Kontonummer ist erforderlich, wenn Stripe als Auszahlungsmethode ausgewählt wurde",
+    "COMMISSION_RATE_RANGE": "Provisionssatz muss zwischen 0 und 100 liegen"
   },
   "PAYMENT": {
     "PROCESSING_PAYMENT": "Zahlung wird verarbeitet...",
@@ -586,10 +594,35 @@
     "FAILED_TO_UPDATE_ACTIVITY": "Aktivität konnte nicht aktualisiert werden",
     "FAILED_TO_LOAD_ACTIVITY": "Aktivitätsdetails konnten nicht geladen werden",
     "ACTIVITY_DROP_CREATED_SUCCESS": "Aktivitäts-Drop erfolgreich erstellt",
-    "INVALID_IMAGE_FILE": "Bitte wählen Sie eine gültige Bilddatei (JPEG, PNG, GIF)",
-    "IMAGE_SIZE_TOO_LARGE": "Bildgröße sollte weniger als 5MB betragen"
+    "INVALID_IMAGE_FILE": "Bitte wählen Sie eine gültige Bilddatei (JPEG, PNG, GIF)"
+  },
+  "PROFILE": {
+    "UPDATED_SUCCESSFULLY": "Profil erfolgreich aktualisiert",
+    "NO_CHANGES": "Keine Änderungen zum Speichern"
+  },
+  "PARTNER_PROFILE": {
+    "DESCRIPTION": "Bearbeiten Sie Ihr öffentliches Profil: Über-Text, Galerie, Karten-Pin und Layout-Hintergrund.",
+    "BUSINESS_NAME": "Firmenname",
+    "BUSINESS_DESCRIPTION": "Firmenbeschreibung",
+    "ABOUT": "Über",
+    "ABOUT_PLACEHOLDER": "Erzählen Sie Besuchern von sich und Ihrem Unternehmen...",
+    "GALLERY": "Galerie",
+    "UPLOAD_IMAGES": "Bilder hochladen",
+    "GALLERY_URLS_HELP": "Eine Bild-URL pro Zeile oder Hochladen zum Hinzufügen. Neue Uploads werden an die Galerie angehängt.",
+    "IMAGES": "Bilder",
+    "MAP_LOCATION": "Kartenposition",
+    "MAP_HELP": "Längengrad und Breitengrad für Ihren Karten-Pin (z. B. wie bei Google Maps: Lng, Lat).",
+    "LONGITUDE": "Längengrad",
+    "LATITUDE": "Breitengrad",
+    "BACKGROUND": "Hintergrund",
+    "UPLOAD_BACKGROUND": "Hintergrund hochladen",
+    "BACKGROUND_HELP": "Bild-URL oder Hex-Farbe (z. B. #1a1a2e) für den Profil-Hintergrund.",
+    "LOAD_FAILED": "Profil konnte nicht geladen werden.",
+    "NO_ABOUT": "Kein Über-Text hinterlegt.",
+    "NO_GALLERY": "Keine Galeriebilder."
   },
   "MESSAGES": {
+    "IMAGE_SIZE_TOO_LARGE": "Bildgröße sollte weniger als 5MB betragen",
     "FAILED_TO_DELETE_USER": "Benutzer konnte nicht gelöscht werden",
     "FAILED_TO_UPDATE_USER": "Benutzerstatus konnte nicht aktualisiert werden",
     "FAILED_TO_APPROVE_BOOKING": "Buchung konnte nicht genehmigt werden",
@@ -653,6 +686,7 @@
     "LAST_UPDATED": "Zuletzt aktualisiert",
     "PEOPLE": "Personen",
     "COORDINATES": "Koordinaten",
+    "OPEN_IN_GOOGLE_MAPS": "In Google Maps öffnen",
     "TIME_SLOTS": "Zeitslots",
     "AVAILABLE_TIME_SLOTS": "Verfügbare Zeitslots",
     "SLOT": "Slot",

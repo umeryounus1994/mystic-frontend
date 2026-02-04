@@ -151,6 +151,18 @@
           </ul>
         </li>
 
+        <!-- Profile Section for Partners -->
+        <li class="nav-item ms-2 my-2" *ngIf="auth.isPartner">
+          <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.PROFILE' | translate }}</span>
+        </li>
+
+        <!-- Partner Profile -->
+        <li class="nav-item" *ngIf="auth.isPartner">
+          <a [routerLink]="['/partner/partner-profile']" class="nav-link text-white" [class.active]="routeURL === '/partner/partner-profile' || routeURL.includes('/partner/partner-profile')" (click)="closeSidebar()">
+            <i class="bi bi-person-badge fa-fw me-2"></i>{{ 'SIDEBAR.PARTNER_PROFILE' | translate }}
+          </a>
+        </li>
+
         <!-- Payouts Section for Partners -->
         <li class="nav-item ms-2 my-2" *ngIf="auth.isPartner">
           <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.PAYOUTS' | translate }}</span>

@@ -88,11 +88,11 @@
                          class="img-fluid rounded shadow-sm" 
                          alt="Activity Image" 
                          style="max-height: 300px; object-fit: cover; width: 100%; cursor: pointer;"
-                         (click)="openImageModal(activity.images[0])">
+                         (click)="openEnlargeImageModal(activity.images[0])">
                 </div>
                 
                 <!-- Multiple Images - Carousel -->
-                <div id="activityImageCarousel" class="carousel slide" data-bs-ride="carousel" *ngIf="activity.images.length > 1">
+                <div id="activityImageCarousel" class="carousel slide carousel-indicators-below" data-bs-ride="carousel" *ngIf="activity.images.length > 1">
                     <div class="carousel-inner rounded">
                         <div *ngFor="let image of activity.images; let i = index" 
                              class="carousel-item" 
@@ -101,7 +101,7 @@
                                  class="d-block w-100" 
                                  alt="Activity Image {{i + 1}}" 
                                  style="max-height: 300px; object-fit: cover; cursor: pointer;"
-                                 (click)="openImageModal(image)">
+                                 (click)="openEnlargeImageModal(image)">
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#activityImageCarousel" data-bs-slide="prev">
@@ -112,7 +112,6 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">{{ 'COMMON.NEXT' | translate }}</span>
                     </button>
-                    <!-- Carousel Indicators -->
                     <div class="carousel-indicators" *ngIf="activity.images.length > 1">
                         <button *ngFor="let image of activity.images; let i = index" 
                                 type="button" 
@@ -138,6 +137,51 @@
                     <div>
                         <h6 class="mb-0">{{activity.partner_id.first_name}} {{activity.partner_id.last_name}}</h6>
                         <small class="text-muted">{{activity.partner_id.partner_profile?.business_name || 'Partner'}}</small>
+                    </div>
+                </div>
+                <!-- Partner About -->
+                <div *ngIf="getPartnerAbout()" class="mb-3">
+                    <h6 class="text-uppercase text-muted small mb-1">{{ 'PARTNER_PROFILE.ABOUT' | translate }}</h6>
+                    <p class="mb-0 text-break small">{{ getPartnerAbout() }}</p>
+                </div>
+                <!-- Partner map location (Google Maps link) -->
+                <div *ngIf="getPartnerMapGoogleUrl()" class="mb-3">
+                    <h6 class="text-uppercase text-muted small mb-1">{{ 'PARTNER_PROFILE.MAP_LOCATION' | translate }}</h6>
+                    <a [href]="getPartnerMapGoogleUrl()" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-geo-alt me-1"></i>{{ 'VIEW_ACTIVITY.OPEN_IN_GOOGLE_MAPS' | translate }}
+                    </a>
+                </div>
+                <!-- Partner Gallery (carousel, click to enlarge) -->
+                <div *ngIf="getPartnerGallery().length > 0">
+                    <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.GALLERY' | translate }}</h6>
+                    <div id="partnerGalleryCarousel" class="carousel slide carousel-indicators-below" data-bs-ride="carousel">
+                        <div class="carousel-inner rounded">
+                            <div *ngFor="let url of getPartnerGallery(); let i = index" 
+                                 class="carousel-item" 
+                                 [class.active]="i === 0">
+                                <img [src]="url" 
+                                     class="d-block w-100" 
+                                     alt="Partner gallery {{ i + 1 }}" 
+                                     style="max-height: 220px; object-fit: cover; cursor: pointer;"
+                                     (click)="openEnlargeImageModal(url)">
+                            </div>
+                        </div>
+                        <button *ngIf="getPartnerGallery().length > 1" class="carousel-control-prev" type="button" data-bs-target="#partnerGalleryCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">{{ 'COMMON.PREVIOUS' | translate }}</span>
+                        </button>
+                        <button *ngIf="getPartnerGallery().length > 1" class="carousel-control-next" type="button" data-bs-target="#partnerGalleryCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">{{ 'COMMON.NEXT' | translate }}</span>
+                        </button>
+                        <div class="carousel-indicators" *ngIf="getPartnerGallery().length > 1">
+                            <button *ngFor="let url of getPartnerGallery(); let i = index" 
+                                    type="button" 
+                                    data-bs-target="#partnerGalleryCarousel" 
+                                    [attr.data-bs-slide-to]="i"
+                                    [class.active]="i === 0"
+                                    [attr.aria-label]="'Slide ' + (i + 1)"></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -398,6 +442,18 @@
                     <i class="bi bi-paypal me-2" *ngIf="selectedPaymentMethod === 'paypal'"></i>
                     {{ 'VIEW_ACTIVITY.BOOK_PAY_WITH' | translate }} {{selectedPaymentMethod === 'stripe' ? ('VIEW_ACTIVITY.CARD' | translate) : ('VIEW_ACTIVITY.PAYPAL' | translate)}}
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enlarge image modal (partner gallery / activity images) -->
+<div class="modal fade" id="enlargeImageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body p-0 position-relative">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2 z-index-1" data-bs-dismiss="modal" aria-label="Close" (click)="closeEnlargeImageModal()"></button>
+                <img *ngIf="selectedEnlargedImage" [src]="selectedEnlargedImage" alt="Enlarged" class="img-fluid w-100" style="max-height: 90vh; object-fit: contain;">
             </div>
         </div>
     </div>

@@ -129,17 +129,18 @@ export class EditActivityComponent implements OnInit {
 
   validatePriceInput(event: any) {
     const input = event.target;
-    let value = parseFloat(input.value);
-    
-    if (isNaN(value) || value < 1) {
-      input.value = 1;
-      this.activityForm.patchValue({ price: 1 });
-    } else {
-      // Round to 2 decimal places
-      value = Math.round(value * 100) / 100;
-      input.value = value.toFixed(2);
-      this.activityForm.patchValue({ price: value });
+    if (input.value === '') {
+      return;
     }
+    const value = parseFloat(input.value);
+    if (isNaN(value) || value < 1) {
+      input.value = '1';
+      this.activityForm.patchValue({ price: 1 });
+      return;
+    }
+    const rounded = Math.round(value * 100) / 100;
+    this.activityForm.patchValue({ price: rounded });
+    // Do not set input.value = rounded.toFixed(2) here – it blocks typing values like 40
   }
 
   validateAvailableSpots(control: AbstractControl): ValidationErrors | null {

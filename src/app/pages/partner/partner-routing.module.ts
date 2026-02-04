@@ -10,6 +10,7 @@ import { CreateActivityDropComponent } from './create-activity-drop/create-activ
 import { ListActivityDropsComponent } from './list-activity-drops/list-activity-drops.component';
 import { PayoutSettingsComponent } from './payouts/payout-settings/payout-settings.component';
 import { PayoutHistoryComponent } from './payouts/payout-history/payout-history.component';
+import { PartnerProfileComponent } from './partner-profile/partner-profile.component';
 
 const routes: Routes = [{
   path: '',
@@ -52,6 +53,11 @@ const routes: Routes = [{
     {
       path: 'payout-settings',
       component: PayoutSettingsComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'partner-profile',
+      component: PartnerProfileComponent,
       canActivate: [AuthGuard]
     },
     {

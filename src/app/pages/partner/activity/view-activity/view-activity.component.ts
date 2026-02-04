@@ -562,4 +562,40 @@ deleteActivity() {
     // For now, opening in new tab
     window.open(imageUrl, '_blank');
   }
+
+  getPartnerAbout(): string {
+    const about = this.activity?.partner_id?.partner_profile?.about;
+    return about != null && String(about).trim() !== '' ? String(about).trim() : '';
+  }
+
+  getPartnerMapCoordinates(): string {
+    const coords = this.activity?.partner_id?.partner_profile?.map_location?.coordinates;
+    if (!Array.isArray(coords) || coords.length < 2) return '';
+    return `${coords[0]}, ${coords[1]}`;
+  }
+
+  getPartnerMapGoogleUrl(): string {
+    const coords = this.activity?.partner_id?.partner_profile?.map_location?.coordinates;
+    if (!Array.isArray(coords) || coords.length < 2) return '';
+    const lat = coords[0];
+    const lng = coords[1];
+    return `https://www.google.com/maps?q=${lat},${lng}`;
+  }
+
+  getPartnerGallery(): string[] {
+    const g = this.activity?.partner_id?.partner_profile?.gallery;
+    return Array.isArray(g) ? g : [];
+  }
+
+  selectedEnlargedImage: string | null = null;
+
+  openEnlargeImageModal(imageUrl: string) {
+    this.selectedEnlargedImage = imageUrl;
+    $('#enlargeImageModal').modal('show');
+  }
+
+  closeEnlargeImageModal() {
+    this.selectedEnlargedImage = null;
+    $('#enlargeImageModal').modal('hide');
+  }
 }

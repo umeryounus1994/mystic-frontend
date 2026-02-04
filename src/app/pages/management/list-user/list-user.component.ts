@@ -2,6 +2,9 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
+import { CommissionRateService } from '../../../services/commission-rate/commission-rate.service';
+import { PartnerProfileService } from '../../../services/partner-profile/partner-profile.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
@@ -32,6 +35,17 @@ export class ListUserComponent implements OnInit {
   lastActionUserId: string | null = null;
   lastActionType: string | null = null;
 
+  // Set partner commission (admin only)
+  selectedPartnerForCommission: any = null;
+  commissionRateInput: number | null = null;
+  savingCommission = false;
+
+  // View partner profile (about, gallery, background)
+  selectedPartnerForView: any = null;
+  partnerProfileView: any = null;
+  loadingProfileView = false;
+  partnerProfileViewError: string | null = null;
+
   // Filter options
   filterOptions = [
     { value: 'all', label: 'LIST.ALL_USERS' },
@@ -60,9 +74,12 @@ export class ListUserComponent implements OnInit {
 
 
   constructor(
-    private sp: NgxSpinnerService, 
-    private api: RestApiService, 
+    private sp: NgxSpinnerService,
+    private api: RestApiService,
     private helper: HelperService,
+    private commissionRateService: CommissionRateService,
+    private partnerProfileService: PartnerProfileService,
+    private auth: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     public translate: TranslateService
@@ -604,6 +621,175 @@ export class ListUserComponent implements OnInit {
   
   trackByUserId(index: number, user: any): any {
     return user.id || user._id || index;
+  }
+
+  get canSetPartnerCommission(): boolean {
+    return !!(this.auth.isAdmin || this.auth.user?.permissions?.includes('Commission Rate') || this.auth.user?.permissions?.includes('All'));
+  }
+
+  isPartner(user: any): boolean {
+    const t = user?.type || user?.user_type || user?.user_role || '';
+    return t === 'partner';
+  }
+
+  getPartnerId(user: any): string {
+    return user?._id || user?.id || '';
+  }
+
+  getPartnerCommissionRate(user: any): number | null {
+    // API may return commission_rate at top level (get_all_admin) or under partner_profile
+    const rate = user?.commission_rate ?? user?.partner_profile?.commission_rate;
+    if (typeof rate === 'number' && !Number.isNaN(rate)) return rate;
+    const n = parseFloat(String(rate));
+    return !Number.isNaN(n) ? n : null;
+  }
+
+  openSetCommissionModal(user: any) {
+    this.selectedPartnerForCommission = user;
+    this.commissionRateInput = this.getPartnerCommissionRate(user) ?? 15;
+    this.cdr.detectChanges();
+    $('#setCommissionModal').modal('show');
+  }
+
+  closeSetCommissionModal() {
+    this.selectedPartnerForCommission = null;
+    this.commissionRateInput = null;
+    $('#setCommissionModal').modal('hide');
+    this.cdr.detectChanges();
+  }
+
+  openViewPartnerProfile(user: any) {
+    const partnerId = this.getPartnerId(user);
+    if (!partnerId) {
+      this.helper.failureToast('Invalid partner');
+      return;
+    }
+    this.selectedPartnerForView = user;
+    this.partnerProfileView = null;
+    this.partnerProfileViewError = null;
+    this.loadingProfileView = true;
+    this.cdr.detectChanges();
+    $('#viewPartnerProfileModal').modal('show');
+    this.partnerProfileService.getProfileByPartnerId(partnerId)
+      .then((res: any) => {
+        this.partnerProfileView = res?.data || res;
+        this.loadingProfileView = false;
+        this.cdr.detectChanges();
+      })
+      .catch((err: any) => {
+        this.loadingProfileView = false;
+        this.partnerProfileViewError = err?.error?.message || err?.message || 'Failed to load profile';
+        this.cdr.detectChanges();
+      });
+  }
+
+  closeViewPartnerProfile() {
+    this.selectedPartnerForView = null;
+    this.partnerProfileView = null;
+    this.partnerProfileViewError = null;
+    $('#viewPartnerProfileModal').modal('hide');
+    this.cdr.detectChanges();
+  }
+
+  getPartnerProfileAbout(): string {
+    const pp = this.partnerProfileView?.partner_profile;
+    const about = pp?.about;
+    return about != null && String(about).trim() !== '' ? String(about).trim() : '';
+  }
+
+  getPartnerProfileGallery(): string[] {
+    const pp = this.partnerProfileView?.partner_profile;
+    const g = pp?.gallery;
+    return Array.isArray(g) ? g : [];
+  }
+
+  getPartnerProfileBackground(): string {
+    const pp = this.partnerProfileView?.partner_profile;
+    const bg = pp?.layout_options?.background;
+    if (bg == null || String(bg).trim() === '') return '';
+    return String(bg).trim();
+  }
+
+  getPartnerProfileBackgroundStyle(): { [key: string]: string } {
+    const bg = this.getPartnerProfileBackground();
+    if (!bg) return {};
+    if (bg.startsWith('#') || bg.startsWith('rgb')) return { 'background-color': bg };
+    return { 'background-image': `url(${bg})`, 'background-size': 'cover', 'background-position': 'center' };
+  }
+
+  getPartnerProfilePP(): any {
+    return this.partnerProfileView?.partner_profile || {};
+  }
+
+  getPartnerProfileBusinessName(): string {
+    const v = this.getPartnerProfilePP().business_name;
+    return v != null && String(v).trim() !== '' ? String(v).trim() : '—';
+  }
+
+  getPartnerProfileBusinessDescription(): string {
+    const v = this.getPartnerProfilePP().business_description;
+    return v != null && String(v).trim() !== '' ? String(v).trim() : '—';
+  }
+
+  getPartnerProfilePhone(): string {
+    const v = this.getPartnerProfilePP().phone;
+    return v != null && String(v).trim() !== '' ? String(v).trim() : '—';
+  }
+
+  getPartnerProfileMapCoordinates(): string {
+    const coords = this.getPartnerProfilePP().map_location?.coordinates;
+    if (!Array.isArray(coords) || coords.length < 2) return '—';
+    return `${coords[0]}, ${coords[1]}`;
+  }
+
+  getPartnerProfileCommissionRate(): number | null {
+    const r = this.getPartnerProfilePP().commission_rate;
+    if (typeof r === 'number' && !Number.isNaN(r)) return r;
+    const n = parseFloat(String(r));
+    return !Number.isNaN(n) ? n : null;
+  }
+
+  getPartnerProfileApprovalStatus(): string {
+    const v = this.getPartnerProfilePP().approval_status;
+    return v != null && String(v).trim() !== '' ? String(v).trim() : '—';
+  }
+
+  getPartnerProfileEmail(): string {
+    const v = this.partnerProfileView?.email;
+    return v != null && String(v).trim() !== '' ? String(v).trim() : '—';
+  }
+
+  getPartnerProfileCreatedAt(): string {
+    const v = this.partnerProfileView?.created_at;
+    return v != null ? String(v) : '—';
+  }
+
+  async savePartnerCommission() {
+    if (!this.selectedPartnerForCommission) return;
+    const partnerId = this.getPartnerId(this.selectedPartnerForCommission);
+    if (!partnerId) {
+      this.helper.failureToast('Invalid partner');
+      return;
+    }
+    const raw = this.commissionRateInput;
+    const rate = typeof raw === 'number' ? raw : parseFloat(String(raw));
+    if (Number.isNaN(rate) || rate < 0 || rate > 100) {
+      this.helper.warningToast(this.translate.instant('VALIDATION.COMMISSION_RATE_RANGE') || 'Commission rate must be between 0 and 100');
+      return;
+    }
+    this.savingCommission = true;
+    this.cdr.detectChanges();
+    try {
+      const res: any = await this.commissionRateService.setPartnerCommissionRate(partnerId, rate);
+      this.helper.successToast(res?.message || this.translate.instant('MESSAGES.UPDATED_SUCCESS') || 'Commission rate updated');
+      this.closeSetCommissionModal();
+      await this.getAllUsers();
+    } catch (err: any) {
+      this.helper.failureToast(err?.error?.message || err?.message || this.translate.instant('MESSAGES.FAILED_TO_UPDATE_USER'));
+    } finally {
+      this.savingCommission = false;
+      this.cdr.detectChanges();
+    }
   }
 
   preventNegativeInput(event: KeyboardEvent) {
