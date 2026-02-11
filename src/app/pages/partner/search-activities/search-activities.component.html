@@ -24,8 +24,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-outline-secondary w-100" (click)="getCurrentLocation()">
-                    <i class="bi bi-geo-alt me-2"></i>{{ 'SEARCH_ACTIVITIES.USE_MY_LOCATION' | translate }}
+                <button class="btn btn-outline-secondary w-100" (click)="getCurrentLocation()" [disabled]="locationLoading">
+                    <span *ngIf="locationLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    <i *ngIf="!locationLoading" class="bi bi-geo-alt me-2"></i>
+                    {{ locationLoading ? ('SEARCH_ACTIVITIES.GETTING_LOCATION' | translate) : ('SEARCH_ACTIVITIES.USE_MY_LOCATION' | translate) }}
                 </button>
             </div>
         </div>

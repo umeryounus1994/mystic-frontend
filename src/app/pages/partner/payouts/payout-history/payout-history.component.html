@@ -1,16 +1,16 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Loading...</p>
+    <p style="font-size: 30px; color: white">{{ 'PAYOUT_HISTORY.LOADING' | translate }}</p>
 </ngx-spinner>
 
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">Payout History</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'PAYOUT_HISTORY.PAGE_TITLE' | translate }}</h1>
         <div class="d-flex gap-2">
             <select class="form-select" [(ngModel)]="selectedStatusFilter" (change)="applyStatusFilter()" style="width: auto;">
-                <option value="">All Status</option>
-                <option value="paid">Paid</option>
-                <option value="pending">Pending</option>
-                <option value="failed">Failed</option>
+                <option value="">{{ 'PAYOUT_HISTORY.ALL_STATUS' | translate }}</option>
+                <option value="paid">{{ 'PAYOUT_HISTORY.PAID' | translate }}</option>
+                <option value="pending">{{ 'PAYOUT_HISTORY.PENDING' | translate }}</option>
+                <option value="failed">{{ 'PAYOUT_HISTORY.FAILED' | translate }}</option>
             </select>
         </div>
     </div>
@@ -22,11 +22,11 @@
             <table datatable [dtOptions]="dtOptions" class="table table-hover align-middle mb-0 modern-table" id="dtable">
                 <thead class="table-header">
                     <tr>
-                        <th>Amount</th>
-                        <th>Method</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Transaction ID</th>
+                        <th>{{ 'PAYOUT_HISTORY.AMOUNT' | translate }}</th>
+                        <th>{{ 'PAYOUT_HISTORY.METHOD' | translate }}</th>
+                        <th>{{ 'PAYOUT_HISTORY.STATUS' | translate }}</th>
+                        <th>{{ 'PAYOUT_HISTORY.DATE' | translate }}</th>
+                        <th>{{ 'PAYOUT_HISTORY.TRANSACTION_ID' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,7 +54,7 @@
         </div>
         <ng-template #noPayoutsTemplate>
             <div class="text-center p-5">
-                <p class="text-muted">No payout history found</p>
+                <p class="text-muted">{{ 'PAYOUT_HISTORY.NO_PAYOUT_HISTORY' | translate }}</p>
             </div>
         </ng-template>
 
@@ -62,21 +62,19 @@
         <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="pagination.pages > 1">
             <div>
                 <small class="text-muted">
-                    Showing {{((pagination.page - 1) * pagination.limit) + 1}} to 
-                    {{getMinValue(pagination.page * pagination.limit, pagination.total)}} of 
-                    {{pagination.total}} entries
+                    {{ 'PAYOUT_HISTORY.SHOWING_TO_OF' | translate:{ from: ((pagination.page - 1) * pagination.limit) + 1, to: getMinValue(pagination.page * pagination.limit, pagination.total), total: pagination.total } }}
                 </small>
             </div>
             <nav>
                 <ul class="pagination mb-0">
                     <li class="page-item" [class.disabled]="pagination.page === 1">
-                        <a class="page-link" (click)="onPageChange(pagination.page - 1)" *ngIf="pagination.page > 1">Previous</a>
+                        <a class="page-link" (click)="onPageChange(pagination.page - 1)" *ngIf="pagination.page > 1">{{ 'PAYOUT_HISTORY.PREVIOUS' | translate }}</a>
                     </li>
                     <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === pagination.page">
                         <a class="page-link" (click)="onPageChange(page)">{{page}}</a>
                     </li>
                     <li class="page-item" [class.disabled]="pagination.page === pagination.pages">
-                        <a class="page-link" (click)="onPageChange(pagination.page + 1)" *ngIf="pagination.page < pagination.pages">Next</a>
+                        <a class="page-link" (click)="onPageChange(pagination.page + 1)" *ngIf="pagination.page < pagination.pages">{{ 'PAYOUT_HISTORY.NEXT' | translate }}</a>
                     </li>
                 </ul>
             </nav>

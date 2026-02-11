@@ -44,6 +44,8 @@ export class SearchActivitiesComponent implements OnInit {
     total_items: 0
   };
 
+  locationLoading = false;
+
   constructor(
     private sp: NgxSpinnerService,
     private api: RestApiService,
@@ -113,16 +115,16 @@ export class SearchActivitiesComponent implements OnInit {
 
   getCurrentLocation() {
     if (navigator.geolocation) {
-      this.sp.show();
+      this.locationLoading = true;
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.filters.latitude = position.coords.latitude.toString();
           this.filters.longitude = position.coords.longitude.toString();
-          this.sp.hide();
-          this.onFilterChange();
+          this.locationLoading = false;
+          this.helper.successToast(this.translate.instant('SEARCH_ACTIVITIES.LOCATION_UPDATED'));
         },
         (error) => {
-          this.sp.hide();
+          this.locationLoading = false;
           this.helper.failureToast(this.translate.instant('SEARCH_ACTIVITIES.UNABLE_TO_GET_LOCATION'));
         }
       );

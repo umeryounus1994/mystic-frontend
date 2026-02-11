@@ -205,45 +205,57 @@ export class EditActivityComponent implements OnInit {
 
   validateSlotDates(group: AbstractControl): ValidationErrors | null {
     const formGroup = group as FormGroup;
+    const startDate = formGroup.get('start_date')?.value;
     const startTime = formGroup.get('start_time')?.value;
+    const endDate = formGroup.get('end_date')?.value;
     const endTime = formGroup.get('end_time')?.value;
-    
-    if (!startTime || !endTime) return null;
-    
-    const start = new Date(startTime);
-    const end = new Date(endTime);
+
+    if (!startDate || !startTime || !endDate || !endTime) return null;
+
+    const start = new Date(startDate + 'T' + startTime);
+    const end = new Date(endDate + 'T' + endTime);
     const now = new Date();
     now.setSeconds(0, 0);
-    
-    // Check if start is in the past
+
     if (start <= now) {
+      formGroup.get('start_date')?.setErrors({ pastDate: true });
       formGroup.get('start_time')?.setErrors({ pastDate: true });
       return { pastDate: true };
     }
-    
-    // Check if end is in the past
+
     if (end < now) {
+      formGroup.get('end_date')?.setErrors({ pastDate: true });
       formGroup.get('end_time')?.setErrors({ pastDate: true });
       return { pastDate: true };
     }
-    
-    // Check if end is before start
+
     if (end <= start) {
+      formGroup.get('end_date')?.setErrors({ endBeforeStart: true });
       formGroup.get('end_time')?.setErrors({ endBeforeStart: true });
       return { endBeforeStart: true };
     }
-    
-    // Clear errors if validation passes
+
+    formGroup.get('start_date')?.setErrors(null);
     formGroup.get('start_time')?.setErrors(null);
+    formGroup.get('end_date')?.setErrors(null);
     formGroup.get('end_time')?.setErrors(null);
-    
+
     return null;
   }
 
-  getMinDateTime(): string {
+  getMinDate(): string {
     const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    return now.toISOString().slice(0, 16);
+    return now.toISOString().slice(0, 10);
+  }
+
+  getMinEndTime(slotIndex: number): string {
+    const slot = this.slots.at(slotIndex);
+    const startDate = slot?.get('start_date')?.value;
+    const endDate = slot?.get('end_date')?.value;
+    if (startDate && endDate && startDate === endDate) {
+      return slot?.get('start_time')?.value || '';
+    }
+    return '';
   }
 
   getActivityDetails() {
@@ -296,21 +308,31 @@ export class EditActivityComponent implements OnInit {
 
   createSlot(): FormGroup {
     return this.fb.group({
-      start_time: ['', [Validators.required, this.validateFutureDate.bind(this)]],
-      end_time: ['', [Validators.required, this.validateFutureDate.bind(this)]],
+      start_date: ['', Validators.required],
+      start_time: ['', Validators.required],
+      end_date: ['', Validators.required],
+      end_time: ['', Validators.required],
       available_spots: ['', [Validators.required, Validators.min(1)]]
     }, { validators: this.validateSlotDates.bind(this) });
   }
 
   createSlotFromData(slot: any): FormGroup {
+    const startDt = new Date(slot.start_time);
+    const endDt = new Date(slot.end_time);
+    const start_date = startDt.toISOString().slice(0, 10);
+    const start_time = startDt.toISOString().slice(11, 16);
+    const end_date = endDt.toISOString().slice(0, 10);
+    const end_time = endDt.toISOString().slice(11, 16);
+
     const slotGroup = this.fb.group({
       _id: [slot._id],
-      start_time: [new Date(slot.start_time).toISOString().slice(0, 16), [Validators.required, this.validateFutureDate.bind(this)]],
-      end_time: [new Date(slot.end_time).toISOString().slice(0, 16), [Validators.required, this.validateFutureDate.bind(this)]],
+      start_date: [start_date, Validators.required],
+      start_time: [start_time, Validators.required],
+      end_date: [end_date, Validators.required],
+      end_time: [end_time, Validators.required],
       available_spots: [slot.available_spots, [Validators.required, Validators.min(1)]]
     }, { validators: this.validateSlotDates.bind(this) });
-    
-    // Add available_spots validator
+
     const availableSpotsControl = slotGroup.get('available_spots');
     if (availableSpotsControl) {
       availableSpotsControl.setValidators([
@@ -319,7 +341,7 @@ export class EditActivityComponent implements OnInit {
         this.validateAvailableSpots.bind(this)
       ]);
     }
-    
+
     return slotGroup;
   }
 
@@ -445,37 +467,39 @@ export class EditActivityComponent implements OnInit {
       return;
     }
     
-    // Validate all time slots
+    // Validate all time slots (build datetime from start_date, start_time, end_date, end_time)
     for (let i = 0; i < formValue.slots.length; i++) {
       const slot = formValue.slots[i];
-      const startTime = new Date(slot.start_time);
-      const endTime = new Date(slot.end_time);
+      const startDateTime = new Date(slot.start_date + 'T' + slot.start_time);
+      const endDateTime = new Date(slot.end_date + 'T' + slot.end_time);
       const now = new Date();
       now.setSeconds(0, 0);
-      
-      // Validate start time is greater than current time
-      if (startTime <= now) {
+
+      const slotControl = this.slots.at(i);
+
+      if (startDateTime <= now) {
         Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.START_TIME_PAST')}`, "error");
-        const slotControl = this.slots.at(i);
+        slotControl.get('start_date')?.setErrors({ pastDate: true });
         slotControl.get('start_time')?.setErrors({ pastDate: true });
+        slotControl.get('start_date')?.markAsTouched();
         slotControl.get('start_time')?.markAsTouched();
         return;
       }
-      
-      // Validate end time is not in the past
-      if (endTime < now) {
+
+      if (endDateTime < now) {
         Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.END_TIME_PAST')}`, "error");
-        const slotControl = this.slots.at(i);
+        slotControl.get('end_date')?.setErrors({ pastDate: true });
         slotControl.get('end_time')?.setErrors({ pastDate: true });
+        slotControl.get('end_date')?.markAsTouched();
         slotControl.get('end_time')?.markAsTouched();
         return;
       }
-      
-      // Validate end time is not less than start time
-      if (endTime <= startTime) {
+
+      if (endDateTime <= startDateTime) {
         Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), `${this.translate.instant('FORMS.SLOT')} ${i + 1}: ${this.translate.instant('VALIDATION.END_TIME_BEFORE_START')}`, "error");
-        const slotControl = this.slots.at(i);
+        slotControl.get('end_date')?.setErrors({ endBeforeStart: true });
         slotControl.get('end_time')?.setErrors({ endBeforeStart: true });
+        slotControl.get('end_date')?.markAsTouched();
         slotControl.get('end_time')?.markAsTouched();
         return;
       }
@@ -559,7 +583,13 @@ export class EditActivityComponent implements OnInit {
     fD.append('address', formData?.address);
     fD.append('duration', formData?.duration);
     fD.append('max_participants', formData?.max_participants);
-    fD.append('slots', JSON.stringify(formData?.slots));
+    const slotsPayload = (formData?.slots || []).map((s: any) => ({
+      ...(s._id ? { _id: s._id } : {}),
+      start_time: new Date(s.start_date + 'T' + s.start_time).toISOString(),
+      end_time: new Date(s.end_date + 'T' + s.end_time).toISOString(),
+      available_spots: s.available_spots
+    }));
+    fD.append('slots', JSON.stringify(slotsPayload));
     fD.append('existing_images', JSON.stringify(this.existingImages));
 
     // Append new image files

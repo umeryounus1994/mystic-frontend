@@ -32,7 +32,7 @@
                                     <div *ngIf="f['drop_name'].errors['minlength']">{{ 'VALIDATION.QUEST_TITLE_MIN' | translate }}</div>
                                     <div *ngIf="f['drop_name'].errors['maxlength']">{{ 'VALIDATION.QUEST_TITLE_MAX' | translate }}</div>
                                 </div>
-                                <small class="text-muted">5-100 {{ getValidationMessage('VALIDATION.CHARACTERS') }}</small>
+                                <small class="text-muted">5-100 {{ 'VALIDATION.CHARACTERS' | translate }}</small>
                             </div>
 
                             <div class="col-lg-3">
@@ -91,7 +91,7 @@
                                     <div *ngIf="f['drop_description'].errors['minlength']">{{ 'VALIDATION.QUEST_QUESTION_MIN' | translate }}</div>
                                     <div *ngIf="f['drop_description'].errors['maxlength']">{{ 'VALIDATION.QUEST_QUESTION_MAX' | translate }}</div>
                                 </div>
-                                <small class="text-muted">5-500 {{ getValidationMessage('VALIDATION.CHARACTERS') }}</small>
+                                <small class="text-muted">5-500 {{ 'VALIDATION.CHARACTERS' | translate }}</small>
                             </div>
 
                             <div class="d-sm-flex justify-content-end">

@@ -197,29 +197,53 @@
                                     </div>
                                     
                                     <div class="row g-3">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6 col-lg-3">
+                                            <label class="form-label">{{ 'FORMS.START_DATE' | translate }} <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control"
+                                                   formControlName="start_date"
+                                                   [min]="getMinDate()"
+                                                   (change)="validateSlotDates(slot)"
+                                                   [ngClass]="{ 'is-invalid': (submitted || slot.get('start_date')?.touched) && (slot.get('start_date')?.errors || slot.errors?.['pastDate']) }">
+                                            <div *ngIf="(submitted || slot.get('start_date')?.touched) && (slot.get('start_date')?.errors || slot.errors?.['pastDate'])" class="invalid-feedback">
+                                                <div *ngIf="slot.get('start_date')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                                <div *ngIf="slot.get('start_date')?.errors?.['pastDate']">{{ 'VALIDATION.START_TIME_PAST' | translate }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3">
                                             <label class="form-label">{{ 'FORMS.START_TIME' | translate }} <span class="text-danger">*</span></label>
-                                            <input type="datetime-local" class="form-control"
+                                            <input type="time" class="form-control"
                                                    formControlName="start_time"
-                                                   [min]="getMinDateTime()"
                                                    (change)="validateSlotDates(slot)"
                                                    [ngClass]="{ 'is-invalid': (submitted || slot.get('start_time')?.touched) && (slot.get('start_time')?.errors || slot.errors?.['pastDate']) }">
                                             <div *ngIf="(submitted || slot.get('start_time')?.touched) && (slot.get('start_time')?.errors || slot.errors?.['pastDate'])" class="invalid-feedback">
                                                 <div *ngIf="slot.get('start_time')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                                                <div *ngIf="slot.get('start_time')?.errors?.['pastDate'] || slot.errors?.['pastDate']">{{ 'VALIDATION.START_TIME_PAST' | translate }}</div>
+                                                <div *ngIf="slot.get('start_time')?.errors?.['pastDate']">{{ 'VALIDATION.START_TIME_PAST' | translate }}</div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6 col-lg-3">
+                                            <label class="form-label">{{ 'FORMS.END_DATE' | translate }} <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control"
+                                                   formControlName="end_date"
+                                                   [min]="slot.get('start_date')?.value || getMinDate()"
+                                                   (change)="validateSlotDates(slot)"
+                                                   [ngClass]="{ 'is-invalid': (submitted || slot.get('end_date')?.touched) && (slot.get('end_date')?.errors || slot.errors?.['endBeforeStart'] || slot.errors?.['pastDate']) }">
+                                            <div *ngIf="(submitted || slot.get('end_date')?.touched) && (slot.get('end_date')?.errors || slot.errors?.['endBeforeStart'] || slot.errors?.['pastDate'])" class="invalid-feedback">
+                                                <div *ngIf="slot.get('end_date')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                                                <div *ngIf="slot.get('end_date')?.errors?.['pastDate']">{{ 'VALIDATION.END_TIME_PAST' | translate }}</div>
+                                                <div *ngIf="slot.get('end_date')?.errors?.['endBeforeStart']">{{ 'VALIDATION.END_TIME_BEFORE_START' | translate }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3">
                                             <label class="form-label">{{ 'FORMS.END_TIME' | translate }} <span class="text-danger">*</span></label>
-                                            <input type="datetime-local" class="form-control"
+                                            <input type="time" class="form-control"
                                                    formControlName="end_time"
-                                                   [min]="slot.get('start_time')?.value || getMinDateTime()"
+                                                   [min]="getMinEndTime(i)"
                                                    (change)="validateSlotDates(slot)"
                                                    [ngClass]="{ 'is-invalid': (submitted || slot.get('end_time')?.touched) && (slot.get('end_time')?.errors || slot.errors?.['endBeforeStart'] || slot.errors?.['pastDate']) }">
                                             <div *ngIf="(submitted || slot.get('end_time')?.touched) && (slot.get('end_time')?.errors || slot.errors?.['endBeforeStart'] || slot.errors?.['pastDate'])" class="invalid-feedback">
                                                 <div *ngIf="slot.get('end_time')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                                                <div *ngIf="slot.get('end_time')?.errors?.['pastDate'] || slot.errors?.['pastDate']">{{ 'VALIDATION.END_TIME_PAST' | translate }}</div>
-                                                <div *ngIf="slot.get('end_time')?.errors?.['endBeforeStart'] || slot.errors?.['endBeforeStart']">{{ 'VALIDATION.END_TIME_BEFORE_START' | translate }}</div>
+                                                <div *ngIf="slot.get('end_time')?.errors?.['pastDate']">{{ 'VALIDATION.END_TIME_PAST' | translate }}</div>
+                                                <div *ngIf="slot.get('end_time')?.errors?.['endBeforeStart']">{{ 'VALIDATION.END_TIME_BEFORE_START' | translate }}</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">

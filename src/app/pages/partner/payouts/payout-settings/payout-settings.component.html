@@ -1,11 +1,11 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-    <p style="font-size: 30px; color: white">Loading...</p>
+    <p style="font-size: 30px; color: white">{{ 'PAYOUT_SETTINGS.LOADING' | translate }}</p>
 </ngx-spinner>
 
 <div class="row mb-4">
     <div class="col-12">
-        <h1 class="h3 mb-2">Payout Settings</h1>
-        <p class="text-muted">Configure how you receive your commission payouts</p>
+        <h1 class="h3 mb-2">{{ 'PAYOUT_SETTINGS.PAGE_TITLE' | translate }}</h1>
+        <p class="text-muted">{{ 'PAYOUT_SETTINGS.PAGE_DESCRIPTION' | translate }}</p>
     </div>
 </div>
 
@@ -14,7 +14,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Preferred Payout Method</h5>
+                <h5 class="mb-0">{{ 'PAYOUT_SETTINGS.PREFERRED_METHOD' | translate }}</h5>
             </div>
             <div class="card-body">
                 <div class="row g-3">
@@ -22,11 +22,11 @@
                     <div class="col-md-4">
                         <div class="card border h-100" [class.border-primary]="preferredMethod === 'stripe'">
                             <div class="card-body d-flex flex-column">
-                                <h6>Stripe Connect</h6>
-                                <p class="text-muted small">Receive payouts directly to your bank account via Stripe</p>
+                                <h6>{{ 'PAYOUT_SETTINGS.STRIPE_CONNECT' | translate }}</h6>
+                                <p class="text-muted small">{{ 'PAYOUT_SETTINGS.STRIPE_DESCRIPTION' | translate }}</p>
                                 <div class="mb-2">
                                     <span class="badge" [ngClass]="stripeAccountId ? 'bg-success' : 'bg-warning'">
-                                        {{stripeAccountId ? 'Configured' : 'Not Configured'}}
+                                        {{ (stripeAccountId ? 'PAYOUT_SETTINGS.CONFIGURED' : 'PAYOUT_SETTINGS.NOT_CONFIGURED') | translate }}
                                     </span>
                                 </div>
                                 <div class="mt-auto">
@@ -35,7 +35,7 @@
                                         [ngClass]="preferredMethod === 'stripe' ? 'btn-primary' : 'btn-outline-primary'"
                                         [disabled]="!isMethodAvailable('stripe')"
                                         (click)="updatePreferredMethod('stripe')">
-                                        {{preferredMethod === 'stripe' ? 'Selected' : 'Select'}}
+                                        {{ (preferredMethod === 'stripe' ? 'PAYOUT_SETTINGS.SELECTED' : 'PAYOUT_SETTINGS.SELECT') | translate }}
                                     </button>
                                 </div>
                             </div>
@@ -46,11 +46,11 @@
                     <div class="col-md-4">
                         <div class="card border h-100" [class.border-primary]="preferredMethod === 'paypal'">
                             <div class="card-body d-flex flex-column">
-                                <h6>PayPal</h6>
-                                <p class="text-muted small">Receive payouts to your PayPal account</p>
+                                <h6>{{ 'PAYOUT_SETTINGS.PAYPAL' | translate }}</h6>
+                                <p class="text-muted small">{{ 'PAYOUT_SETTINGS.PAYPAL_DESCRIPTION' | translate }}</p>
                                 <div class="mb-2">
                                     <span class="badge" [ngClass]="paypalEmail ? 'bg-success' : 'bg-warning'">
-                                        {{paypalEmail ? 'Configured' : 'Not Configured'}}
+                                        {{ (paypalEmail ? 'PAYOUT_SETTINGS.CONFIGURED' : 'PAYOUT_SETTINGS.NOT_CONFIGURED') | translate }}
                                     </span>
                                 </div>
                                 <div class="mt-auto">
@@ -59,7 +59,7 @@
                                         [ngClass]="preferredMethod === 'paypal' ? 'btn-primary' : 'btn-outline-primary'"
                                         [disabled]="!isMethodAvailable('paypal')"
                                         (click)="updatePreferredMethod('paypal')">
-                                        {{preferredMethod === 'paypal' ? 'Selected' : 'Select'}}
+                                        {{ (preferredMethod === 'paypal' ? 'PAYOUT_SETTINGS.SELECTED' : 'PAYOUT_SETTINGS.SELECT') | translate }}
                                     </button>
                                 </div>
                             </div>
@@ -70,11 +70,11 @@
                     <div class="col-md-4">
                         <div class="card border h-100" [class.border-primary]="preferredMethod === 'bank_transfer'">
                             <div class="card-body d-flex flex-column">
-                                <h6>Bank Transfer</h6>
-                                <p class="text-muted small">Receive payouts via bank transfer (manual processing)</p>
+                                <h6>{{ 'PAYOUT_SETTINGS.BANK_TRANSFER' | translate }}</h6>
+                                <p class="text-muted small">{{ 'PAYOUT_SETTINGS.BANK_TRANSFER_DESCRIPTION' | translate }}</p>
                                 <div class="mb-2">
                                     <span class="badge" [ngClass]="bankDetailsConfigured ? 'bg-success' : 'bg-warning'">
-                                        {{bankDetailsConfigured ? 'Configured' : 'Not Configured'}}
+                                        {{ (bankDetailsConfigured ? 'PAYOUT_SETTINGS.CONFIGURED' : 'PAYOUT_SETTINGS.NOT_CONFIGURED') | translate }}
                                     </span>
                                 </div>
                                 <div class="mt-auto">
@@ -83,7 +83,7 @@
                                         [ngClass]="preferredMethod === 'bank_transfer' ? 'btn-primary' : 'btn-outline-primary'"
                                         [disabled]="!isMethodAvailable('bank_transfer')"
                                         (click)="updatePreferredMethod('bank_transfer')">
-                                        {{preferredMethod === 'bank_transfer' ? 'Selected' : 'Select'}}
+                                        {{ (preferredMethod === 'bank_transfer' ? 'PAYOUT_SETTINGS.SELECTED' : 'PAYOUT_SETTINGS.SELECT') | translate }}
                                     </button>
                                 </div>
                             </div>
@@ -98,28 +98,28 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">PayPal Email</h5>
+                <h5 class="mb-0">{{ 'PAYOUT_SETTINGS.PAYPAL_EMAIL' | translate }}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
-                        <label class="form-label">PayPal Email Address</label>
+                        <label class="form-label">{{ 'PAYOUT_SETTINGS.PAYPAL_EMAIL_ADDRESS' | translate }}</label>
                         <div class="input-group">
                             <input 
                                 type="email" 
                                 class="form-control" 
                                 [(ngModel)]="newPaypalEmail"
-                                placeholder="your-email@paypal.com">
+                                [placeholder]="'PAYOUT_SETTINGS.PAYPAL_EMAIL_PLACEHOLDER' | translate">
                             <button 
                                 class="btn btn-primary" 
                                 (click)="updatePayPalEmail()"
                                 [disabled]="!newPaypalEmail || newPaypalEmail === paypalEmail">
-                                Update
+                                {{ 'PAYOUT_SETTINGS.UPDATE' | translate }}
                             </button>
                         </div>
-                        <small class="text-muted">Enter the PayPal email address where you want to receive payouts</small>
+                        <small class="text-muted">{{ 'PAYOUT_SETTINGS.PAYPAL_EMAIL_HELP' | translate }}</small>
                         <div *ngIf="paypalEmail" class="mt-2">
-                            <small class="text-success">Current: {{paypalEmail}}</small>
+                            <small class="text-success">{{ 'PAYOUT_SETTINGS.CURRENT' | translate }}: {{paypalEmail}}</small>
                         </div>
                     </div>
                 </div>
@@ -131,28 +131,28 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Stripe Connect Account ID</h5>
+                <h5 class="mb-0">{{ 'PAYOUT_SETTINGS.STRIPE_ACCOUNT_ID' | translate }}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
-                        <label class="form-label">Stripe Connect Account ID</label>
+                        <label class="form-label">{{ 'PAYOUT_SETTINGS.STRIPE_ACCOUNT_ID' | translate }}</label>
                         <div class="input-group">
                             <input 
                                 type="text" 
                                 class="form-control" 
                                 [(ngModel)]="newStripeAccountId"
-                                placeholder="acct_xxxxx">
+                                [placeholder]="'PAYOUT_SETTINGS.STRIPE_PLACEHOLDER' | translate">
                             <button 
                                 class="btn btn-primary" 
                                 (click)="updateStripeAccountId()"
                                 [disabled]="!newStripeAccountId || newStripeAccountId === stripeAccountId">
-                                Update
+                                {{ 'PAYOUT_SETTINGS.UPDATE' | translate }}
                             </button>
                         </div>
-                        <small class="text-muted">Enter your Stripe Connect account ID. You can find this in your Stripe Dashboard under Settings → Connect → Accounts. Format: acct_xxxxx</small>
+                        <small class="text-muted">{{ 'PAYOUT_SETTINGS.STRIPE_ACCOUNT_ID_HELP' | translate }}</small>
                         <div *ngIf="stripeAccountId" class="mt-2">
-                            <small class="text-success">Current: {{stripeAccountId}}</small>
+                            <small class="text-success">{{ 'PAYOUT_SETTINGS.CURRENT' | translate }}: {{stripeAccountId}}</small>
                         </div>
                     </div>
                 </div>
@@ -164,39 +164,39 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Bank Account Details</h5>
+                <h5 class="mb-0">{{ 'PAYOUT_SETTINGS.BANK_ACCOUNT_DETAILS' | translate }}</h5>
             </div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Account Holder Name <span class="text-danger">*</span></label>
+                        <label class="form-label">{{ 'PAYOUT_SETTINGS.ACCOUNT_HOLDER_NAME' | translate }} <span class="text-danger">*</span></label>
                         <input 
                             type="text" 
                             class="form-control" 
                             [(ngModel)]="newBankDetails.account_holder"
-                            placeholder="John Doe"
+                            [placeholder]="'PAYOUT_SETTINGS.ACCOUNT_HOLDER_PLACEHOLDER' | translate"
                             maxlength="100">
-                        <small class="text-muted">2-100 characters</small>
+                        <small class="text-muted">{{ 'PAYOUT_SETTINGS.ACCOUNT_HOLDER_2_100' | translate }}</small>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Account Number / IBAN <span class="text-danger">*</span></label>
+                        <label class="form-label">{{ 'PAYOUT_SETTINGS.ACCOUNT_NUMBER_IBAN' | translate }} <span class="text-danger">*</span></label>
                         <input 
                             type="text" 
                             class="form-control" 
                             [(ngModel)]="newBankDetails.account_number"
-                            placeholder="e.g. 1234567890 or DE89370400440532013000"
+                            [placeholder]="'PAYOUT_SETTINGS.ACCOUNT_NUMBER_PLACEHOLDER' | translate"
                             maxlength="40">
-                        <small class="text-muted">Account number or full IBAN (spaces will be removed when saving)</small>
+                        <small class="text-muted">{{ 'PAYOUT_SETTINGS.ACCOUNT_NUMBER_HELP' | translate }}</small>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Routing Number <span class="text-danger">*</span></label>
+                        <label class="form-label">{{ 'PAYOUT_SETTINGS.ROUTING_NUMBER' | translate }} <span class="text-danger">*</span></label>
                         <input 
                             type="text" 
                             class="form-control" 
                             [(ngModel)]="newBankDetails.routing_number"
-                            placeholder="987654321"
+                            [placeholder]="'PAYOUT_SETTINGS.ROUTING_NUMBER_PLACEHOLDER' | translate"
                             maxlength="9">
-                        <small class="text-muted">9 digits (spaces will be removed)</small>
+                        <small class="text-muted">{{ 'PAYOUT_SETTINGS.ROUTING_NUMBER_HELP' | translate }}</small>
                     </div>
                     <div class="col-md-12">
                         <button 
@@ -206,7 +206,7 @@
                                        (newBankDetails.account_number === bankDetails.account_number && 
                                         newBankDetails.routing_number === bankDetails.routing_number && 
                                         newBankDetails.account_holder === bankDetails.account_holder)">
-                            Update Bank Details
+                            {{ 'PAYOUT_SETTINGS.UPDATE_BANK_DETAILS' | translate }}
                         </button>
                     </div>
                 </div>
