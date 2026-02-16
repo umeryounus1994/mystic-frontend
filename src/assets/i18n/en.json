@@ -75,7 +75,8 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next",
     "RESET_SEARCH": "Reset Search",
-    "CLEAR_FILTERS": "Clear Filters"
+    "CLEAR_FILTERS": "Clear Filters",
+    "WELCOME_BACK_USER": "Welcome back, {{username}}!"
   },
   "SIDEBAR": {
     "MENU": "Menu",
@@ -502,6 +503,7 @@
     "TOTAL_REVENUE": "Total Revenue",
     "TOTAL_SPENT": "Total Spent",
     "NEW_ACTIVITY": "New Activity",
+    "CREATE_NEW_ACTIVITY": "Create New Activity",
     "QUICK_ACTIONS": "Quick Actions",
     "MANAGE_USERS": "Manage Users",
     "PLATFORM_OVERVIEW": "Platform Overview",
