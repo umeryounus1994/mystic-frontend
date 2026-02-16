@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PartnerRoutingModule } from './partner-routing.module';
+import { SharedModule } from '../../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,6 +25,7 @@ import { PartnerProfileComponent } from './partner-profile/partner-profile.compo
   imports: [
     CommonModule,
     PartnerRoutingModule,
+    SharedModule,
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,

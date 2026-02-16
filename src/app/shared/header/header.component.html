@@ -17,7 +17,7 @@
 
             <!-- Welcome message -->
             <div class="welcome-message d-none d-md-block" *ngIf="auth.user">
-                Welcome back, {{ auth.user.username }}!
+                {{ 'COMMON.WELCOME_BACK_USER' | translate:{ username: auth.user.username } }}
             </div>
 
 

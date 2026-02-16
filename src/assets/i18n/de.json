@@ -61,7 +61,8 @@
     "SHOWING": "Zeige",
     "OF": "von",
     "PREVIOUS": "Vorherige",
-    "NEXT": "Nächste"
+    "NEXT": "Nächste",
+    "WELCOME_BACK_USER": "Willkommen zurück, {{username}}!"
   },
   "SIDEBAR": {
     "MENU": "Menü",
@@ -514,6 +515,7 @@
     "TOTAL_REVENUE": "Gesamteinnahmen",
     "TOTAL_SPENT": "Gesamt ausgegeben",
     "NEW_ACTIVITY": "Neue Aktivität",
+    "CREATE_NEW_ACTIVITY": "Neue Aktivität erstellen",
     "QUICK_ACTIONS": "Schnellaktionen",
     "MANAGE_USERS": "Benutzer verwalten",
     "PLATFORM_OVERVIEW": "Plattformübersicht",

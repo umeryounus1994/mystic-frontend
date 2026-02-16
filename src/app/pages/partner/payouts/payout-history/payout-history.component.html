@@ -43,7 +43,7 @@
                                 {{payout.payout_status | titlecase}}
                             </span>
                         </td>
-                        <td>{{payout.payout_date ? (payout.payout_date | date:'short') : (payout.transaction_date | date:'short')}}</td>
+                        <td>{{payout.payout_date ? (payout.payout_date | appDate:'datetime') : (payout.transaction_date | appDate:'datetime')}}</td>
                         <td>
                             <small *ngIf="payout.payout_transaction_id">{{payout.payout_transaction_id}}</small>
                             <span *ngIf="!payout.payout_transaction_id" class="text-muted">-</span>

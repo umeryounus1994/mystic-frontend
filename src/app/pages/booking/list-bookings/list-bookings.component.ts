@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { APP_TIME_FORMAT } from '../../../constants/constants';
 
 declare var $: any;
 
@@ -15,6 +16,7 @@ declare var $: any;
   styleUrl: './list-bookings.component.scss'
 })
 export class ListBookingsComponent implements OnInit {
+  readonly timeFormat = APP_TIME_FORMAT;
   Math = Math;
 
   dtOptions: any = {

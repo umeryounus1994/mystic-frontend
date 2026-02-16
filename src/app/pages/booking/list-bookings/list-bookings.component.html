@@ -86,10 +86,10 @@
                         </td>
                         <td>
                             <div>
-                                <strong>{{booking.slot_id?.start_time | date:'mediumDate'}}</strong><br>
+                                <strong>{{booking.slot_id?.start_time | appDate}}</strong><br>
                                 <small class="text-muted">
-                                    {{booking.slot_id?.start_time | date:'shortTime'}} - 
-                                    {{booking.slot_id?.end_time | date:'shortTime'}}
+                                    {{booking.slot_id?.start_time | date:timeFormat}} -
+                                    {{booking.slot_id?.end_time | date:timeFormat}}
                                 </small>
                             </div>
                         </td>
@@ -217,10 +217,10 @@
                     <div class="col-md-6">
                         <h6>Booking Information</h6>
                         <p><strong>Booking ID:</strong> {{selectedBooking.booking_id}}</p>
-                        <p><strong>Date:</strong> {{selectedBooking.slot_id?.start_time | date:'fullDate'}}</p>
-                        <p><strong>Time:</strong> 
-                            {{selectedBooking.slot_id?.start_time | date:'shortTime'}} - 
-                            {{selectedBooking.slot_id?.end_time | date:'shortTime'}}
+                        <p><strong>Date:</strong> {{selectedBooking.slot_id?.start_time | appDate}}</p>
+                        <p><strong>Time:</strong>
+                            {{selectedBooking.slot_id?.start_time | date:timeFormat}} -
+                            {{selectedBooking.slot_id?.end_time | date:timeFormat}}
                         </p>
                         <p><strong>Participants:</strong> {{selectedBooking.participants}}</p>
                         <p><strong>Total Amount:</strong> €{{selectedBooking.total_amount}}</p>

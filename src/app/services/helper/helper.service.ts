@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 import * as CryptoJS from 'crypto-js';
-import { EncryptionPassword } from '../../constants/constants';
+import { EncryptionPassword, APP_DATE_FORMAT } from '../../constants/constants';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable({
@@ -9,7 +11,10 @@ import { AuthService } from '../auth/auth.service';
 })
 export class HelperService {
 
-  constructor(private toastrService: ToastrService) { }
+  constructor(
+    private toastrService: ToastrService,
+    private translate: TranslateService
+  ) { }
 
   // Toasts:
   successToast(message: any) {
@@ -60,12 +65,9 @@ export class HelperService {
     return (mm + '/' + dd + '/' + yyyy);
   }
   getReportFormatedDateYMD(date: any) {
-    const today = new Date(date);
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-
-    return (yyyy + '-' + mm + '-' + dd);
+    if (!date) return '';
+    const locale = this.translate.currentLang === 'de' ? 'de' : 'en';
+    return formatDate(date, APP_DATE_FORMAT, locale).toLowerCase();
   }
 
   // Encryption:

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ManagementRoutingModule } from './management-routing.module';
+import { SharedModule } from '../../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +22,7 @@ import { CommissionRateComponent } from './commission-rate/commission-rate.compo
   imports: [
     CommonModule,
     ManagementRoutingModule,
+    SharedModule,
     NgxSpinnerModule,
     DataTablesModule,
     FormsModule,

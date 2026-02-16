@@ -234,11 +234,11 @@
                             </div>
                             <p class="mb-1">
                                 <i class="bi bi-clock me-2"></i>
-                                <strong>{{ 'VIEW_ACTIVITY.START' | translate }}:</strong> {{slot.start_time | date:'medium'}}
+                                <strong>{{ 'VIEW_ACTIVITY.START' | translate }}:</strong> {{slot.start_time | appDate:'datetime'}}
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-clock-history me-2"></i>
-                                <strong>{{ 'VIEW_ACTIVITY.END' | translate }}:</strong> {{slot.end_time | date:'medium'}}
+                                <strong>{{ 'VIEW_ACTIVITY.END' | translate }}:</strong> {{slot.end_time | appDate:'datetime'}}
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-people me-2"></i>
@@ -303,7 +303,7 @@
                             </p>
                             <p class="mb-1">
                                 <i class="bi bi-calendar me-2"></i>
-                                <strong>{{ 'VIEW_ACTIVITY.BOOKED' | translate }}:</strong> {{booking.booked_at | date:'medium'}}
+                                <strong>{{ 'VIEW_ACTIVITY.BOOKED' | translate }}:</strong> {{booking.booked_at | appDate:'datetime'}}
                             </p>
                             <div class="cancellation-reason-container">
                                 <div *ngIf="booking.cancellation_reason" class="mt-2">
@@ -335,7 +335,7 @@
                         <h6>{{activity.title}}</h6>
                         <p class="text-muted mb-1">
                             <i class="bi bi-clock me-2"></i>
-                            {{selectedSlot.start_time | date:'medium'}} - {{selectedSlot.end_time | date:'medium'}}
+                            {{selectedSlot.start_time | appDate:'datetime'}} - {{selectedSlot.end_time | appDate:'datetime'}}
                         </p>
                         <p class="text-muted">
                             <i class="bi bi-people me-2"></i>

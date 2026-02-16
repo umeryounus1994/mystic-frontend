@@ -104,7 +104,7 @@
                         <h6 class="mb-0">{{booking.activity_id?.title}}</h6>
                         <small class="text-muted">
                             <i class="bi bi-calendar me-1"></i>
-                            {{booking.slot_id?.start_time | date:'mediumDate'}} at {{booking.slot_id?.start_time | date:'shortTime'}}
+                            {{booking.slot_id?.start_time | appDate:'datetime'}}
                             <br>
                             <span class="badge me-2" [ngClass]="getStatusBadgeClass(booking.booking_status)">
                                 {{booking.booking_status | titlecase}}
@@ -155,7 +155,7 @@
                         <h6 class="mb-0">{{booking.activity_id?.title}}</h6>
                         <small class="text-muted">
                             <i class="bi bi-calendar me-1"></i>
-                            {{booking.slot_id?.start_time | date:'mediumDate'}} at {{booking.slot_id?.start_time | date:'shortTime'}}
+                            {{booking.slot_id?.start_time | appDate:'datetime'}}
                             <br>
                             <span class="badge me-2" [ngClass]="getStatusBadgeClass(booking.booking_status)">
                                 {{booking.booking_status | titlecase}}

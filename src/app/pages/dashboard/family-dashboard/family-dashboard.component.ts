@@ -4,14 +4,12 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { TranslateService } from '@ngx-translate/core';
-
 @Component({
   selector: 'app-family-dashboard',
   templateUrl: './family-dashboard.component.html',
   styleUrl: './family-dashboard.component.scss'
 })
 export class FamilyDashboardComponent implements OnInit {
-  
   stats: any = {
     bookings: {
       total: 0,

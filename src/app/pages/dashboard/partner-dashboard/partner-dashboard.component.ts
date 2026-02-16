@@ -58,8 +58,24 @@ export class PartnerDashboardComponent implements OnInit {
       const response: any = await this.api.get('activity/dashboard-stats');
       if (response?.data) {
         this.stats = response.data;
-        this.recentActivities = response.data.recentActivities || [];
-        this.recentBookings = response.data.recentBookings || [];
+        this.recentActivities = (response.data.recentActivities || []).map((a: any) => {
+          const rawDate = a.created_at ?? a.updated_at ?? a.createdAt ?? a.updatedAt ?? a.date;
+          let formatted = rawDate ? this.getFormatedDate(rawDate) : '';
+          if (!formatted && a.formatted_date) {
+            const parsed = new Date(a.formatted_date);
+            if (!isNaN(parsed.getTime())) formatted = this.getFormatedDate(parsed);
+          }
+          return { ...a, formatted_date: formatted || a.formatted_date || '' };
+        });
+        this.recentBookings = (response.data.recentBookings || []).map((b: any) => {
+          const rawDate = b.created_at ?? b.booked_at ?? b.booking_date ?? b.bookedAt ?? b.date ?? b.slot_id?.start_time;
+          let formatted = rawDate ? this.getFormatedDate(rawDate) : '';
+          if (!formatted && b.formatted_date) {
+            const parsed = new Date(b.formatted_date);
+            if (!isNaN(parsed.getTime())) formatted = this.getFormatedDate(parsed);
+          }
+          return { ...b, formatted_date: formatted || b.formatted_date || '' };
+        });
       }
     } catch (error: any) {
       this.helper.failureToast(error?.error?.message || 'Failed to load stats');
