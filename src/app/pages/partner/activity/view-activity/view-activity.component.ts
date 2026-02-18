@@ -156,6 +156,13 @@ deleteActivity() {
     this.router.navigate(['/partner/list-activities']);
   }
 
+  viewPartnerProfile() {
+    const partnerId = this.activity?.partner_id?._id;
+    if (partnerId) {
+      this.router.navigate(['/partner/view-partner-profile'], { queryParams: { partnerId } });
+    }
+  }
+
   openBookingModal(slot: any) {
     this.selectedSlot = slot;
     this.bookingData = {

@@ -1,0 +1,119 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+  <p style="font-size: 30px; color: white">{{ 'COMMON.LOADING' | translate }}</p>
+</ngx-spinner>
+
+<div class="row mb-4" *ngIf="!loading">
+  <div class="col-12">
+    <button class="btn btn-light btn-sm mb-2" (click)="goBack()">
+      <i class="bi bi-arrow-left me-2"></i>{{ 'COMMON.BACK' | translate }}
+    </button>
+    <h1 class="h3 mb-0">{{ 'SIDEBAR.PARTNER_PROFILE' | translate }}</h1>
+  </div>
+</div>
+
+<!-- Error -->
+<div class="row" *ngIf="error && !loading">
+  <div class="col-12">
+    <div class="alert alert-danger">{{ error }}</div>
+  </div>
+</div>
+
+<!-- Partner profile content -->
+<div *ngIf="!loading && !error && partner" class="row g-4">
+  <!-- Partner card with background -->
+  <div class="col-12">
+    <div class="card overflow-hidden">
+      <div class="partner-header-bg" *ngIf="getProfile()?.layout_options?.background"
+           [style.background-image]="'url(' + getProfile().layout_options.background + ')'"></div>
+      <div class="card-body">
+        <div class="d-flex align-items-start flex-wrap gap-3">
+          <div class="avatar avatar-xl flex-shrink-0">
+            <img *ngIf="partner.image && !partnerImageFailed" [src]="partner.image" class="avatar-img rounded-circle" alt="Partner"
+                 (error)="onPartnerImageError()">
+            <div *ngIf="!partner.image || partnerImageFailed" class="avatar-img rounded-circle bg-primary d-flex align-items-center justify-content-center">
+              <i class="bi bi-person text-white fs-1"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <h4 class="mb-1">{{ partner.username }}</h4>
+            <p class="text-muted mb-1" *ngIf="partner.email">
+              <i class="bi bi-envelope me-1"></i>{{ partner.email }}
+            </p>
+            <p class="mb-1" *ngIf="getProfile()?.business_name">
+              <strong>{{ 'PARTNER_PROFILE.BUSINESS_NAME' | translate }}:</strong> {{ getProfile().business_name }}
+            </p>
+            <p class="mb-0" *ngIf="getProfile()?.phone">
+              <i class="bi bi-telephone me-1"></i>{{ getProfile().phone }}
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-4" *ngIf="getProfile()?.business_description">
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.BUSINESS_DESCRIPTION' | translate }}</h6>
+          <p class="mb-0 text-break">{{ getProfile().business_description }}</p>
+        </div>
+        <div class="mt-3" *ngIf="getProfile()?.about">
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.ABOUT' | translate }}</h6>
+          <p class="mb-0 text-break">{{ getProfile().about }}</p>
+        </div>
+
+        <div class="mt-3" *ngIf="getMapGoogleUrl()">
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.MAP_LOCATION' | translate }}</h6>
+          <a [href]="getMapGoogleUrl()" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-geo-alt me-1"></i>{{ 'VIEW_ACTIVITY.OPEN_IN_GOOGLE_MAPS' | translate }}
+          </a>
+        </div>
+
+        <div class="mt-3" *ngIf="getGallery().length > 0">
+          <h6 class="text-uppercase text-muted small mb-2">{{ 'PARTNER_PROFILE.GALLERY' | translate }}</h6>
+          <div class="row g-2">
+            <div class="col-6 col-md-4 col-lg-3" *ngFor="let url of getGallery(); let i = index">
+              <img *ngIf="!galleryFailed.has(i)" [src]="url" class="img-fluid rounded" alt="Gallery" style="max-height: 120px; object-fit: cover; width: 100%;"
+                   (error)="onGalleryImageError(i)">
+              <div *ngIf="galleryFailed.has(i)" class="rounded bg-light d-flex align-items-center justify-content-center" style="min-height: 120px;">
+                <i class="bi bi-image text-muted"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activities by this partner -->
+  <div class="col-12">
+    <h5 class="mb-3">{{ 'DASHBOARD.RECENT_ACTIVITIES' | translate }} ({{ activities.length }})</h5>
+    <div class="row g-4" *ngIf="activities.length > 0">
+      <div class="col-md-6 col-lg-4" *ngFor="let act of activities">
+        <div class="card h-100 activity-card">
+          <img *ngIf="getActivityImageUrl(act) && !activityImageFailed.has(act._id)" [src]="getActivityImageUrl(act)" class="card-img-top" alt="{{ act.title }}"
+               style="height: 160px; object-fit: cover;" (error)="onActivityImageError(act._id)">
+          <div *ngIf="!getActivityImageUrl(act) || activityImageFailed.has(act._id)" class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 160px;">
+            <i class="bi bi-calendar-event display-4 text-muted"></i>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title">{{ act.title }}</h6>
+            <p class="card-text text-muted small flex-grow-1" *ngIf="act.description">
+              {{ (act.description | slice:0:120) }}{{ act.description?.length > 120 ? '...' : '' }}
+            </p>
+            <div class="mb-2">
+              <span class="badge bg-light text-dark me-1">€{{ act.price }}</span>
+              <span class="badge bg-light text-dark me-1">{{ act.duration }} {{ 'COMMON.MINUTES' | translate }}</span>
+              <span class="badge bg-light text-dark">{{ act.max_participants }} {{ 'VIEW_ACTIVITY.PEOPLE' | translate }}</span>
+            </div>
+            <p class="small text-muted mb-2" *ngIf="act.address">
+              <i class="bi bi-geo-alt me-1"></i>{{ act.address }}
+            </p>
+            <button class="btn btn-primary btn-sm mt-auto" (click)="viewActivity(act._id)">
+              <i class="bi bi-eye me-1"></i>{{ 'COMMON.VIEW_DETAILS' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-light text-center" *ngIf="activities.length === 0">
+      <i class="bi bi-calendar-x display-4 text-muted"></i>
+      <p class="mt-2 mb-0">{{ 'LIST.NO_ACTIVITIES_FOUND' | translate }}</p>
+    </div>
+  </div>
+</div>

@@ -17,10 +17,12 @@ import { ListActivityDropsComponent } from './list-activity-drops/list-activity-
 import { PayoutSettingsComponent } from './payouts/payout-settings/payout-settings.component';
 import { PayoutHistoryComponent } from './payouts/payout-history/payout-history.component';
 import { PartnerProfileComponent } from './partner-profile/partner-profile.component';
+import { ViewPartnerProfileComponent } from './view-partner-profile/view-partner-profile.component';
 
 @NgModule({
   declarations: [CreateActivityComponent, ListActivityComponent, ViewActivityComponent, EditActivityComponent, SearchActivitiesComponent,
-    CreateActivityDropComponent, ListActivityDropsComponent, PayoutSettingsComponent, PayoutHistoryComponent, PartnerProfileComponent
+    CreateActivityDropComponent, ListActivityDropsComponent, PayoutSettingsComponent, PayoutHistoryComponent, PartnerProfileComponent,
+    ViewPartnerProfileComponent
   ],
   imports: [
     CommonModule,

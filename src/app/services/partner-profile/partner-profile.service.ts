@@ -40,6 +40,14 @@ export class PartnerProfileService {
   }
 
   /**
+   * GET /api/v1/user/partner/:partnerId/profile-with-activities
+   * Returns partner profile and their activities (for public/view partner page).
+   */
+  getProfileWithActivities(partnerId: string) {
+    return this.api.get(`user/partner/${partnerId}/profile-with-activities`);
+  }
+
+  /**
    * PATCH /api/v1/user/partner/profile
    * Send only fields to update: about, gallery, map_location, layout_options
    */

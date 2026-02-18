@@ -1,0 +1,13 @@
+.partner-header-bg {
+  min-height: 180px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.activity-card {
+  transition: box-shadow 0.2s;
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  }
+}
