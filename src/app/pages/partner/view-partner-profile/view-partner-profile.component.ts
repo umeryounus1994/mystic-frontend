@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { PartnerProfileService } from '../../../services/partner-profile/partner-profile.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-view-partner-profile',
@@ -12,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ViewPartnerProfileComponent implements OnInit {
   partnerId: string | null = null;
+  slug: string | null = null;
   partner: any = null;
   activities: any[] = [];
   loading = false;
@@ -34,11 +36,14 @@ export class ViewPartnerProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
+      this.slug = (params['slug'] || '').trim() || null;
       this.partnerId = params['partnerId'] || null;
-      if (this.partnerId) {
+      if (this.slug) {
+        this.loadProfileWithActivitiesBySlug();
+      } else if (this.partnerId) {
         this.loadProfileWithActivities();
       } else {
-        this.error = 'Partner ID is required';
+        this.error = this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITY') || 'Partner ID or slug is required';
       }
     });
   }
@@ -50,6 +55,29 @@ export class ViewPartnerProfileComponent implements OnInit {
     this.spinner.show();
     try {
       const res: any = await this.partnerProfileService.getProfileWithActivities(this.partnerId);
+      const data = res?.data;
+      if (data) {
+        this.partner = data.partner || null;
+        this.activities = Array.isArray(data.activities) ? data.activities : [];
+      } else {
+        this.error = this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITY') || 'Failed to load profile';
+      }
+    } catch (err: any) {
+      this.error = err?.error?.message || err?.message || this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITY');
+      this.helper.failureToast(this.error);
+    } finally {
+      this.loading = false;
+      this.spinner.hide();
+    }
+  }
+
+  async loadProfileWithActivitiesBySlug(): Promise<void> {
+    if (!this.slug) return;
+    this.loading = true;
+    this.error = null;
+    this.spinner.show();
+    try {
+      const res: any = await this.partnerProfileService.getProfileWithActivitiesBySlug(this.slug);
       const data = res?.data;
       if (data) {
         this.partner = data.partner || null;
@@ -110,5 +138,48 @@ export class ViewPartnerProfileComponent implements OnInit {
 
   goBack(): void {
     window.history.back();
+  }
+
+  /** Slug used for public profile URL (from query or partner data). */
+  getDisplaySlug(): string | null {
+    if (this.slug && this.slug.trim() !== '') return this.slug.trim();
+    const slug = this.partner?.slug ?? this.getProfile()?.slug;
+    return slug && typeof slug === 'string' && slug.trim() !== '' ? slug.trim() : null;
+  }
+
+  /** Public partner profile URL: https://mycrebooking.com/partner-profile.html?slug=... */
+  getPartnerProfilePublicUrl(): string {
+    const slug = this.getDisplaySlug();
+    const base = (environment as any).partnerProfilePublicBaseUrl || 'https://mycrebooking.com';
+    const cleanBase = base.replace(/\/$/, '');
+    return slug ? `${cleanBase}/partner-profile.html?slug=${encodeURIComponent(slug)}` : cleanBase + '/partner-profile.html';
+  }
+
+  copyProfileSlug(): void {
+    const url = this.getPartnerProfilePublicUrl();
+    const successKey = 'PARTNER_PROFILE.PROFILE_LINK_COPIED';
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        this.helper.successToast(this.translate.instant(successKey));
+      }).catch(() => this.fallbackCopy(url, successKey));
+    } else {
+      this.fallbackCopy(url, successKey);
+    }
+  }
+
+  private fallbackCopy(text: string, successKey: string): void {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      this.helper.successToast(this.translate.instant(successKey));
+    } catch {
+      this.helper.failureToast('Copy failed');
+    }
+    document.body.removeChild(ta);
   }
 }

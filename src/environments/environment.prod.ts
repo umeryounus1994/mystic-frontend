@@ -3,6 +3,7 @@ export const environment = {
   //apiURL: 'http://localhost:8002/api/v1',
   apiURL: 'https://seashell-app-s2emo.ondigitalocean.app/api/v1',
   reportURL: '',
+  partnerProfilePublicBaseUrl: 'https://mycrebooking.com',
   stripe: {
     publishableKey: 'pk_live_51SOGss1pWDBoxHykb8SVNCGXBgiCsfIP8CM1h4292gpcvHvU2qXZKaQduSHRXDH9nDAFMoeWmtKOnmYo65olTw3Y00NaVu4icQ'
   },

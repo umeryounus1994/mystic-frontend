@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +14,9 @@ import { AuthService } from './services/auth/auth.service';
 import { StorageService } from './services/storage/storage.service';
 import { WebStorageModule } from 'ngx-store';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+
+// Register German locale so formatDate(..., 'de') works (avoids NG0701)
+registerLocaleData(localeDe, 'de');
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

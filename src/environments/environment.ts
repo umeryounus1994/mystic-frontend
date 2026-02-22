@@ -1,12 +1,20 @@
 export const environment = {
   production: false,
   //apiURL: 'http://localhost:8002/api/v1',
+  /** Base URL for public partner profile page (e.g. https://mycrebooking.com); link is {partnerProfilePublicBaseUrl}/partner-profile.html?slug=... */
+  partnerProfilePublicBaseUrl: 'https://mycrebooking.com',
   apiURL: 'https://seashell-app-s2emo.ondigitalocean.app/api/v1',
   reportURL: '',
   stripe: {
-    publishableKey: 'pk_test_51SOGt504mqDQozKR1B35IEpVvpFC4VyqKXEFJrdhwmykOFrZp29EQ0fjpmNOYJVoTJ6ieIDzyMHZFJNs4BCKtXCg00NRAow49H'
+    publishableKey: 'pk_live_51SOGss1pWDBoxHykb8SVNCGXBgiCsfIP8CM1h4292gpcvHvU2qXZKaQduSHRXDH9nDAFMoeWmtKOnmYo65olTw3Y00NaVu4icQ'
   },
   paypal: {
-    clientId: 'AUxckM9AfxuicZGi96-DKsUHxsDSnv5UR9BLpvmCkq6fIcXEUAxlNeKZxw5NuvU_2kUK7SryfHrp6rhZ'
+    clientId: 'AdGowtuW-1nD_JPhAIVrKpkakY02n9gBOTlEdmP_viv7z7xIFRC94E9UsK1PhKJCghGq-oQChAQs562u'
   }
+  // stripe: {
+  //   publishableKey: 'pk_test_51SOGt504mqDQozKR1B35IEpVvpFC4VyqKXEFJrdhwmykOFrZp29EQ0fjpmNOYJVoTJ6ieIDzyMHZFJNs4BCKtXCg00NRAow49H'
+  // },
+  // paypal: {
+  //   clientId: 'AYRT5Jt68O9YlPH6myl_tZvR_mOZwwVwNlJxMcdt8cT9_Y6fDIyj-WxvvJcDu4ZtoXwImYkCynjkEhn5'
+  // }
 };

@@ -56,6 +56,8 @@
     "CREATED": "Erstellt",
     "COORDINATES": "Koordinaten",
     "PARTNER_INFORMATION": "Partner-Informationen",
+    "PARTNER": "Partner",
+    "PROFILE": "Profil",
     "MINUTES_SHORT": "Min",
     "MINUTES": "Minuten",
     "SHOWING": "Zeige",
@@ -720,7 +722,9 @@
     "BACKGROUND_HELP": "Bild-URL oder Hex-Farbe (z. B. #1a1a2e) für den Profil-Hintergrund.",
     "LOAD_FAILED": "Profil konnte nicht geladen werden.",
     "NO_ABOUT": "Kein Über-Text hinterlegt.",
-    "NO_GALLERY": "Keine Galeriebilder."
+    "NO_GALLERY": "Keine Galeriebilder.",
+    "COPY_PROFILE_LINK": "Profil-Link kopieren",
+    "PROFILE_LINK_COPIED": "Profil-Link kopiert"
   },
   "MESSAGES": {
     "IMAGE_SIZE_TOO_LARGE": "Bildgröße sollte weniger als 5MB betragen",
@@ -783,6 +787,7 @@
     "IMAGES": "Bilder",
     "PARTNER_INFORMATION": "Partner-Informationen",
     "VIEW_PARTNER_PROFILE": "Partnerprofil anzeigen",
+    "VIEW_PARTNER_PROFILE_SHORT": "Profil",
     "ACTIVITY_INFORMATION": "Aktivitätsinformationen",
     "CREATED": "Erstellt",
     "LAST_UPDATED": "Zuletzt aktualisiert",
@@ -820,7 +825,12 @@
     "COMPLETE_PAYMENT": "Zahlung abschließen",
     "PROCESSING": "Wird verarbeitet",
     "BOOK_PAY_WITH": "Buchen & Bezahlen mit",
-    "CARD": "Karte"
+    "CARD": "Karte",
+    "PROFILE_SLUG": "Profil-Slug",
+    "COPY_PROFILE_SLUG": "Profil-Slug kopieren",
+    "PROFILE_SLUG_COPIED": "Profil-Slug kopiert",
+    "PROFILE_LINK_COPIED": "Profil-Link kopiert",
+    "COPY_PROFILE_LINK": "Profil-Link kopieren"
   },
   "SEARCH_ACTIVITIES": {
     "SEARCHING_ACTIVITIES": "Aktivitäten werden gesucht",

@@ -130,17 +130,24 @@
                     </div>
                 </div>
 
-                <!-- Partner Info -->
+                <!-- Partner name (clickable → profile by slug) -->
                 <div class="d-flex align-items-center mb-3" *ngIf="activity.partner_id">
                     <div class="avatar avatar-xs me-2">
                         <div class="avatar-img rounded-circle bg-primary d-flex align-items-center justify-content-center">
-                            <i class="bi bi-building text-white"></i>
+                            <i class="bi bi-person-badge text-white"></i>
                         </div>
                     </div>
-                    <small class="text-muted">
-                        {{activity.partner_id.partner_profile?.business_name || 
-                          (activity.partner_id.first_name + ' ' + activity.partner_id.last_name)}}
-                    </small>
+                    <div class="flex-grow-1">
+                        <small class="text-uppercase text-muted small d-block">{{ 'COMMON.PARTNER' | translate }}</small>
+                        <button type="button" class="btn btn-link btn-link-partner p-0 text-start text-decoration-none fw-medium"
+                                (click)="goToPartnerProfile(activity)">
+                            {{activity.partner_id.partner_profile?.business_name || 
+                              (activity.partner_id.first_name + ' ' + activity.partner_id.last_name)}}
+                        </button>
+                        <small class="text-muted d-block" *ngIf="getPartnerSlug(activity)">
+                            <span class="text-muted">/{{ getPartnerSlug(activity) }}</span>
+                        </small>
+                    </div>
                 </div>
 
                 <!-- Location -->

@@ -128,9 +128,11 @@
         <div class="card mt-4" *ngIf="activity.partner_id">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title mb-0">{{ 'VIEW_ACTIVITY.PARTNER_INFORMATION' | translate }}</h5>
-                    <button class="btn btn-outline-primary btn-sm" (click)="viewPartnerProfile()" *ngIf="activity.partner_id._id">
-                        <i class="bi bi-person-badge me-1"></i>{{ 'VIEW_ACTIVITY.VIEW_PARTNER_PROFILE' | translate }}
+                    <h5 class="card-title mb-0">{{ partnerInformationLabel }}</h5>
+                    <button class="btn btn-view-partner-profile" (click)="viewPartnerProfile()" *ngIf="activity.partner_id._id">
+                        <i class="bi bi-person-badge btn-icon-left"></i>
+                        <span class="btn-text">{{ profileButtonLabel }}</span>
+                        <i class="bi bi-arrow-right btn-icon-right"></i>
                     </button>
                 </div>
                 <div class="d-flex align-items-center mb-3">
@@ -142,6 +144,17 @@
                     <div>
                         <h6 class="mb-0">{{activity.partner_id.first_name}} {{activity.partner_id.last_name}}</h6>
                         <small class="text-muted">{{activity.partner_id.partner_profile?.business_name || 'Partner'}}</small>
+                    </div>
+                </div>
+                <!-- Copy profile slug / link -->
+                <div class="mb-3" *ngIf="activity.partner_id._id">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        <small class="text-muted" *ngIf="getPartnerSlug()">
+                            {{ 'VIEW_ACTIVITY.PROFILE_SLUG' | translate }}: <code>{{ getPartnerSlug() }}</code>
+                        </small>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="copyPartnerProfileSlug()">
+                            <i class="bi bi-clipboard me-1"></i>{{ (getPartnerSlug() ? 'VIEW_ACTIVITY.COPY_PROFILE_SLUG' : 'VIEW_ACTIVITY.COPY_PROFILE_LINK') | translate }}
+                        </button>
                     </div>
                 </div>
                 <!-- Partner About -->

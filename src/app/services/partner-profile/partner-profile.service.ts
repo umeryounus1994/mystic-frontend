@@ -48,6 +48,22 @@ export class PartnerProfileService {
   }
 
   /**
+   * GET /api/v1/user/partner/by-slug/:slug/profile
+   * Returns partner profile by slug (for public/shareable links).
+   */
+  getProfileBySlug(slug: string) {
+    return this.api.get(`user/partner/by-slug/${encodeURIComponent(slug)}/profile`);
+  }
+
+  /**
+   * GET /api/v1/user/partner/by-slug/:slug/profile-with-activities
+   * Returns partner profile and activities by slug (for public/view partner page by slug).
+   */
+  getProfileWithActivitiesBySlug(slug: string) {
+    return this.api.get(`user/partner/by-slug/${encodeURIComponent(slug)}/profile-with-activities`);
+  }
+
+  /**
    * PATCH /api/v1/user/partner/profile
    * Send only fields to update: about, gallery, map_location, layout_options
    */

@@ -70,6 +70,8 @@
     "CREATED": "Created",
     "COORDINATES": "Coordinates",
     "PARTNER_INFORMATION": "Partner Information",
+    "PARTNER": "Partner",
+    "PROFILE": "Profile",
     "SHOWING": "Showing",
     "OF": "of",
     "PREVIOUS": "Previous",
@@ -761,7 +763,9 @@
     "BACKGROUND_HELP": "Image URL or hex color (e.g. #1a1a2e) for your profile layout background.",
     "LOAD_FAILED": "Could not load profile.",
     "NO_ABOUT": "No about text set.",
-    "NO_GALLERY": "No gallery images."
+    "NO_GALLERY": "No gallery images.",
+    "COPY_PROFILE_LINK": "Copy profile link",
+    "PROFILE_LINK_COPIED": "Profile link copied"
   },
   "QUEST_GROUP": {
     "QUEST_GROUP": "Quest Group",
@@ -803,6 +807,7 @@
     "IMAGES": "Images",
     "PARTNER_INFORMATION": "Partner Information",
     "VIEW_PARTNER_PROFILE": "View partner profile",
+    "VIEW_PARTNER_PROFILE_SHORT": "Profile",
     "ACTIVITY_INFORMATION": "Activity Information",
     "CREATED": "Created",
     "LAST_UPDATED": "Last Updated",
@@ -840,7 +845,12 @@
     "COMPLETE_PAYMENT": "Complete Payment",
     "PROCESSING": "Processing",
     "BOOK_PAY_WITH": "Book & Pay with",
-    "CARD": "Card"
+    "CARD": "Card",
+    "PROFILE_SLUG": "Profile slug",
+    "COPY_PROFILE_SLUG": "Copy profile slug",
+    "PROFILE_SLUG_COPIED": "Profile slug copied",
+    "PROFILE_LINK_COPIED": "Profile link copied",
+    "COPY_PROFILE_LINK": "Copy profile link"
   },
   "SEARCH_ACTIVITIES": {
     "SEARCHING_ACTIVITIES": "Searching Activities",

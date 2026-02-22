@@ -59,6 +59,21 @@ export class SearchActivitiesComponent implements OnInit {
     await this.searchActivities();
   }
 
+  getPartnerSlug(activity: any): string | null {
+    const slug = activity?.partner_id?.slug ?? activity?.partner_id?.partner_profile?.slug;
+    return slug && typeof slug === 'string' && slug.trim() !== '' ? slug.trim() : null;
+  }
+
+  goToPartnerProfile(activity: any): void {
+    const slug = this.getPartnerSlug(activity);
+    const partnerId = activity?.partner_id?._id;
+    if (slug) {
+      this.router.navigate(['/partner/view-partner-profile'], { queryParams: { slug } });
+    } else if (partnerId) {
+      this.router.navigate(['/partner/view-partner-profile'], { queryParams: { partnerId } });
+    }
+  }
+
   async searchActivities() {
     this.activities = [];
     

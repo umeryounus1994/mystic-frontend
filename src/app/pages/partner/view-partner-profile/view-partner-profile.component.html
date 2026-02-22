@@ -35,7 +35,12 @@
             </div>
           </div>
           <div class="flex-grow-1">
-            <h4 class="mb-1">{{ partner.username }}</h4>
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+              <h4 class="mb-0">{{ partner.username }}</h4>
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="copyProfileSlug()" *ngIf="getDisplaySlug()">
+                <i class="bi bi-clipboard me-1"></i>{{ 'PARTNER_PROFILE.COPY_PROFILE_LINK' | translate }}
+              </button>
+            </div>
             <p class="text-muted mb-1" *ngIf="partner.email">
               <i class="bi bi-envelope me-1"></i>{{ partner.email }}
             </p>

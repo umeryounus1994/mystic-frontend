@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../../services/api/rest-api.service';
@@ -7,13 +7,14 @@ import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { PaymentService } from '../../../../services/payment/payment.service';
+import { Subscription } from 'rxjs';
 declare var $: any;
 @Component({
   selector: 'app-view-activity',
   templateUrl: './view-activity.component.html',
   styleUrl: './view-activity.component.scss'
 })
-export class ViewActivityComponent implements OnInit {
+export class ViewActivityComponent implements OnInit, OnDestroy {
   activity: any = {};
   activityId: string = '';
   selectedSlot: any = null;
@@ -28,6 +29,11 @@ export class ViewActivityComponent implements OnInit {
   currentBookingId: string = ''; // Add this property
   @ViewChild('paymentElement', { static: false }) paymentElementRef!: ElementRef;
 
+  /** Labels updated on language change so they translate when switching to German */
+  partnerInformationLabel = '';
+  profileButtonLabel = '';
+  private langSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -36,10 +42,13 @@ export class ViewActivityComponent implements OnInit {
     private helper: HelperService,
     public auth: AuthService,
     private paymentService: PaymentService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
+    this.updateTranslationLabels();
+    this.langSub = this.translate.onLangChange.subscribe(() => this.updateTranslationLabels());
     this.route.queryParams.subscribe(params => {
       this.activityId = params['activityId'];
       if (this.activityId) {
@@ -47,6 +56,18 @@ export class ViewActivityComponent implements OnInit {
       } else {
         this.router.navigate(['/partner/list-activities']);
       }
+    });
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
+  }
+
+  private updateTranslationLabels() {
+    this.translate.get(['COMMON.PARTNER_INFORMATION', 'COMMON.PROFILE']).subscribe((t) => {
+      this.partnerInformationLabel = t['COMMON.PARTNER_INFORMATION'];
+      this.profileButtonLabel = t['COMMON.PROFILE'];
+      this.cdr.markForCheck();
     });
   }
 
@@ -156,11 +177,71 @@ deleteActivity() {
     this.router.navigate(['/partner/list-activities']);
   }
 
+  getPartnerSlug(): string | null {
+    const slug = this.activity?.partner_id?.slug ?? this.activity?.partner_id?.partner_profile?.slug;
+    return slug && typeof slug === 'string' && slug.trim() !== '' ? slug.trim() : null;
+  }
+
   viewPartnerProfile() {
+    const slug = this.getPartnerSlug();
     const partnerId = this.activity?.partner_id?._id;
-    if (partnerId) {
+    if (slug) {
+      this.router.navigate(['/partner/view-partner-profile'], { queryParams: { slug } });
+    } else if (partnerId) {
       this.router.navigate(['/partner/view-partner-profile'], { queryParams: { partnerId } });
     }
+  }
+
+  copyPartnerProfileSlug(): void {
+    const slug = this.getPartnerSlug();
+    if (slug) {
+      this.copyToClipboard(slug, true);
+    } else {
+      const partnerId = this.activity?.partner_id?._id;
+      if (partnerId) {
+        const url = this.getPartnerProfileUrl();
+        this.copyToClipboard(url, false);
+      } else {
+        this.helper.failureToast(this.translate.instant('MESSAGES.FAILED_TO_LOAD_ACTIVITY'));
+      }
+    }
+  }
+
+  private getPartnerProfileUrl(): string {
+    const slug = this.getPartnerSlug();
+    const base = window.location.origin + this.router.serializeUrl(this.router.createUrlTree(['/partner/view-partner-profile']));
+    if (slug) {
+      return `${base}?slug=${encodeURIComponent(slug)}`;
+    }
+    const partnerId = this.activity?.partner_id?._id;
+    return partnerId ? `${base}?partnerId=${encodeURIComponent(partnerId)}` : base;
+  }
+
+  private copyToClipboard(text: string, isSlug: boolean): void {
+    const successKey = isSlug ? 'VIEW_ACTIVITY.PROFILE_SLUG_COPIED' : 'VIEW_ACTIVITY.PROFILE_LINK_COPIED';
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        this.helper.successToast(this.translate.instant(successKey));
+      }).catch(() => this.fallbackCopy(text, successKey));
+    } else {
+      this.fallbackCopy(text, successKey);
+    }
+  }
+
+  private fallbackCopy(text: string, successKey: string): void {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      this.helper.successToast(this.translate.instant(successKey));
+    } catch {
+      this.helper.failureToast('Copy failed');
+    }
+    document.body.removeChild(ta);
   }
 
   openBookingModal(slot: any) {
