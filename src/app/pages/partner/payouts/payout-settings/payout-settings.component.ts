@@ -238,7 +238,7 @@ export class PayoutSettingsComponent implements OnInit {
     }
 
     if (!this.validateRoutingNumber(this.newBankDetails.routing_number)) {
-      this.helper.failureToast('Routing number must be exactly 9 digits');
+      this.helper.failureToast('IBAN number must be exactly 9 digits');
       return;
     }
 

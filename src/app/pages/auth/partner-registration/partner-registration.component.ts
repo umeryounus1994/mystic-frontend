@@ -289,7 +289,7 @@ export class PartnerRegistrationComponent implements OnInit {
     }
     
     if (!formValue.partner_profile?.routing_number || formValue.partner_profile.routing_number.trim() === '') {
-      Swal.fire("Validation Error", "Routing number is required", "error");
+      Swal.fire("Validation Error", "IBAN number is required", "error");
       return false;
     }
     
