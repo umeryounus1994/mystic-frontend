@@ -90,4 +90,14 @@ export class PartnerProfileService {
     formData.append('background', file, file.name);
     return this.api.postImageData('user/partner/profile/background', formData);
   }
+
+  /**
+   * POST /api/v1/user/partner/profile/image (multipart)
+   * Field name: image. Single file. Returns { data: { image: "https://..." } }.
+   */
+  uploadProfileImage(file: File) {
+    const formData = new FormData();
+    formData.append('image', file, file.name);
+    return this.api.postImageData('user/partner/profile/image', formData);
+  }
 }

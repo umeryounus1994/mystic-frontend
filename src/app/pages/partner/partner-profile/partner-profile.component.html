@@ -10,6 +10,32 @@
 </div>
 
 <div class="row g-4" *ngIf="!loading && profile">
+  <!-- Profile picture -->
+  <div class="col-12">
+    <div class="card bg-transparent border">
+      <div class="card-header">
+        <h5 class="mb-0">{{ 'PARTNER_PROFILE.PROFILE_PICTURE' | translate }}</h5>
+      </div>
+      <div class="card-body d-flex align-items-center flex-wrap gap-4">
+        <div class="position-relative">
+          <div class="avatar avatar-xxl">
+            <img *ngIf="profileImageUrl" [src]="profileImageUrl" class="avatar-img rounded-circle" alt="Profile">
+            <div *ngIf="!profileImageUrl" class="avatar-img rounded-circle bg-primary bg-opacity-25 d-flex align-items-center justify-content-center">
+              <i class="bi bi-person text-muted" style="font-size: 3rem;"></i>
+            </div>
+          </div>
+        </div>
+        <div>
+          <input type="file" id="profileImageFileInput" accept="image/*" class="d-none" (change)="onProfileImageSelected($event)">
+          <button type="button" class="btn btn-outline-primary" [disabled]="uploadingImage" (click)="triggerProfileImageUpload()">
+            <span *ngIf="uploadingImage" class="spinner-border spinner-border-sm me-1" role="status"></span>
+            <i *ngIf="!uploadingImage" class="bi bi-camera me-1"></i>{{ 'PARTNER_PROFILE.CHANGE_PROFILE_PICTURE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- About -->
   <div class="col-12">
     <div class="card bg-transparent border">

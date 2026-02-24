@@ -21,6 +21,8 @@ export class ViewPartnerProfileComponent implements OnInit {
   /** Activity IDs whose first image failed to load - show placeholder instead */
   activityImageFailed = new Set<string>();
   partnerImageFailed = false;
+  /** When using first gallery image as avatar and it fails to load */
+  galleryAvatarFailed = false;
   /** Gallery image URLs that failed to load - hide or show placeholder */
   galleryFailed = new Set<number>();
 
@@ -111,6 +113,26 @@ export class ViewPartnerProfileComponent implements OnInit {
     return Array.isArray(g) ? g : [];
   }
 
+  /** Partner avatar: use partner.image first; if missing or failed, use first gallery image. */
+  getPartnerAvatarUrl(): string | null {
+    const hasPartnerImage = this.partner?.image && typeof this.partner.image === 'string' && this.partner.image.trim() !== '';
+    if (hasPartnerImage && !this.partnerImageFailed) return this.partner.image.trim();
+    if (this.galleryAvatarFailed) return null;
+    const gallery = this.getGallery();
+    return gallery.length > 0 && typeof gallery[0] === 'string' && gallery[0].trim() !== '' ? gallery[0].trim() : null;
+  }
+
+  onPartnerOrGalleryAvatarError(): void {
+    const url = this.getPartnerAvatarUrl();
+    const isPartnerImage = url === (this.partner?.image?.trim());
+    if (isPartnerImage) {
+      this.partnerImageFailed = true;
+    } else {
+      this.galleryAvatarFailed = true;
+    }
+    this.cdr.detectChanges();
+  }
+
   /** True if activity has a valid first image URL (non-empty string). */
   getActivityImageUrl(act: any): string | null {
     const url = act?.images?.[0];
@@ -119,11 +141,6 @@ export class ViewPartnerProfileComponent implements OnInit {
 
   onActivityImageError(activityId: string): void {
     this.activityImageFailed.add(activityId);
-    this.cdr.detectChanges();
-  }
-
-  onPartnerImageError(): void {
-    this.partnerImageFailed = true;
     this.cdr.detectChanges();
   }
 

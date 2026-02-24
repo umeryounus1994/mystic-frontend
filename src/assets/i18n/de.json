@@ -724,7 +724,10 @@
     "NO_ABOUT": "Kein Über-Text hinterlegt.",
     "NO_GALLERY": "Keine Galeriebilder.",
     "COPY_PROFILE_LINK": "Profil-Link kopieren",
-    "PROFILE_LINK_COPIED": "Profil-Link kopiert"
+    "PROFILE_LINK_COPIED": "Profil-Link kopiert",
+    "PROFILE_PICTURE": "Profilbild",
+    "CHANGE_PROFILE_PICTURE": "Profilbild ändern",
+    "PROFILE_IMAGE_UPDATED": "Profilbild erfolgreich aktualisiert"
   },
   "MESSAGES": {
     "IMAGE_SIZE_TOO_LARGE": "Bildgröße sollte weniger als 5MB betragen",

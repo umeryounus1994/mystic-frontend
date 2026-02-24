@@ -28,9 +28,9 @@
       <div class="card-body">
         <div class="d-flex align-items-start flex-wrap gap-3">
           <div class="avatar avatar-xl flex-shrink-0">
-            <img *ngIf="partner.image && !partnerImageFailed" [src]="partner.image" class="avatar-img rounded-circle" alt="Partner"
-                 (error)="onPartnerImageError()">
-            <div *ngIf="!partner.image || partnerImageFailed" class="avatar-img rounded-circle bg-primary d-flex align-items-center justify-content-center">
+            <img *ngIf="getPartnerAvatarUrl()" [src]="getPartnerAvatarUrl()" class="avatar-img rounded-circle" alt="Partner"
+                 (error)="onPartnerOrGalleryAvatarError()">
+            <div *ngIf="!getPartnerAvatarUrl()" class="avatar-img rounded-circle bg-primary d-flex align-items-center justify-content-center">
               <i class="bi bi-person text-white fs-1"></i>
             </div>
           </div>

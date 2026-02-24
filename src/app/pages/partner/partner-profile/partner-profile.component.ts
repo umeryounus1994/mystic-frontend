@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class PartnerProfileComponent implements OnInit {
   profile: any = null;
+  profileImageUrl: string | null = null; // current profile picture URL
   about = '';
   gallery: string[] = [];
   longitude: number | null = null;
@@ -22,6 +23,7 @@ export class PartnerProfileComponent implements OnInit {
   saving = false;
   uploadingGallery = false;
   uploadingBackground = false;
+  uploadingImage = false;
   galleryFileInput: HTMLInputElement | null = null;
   backgroundFileInput: HTMLInputElement | null = null;
 
@@ -44,6 +46,7 @@ export class PartnerProfileComponent implements OnInit {
       const res: any = await this.partnerProfileService.getProfile();
       const data = res?.data;
       this.profile = data;
+      this.profileImageUrl = data?.image || this.auth.user?.image || null;
       const pp = data?.partner_profile || {};
       this.about = pp.about || '';
       this.gallery = Array.isArray(pp.gallery) ? [...pp.gallery] : [];
@@ -114,6 +117,38 @@ export class PartnerProfileComponent implements OnInit {
     } finally {
       this.saving = false;
       this.spinner.hide();
+    }
+  }
+
+  triggerProfileImageUpload(): void {
+    const el = document.getElementById('profileImageFileInput') as HTMLInputElement;
+    if (el) {
+      el.value = '';
+      el.click();
+    }
+  }
+
+  async onProfileImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (!file) return;
+    this.uploadingImage = true;
+    this.spinner.show();
+    try {
+      const res: any = await this.partnerProfileService.uploadProfileImage(file);
+      const url = res?.data?.image;
+      if (url) {
+        this.profileImageUrl = url;
+        if (this.profile) this.profile.image = url;
+        if (this.auth.user) this.auth.user.image = url;
+      }
+      this.helper.successToast(res?.message || this.translate.instant('PARTNER_PROFILE.PROFILE_IMAGE_UPDATED'));
+    } catch (err: any) {
+      this.helper.failureToast(err?.error?.message || err?.message || 'Failed to upload profile image');
+    } finally {
+      this.uploadingImage = false;
+      this.spinner.hide();
+      input.value = '';
     }
   }
 

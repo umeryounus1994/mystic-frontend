@@ -765,7 +765,10 @@
     "NO_ABOUT": "No about text set.",
     "NO_GALLERY": "No gallery images.",
     "COPY_PROFILE_LINK": "Copy profile link",
-    "PROFILE_LINK_COPIED": "Profile link copied"
+    "PROFILE_LINK_COPIED": "Profile link copied",
+    "PROFILE_PICTURE": "Profile picture",
+    "CHANGE_PROFILE_PICTURE": "Change profile picture",
+    "PROFILE_IMAGE_UPDATED": "Profile image updated successfully"
   },
   "QUEST_GROUP": {
     "QUEST_GROUP": "Quest Group",
