@@ -15,6 +15,8 @@ export interface UpdatePartnerProfileBody {
   gallery?: string[];
   map_location?: MapLocation;
   layout_options?: LayoutOptions;
+  /** Optional. Backend slugifies (lowercase, spaces/special → hyphens) and ensures uniqueness. */
+  slug?: string;
 }
 
 @Injectable({
@@ -65,7 +67,8 @@ export class PartnerProfileService {
 
   /**
    * PATCH /api/v1/user/partner/profile
-   * Send only fields to update: about, gallery, map_location, layout_options
+   * Send only fields to update: about, gallery, map_location, layout_options, slug.
+   * slug is optional; backend slugifies and ensures uniqueness.
    */
   updateProfile(body: UpdatePartnerProfileBody) {
     return this.api.patch('user/partner/profile', body);

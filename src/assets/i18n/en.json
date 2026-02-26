@@ -78,7 +78,10 @@
     "NEXT": "Next",
     "RESET_SEARCH": "Reset Search",
     "CLEAR_FILTERS": "Clear Filters",
-    "WELCOME_BACK_USER": "Welcome back, {{username}}!"
+    "WELCOME_BACK_USER": "Welcome back, {{username}}!",
+    "PROFILE_URL_SLUG": "Profile URL (slug)",
+    "SLUG_HELP": "Used in your profile link. You can use letters, numbers and spaces; the backend will normalize it (e.g. \"My Business\" → my-business). Must be unique.",
+    "SLUG_PLACEHOLDER": "my-business"
   },
   "SIDEBAR": {
     "MENU": "Menu",
@@ -768,7 +771,11 @@
     "PROFILE_LINK_COPIED": "Profile link copied",
     "PROFILE_PICTURE": "Profile picture",
     "CHANGE_PROFILE_PICTURE": "Change profile picture",
-    "PROFILE_IMAGE_UPDATED": "Profile image updated successfully"
+    "PROFILE_IMAGE_UPDATED": "Profile image updated successfully",
+    "SLUG": "Profile URL (slug)",
+    "PROFILE_URL_SLUG": "Profile URL (slug)",
+    "SLUG_HELP": "Used in your profile link. You can use letters, numbers and spaces; the backend will normalize it (e.g. \"My Business\" → my-business). Must be unique.",
+    "SLUG_PLACEHOLDER": "my-business"
   },
   "QUEST_GROUP": {
     "QUEST_GROUP": "Quest Group",

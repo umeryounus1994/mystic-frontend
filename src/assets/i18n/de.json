@@ -64,7 +64,10 @@
     "OF": "von",
     "PREVIOUS": "Vorherige",
     "NEXT": "Nächste",
-    "WELCOME_BACK_USER": "Willkommen zurück, {{username}}!"
+    "WELCOME_BACK_USER": "Willkommen zurück, {{username}}!",
+    "PROFILE_URL_SLUG": "Profil-URL (Slug)",
+    "SLUG_HELP": "Wird in Ihrem Profil-Link verwendet. Sie können Buchstaben, Zahlen und Leerzeichen verwenden; das System normalisiert es (z. B. \"Mein Betrieb\" → mein-betrieb). Muss eindeutig sein.",
+    "SLUG_PLACEHOLDER": "mein-betrieb"
   },
   "SIDEBAR": {
     "MENU": "Menü",
@@ -727,7 +730,11 @@
     "PROFILE_LINK_COPIED": "Profil-Link kopiert",
     "PROFILE_PICTURE": "Profilbild",
     "CHANGE_PROFILE_PICTURE": "Profilbild ändern",
-    "PROFILE_IMAGE_UPDATED": "Profilbild erfolgreich aktualisiert"
+    "PROFILE_IMAGE_UPDATED": "Profilbild erfolgreich aktualisiert",
+    "SLUG": "Profil-URL (Slug)",
+    "PROFILE_URL_SLUG": "Profil-URL (Slug)",
+    "SLUG_HELP": "Wird in Ihrem Profil-Link verwendet. Sie können Buchstaben, Zahlen und Leerzeichen verwenden; das System normalisiert es (z. B. \"Mein Betrieb\" → mein-betrieb). Muss eindeutig sein.",
+    "SLUG_PLACEHOLDER": "mein-betrieb"
   },
   "MESSAGES": {
     "IMAGE_SIZE_TOO_LARGE": "Bildgröße sollte weniger als 5MB betragen",

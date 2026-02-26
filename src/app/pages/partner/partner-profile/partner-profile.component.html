@@ -36,6 +36,21 @@
     </div>
   </div>
 
+  <!-- Profile URL / Slug -->
+  <div class="col-12">
+    <div class="card bg-transparent border">
+      <div class="card-header">
+        <h5 class="mb-0">{{ 'COMMON.PROFILE_URL_SLUG' | translate }}</h5>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-2">{{ 'COMMON.SLUG_HELP' | translate }}</p>
+        <input type="text" class="form-control" [(ngModel)]="slug"
+               [placeholder]="'COMMON.SLUG_PLACEHOLDER' | translate"
+               maxlength="100">
+      </div>
+    </div>
+  </div>
+
   <!-- About -->
   <div class="col-12">
     <div class="card bg-transparent border">

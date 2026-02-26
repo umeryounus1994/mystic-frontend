@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class PartnerProfileComponent implements OnInit {
   profile: any = null;
   profileImageUrl: string | null = null; // current profile picture URL
+  slug = '';
   about = '';
   gallery: string[] = [];
   longitude: number | null = null;
@@ -47,6 +48,7 @@ export class PartnerProfileComponent implements OnInit {
       const data = res?.data;
       this.profile = data;
       this.profileImageUrl = data?.image || this.auth.user?.image || null;
+      this.slug = data?.slug ?? this.auth.user?.slug ?? '';
       const pp = data?.partner_profile || {};
       this.about = pp.about || '';
       this.gallery = Array.isArray(pp.gallery) ? [...pp.gallery] : [];
@@ -75,6 +77,8 @@ export class PartnerProfileComponent implements OnInit {
 
   async saveProfile(): Promise<void> {
     const body: UpdatePartnerProfileBody = {};
+    const currentSlug = this.profile?.slug ?? this.auth.user?.slug ?? '';
+    if (this.slug.trim() !== currentSlug) body.slug = this.slug.trim();
     if (this.about !== (this.profile?.partner_profile?.about || '')) body.about = this.about;
     const lng = this.parseNumber(this.longitude);
     const lat = this.parseNumber(this.latitude);
@@ -101,6 +105,10 @@ export class PartnerProfileComponent implements OnInit {
       const data = res?.data;
       if (data) {
         this.profile = data;
+        if (body.slug !== undefined && data.slug != null) {
+          this.slug = data.slug;
+          if (this.auth.user) this.auth.user.slug = data.slug;
+        }
         const pp = data.partner_profile || {};
         if (body.about !== undefined) this.about = pp.about ?? body.about;
         if (body.gallery) this.gallery = Array.isArray(pp.gallery) ? pp.gallery : body.gallery;
