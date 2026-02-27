@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -21,11 +21,12 @@ export class LoginComponent implements OnInit {
   text = "";
 
   constructor(
-    private fb: FormBuilder, 
-    private router: Router, 
-    private auth: AuthService, 
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private auth: AuthService,
     private sp: NgxSpinnerService,
-    private helper: HelperService, 
+    private helper: HelperService,
     private api: RestApiService,
     public translate: TranslateService
   ) {
@@ -68,6 +69,11 @@ export class LoginComponent implements OnInit {
         this.isSubmitted = false;
         this.sp.hide();
         if (data === 'open') {
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+          if (returnUrl && this.isSafeInternalPath(returnUrl)) {
+            this.router.navigateByUrl(returnUrl);
+            return;
+          }
           if (this.auth.isAdmin === true) {
             this.router.navigateByUrl('dashboard/admin');
           }
@@ -125,5 +131,12 @@ export class LoginComponent implements OnInit {
   showResetPasswordModal(){
     $("#forgetPassword").modal('show')
     $('.modal-backdrop').removeClass('modal-backdrop').addClass('modal');
+  }
+
+  /** Only allow internal paths to prevent open redirect. */
+  private isSafeInternalPath(url: string): boolean {
+    if (!url || typeof url !== 'string') return false;
+    const trimmed = url.trim();
+    return trimmed.startsWith('/') && !trimmed.startsWith('//') && !trimmed.toLowerCase().startsWith('http');
   }
 }

@@ -58,7 +58,9 @@ export class PartnerDashboardComponent implements OnInit {
       const response: any = await this.api.get('activity/dashboard-stats');
       if (response?.data) {
         this.stats = response.data;
-        this.recentActivities = (response.data.recentActivities || []).map((a: any) => {
+        this.recentActivities = (response.data.recentActivities || [])
+          .filter((a: any) => !this.isActivityDeleted(a))
+          .map((a: any) => {
           const rawDate = a.created_at ?? a.updated_at ?? a.createdAt ?? a.updatedAt ?? a.date;
           let formatted = rawDate ? this.getFormatedDate(rawDate) : '';
           if (!formatted && a.formatted_date) {
@@ -112,6 +114,15 @@ export class PartnerDashboardComponent implements OnInit {
 
   viewActivity(activityId: string) {
     this.router.navigate(['/partner/view-activity'], { queryParams: { activityId } });
+  }
+
+  /** Exclude deleted activities from recent list. */
+  private isActivityDeleted(a: any): boolean {
+    if (!a) return true;
+    if (a.deleted === true || a.isDeleted === true || a.is_deleted === true) return true;
+    if (a.deleted_at != null || a.deletedAt != null) return true;
+    if (String(a.status).toLowerCase() === 'deleted') return true;
+    return false;
   }
 
   getStatusBadgeClass(status: string): string {
