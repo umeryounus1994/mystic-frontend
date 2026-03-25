@@ -34,24 +34,24 @@
                 <thead>
                     <tr>
 
-                        <th scope="col" class="border-0 rounded-start">Question</th>
-                        <th scope="col" class="border-0">Type</th>
-                        <th scope="col" class="border-0">No of XP</th>
-                        <th scope="col" class="border-0">No of Crypes</th>
-                        <th scope="col" class="border-0">Assigned Group</th>
-                        <th scope="col" class="border-0">Status</th>
-                        <th scope="col" class="border-0">Action</th>
-                        <th scope="col" class="border-0 rounded-end">Group</th>
+                        <th scope="col" class="border-0 rounded-start">{{ 'COMMON.TITLE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'LIST.TYPE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.NO_OF_XP' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'FORMS.NO_OF_CRYPES' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'QUEST_GROUP.QUEST_GROUP' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.STATUS' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'COMMON.ACTIONS' | translate }}</th>
+                        <th scope="col" class="border-0 rounded-end">{{ 'QUEST_GROUP.QUEST_GROUP' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let q of allQuests; let i = index">
 
-                        <td>{{q.quest_question.toString().substring(0,20)}}...</td>
+                        <td>{{q.quest_title.toString().substring(0,60)}}...</td>
                         <td>{{q.quest_type ? q.quest_type : "simple"}}</td>
                         <td>{{q.no_of_xp}}</td>
                         <td>{{q.no_of_crypes}}</td>
-                        <td>{{q.assigned_group}}</td>
+                        <td>{{q.quest_group != null ? q.quest_group : "N/A"}}</td>
                         
                         <td>
                             <div *ngIf="q.status == 'active'"

@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-lg-7 mb-1">
                                 <label class="form-label">{{ 'FORMS.QUEST_FILE' | translate }}</label>
-                                <input type="file" class="form-control" accept="image/*"
+                                <input type="file" class="form-control" accept="image/*, video/*"
                                     (change)="onFileSelectedQuest($event)" placeholder="Answer">
                             </div>
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
