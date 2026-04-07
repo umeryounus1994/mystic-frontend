@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { PartnerProfileService, UpdatePartnerProfileBody } from '../../../services/partner-profile/partner-profile.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { HelperService } from '../../../services/helper/helper.service';
+import { RestApiService } from '../../../services/api/rest-api.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -13,6 +14,13 @@ import { TranslateService } from '@ngx-translate/core';
 export class PartnerProfileComponent implements OnInit {
   profile: any = null;
   profileImageUrl: string | null = null; // current profile picture URL
+  email = '';
+  phone = '';
+  currentPassword = '';
+  newPassword = '';
+  confirmPassword = '';
+  updatingAccount = false;
+  changingPassword = false;
   slug = '';
   about = '';
   gallery: string[] = [];
@@ -31,6 +39,7 @@ export class PartnerProfileComponent implements OnInit {
   constructor(
     private spinner: NgxSpinnerService,
     private partnerProfileService: PartnerProfileService,
+    private api: RestApiService,
     private auth: AuthService,
     private helper: HelperService,
     public translate: TranslateService
@@ -48,8 +57,10 @@ export class PartnerProfileComponent implements OnInit {
       const data = res?.data;
       this.profile = data;
       this.profileImageUrl = data?.image || this.auth.user?.image || null;
+      this.email = data?.email || this.auth.user?.email || '';
       this.slug = data?.slug ?? this.auth.user?.slug ?? '';
       const pp = data?.partner_profile || {};
+      this.phone = pp.phone || this.auth.user?.partner_profile?.phone || '';
       this.about = pp.about || '';
       this.gallery = Array.isArray(pp.gallery) ? [...pp.gallery] : [];
       this.galleryUrlsText = this.gallery.join('\n');
@@ -219,6 +230,102 @@ export class PartnerProfileComponent implements OnInit {
       this.uploadingBackground = false;
       this.spinner.hide();
       input.value = '';
+    }
+  }
+
+  async updateAccountDetails(): Promise<void> {
+    const email = (this.email || '').trim();
+    const phone = (this.phone || '').trim();
+
+    const currentEmail = this.profile?.email || this.auth.user?.email || '';
+    const currentPhone = this.profile?.partner_profile?.phone || this.auth.user?.partner_profile?.phone || '';
+
+    if (email === currentEmail && phone === currentPhone) {
+      this.helper.infoToast(this.translate.instant('PROFILE.NO_CHANGES') || 'No changes to save');
+      return;
+    }
+
+    if (!email) {
+      this.helper.infoToast(this.translate.instant('VALIDATION.EMAIL_REQUIRED') || 'Email is required');
+      return;
+    }
+
+    const payload: any = {
+      email,
+      partner_profile: { phone }
+    };
+
+    const partnerId = this.auth.user?._id || this.profile?._id;
+    if (!partnerId) {
+      this.helper.failureToast(this.translate.instant('MESSAGES.FAILED_TO_UPDATE_PROFILE'));
+      return;
+    }
+
+    this.updatingAccount = true;
+    this.spinner.show();
+    try {
+      const res: any = await this.api.patch('user/partner/' + partnerId, payload);
+      const data = res?.data;
+      if (data) {
+        this.profile = { ...this.profile, ...data };
+        this.email = data.email || email;
+        this.phone = data?.partner_profile?.phone ?? phone;
+        if (this.auth.user) {
+          this.auth.user.email = this.email;
+          this.auth.user.partner_profile = this.auth.user.partner_profile || {};
+          this.auth.user.partner_profile.phone = this.phone;
+        }
+      }
+      this.helper.successToast(res?.message || this.translate.instant('PROFILE.UPDATED_SUCCESSFULLY'));
+    } catch (err: any) {
+      this.helper.failureToast(err?.error?.message || err?.message || 'Failed to update account details');
+    } finally {
+      this.updatingAccount = false;
+      this.spinner.hide();
+    }
+  }
+
+  async changePassword(): Promise<void> {
+    const current = (this.currentPassword || '').trim();
+    const next = (this.newPassword || '').trim();
+    const confirm = (this.confirmPassword || '').trim();
+
+    if (!current || !next || !confirm) {
+      this.helper.infoToast(this.translate.instant('VALIDATION.REQUIRED') || 'All fields are required');
+      return;
+    }
+
+    if (next.length < 6) {
+      this.helper.infoToast(this.translate.instant('VALIDATION.PASSWORD_MIN') || 'Password must be at least 6 characters');
+      return;
+    }
+
+    if (next !== confirm) {
+      this.helper.infoToast(this.translate.instant('VALIDATION.CONFIRM_PASSWORD') || 'Passwords do not match');
+      return;
+    }
+
+    this.changingPassword = true;
+    this.spinner.show();
+    try {
+      const payload = {
+        password: current,
+        password_confirmation: next
+      };
+      const res: any = await this.api.post('user/partner/change-password', payload);
+      this.currentPassword = '';
+      this.newPassword = '';
+      this.confirmPassword = '';
+      this.helper.successToast(res?.message || this.translate.instant('AUTH.RESET_PASSWORD') || 'Password updated successfully');
+      setTimeout(() => {
+        this.helper.infoToast(this.translate.instant('AUTH.SIGN_IN_INSTEAD') || 'Please login again');
+        this.auth.logout();
+      }, 1500);
+    } catch (err: any) {
+      this.helper.failureToast(err?.error?.message || err?.message || 'Failed to change password');
+    } finally {
+      this.changingPassword = false;
+      this.spinner.hide();
     }
   }
 

@@ -47,7 +47,7 @@
         </li>
 
         <!-- Quests -->
-        <li class="nav-item" *ngIf="auth.isAdmin || auth.isPartner || auth.user?.permissions?.includes('Quest')">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Quest')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsequest')">
             <i class="bi bi-puzzle fa-fw me-2"></i>{{ 'SIDEBAR.DIGITAL_QUESTS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
@@ -136,7 +136,7 @@
         </li>
 
         <!-- Activity Drops -->
-        <li class="nav-item" *ngIf="auth.isPartner">
+        <li class="nav-item" *ngIf="auth.user?.permissions?.includes('Drops')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapseactivitydrops')">
             <i class="bi bi-box-seam fa-fw me-2"></i>{{ 'SIDEBAR.ACTIVITY_DROPS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
@@ -164,19 +164,19 @@
         </li>
 
         <!-- Payouts Section for Partners -->
-        <li class="nav-item ms-2 my-2" *ngIf="auth.isPartner">
+        <li class="nav-item ms-2 my-2" *ngIf="false">
           <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.PAYOUTS' | translate }}</span>
         </li>
 
         <!-- Payout Settings -->
-        <li class="nav-item" *ngIf="auth.isPartner">
+        <li class="nav-item" *ngIf="false">
           <a [routerLink]="['/partner/payout-settings']" class="nav-link text-white" [class.active]="routeURL === '/partner/payout-settings' || routeURL.includes('/partner/payout-settings')" (click)="closeSidebar()">
             <i class="bi bi-wallet2 fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUT_SETTINGS' | translate }}
           </a>
         </li>
 
         <!-- Payout History -->
-        <li class="nav-item" *ngIf="auth.isPartner">
+        <li class="nav-item" *ngIf="false">
           <a [routerLink]="['/partner/payout-history']" class="nav-link text-white" [class.active]="routeURL === '/partner/payout-history' || routeURL.includes('/partner/payout-history')" (click)="closeSidebar()">
             <i class="bi bi-clock-history fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUT_HISTORY' | translate }}
           </a>
