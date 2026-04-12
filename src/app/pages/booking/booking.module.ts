@@ -5,13 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { BookingRoutingModule } from './booking-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { ListBookingsComponent } from './list-bookings/list-bookings.component';
+import { MonthlyFinancialReportComponent } from './monthly-financial-report/monthly-financial-report.component';
 import { DataTablesModule } from 'angular-datatables';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
-  declarations: [ListBookingsComponent],
+  declarations: [ListBookingsComponent, MonthlyFinancialReportComponent],
   imports: [
     CommonModule,
     BookingRoutingModule,

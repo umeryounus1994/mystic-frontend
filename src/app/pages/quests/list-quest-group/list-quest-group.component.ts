@@ -5,6 +5,7 @@ import { HelperService } from '../../../services/helper/helper.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 declare var $: any;
 
 @Component({
@@ -30,9 +31,13 @@ export class ListQuestGroupComponent implements OnInit {
   mythicaURL = '';
   mythicaModel = '';
 
+  /** Quests returned for the group opened in the modal */
+  groupQuests: any[] = [];
+  groupQuestsMessage = '';
+  selectedGroupName = '';
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
-    private router: Router, public auth:AuthService) {
+    private router: Router, public auth: AuthService, private translate: TranslateService) {
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
@@ -57,5 +62,141 @@ export class ListQuestGroupComponent implements OnInit {
   }
   getFormatedDate(date: any) {
     return this.helper.getReportFormatedDateYMD(date);
+  }
+
+  getQuestGroupId(group: any): string | undefined {
+    if (!group) {
+      return undefined;
+    }
+    const id = group.id ?? group._id;
+    return id != null ? String(id) : undefined;
+  }
+
+  viewQuestsInGroup(group: any) {
+    const gid = this.getQuestGroupId(group);
+    if (!gid) {
+      Swal.fire(
+        this.translate.instant('MESSAGES.ERROR'),
+        this.translate.instant('QUEST_GROUP.INVALID_GROUP'),
+        'error'
+      );
+      return;
+    }
+    this.selectedGroupName = group.quest_group_name ?? '';
+    this.groupQuests = [];
+    this.groupQuestsMessage = '';
+    this.sp.show();
+    this.api
+      .get(`quest/get_quests_by_group/${gid}`)
+      .then((res: any) => {
+        this.sp.hide();
+        this.groupQuestsMessage = (res?.message ?? '').toString();
+        const data = res?.data;
+        const raw = Array.isArray(data) ? data : [];
+        this.groupQuests = this.sortQuestsChronological(raw);
+        setTimeout(() => {
+          $('#viewQuestsInGroup').modal('show');
+        }, 0);
+      })
+      .catch(() => {
+        this.sp.hide();
+        Swal.fire(
+          this.translate.instant('MESSAGES.ERROR'),
+          this.translate.instant('QUEST_GROUP.LOAD_QUESTS_FAILED'),
+          'error'
+        );
+      });
+  }
+
+  getQuestTitle(quest: any): string {
+    const t = quest?.quest_title ?? quest?.title ?? '';
+    return t != null ? String(t) : '';
+  }
+
+  getQuestType(quest: any): string {
+    const t = quest?.quest_type;
+    if (t != null && String(t).trim() !== '') {
+      return String(t);
+    }
+    return 'simple';
+  }
+
+  /** Oldest first (quest 1 → N), stable tie-breaker by id. */
+  sortQuestsChronological(quests: any[]): any[] {
+    return [...quests].sort((a, b) => {
+      const ta = this.parseQuestDateMs(a?.created_at);
+      const tb = this.parseQuestDateMs(b?.created_at);
+      if (ta !== tb) {
+        return ta - tb;
+      }
+      const ida = String(a?.id ?? a?._id ?? '');
+      const idb = String(b?.id ?? b?._id ?? '');
+      return ida.localeCompare(idb);
+    });
+  }
+
+  private parseQuestDateMs(value: any): number {
+    if (value == null || value === '') {
+      return Number.MAX_SAFE_INTEGER;
+    }
+    const ms = new Date(value).getTime();
+    return Number.isNaN(ms) ? Number.MAX_SAFE_INTEGER : ms;
+  }
+
+  getGroupNamePreview(group: any): string {
+    const n = group?.quest_group_name != null ? String(group.quest_group_name) : '';
+    if (n.length <= 40) {
+      return n || '—';
+    }
+    return `${n.substring(0, 40)}…`;
+  }
+
+  getQuizEntries(quest: any): any[] {
+    const q = quest?.quiz ?? quest?.options ?? quest?.questions ?? quest?.answers;
+    return Array.isArray(q) ? q : [];
+  }
+
+  hasTextContent(value: any): boolean {
+    if (value == null) {
+      return false;
+    }
+    return String(value).trim().length > 0;
+  }
+
+  /** Non-empty file / URL string (relative or absolute). */
+  hasFileLink(value: any): boolean {
+    if (value == null) {
+      return false;
+    }
+    const t = String(value).trim();
+    return t.length > 0 && t !== 'undefined' && t !== 'null';
+  }
+
+  fileHref(value: any): string {
+    return String(value ?? '').trim();
+  }
+
+  formatMultiline(value: any): string {
+    if (value == null) {
+      return '';
+    }
+    return String(value);
+  }
+
+  getMythicaLabel(quest: any): string {
+    if (quest?.mythica != null && String(quest.mythica).trim() !== '') {
+      return String(quest.mythica).trim();
+    }
+    if (quest?.mythica_ID?.name) {
+      return String(quest.mythica_ID.name);
+    }
+    return '';
+  }
+
+  onImgError(ev: Event): void {
+    const el = ev.target as HTMLImageElement | null;
+    if (el?.style) {
+      el.style.display = 'none';
+    }
   }
 }

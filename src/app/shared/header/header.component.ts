@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  readonly defaultAvatarSrc = 'assets/images/avatar/01.jpg';
   currentLanguage: string = 'en';
   languageDisplay: string = 'DE';
   private langChangeSubscription?: Subscription;
@@ -43,6 +44,45 @@ export class HeaderComponent implements OnInit, OnDestroy {
      this.currentLanguage = lang;
      this.languageDisplay = lang === 'en' ? 'DE' : 'EN';
    }
+
+  /**
+   * Name shown after "Welcome back" — admins use first + last name from the API;
+   * other roles keep username (with sensible fallbacks).
+   */
+  getWelcomeUserName(): string {
+    const u = this.auth.user;
+    if (!u) {
+      return '';
+    }
+    if (u.user_type === 'admin' || u.user_type === 'subadmin') {
+      const fn = (u.first_name ?? '').toString().trim();
+      const ln = (u.last_name ?? '').toString().trim();
+      const full = `${fn} ${ln}`.trim();
+      return full || (u.email ?? '').toString() || (u.username ?? '').toString() || '';
+    }
+    return (u.username ?? '').toString() || (u.email ?? '').toString() || '';
+  }
+
+  /** Profile image URL when `user.image` is set; otherwise the default avatar asset. */
+  getHeaderAvatarSrc(): string {
+    const u = this.auth.user;
+    if (!u) {
+      return this.defaultAvatarSrc;
+    }
+    const raw = u.image;
+    if (raw == null) {
+      return this.defaultAvatarSrc;
+    }
+    const s = String(raw).trim();
+    return s !== '' ? s : this.defaultAvatarSrc;
+  }
+
+  onHeaderAvatarError(event: Event): void {
+    const el = event.target as HTMLImageElement | null;
+    if (el && el.src !== this.defaultAvatarSrc) {
+      el.src = this.defaultAvatarSrc;
+    }
+  }
 
    toggleLanguage() {
      const current = this.translate.currentLang || this.currentLanguage || 'en';

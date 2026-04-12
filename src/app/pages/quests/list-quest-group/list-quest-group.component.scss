@@ -1,0 +1,40 @@
+.quest-group-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.08) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: -2px;
+  }
+}
+
+.quest-detail-card {
+  scroll-margin-top: 0.5rem;
+}
+
+.quest-multiline {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.quest-thumb {
+  max-height: 220px;
+  object-fit: contain;
+}
+
+.answer-thumb {
+  max-height: 160px;
+  object-fit: contain;
+}
+
+.quest-meta-list li + li {
+  margin-top: 0.25rem;
+}
+
+.answer-row {
+  border-color: rgba(var(--bs-border-color-rgb), 0.65) !important;
+}

@@ -3,7 +3,10 @@
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">{{ 'QUEST_GROUP.QUEST_GROUP' | translate }}</h1>
+        <div>
+            <h1 class="h3 mb-1">{{ 'QUEST_GROUP.QUEST_GROUP' | translate }}</h1>
+            <p class="text-muted small mb-0">{{ 'QUEST_GROUP.CLICK_ROW_HINT' | translate }}</p>
+        </div>
     </div>
 </div>
 <div class="card bg-transparent border">
@@ -17,28 +20,162 @@
                         <th scope="col" class="border-0 rounded-start">{{ 'QUEST_GROUP.GROUP_NAME' | translate }}</th>
                         <th scope="col" class="border-0">{{ 'QUEST_GROUP.PACKAGE' | translate }}</th>
                         <th scope="col" class="border-0">{{ 'FORMS.NO_OF_CRYPES' | translate }}</th>
-                        <th scope="col" class="border-0 rounded-end">{{ 'COMMON.STATUS' | translate }}</th>
-                        <!-- <th scope="col" class="border-0 rounded-end">Action</th> -->
+                        <th scope="col" class="border-0">{{ 'COMMON.STATUS' | translate }}</th>
+                        <th scope="col" class="border-0 rounded-end">{{ 'COMMON.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let q of allQuests; let i = index">
+                    <tr *ngFor="let q of allQuests; let i = index"
+                        class="quest-group-row"
+                        (click)="viewQuestsInGroup(q)"
+                        [title]="'QUEST_GROUP.CLICK_ROW_HINT' | translate"
+                        role="button"
+                        tabindex="0"
+                        (keydown.enter)="viewQuestsInGroup(q)"
+                        (keydown.space)="$event.preventDefault(); viewQuestsInGroup(q)">
 
-                        <td>{{q.quest_group_name.toString().substring(0,30)}}...</td>
-                        <td>{{q.package}}</td>
-                        <td>{{q.no_of_crypes}}</td>
-                        
+                        <td>{{ getGroupNamePreview(q) }}</td>
+                        <td>{{ q.package }}</td>
+                        <td>{{ q.no_of_crypes }}</td>
+
                         <td>
                             <div *ngIf="q.status == 'active'"
                                 class="badge bg-success bg-opacity-10 text-success">{{ 'COMMON.ACTIVE' | translate }}</div>
                             <div *ngIf="q.status == 'deleted'"
                                 class="badge bg-danger bg-opacity-10 text-danger">{{ 'COMMON.DELETED' | translate }}</div>
                         </td>
-                  
+                        <td class="text-end" (click)="$event.stopPropagation()">
+                            <button type="button" class="btn btn-info-soft btn-sm"
+                                (click)="viewQuestsInGroup(q)"
+                                [title]="'QUEST_GROUP.VIEW_QUESTS_IN_GROUP' | translate">
+                                <i class="bi bi-collection me-1"></i>{{ 'QUEST_GROUP.VIEW_QUESTS' | translate }}
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
+</div>
+
+<!-- Quests in group — full breakdown, chronological -->
+<div class="modal fade" id="viewQuestsInGroup" tabindex="-1" aria-labelledby="viewQuestsInGroupLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="viewQuestsInGroupLabel">
+                    {{ 'QUEST_GROUP.QUESTS_IN_GROUP' | translate }}
+                    <span *ngIf="selectedGroupName" class="text-white-50 fw-normal"> — {{ selectedGroupName }}</span>
+                </h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" [attr.aria-label]="'COMMON.CLOSE' | translate">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <ng-container *ngIf="groupQuests.length > 0">
+                    <div *ngFor="let quest of groupQuests; let idx = index" class="card border quest-detail-card mb-4 shadow-sm">
+                        <div class="card-header bg-body-secondary d-flex flex-wrap align-items-center justify-content-between gap-2 py-3">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <span class="badge bg-primary rounded-pill px-3 py-2">
+                                    {{ 'QUEST_GROUP.QUEST_INDEX' | translate: { n: idx + 1, total: groupQuests.length } }}
+                                </span>
+                                <span *ngIf="quest.status == 'active'" class="badge bg-success bg-opacity-10 text-success">{{ 'COMMON.ACTIVE' | translate }}</span>
+                                <span *ngIf="quest.status == 'deleted'" class="badge bg-danger bg-opacity-10 text-danger">{{ 'COMMON.DELETED' | translate }}</span>
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary text-uppercase">{{ getQuestType(quest) }}</span>
+                                <span *ngIf="hasTextContent(quest.quest_context)" class="badge bg-info bg-opacity-10 text-info">{{ quest.quest_context }}</span>
+                            </div>
+                            <small class="text-muted" *ngIf="quest.created_at">
+                                {{ 'QUEST_GROUP.CREATED' | translate }}: {{ quest.created_at | date:'medium' }}
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="h5 mb-3">{{ getQuestTitle(quest) }}</h4>
+
+                            <div class="mb-4" *ngIf="hasTextContent(quest.quest_question)">
+                                <h6 class="text-uppercase text-muted small mb-2">{{ 'QUEST_GROUP.QUEST_STORY' | translate }}</h6>
+                                <div class="quest-multiline border rounded-3 p-3 bg-body-tertiary">{{ formatMultiline(quest.quest_question) }}</div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-4" *ngIf="quest.qr_code">
+                                    <h6 class="text-uppercase text-muted small mb-2">{{ 'QUEST_GROUP.QR_CODE' | translate }}</h6>
+                                    <qrcode [qrdata]="quest.qr_code" [width]="112" [errorCorrectionLevel]="'M'"></qrcode>
+                                    <div class="small text-muted mt-1 font-monospace">{{ quest.qr_code }}</div>
+                                </div>
+                                <div [class]="quest.qr_code ? 'col-md-8' : 'col-12'">
+                                    <h6 class="text-uppercase text-muted small mb-2">{{ 'QUEST_GROUP.REWARDS_AND_PROGRESS' | translate }}</h6>
+                                    <ul class="list-unstyled small mb-0 quest-meta-list">
+                                        <li><strong>{{ 'FORMS.NO_OF_XP' | translate }}:</strong> {{ quest.no_of_xp }}</li>
+                                        <li><strong>{{ 'FORMS.NO_OF_CRYPES' | translate }}:</strong> {{ quest.no_of_crypes }}</li>
+                                        <li *ngIf="quest.level_increase != null && quest.level_increase !== ''">
+                                            <strong>{{ 'FORMS.LEVEL_INCREASE' | translate }}:</strong> {{ quest.level_increase }}
+                                        </li>
+                                        <li *ngIf="getMythicaLabel(quest)">
+                                            <strong>{{ 'QUEST_GROUP.MYTHICA_REWARD' | translate }}:</strong> {{ getMythicaLabel(quest) }}
+                                        </li>
+                                        <li *ngIf="hasTextContent(quest.quest_password)">
+                                            <strong>{{ 'QUEST_GROUP.QUEST_PASSWORD' | translate }}:</strong> {{ quest.quest_password }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="mb-4" *ngIf="hasFileLink(quest.quest_image) || hasFileLink(quest.reward_file)">
+                                <h6 class="text-uppercase text-muted small mb-2">{{ 'QUEST_GROUP.MEDIA_FILES' | translate }}</h6>
+                                <div class="d-flex flex-wrap gap-4 align-items-start">
+                                    <div *ngIf="hasFileLink(quest.quest_image)">
+                                        <div class="small text-muted mb-1">{{ 'QUEST_GROUP.QUEST_IMAGE' | translate }}</div>
+                                        <a [href]="fileHref(quest.quest_image)" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary mb-2 d-inline-block">
+                                            {{ 'REWARDS.VIEW_FILE' | translate }}
+                                        </a>
+                                        <div>
+                                            <img [src]="fileHref(quest.quest_image)" (error)="onImgError($event)" class="img-fluid rounded border quest-thumb d-block" alt="">
+                                        </div>
+                                    </div>
+                                    <div *ngIf="hasFileLink(quest.reward_file)">
+                                        <div class="small text-muted mb-1">{{ 'REWARDS.REWARD_FILE' | translate }}</div>
+                                        <a [href]="fileHref(quest.reward_file)" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'REWARDS.VIEW_FILE' | translate }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h6 class="text-uppercase text-muted small mb-2">{{ 'QUEST_GROUP.ANSWER_OPTIONS' | translate }}</h6>
+                                <div *ngIf="getQuizEntries(quest).length === 0" class="text-muted small">{{ 'QUEST_GROUP.NO_ANSWERS' | translate }}</div>
+                                <div *ngFor="let a of getQuizEntries(quest); let ai = index" class="answer-row border rounded-3 p-3 mb-2 bg-body-tertiary">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i *ngIf="a.correct_option === true" class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1" [title]="'QUEST_GROUP.CORRECT' | translate"></i>
+                                        <i *ngIf="a.correct_option !== true" class="bi bi-x-circle flex-shrink-0 mt-1 text-danger" [title]="'QUEST_GROUP.INCORRECT' | translate"></i>
+                                        <div class="flex-grow-1">
+                                            <div class="small text-muted mb-1">{{ 'COMMON.TITLE' | translate }} #{{ ai + 1 }}</div>
+                                            <div *ngIf="hasTextContent(a.answer)" class="quest-multiline">{{ formatMultiline(a.answer) }}</div>
+                                            <div *ngIf="!hasTextContent(a.answer)" class="text-muted fst-italic small">{{ 'QUEST_GROUP.EMPTY_ANSWER' | translate }}</div>
+                                            <div *ngIf="hasFileLink(a.answer_image)" class="mt-2">
+                                                <a [href]="fileHref(a.answer_image)" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary mb-1">
+                                                    {{ 'REWARDS.VIEW_FILE' | translate }}
+                                                </a>
+                                                <div>
+                                                    <img [src]="fileHref(a.answer_image)" (error)="onImgError($event)" class="img-fluid rounded border answer-thumb d-block" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div *ngIf="groupQuests.length === 0" class="text-center text-muted py-4">
+                    {{ groupQuestsMessage || ('QUEST_GROUP.NO_QUESTS_IN_GROUP' | translate) }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">{{ 'COMMON.CLOSE' | translate }}</button>
+            </div>
+        </div>
+    </div>
 </div>

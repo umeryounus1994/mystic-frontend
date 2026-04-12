@@ -17,7 +17,7 @@
 
             <!-- Welcome message -->
             <div class="welcome-message d-none d-md-block" *ngIf="auth.user">
-                {{ 'COMMON.WELCOME_BACK_USER' | translate:{ username: auth.user.username } }}
+                {{ 'COMMON.WELCOME_BACK_USER' | translate:{ username: getWelcomeUserName() } }}
             </div>
 
 
@@ -41,7 +41,7 @@
                 <!-- Profile dropdown -->
                 <div class="dropdown">
                     <a class="avatar avatar-sm p-0 position-relative" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
+                        <img class="avatar-img rounded-circle" [src]="getHeaderAvatarSrc()" (error)="onHeaderAvatarError($event)" alt="avatar">
                         <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle d-none d-md-block">
                             <span class="visually-hidden">Online</span>
                         </span>

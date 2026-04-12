@@ -89,6 +89,32 @@ setHeaderWithTokenWithoutContentType() {
 }
 }
 
+  /**
+   * GET binary response (e.g. PDF) with auth. Path is relative to apiURL (no leading slash).
+   */
+  getBlob(path: string): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const tokenOpts = this.setHeaderWithToken();
+      const httpOptions: { headers?: HttpHeaders; responseType: 'blob' } = {
+        ...tokenOpts,
+        responseType: 'blob'
+      };
+      this.http
+        .get(environment.apiURL + '/' + path, httpOptions)
+        .subscribe({
+          next: (data) => resolve(data as Blob),
+          error: (error) => {
+            if (error?.status === 401) {
+              this.handleUnauthorized();
+              reject(error);
+              return;
+            }
+            reject(error);
+          }
+        });
+    });
+  }
+
   get(path: any) {
     return new Promise((resolve, reject) => {
       const httpOptions = this.setHeaderWithToken()
