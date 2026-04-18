@@ -90,11 +90,38 @@ export class LoginComponent implements OnInit {
       }).catch((error: any) => {
         this.isSubmitted = false;
         this.sp.hide();
-        if(error.status === 400) {
-          this.helper.failureToast(error?.error.message)
+        const msg = (error?.error?.message || '') as string;
+        const status = error?.status;
+
+        if (status === 401 || status === 403) {
+          if (this.isEmailVerificationRequired(msg)) {
+            const email = (this.submissionForm.value?.email || '').trim();
+            Swal.fire({
+              icon: 'warning',
+              title: this.translate.instant('AUTH.VERIFY_EMAIL_LOGIN_TITLE'),
+              html: `${this.translate.instant('AUTH.VERIFY_EMAIL_LOGIN_BODY')}<br><br><small>${this.escapeHtml(msg)}</small>`,
+              showCancelButton: true,
+              confirmButtonText: this.translate.instant('AUTH.RESEND_VERIFICATION'),
+              cancelButtonText: this.translate.instant('COMMON.CLOSE')
+            }).then((result) => {
+              if (result.isConfirmed && email) {
+                this.auth.resendVerificationEmail(email).then((res: any) => {
+                  this.helper.successToast(res?.message || this.translate.instant('AUTH.RESEND_SUCCESS_GENERIC'));
+                }).catch(() => {
+                  this.helper.successToast(this.translate.instant('AUTH.RESEND_SUCCESS_GENERIC'));
+                });
+              }
+            });
+            return;
+          }
         }
-        if(error.status === 404) {
-          this.helper.failureToast(error?.error.message)
+
+        if (status === 400) {
+          this.helper.failureToast(error?.error?.message);
+        } else if (status === 404) {
+          this.helper.failureToast(error?.error?.message);
+        } else if (status === 401 || status === 403) {
+          this.helper.failureToast(msg || this.translate.instant('MESSAGES.INVALID_CREDENTIALS'));
         }
       });
     } else {
@@ -131,6 +158,21 @@ export class LoginComponent implements OnInit {
   showResetPasswordModal(){
     $("#forgetPassword").modal('show')
     $('.modal-backdrop').removeClass('modal-backdrop').addClass('modal');
+  }
+
+  private isEmailVerificationRequired(message: string): boolean {
+    if (!message || typeof message !== 'string') return false;
+    const m = message.toLowerCase();
+    if (m.includes('email not verified') || m.includes('not verified') || m.includes('unverified')) return true;
+    return m.includes('verify') && (m.includes('email') || m.includes('e-mail') || m.includes('inbox'));
+  }
+
+  private escapeHtml(s: string): string {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   /** Only allow internal paths to prevent open redirect. */

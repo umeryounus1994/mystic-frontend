@@ -164,19 +164,19 @@
         </li>
 
         <!-- Payouts Section for Partners -->
-        <li class="nav-item ms-2 my-2" *ngIf="false">
+        <li class="nav-item ms-2 my-2" *ngIf="auth.isPartner">
           <span class="text-white-50 small text-uppercase fw-bold">{{ 'SIDEBAR.PAYOUTS' | translate }}</span>
         </li>
 
         <!-- Payout Settings -->
-        <li class="nav-item" *ngIf="false">
+        <li class="nav-item" *ngIf="auth.isPartner">
           <a [routerLink]="['/partner/payout-settings']" class="nav-link text-white" [class.active]="routeURL === '/partner/payout-settings' || routeURL.includes('/partner/payout-settings')" (click)="closeSidebar()">
             <i class="bi bi-wallet2 fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUT_SETTINGS' | translate }}
           </a>
         </li>
 
         <!-- Payout History -->
-        <li class="nav-item" *ngIf="false">
+        <li class="nav-item" *ngIf="auth.isPartner">
           <a [routerLink]="['/partner/payout-history']" class="nav-link text-white" [class.active]="routeURL === '/partner/payout-history' || routeURL.includes('/partner/payout-history')" (click)="closeSidebar()">
             <i class="bi bi-clock-history fa-fw me-2"></i>{{ 'SIDEBAR.PAYOUT_HISTORY' | translate }}
           </a>

@@ -1,18 +1,21 @@
+/**
+ * @deprecated Legacy multipart signup shape. Partner signup now uses JSON only:
+ * { first_name, last_name, email, password } via AuthService.registerPartner (see SimpleSignupPayload).
+ * Bank and payout details are collected in Partner profile / Payout settings after login.
+ */
 export interface PartnerRegistrationRequest {
-  // Basic User fields
   username: string;
   email: string;
   password: string;
   confirm_password: string;
   image?: File;
-  user_type: 'partner';  // Set to 'partner' from enum ["family", "partner", "admin"]
-  
-  // Partner profile fields (from partner_profile in User model)
+  user_type: 'partner';
+
   partner_profile: {
     business_name: string;
     business_description: string;
     phone: string;
-    commission_rate?: number;  // defaults to 15
+    commission_rate?: number;
     payout_preference?: {
       preferred_method: 'bank_transfer' | 'paypal' | 'stripe';
     };
@@ -27,6 +30,6 @@ export interface PartnerRegistrationRequest {
       routing_number: string;
       account_holder: string;
     };
-    approval_status: 'pending';  // default value
+    approval_status: 'pending';
   };
 }

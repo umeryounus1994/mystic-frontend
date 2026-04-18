@@ -1,300 +1,134 @@
 <div class="row min-vh-100">
     <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-        <p style="font-size: 20px; color: white">{{text}}</p>
+        <p style="font-size: 20px; color: white">{{ text | translate }}</p>
     </ngx-spinner>
 
-    <!-- left -->
     <div class="col-12 col-lg-4 d-md-flex align-items-center justify-content-center min-vh-100 left-side">
-        <!-- Floating Elements - Magic Theme -->
         <div class="position-absolute floating-element" style="top: 10%; left: 10%; width: 60px; height: 60px; background: rgba(139, 92, 246, 0.2); border-radius: 50%;"></div>
         <div class="position-absolute floating-element reverse" style="top: 70%; right: 15%; width: 50px; height: 50px; background: rgba(20, 184, 166, 0.2); border-radius: 50%;"></div>
         <div class="position-absolute floating-element delay" style="top: 30%; right: 20%; width: 30px; height: 30px; background: rgba(245, 158, 11, 0.25); border-radius: 50%;"></div>
-        
+
         <div class="p-3 p-lg-4 text-center" style="position: relative; z-index: 1;">
-            <!-- Title -->
             <div class="text-center mb-4">
                 <div class="mb-3">
                     <span style="font-size: 3.5rem; display: inline-block; animation: bounce 2s ease-in-out infinite;">🚀</span>
                 </div>
-                <h4 class="fw-bold mb-3" style="color: #8B5CF6; font-size: 1.8rem;">Welcome to our largest community</h4>
-                <p class="mb-0 h5" style="color: #6B7280; font-weight: 500;">Let's learn something new today!</p>
+                <h4 class="fw-bold mb-3" style="color: #8B5CF6; font-size: 1.8rem;">{{ 'AUTH.WELCOME_COMMUNITY' | translate }}</h4>
+                <p class="mb-0 h5" style="color: #6B7280; font-weight: 500;">{{ 'AUTH.LEARN_SOMETHING_NEW' | translate }}</p>
             </div>
-            <!-- SVG Image -->
             <img src="assets/images/element/02.svg" class="mt-4 w-100" alt="" style="max-width: 250px; filter: drop-shadow(0 15px 35px rgba(139, 92, 246, 0.2)); animation: float 8s ease-in-out infinite;">
         </div>
     </div>
 
-    <!-- Right -->
     <div class="col-12 col-lg-8 min-vh-100">
         <div class="row my-4">
             <div class="col-sm-11 col-xl-9 mx-auto">
-                <!-- Title -->
                 <div class="text-center mb-4">
                     <span class="mb-0 fs-1" style="display: inline-block; animation: bounce 2s ease-in-out infinite;">🏢</span>
                     <h1 class="fs-2 fw-bold mb-2" style="color: #8B5CF6;">{{ 'AUTH.PARTNER_REGISTRATION' | translate }}</h1>
                     <p class="lead mb-0" style="color: #6B7280; font-size: 1.1rem;">{{ 'AUTH.JOIN_PLATFORM' | translate }}</p>
                 </div>
 
-                <!-- Form START -->
                 <form [formGroup]="partnerForm" (ngSubmit)="onSubmit()">
-                    <!-- Basic Information -->
                     <div class="mb-3">
                         <h6 class="text-muted fw-bold">{{ 'AUTH.BASIC_INFORMATION' | translate }}</h6>
                     </div>
 
-                    <!-- Username and Email -->
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label for="username" class="form-label">{{ 'FORMS.USERNAME' | translate }} <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-lg"
-                                [ngClass]="{ 'is-invalid': isFieldInvalid('username') }">
-                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                    <i class="bi bi-person-fill"></i>
-                                </span>
-                                <input type="text" formControlName="username" maxlength="50"
-                                    class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.ENTER_USERNAME' | translate"
-                                    id="username">
+                            <label for="first_name" class="form-label">{{ 'AUTH.FIRST_NAME' | translate }} <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg" [ngClass]="{ 'is-invalid': isFieldInvalid('first_name') }">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" formControlName="first_name" class="form-control border-0 bg-light rounded-end ps-1" id="first_name" maxlength="100">
                             </div>
-                            <div class="invalid-feedback" *ngIf="isFieldInvalid('username')">
-                                <div *ngIf="partnerForm.get('username')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
-                                <div *ngIf="partnerForm.get('username')?.errors?.['minlength']">{{ getValidationMessage('VALIDATION.USERNAME_MIN') }}</div>
-                                <div *ngIf="partnerForm.get('username')?.errors?.['maxlength']">{{ getValidationMessage('VALIDATION.USERNAME_MAX') }}</div>
-                                <div *ngIf="partnerForm.get('username')?.errors?.['pattern']">{{ getValidationMessage('VALIDATION.USERNAME_PATTERN') }}</div>
+                            <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('first_name')">
+                                {{ getValidationMessage('VALIDATION.REQUIRED') }}
                             </div>
                         </div>
-
                         <div class="col-md-6 mb-4">
-                            <label for="email" class="form-label">{{ 'AUTH.EMAIL_ADDRESS' | translate }} <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-lg"
-                                [ngClass]="{ 'is-invalid': isFieldInvalid('email') }">
-                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                    <i class="bi bi-envelope-fill"></i>
-                                </span>
-                                <input type="email" formControlName="email" maxlength="100"
-                                    class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.ENTER_EMAIL' | translate"
-                                    id="email">
+                            <label for="last_name" class="form-label">{{ 'AUTH.LAST_NAME' | translate }} <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg" [ngClass]="{ 'is-invalid': isFieldInvalid('last_name') }">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" formControlName="last_name" class="form-control border-0 bg-light rounded-end ps-1" id="last_name" maxlength="100">
                             </div>
-                            <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
-                                <div *ngIf="partnerForm.get('email')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
-                                <div *ngIf="partnerForm.get('email')?.errors?.['email'] || partnerForm.get('email')?.errors?.['invalidEmail']">{{ getValidationMessage('VALIDATION.EMAIL_INVALID') }}</div>
-                                <div *ngIf="partnerForm.get('email')?.errors?.['maxlength']">{{ getValidationMessage('VALIDATION.MAX_LENGTH').replace('{{max}}', '100') }}</div>
+                            <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('last_name')">
+                                {{ getValidationMessage('VALIDATION.REQUIRED') }}
                             </div>
                         </div>
                     </div>
 
-                    <!-- Password and Confirm Password -->
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <label for="email" class="form-label">{{ 'AUTH.EMAIL_ADDRESS' | translate }} <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg" [ngClass]="{ 'is-invalid': isFieldInvalid('email') }">
+                                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="bi bi-envelope-fill"></i></span>
+                                <input type="email" formControlName="email" class="form-control border-0 bg-light rounded-end ps-1" [placeholder]="'AUTH.ENTER_EMAIL' | translate" id="email" maxlength="100">
+                            </div>
+                            <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('email')">
+                                <span *ngIf="partnerForm.get('email')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</span>
+                                <span *ngIf="partnerForm.get('email')?.errors?.['email']">{{ getValidationMessage('VALIDATION.EMAIL_INVALID') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <label for="password" class="form-label">{{ 'COMMON.PASSWORD' | translate }} <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-lg"
-                                [ngClass]="{ 'is-invalid': isFieldInvalid('password') }">
-                                <span class="input-group-text border-end-0">
-                                    <span style="font-size: 1.2rem;">🔒</span>
-                                </span>
-                                <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" maxlength="15"
-                                    class="form-control border-start-0 border-end-0 ps-0" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
-                                    id="password">
+                            <div class="input-group input-group-lg" [ngClass]="{ 'is-invalid': isFieldInvalid('password') }">
+                                <span class="input-group-text border-end-0"><span style="font-size: 1.2rem;">🔒</span></span>
+                                <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" class="form-control border-start-0 border-end-0 ps-0" [placeholder]="'AUTH.SIGNUP_PASSWORD_HINT' | translate" id="password">
                                 <button class="btn border-start-0" type="button" (click)="showPassword()" style="background: #F9FAFB; border: 2px solid #E5E7EB; border-left: none; border-radius: 0 16px 16px 0;">
                                     <span *ngIf="fieldTextType" style="font-size: 1.2rem;">👁️</span>
                                     <span *ngIf="!fieldTextType" style="font-size: 1.2rem;">👁️‍🗨️</span>
                                 </button>
                             </div>
-                            <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
-                                <div *ngIf="partnerForm.get('password')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['minlength']">{{ getValidationMessage('VALIDATION.PASSWORD_MIN') }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['maxLength']">{{ getValidationMessage('VALIDATION.PASSWORD_MAX') }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['noCapital']">{{ getValidationMessage('VALIDATION.PASSWORD_CAPITAL') }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['noNumber']">{{ getValidationMessage('VALIDATION.PASSWORD_NUMBER') }}</div>
-                                <div *ngIf="partnerForm.get('password')?.errors?.['invalidChars']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
+                            <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('password')">
+                                <span *ngIf="partnerForm.get('password')?.errors?.['required']">{{ getValidationMessage('VALIDATION.REQUIRED') }}</span>
+                                <span *ngIf="partnerForm.get('password')?.errors?.['signupPasswordMin']">{{ getValidationMessage('VALIDATION.SIGNUP_PASSWORD_MIN') }}</span>
+                                <span *ngIf="partnerForm.get('password')?.errors?.['signupPasswordLower']">{{ getValidationMessage('VALIDATION.SIGNUP_PASSWORD_LOWER') }}</span>
+                                <span *ngIf="partnerForm.get('password')?.errors?.['signupPasswordUpper']">{{ getValidationMessage('VALIDATION.SIGNUP_PASSWORD_UPPER') }}</span>
+                                <span *ngIf="partnerForm.get('password')?.errors?.['signupPasswordDigit']">{{ getValidationMessage('VALIDATION.SIGNUP_PASSWORD_DIGIT') }}</span>
+                                <span *ngIf="partnerForm.get('password')?.errors?.['signupPasswordSpecial']">{{ getValidationMessage('VALIDATION.SIGNUP_PASSWORD_SPECIAL') }}</span>
                             </div>
                         </div>
-
                         <div class="col-md-6 mb-4">
                             <label for="confirmPassword" class="form-label">{{ 'FORMS.CONFIRM_PASSWORD' | translate }} <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-lg"
-                                [ngClass]="{ 'is-invalid': isFieldInvalid('confirm_password') || partnerForm.hasError('passwordMismatch') }">
-                                <span class="input-group-text border-end-0">
-                                    <span style="font-size: 1.2rem;">🔒</span>
-                                </span>
-                                <input [type]="fieldTextTypeConfirm ? 'text' : 'password'"
-                                    formControlName="confirm_password"
-                                    class="form-control border-start-0 border-end-0 ps-0"
-                                    [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" id="confirmPassword">
+                            <div class="input-group input-group-lg" [ngClass]="{ 'is-invalid': isFieldInvalid('confirm_password') || partnerForm.hasError('passwordMismatch') }">
+                                <span class="input-group-text border-end-0"><span style="font-size: 1.2rem;">🔒</span></span>
+                                <input [type]="fieldTextTypeConfirm ? 'text' : 'password'" formControlName="confirm_password" class="form-control border-start-0 border-end-0 ps-0" [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" id="confirmPassword">
                                 <button class="btn border-start-0" type="button" (click)="showPasswordConfirm()" style="background: #F9FAFB; border: 2px solid #E5E7EB; border-left: none; border-radius: 0 16px 16px 0;">
                                     <span *ngIf="fieldTextTypeConfirm" style="font-size: 1.2rem;">👁️</span>
                                     <span *ngIf="!fieldTextTypeConfirm" style="font-size: 1.2rem;">👁️‍🗨️</span>
                                 </button>
                             </div>
-                            <div class="invalid-feedback" *ngIf="isFieldInvalid('confirm_password')">
-                                {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                            </div>
-                            <div class="invalid-feedback" *ngIf="partnerForm.hasError('passwordMismatch')">
-                                {{ getValidationMessage('VALIDATION.PASSWORD_MISMATCH') }}
-                            </div>
+                            <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('confirm_password')">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
+                            <div class="invalid-feedback d-block" *ngIf="partnerForm.hasError('passwordMismatch') && partnerForm.get('confirm_password')?.touched">{{ getValidationMessage('VALIDATION.PASSWORD_MISMATCH') }}</div>
                         </div>
                     </div>
 
-                    <!-- Business Information -->
-                    <div class="mb-3 mt-4">
-                        <h6 class="text-muted fw-bold">{{ 'AUTH.BUSINESS_INFORMATION' | translate }}</h6>
-                    </div>
+                    <p class="text-muted small mb-3">{{ 'AUTH.SIGNUP_PASSWORD_RULES' | translate }}</p>
 
-                    <div formGroupName="partner_profile">
-                        <!-- Business Name and Profile Image -->
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <label for="businessName" class="form-label">{{ 'FORMS.BUSINESS_NAME' | translate }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg"
-                                    [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('business_name') }">
-                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                        <i class="bi bi-building"></i>
-                                    </span>
-                                    <input type="text" formControlName="business_name"
-                                        class="form-control border-0 bg-light rounded-end ps-1"
-                                        [placeholder]="'AUTH.ENTER_BUSINESS_NAME' | translate" id="businessName">
-                                </div>
-                                <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('business_name')">
-                                    {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <label for="image" class="form-label">{{ 'AUTH.UPLOAD_IMAGE' | translate }} ({{ 'COMMON.OPTIONAL' | translate }})</label>
-                                <input type="file" class="form-control form-control-lg" id="image"
-                                    (change)="onImageSelect($event)" accept="image/*">
-                            </div>
-                        </div>
-
-                        <!-- Business Documents and Phone Number -->
-                        <div class="row">
-
-
-                            <div class="col-md-6 mb-4">
-                                <label for="phone" class="form-label">{{ 'FORMS.PHONE_NUMBER' | translate }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg"
-                                    [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('phone') }">
-                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                        <i class="bi bi-telephone-fill"></i>
-                                    </span>
-                                    <input type="tel" formControlName="phone"
-                                        class="form-control border-0 bg-light rounded-end ps-1"
-                                        [placeholder]="'AUTH.ENTER_PHONE' | translate" id="phone">
-                                </div>
-                                <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('phone')">
-                                    {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <label for="routingNumber" class="form-label">{{ 'FORMS.ROUTING_NUMBER' | translate }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg"
-                                    [ngClass]="{ 'is-invalid': isPartnerFieldInvalid('routing_number') }">
-                                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                        <i class="bi bi-bank"></i>
-                                    </span>
-                                    <input type="text" formControlName="routing_number"
-                                        class="form-control border-0 bg-light rounded-end ps-1"
-                                        [placeholder]="'AUTH.ENTER_ROUTING_NUMBER' | translate" id="routingNumber">
-                                </div>
-                                <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('routing_number')">
-                                    {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Business Description -->
-                        <div class="mb-4">
-                            <label for="businessDescription" class="form-label">{{ 'FORMS.BUSINESS_DESCRIPTION' | translate }} <span class="text-danger">*</span></label>
-                            <textarea class="form-control form-control-lg bg-light border-0"
-                                formControlName="business_description" rows="3"
-                                [placeholder]="'AUTH.ENTER_BUSINESS_DESCRIPTION' | translate" id="businessDescription"
-                                [class.is-invalid]="isPartnerFieldInvalid('business_description')"></textarea>
-                            <div class="invalid-feedback" *ngIf="isPartnerFieldInvalid('business_description')">
-                                {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                            </div>
-                        </div>
-
-                        <!-- Bank Details -->
-                        <div class="mb-3 mt-4">
-                            <h6 class="text-muted fw-bold">{{ 'AUTH.BANK_INFORMATION' | translate }}</h6>
-                        </div>
-
-                        <div formGroupName="bank_details">
-                            <!-- Account Holder and Account Number -->
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <label for="accountHolder" class="form-label">{{ 'FORMS.ACCOUNT_HOLDER' | translate }} <span class="text-danger">*</span></label>
-                                    <div class="input-group input-group-lg"
-                                        [ngClass]="{ 'is-invalid': isBankFieldInvalid('account_holder') }">
-                                        <span
-                                            class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                            <i class="bi bi-person-badge"></i>
-                                        </span>
-                                        <input type="text" formControlName="account_holder"
-                                            class="form-control border-0 bg-light rounded-end ps-1"
-                                            [placeholder]="'AUTH.ENTER_ACCOUNT_HOLDER' | translate" id="accountHolder">
-                                    </div>
-                                    <div class="invalid-feedback" *ngIf="isBankFieldInvalid('account_holder')">
-                                        {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 mb-4">
-                                    <label for="accountNumber" class="form-label">{{ 'FORMS.ACCOUNT_NUMBER' | translate }} <span class="text-danger">*</span></label>
-                                    <div class="input-group input-group-lg"
-                                        [ngClass]="{ 'is-invalid': isBankFieldInvalid('account_number') }">
-                                        <span
-                                            class="input-group-text bg-light rounded-start border-0 text-secondary px-3">
-                                            <i class="bi bi-credit-card"></i>
-                                        </span>
-                                        <input type="text" formControlName="account_number"
-                                            class="form-control border-0 bg-light rounded-end ps-1"
-                                            [placeholder]="'AUTH.ENTER_ACCOUNT_NUMBER' | translate" id="accountNumber">
-                                    </div>
-                                    <div class="invalid-feedback" *ngIf="isBankFieldInvalid('account_number')">
-                                        {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Routing Number -->
-
-                        </div>
-                    </div>
-
-                    <!-- Terms and Conditions -->
                     <div class="mb-4">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="agreeTerms" formControlName="agreeTerms"
-                                [class.is-invalid]="isFieldInvalid('agreeTerms')">
-                            <label class="form-check-label" for="agreeTerms">
-                                {{ 'AUTH.AGREE_TERMS' | translate }} <span class="text-danger">*</span>
-                            </label>
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" formControlName="agreeTerms" [class.is-invalid]="isFieldInvalid('agreeTerms')">
+                            <label class="form-check-label" for="agreeTerms">{{ 'AUTH.AGREE_TERMS' | translate }} <span class="text-danger">*</span></label>
                         </div>
-                        <div class="invalid-feedback" *ngIf="isFieldInvalid('agreeTerms')">
-                            {{ getValidationMessage('VALIDATION.REQUIRED') }}
-                        </div>
+                        <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('agreeTerms')">{{ getValidationMessage('VALIDATION.REQUIRED') }}</div>
                     </div>
 
-                    <!-- Button -->
-                    <div class="align-items-center mt-0">
-                        <div class="d-grid">
-                            <button class="btn btn-primary mb-0" type="submit"
-                                [disabled]="isSubmitting">
-                                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
-                                {{ isSubmitting ? ('AUTH.REGISTERING' | translate) : ('AUTH.REGISTER_AS_PARTNER' | translate) }}
-                            </button>
-                        </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary mb-0" type="submit" [disabled]="isSubmitting">
+                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+                            {{ isSubmitting ? ('AUTH.REGISTERING' | translate) : ('AUTH.REGISTER_AS_PARTNER' | translate) }}
+                        </button>
                     </div>
                 </form>
 
                 <p class="text-center mt-2">
                     <span>{{ 'AUTH.ALREADY_HAVE_ACCOUNT' | translate }}</span>
-                    <a routerLink="/auth/login">
-                        <span>&nbsp;{{ 'AUTH.SIGN_IN_INSTEAD' | translate }}</span>
-                    </a>
+                    <a routerLink="/auth/login"><span>&nbsp;{{ 'AUTH.SIGN_IN_INSTEAD' | translate }}</span></a>
                 </p>
-                <!-- Form END -->
             </div>
-        </div> <!-- Row END -->
+        </div>
     </div>
-</div> <!-- Row END -->
+</div>

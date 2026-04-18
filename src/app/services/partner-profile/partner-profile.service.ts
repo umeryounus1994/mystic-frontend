@@ -10,7 +10,22 @@ export interface LayoutOptions {
   background?: string; // URL or #hex
 }
 
+/** Nested PATCH fields; send only keys you want to change. */
+export interface PartnerBankDetailsPatch {
+  account_holder?: string;
+  account_number?: string;
+  routing_number?: string;
+  /** Spaces stripped on server; stored uppercase */
+  iban?: string;
+}
+
 export interface UpdatePartnerProfileBody {
+  /** Optional; uniqueness checked against other users */
+  username?: string;
+  business_name?: string;
+  business_description?: string;
+  phone?: string;
+  bank_details?: PartnerBankDetailsPatch;
   about?: string;
   gallery?: string[];
   map_location?: MapLocation;
@@ -67,8 +82,8 @@ export class PartnerProfileService {
 
   /**
    * PATCH /api/v1/user/partner/profile
-   * Send only fields to update: about, gallery, map_location, layout_options, slug.
-   * slug is optional; backend slugifies and ensures uniqueness.
+   * Send only fields to update: username, business_*, phone, bank_details, about, gallery, map_location, layout_options, slug.
+   * If slug is omitted but business_name is sent, public slug may be recomputed from business name.
    */
   updateProfile(body: UpdatePartnerProfileBody) {
     return this.api.patch('user/partner/profile', body);

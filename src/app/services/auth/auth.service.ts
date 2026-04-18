@@ -3,7 +3,13 @@ import { RestApiService } from '../api/rest-api.service';
 import { Router } from '@angular/router';
 import { StorageService } from '../storage/storage.service';
 import { Observable, from } from 'rxjs';
-import { PartnerRegistrationRequest } from '../../models/PartnerRegistrationRequest.model';
+/** JSON body for POST user/partner-signup and user/family-signup */
+export interface SimpleSignupPayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -119,57 +125,31 @@ export class AuthService {
     }
   }
 
-  registerPartner(partnerData: PartnerRegistrationRequest): Observable<any> {
-    const formData = new FormData();
-    
-    // Append basic fields with trimming
-    formData.append('username', partnerData.username?.trim() || '');
-    formData.append('email', partnerData.email?.trim() || '');
-    formData.append('password', partnerData.password || '');
-    formData.append('confirm_password', partnerData.confirm_password || '');
-    formData.append('user_type', partnerData.user_type || 'partner');
-    
-    // Append image if provided
-    if (partnerData.image) {
-      formData.append('image', partnerData.image, partnerData.image.name);
-    }
-    
-    // Append partner profile as JSON - include routing_number in bank_details
-    formData.append('partner_profile', JSON.stringify({
-      business_name: partnerData.partner_profile.business_name?.trim() || '',
-      business_description: partnerData.partner_profile.business_description?.trim() || '',
-      phone: partnerData.partner_profile.phone?.trim() || '',
-      commission_rate: partnerData.partner_profile.commission_rate || 15,
-      bank_details: {
-        account_number: partnerData.partner_profile.bank_details.account_number?.trim() || '',
-        routing_number: partnerData.partner_profile.bank_details.routing_number?.trim() || '', // Move routing_number here
-        account_holder: partnerData.partner_profile.bank_details.account_holder?.trim() || ''
-      },
-      approval_status: partnerData.partner_profile.approval_status || 'pending'
-    }));
-
-    return from(this.api.postImageData('user/partner-signup', formData).catch(error => {
-      // Ensure error is properly propagated
-      console.error('Partner registration API error:', error);
-      throw error;
-    }));
+  registerPartner(payload: SimpleSignupPayload): Observable<any> {
+    const body = {
+      first_name: payload.first_name?.trim() || '',
+      last_name: payload.last_name?.trim() || '',
+      email: payload.email?.trim() || '',
+      password: payload.password || ''
+    };
+    return from(this.api.postDataLogin('user/partner-signup', body));
   }
 
-  registerFamily(familyData: any): Observable<any> {
-    const formData = new FormData();
-    
-    // Append basic fields
-    formData.append('username', familyData.username);
-    formData.append('email', familyData.email);
-    formData.append('password', familyData.password);
-    formData.append('confirm_password', familyData.confirm_password);
-    formData.append('user_type', familyData.user_type);
-    
-    // Append image if provided
-    if (familyData.image) {
-      formData.append('image', familyData.image);
-    }
-    
-    return from(this.api.postImageData('user/family-signup', formData));
+  registerFamily(payload: SimpleSignupPayload): Observable<any> {
+    const body = {
+      first_name: payload.first_name?.trim() || '',
+      last_name: payload.last_name?.trim() || '',
+      email: payload.email?.trim() || '',
+      password: payload.password || ''
+    };
+    return from(this.api.postDataLogin('user/family-signup', body));
+  }
+
+  verifyEmailToken(token: string): Promise<any> {
+    return this.api.postDataLogin('user/verify-email', { token });
+  }
+
+  resendVerificationEmail(email: string): Promise<any> {
+    return this.api.postDataLogin('user/resend-verification-email', { email: email?.trim() || '' });
   }
 }
