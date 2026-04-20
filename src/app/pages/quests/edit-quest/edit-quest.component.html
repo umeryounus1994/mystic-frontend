@@ -43,7 +43,10 @@
                                 accept="image/*, video/*"
                                 (change)="onFileSelectedQuest($event)"
                                     placeholder="Answer">
-                                    <span><a target="_blank" href="{{questimg}}">View File</a></span>
+                                    <span class="d-flex gap-2 mt-2" *ngIf="questimg">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="openExternalFile(questimg)">View File</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(questimg)">Download</button>
+                                    </span>
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">No of XP</label>
@@ -92,7 +95,11 @@
                             <div class="col-lg-3">
                                 <label class="form-label">Reward PDF</label>
                                 <input type="file" class="form-control" accept="application/pdf" placeholder=""
-                                (change)="onFileSelected($event, 'reward')">  <span><a target="_blank" href="{{rewardFile}}">View Reward File</a></span>
+                                (change)="onFileSelected($event, 'reward')">
+                                <span class="d-flex gap-2 mt-2" *ngIf="rewardFile">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openExternalFile(rewardFile)">View Reward File</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(rewardFile)">Download</button>
+                                </span>
                             </div>
                 
                             <label class="form-label">Answers</label>
@@ -105,7 +112,7 @@
                                             placeholder="Answer">
                                     </div>
                                     <div class="col-lg-3 mb-1">
-                                        <input type="file" class="form-control" formControlName="answer_image"
+                                        <input type="file" class="form-control"
                                         accept="image/*, video/*"
                                         (change)="onFileSelectedOptions($event, 'option'+(i+1))"
                                             placeholder="Answer">

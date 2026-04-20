@@ -176,6 +176,55 @@ export class ListQuestGroupComponent implements OnInit {
     return String(value ?? '').trim();
   }
 
+  isVideoFile(value: any): boolean {
+    const url = this.fileHref(value).toLowerCase();
+    return url.includes('.mp4') || url.includes('.webm') || url.includes('.mov') || url.includes('.m4v');
+  }
+
+  isImageFile(value: any): boolean {
+    const url = this.fileHref(value).toLowerCase();
+    return url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif') || url.includes('.webp');
+  }
+
+  openExternalFile(value: any): void {
+    const url = this.fileHref(value);
+    if (!url) {
+      this.helper.infoToast('File not available');
+      return;
+    }
+
+    if (this.isAndroidDevice() && this.isPdfFile(url)) {
+      window.location.href = url;
+      return;
+    }
+
+    const opened = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!opened) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
+
+  downloadExternalFile(value: any): void {
+    const url = this.fileHref(value);
+    if (!url) {
+      this.helper.infoToast('File not available');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
   formatMultiline(value: any): string {
     if (value == null) {
       return '';
@@ -198,5 +247,13 @@ export class ListQuestGroupComponent implements OnInit {
     if (el?.style) {
       el.style.display = 'none';
     }
+  }
+
+  private isPdfFile(url: string): boolean {
+    return url.toLowerCase().includes('.pdf');
+  }
+
+  private isAndroidDevice(): boolean {
+    return /android/i.test(navigator.userAgent || '');
   }
 }

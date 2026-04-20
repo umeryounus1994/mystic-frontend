@@ -507,4 +507,49 @@ export class EditMysteriesComponent implements OnInit {
   trackByIndex(index: number, item: any): any {
     return index;
   }
+
+  openExternalFile(fileUrl: string) {
+    const url = String(fileUrl || '').trim();
+    if (!url) {
+      this.helper.infoToast('File not available');
+      return;
+    }
+    if (this.isAndroidDevice() && this.isPdfFile(url)) {
+      window.location.href = url;
+      return;
+    }
+    const opened = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!opened) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
+
+  downloadExternalFile(fileUrl: string) {
+    const url = String(fileUrl || '').trim();
+    if (!url) {
+      this.helper.infoToast('File not available');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  private isPdfFile(url: string): boolean {
+    return url.toLowerCase().includes('.pdf');
+  }
+
+  private isAndroidDevice(): boolean {
+    return /android/i.test(navigator.userAgent || '');
+  }
 }
