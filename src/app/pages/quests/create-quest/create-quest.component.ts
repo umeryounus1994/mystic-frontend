@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HelperService } from '../../../services/helper/helper.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -124,33 +124,32 @@ export class CreateQuestComponent implements OnInit {
       this.questForm.patchValue({ quest_context: 'standalone' });
     }
   }
-  newQuestion(): FormGroup {  
-    return this.fb.group({  
-      answer: '',  
-      correct_option: false,  
+  newQuestion(): FormGroup {
+    return this.fb.group({
+      answer: '',
+      answer_image: '',
+      correct_option: false,
       quest_id: ''
-    })  
-  }     
-  addQuestion() {  
-    this.questions().push(this.newQuestion());  
-  }  
-  removeQuestion(i:number) {  
-    // Ensure at least one answer always remains
-      // Clear the corresponding file option if it exists
-      const optionIndex = i + 1;
-      if (optionIndex === 1) this.option1 = undefined;
-      if (optionIndex === 2) this.option2 = undefined;
-      if (optionIndex === 3) this.option3 = undefined;
-      if (optionIndex === 4) this.option4 = undefined;
-      if (optionIndex === 5) this.option5 = undefined;
-      
-      // Remove the question from the form array
-      this.questions().removeAt(i);
-      
-      // Force change detection to update the UI
-      this.cdr.detectChanges();
-
-  } 
+    });
+  }
+  addQuestion() {
+    this.questions().push(this.newQuestion());
+  }
+  removeQuestion(i:number) {
+    // Keep at least one row so quest creation stays valid.
+    if (this.questions().length <= 1) {
+      this.helper.infoToast('At least one answer is required');
+      return;
+    }
+    const optionIndex = i + 1;
+    if (optionIndex === 1) this.option1 = undefined;
+    if (optionIndex === 2) this.option2 = undefined;
+    if (optionIndex === 3) this.option3 = undefined;
+    if (optionIndex === 4) this.option4 = undefined;
+    if (optionIndex === 5) this.option5 = undefined;
+    this.questions().removeAt(i);
+    this.cdr.detectChanges();
+  }
   onSubmit(){
     this.submitted = true;
     
@@ -193,6 +192,11 @@ export class CreateQuestComponent implements OnInit {
       this.questForm.patchValue({ level_increase: Math.floor(formValue.level_increase) });
     }
     
+    if (!this.hasAtLeastOneValidAnswer(formValue.questions)) {
+      Swal.fire('Validation Error!', 'Please add at least one valid answer option', 'error');
+      return;
+    }
+
     if (this.questForm?.valid) {
       this._sendSaveRequest(this.questForm.value);
     } else {
@@ -236,9 +240,15 @@ export class CreateQuestComponent implements OnInit {
     
     // Filter out empty or invalid questions before sending
     const validQuestions = (formData.questions || []).filter((q: any) => {
-      // Only include questions that have at least an answer text or are marked as correct
-      return q && (q.answer || q.correct_option === true || q.correct_option === 'true');
+      const answer = (q?.answer || '').toString().trim();
+      return q && (answer.length > 0 || q.correct_option === true || q.correct_option === 'true');
     });
+
+    if (validQuestions.length === 0) {
+      this.sp.hide();
+      Swal.fire('Validation Error!', 'Please add at least one valid answer option', 'error');
+      return;
+    }
     
     // Only append files for questions that still exist
     if(validQuestions.length >= 1 && this.option1){
@@ -351,5 +361,13 @@ export class CreateQuestComponent implements OnInit {
 
   trackByIndex(index: number, item: any): any {
     return index;
+  }
+
+  private hasAtLeastOneValidAnswer(questions: any[]): boolean {
+    if (!Array.isArray(questions) || questions.length === 0) return false;
+    return questions.some((q: any) => {
+      const answer = (q?.answer || '').toString().trim();
+      return answer.length > 0 || q?.correct_option === true || q?.correct_option === 'true';
+    });
   }
 }

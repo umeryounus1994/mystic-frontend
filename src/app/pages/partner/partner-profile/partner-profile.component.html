@@ -81,38 +81,6 @@
     </div>
   </div>
 
-  <!-- Bank details (saved with profile; send only changed fields) -->
-  <div class="col-12">
-    <div class="card bg-transparent border">
-      <div class="card-header">
-        <h5 class="mb-0">{{ 'PARTNER_PROFILE.BANK_SECTION' | translate }}</h5>
-      </div>
-      <div class="card-body">
-        <p class="text-muted small mb-3">{{ 'PARTNER_PROFILE.BANK_SECTION_HELP' | translate }}</p>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label">{{ 'FORMS.ACCOUNT_HOLDER' | translate }}</label>
-            <input type="text" class="form-control" [(ngModel)]="bankAccountHolder" [placeholder]="'AUTH.ENTER_ACCOUNT_HOLDER' | translate" autocomplete="off">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">{{ 'PARTNER_PROFILE.IBAN_LABEL' | translate }}</label>
-            <input type="text" class="form-control font-monospace" [(ngModel)]="bankIban" [placeholder]="'PAYOUT_SETTINGS.ACCOUNT_NUMBER_PLACEHOLDER' | translate" autocomplete="off">
-            <small class="text-muted">{{ 'PARTNER_PROFILE.IBAN_HELP' | translate }}</small>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">{{ 'FORMS.ACCOUNT_NUMBER' | translate }}</label>
-            <input type="text" class="form-control" [(ngModel)]="bankAccountNumber" [placeholder]="'AUTH.ENTER_ACCOUNT_NUMBER' | translate" autocomplete="off">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">{{ 'PARTNER_PROFILE.ROUTING_OR_LOCAL' | translate }}</label>
-            <input type="text" class="form-control" [(ngModel)]="bankRoutingNumber" [placeholder]="'AUTH.ENTER_ROUTING_NUMBER' | translate" autocomplete="off">
-            <small class="text-muted">{{ 'PARTNER_PROFILE.ROUTING_HELP' | translate }}</small>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- About -->
   <div class="col-12">
     <div class="card bg-transparent border">
@@ -130,7 +98,10 @@
     <div class="card bg-transparent border">
       <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
         <h5 class="mb-0">{{ 'PARTNER_PROFILE.GALLERY' | translate }}</h5>
-        <div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="toggleGalleryUrlEditor()">
+            <i class="bi bi-code-slash me-1"></i>{{ showGalleryUrlEditor ? 'Hide URL editor' : 'Edit URLs' }}
+          </button>
           <input type="file" id="galleryFileInput" accept="image/*" multiple class="d-none" (change)="onGalleryFilesSelected($event)">
           <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="uploadingGallery" (click)="triggerGalleryUpload()">
             <i class="bi bi-upload me-1"></i>{{ 'PARTNER_PROFILE.UPLOAD_IMAGES' | translate }}
@@ -139,9 +110,49 @@
       </div>
       <div class="card-body">
         <p class="text-muted small mb-2">{{ 'PARTNER_PROFILE.GALLERY_URLS_HELP' | translate }}</p>
-        <textarea class="form-control font-monospace small" rows="3" [(ngModel)]="galleryUrlsText" placeholder="https://...&#10;https://..."></textarea>
+        <textarea *ngIf="showGalleryUrlEditor"
+                  class="form-control font-monospace small"
+                  rows="3"
+                  [(ngModel)]="galleryUrlsText"
+                  (ngModelChange)="onGalleryUrlsTextChanged()"
+                  placeholder="https://...&#10;https://..."></textarea>
         <div class="mt-2" *ngIf="gallery.length > 0">
           <span class="badge bg-secondary me-1">{{ gallery.length }} {{ 'PARTNER_PROFILE.IMAGES' | translate }}</span>
+        </div>
+        <div class="mt-3">
+          <div class="gallery-slider" *ngIf="galleryPreviewUrls.length > 0; else noGalleryPreview">
+            <a class="gallery-slide-link"
+               [href]="getCurrentGalleryImage()"
+               target="_blank"
+               rel="noopener noreferrer">
+              <img [src]="getCurrentGalleryImage()"
+                   [alt]="'Gallery image ' + (gallerySlideIndex + 1)"
+                   class="gallery-slide-image">
+            </a>
+          </div>
+
+          <div class="gallery-controls" *ngIf="galleryPreviewUrls.length > 1">
+            <button type="button" class="btn btn-sm btn-outline-secondary gallery-nav-btn" (click)="prevGallerySlide()">
+              <i class="bi bi-chevron-left me-1"></i>Previous
+            </button>
+            <div class="gallery-dots-wrap">
+              <button type="button"
+                      class="gallery-dot"
+                      *ngFor="let imageUrl of galleryPreviewUrls; let i = index"
+                      [class.active]="i === gallerySlideIndex"
+                      (click)="goToGallerySlide(i)"
+                      [attr.aria-label]="'Go to image ' + (i + 1)">
+              </button>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary gallery-nav-btn" (click)="nextGallerySlide()">
+              Next<i class="bi bi-chevron-right ms-1"></i>
+            </button>
+          </div>
+          <ng-template #noGalleryPreview>
+            <div class="gallery-empty-state">
+              <i class="bi bi-images me-2"></i>{{ 'PARTNER_PROFILE.NO_GALLERY' | translate }}
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>

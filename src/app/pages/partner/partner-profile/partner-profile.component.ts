@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PartnerBankDetailsPatch, PartnerProfileService, UpdatePartnerProfileBody } from '../../../services/partner-profile/partner-profile.service';
+import { PartnerProfileService, UpdatePartnerProfileBody } from '../../../services/partner-profile/partner-profile.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { HelperService } from '../../../services/helper/helper.service';
 import { RestApiService } from '../../../services/api/rest-api.service';
@@ -19,10 +19,6 @@ export class PartnerProfileComponent implements OnInit {
   businessName = '';
   businessDescription = '';
   phone = '';
-  bankAccountHolder = '';
-  bankAccountNumber = '';
-  bankRoutingNumber = '';
-  bankIban = '';
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
@@ -31,10 +27,13 @@ export class PartnerProfileComponent implements OnInit {
   slug = '';
   about = '';
   gallery: string[] = [];
+  galleryPreviewUrls: string[] = [];
   longitude: number | null = null;
   latitude: number | null = null;
   backgroundValue = ''; // URL or #hex
   galleryUrlsText = ''; // temporary edit for gallery URLs (one per line)
+  gallerySlideIndex = 0;
+  showGalleryUrlEditor = false;
   loading = false;
   saving = false;
   uploadingGallery = false;
@@ -71,14 +70,11 @@ export class PartnerProfileComponent implements OnInit {
       this.businessName = pp.business_name || '';
       this.businessDescription = pp.business_description || '';
       this.phone = pp.phone || this.auth.user?.partner_profile?.phone || '';
-      const bd = pp.bank_details || {};
-      this.bankAccountHolder = bd.account_holder || '';
-      this.bankAccountNumber = bd.account_number || '';
-      this.bankRoutingNumber = bd.routing_number || '';
-      this.bankIban = bd.iban || '';
       this.about = pp.about || '';
       this.gallery = Array.isArray(pp.gallery) ? [...pp.gallery] : [];
       this.galleryUrlsText = this.gallery.join('\n');
+      this.gallerySlideIndex = 0;
+      this.refreshGalleryPreviewUrls();
       const coords = pp.map_location?.coordinates;
       if (Array.isArray(coords) && coords.length >= 2) {
         this.longitude = coords[0];
@@ -119,11 +115,6 @@ export class PartnerProfileComponent implements OnInit {
     }
     if ((this.phone || '').trim() !== (pp.phone || '')) {
       body.phone = (this.phone || '').trim();
-    }
-
-    const bankPatch = this.buildBankDetailsPatch(pp.bank_details || {});
-    if (bankPatch && Object.keys(bankPatch).length > 0) {
-      body.bank_details = bankPatch;
     }
 
     if (this.about !== (pp.about || '')) body.about = this.about;
@@ -171,16 +162,10 @@ export class PartnerProfileComponent implements OnInit {
         if (body.business_name !== undefined) this.businessName = ppOut.business_name ?? this.businessName;
         if (body.business_description !== undefined) this.businessDescription = ppOut.business_description ?? this.businessDescription;
         if (body.phone !== undefined) this.phone = ppOut.phone ?? this.phone;
-        if (body.bank_details && ppOut.bank_details) {
-          const b = ppOut.bank_details;
-          this.bankAccountHolder = b.account_holder ?? this.bankAccountHolder;
-          this.bankAccountNumber = b.account_number ?? this.bankAccountNumber;
-          this.bankRoutingNumber = b.routing_number ?? this.bankRoutingNumber;
-          this.bankIban = b.iban ?? this.bankIban;
-        }
         if (body.about !== undefined) this.about = ppOut.about ?? body.about;
         if (body.gallery) this.gallery = Array.isArray(ppOut.gallery) ? ppOut.gallery : body.gallery;
         if (body.gallery) this.galleryUrlsText = this.gallery.join('\n');
+        if (body.gallery) this.refreshGalleryPreviewUrls();
         if (body.layout_options?.background !== undefined) this.backgroundValue = ppOut.layout_options?.background ?? body.layout_options?.background ?? '';
         if (body.map_location && ppOut.map_location?.coordinates?.length >= 2) {
           this.longitude = ppOut.map_location.coordinates[0];
@@ -261,6 +246,8 @@ export class PartnerProfileComponent implements OnInit {
       if (Array.isArray(newGallery)) {
         this.gallery = newGallery;
         this.galleryUrlsText = this.gallery.join('\n');
+        this.gallerySlideIndex = 0;
+        this.refreshGalleryPreviewUrls();
       }
       this.helper.successToast(res?.message || 'Gallery images added');
     } catch (err: any) {
@@ -387,31 +374,65 @@ export class PartnerProfileComponent implements OnInit {
     return Number.isNaN(n) ? null : n;
   }
 
-  private normalizeIban(s: string): string {
-    return (s || '').replace(/\s/g, '').toUpperCase();
+  getGalleryPreviewUrls(): string[] {
+    const fromText = (this.galleryUrlsText || '')
+      .split('\n')
+      .map((u) => u.trim())
+      .filter(Boolean);
+
+    if (fromText.length > 0) {
+      return fromText;
+    }
+
+    return Array.isArray(this.gallery) ? this.gallery : [];
   }
 
-  /** Partial bank_details for PATCH; only changed keys. */
-  private buildBankDetailsPatch(existing: Record<string, unknown>): PartnerBankDetailsPatch {
-    const out: PartnerBankDetailsPatch = {};
-    const exHolder = String(existing['account_holder'] ?? '');
-    const exNum = String(existing['account_number'] ?? '');
-    const exRoute = String(existing['routing_number'] ?? '');
-    const exIban = this.normalizeIban(String(existing['iban'] ?? ''));
+  getCurrentGalleryImage(): string {
+    const urls = this.galleryPreviewUrls;
+    if (urls.length === 0) return '';
+    if (this.gallerySlideIndex >= urls.length) {
+      this.gallerySlideIndex = 0;
+    }
+    if (this.gallerySlideIndex < 0) {
+      this.gallerySlideIndex = 0;
+    }
+    return urls[this.gallerySlideIndex];
+  }
 
-    if ((this.bankAccountHolder || '').trim() !== exHolder) {
-      out.account_holder = (this.bankAccountHolder || '').trim();
+  prevGallerySlide(): void {
+    const total = this.galleryPreviewUrls.length;
+    if (total <= 1) return;
+    this.gallerySlideIndex = (this.gallerySlideIndex - 1 + total) % total;
+  }
+
+  nextGallerySlide(): void {
+    const total = this.galleryPreviewUrls.length;
+    if (total <= 1) return;
+    this.gallerySlideIndex = (this.gallerySlideIndex + 1) % total;
+  }
+
+  goToGallerySlide(index: number): void {
+    const total = this.galleryPreviewUrls.length;
+    if (index < 0 || index >= total) return;
+    this.gallerySlideIndex = index;
+  }
+
+  toggleGalleryUrlEditor(): void {
+    this.showGalleryUrlEditor = !this.showGalleryUrlEditor;
+  }
+
+  onGalleryUrlsTextChanged(): void {
+    this.refreshGalleryPreviewUrls();
+  }
+
+  private refreshGalleryPreviewUrls(): void {
+    this.galleryPreviewUrls = this.getGalleryPreviewUrls();
+    if (this.galleryPreviewUrls.length === 0) {
+      this.gallerySlideIndex = 0;
+      return;
     }
-    if ((this.bankAccountNumber || '').trim() !== exNum) {
-      out.account_number = (this.bankAccountNumber || '').trim();
+    if (this.gallerySlideIndex >= this.galleryPreviewUrls.length) {
+      this.gallerySlideIndex = 0;
     }
-    if ((this.bankRoutingNumber || '').trim() !== exRoute) {
-      out.routing_number = (this.bankRoutingNumber || '').trim();
-    }
-    const newIban = this.normalizeIban(this.bankIban);
-    if (newIban !== exIban) {
-      out.iban = newIban;
-    }
-    return out;
   }
 }

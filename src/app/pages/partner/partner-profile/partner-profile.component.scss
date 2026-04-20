@@ -1,1 +1,69 @@
 // Partner profile page styles
+.gallery-slider {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.gallery-slide-link {
+  display: block;
+  text-decoration: none;
+}
+
+.gallery-slide-image {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+  background: #f3f4f6;
+}
+
+.gallery-controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  justify-items: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.gallery-nav-btn {
+  white-space: nowrap;
+  min-width: 92px;
+}
+
+.gallery-dots-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.gallery-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 0;
+  background: #cbd5e1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.gallery-dot.active {
+  width: 18px;
+  background: #4f46e5;
+}
+
+.gallery-empty-state {
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 16px;
+  color: #64748b;
+  background: #f8fafc;
+  font-size: 14px;
+}

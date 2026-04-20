@@ -126,18 +126,25 @@
                                 <div class="d-flex flex-wrap gap-4 align-items-start">
                                     <div *ngIf="hasFileLink(quest.quest_image)">
                                         <div class="small text-muted mb-1">{{ 'QUEST_GROUP.QUEST_IMAGE' | translate }}</div>
-                                        <a [href]="fileHref(quest.quest_image)" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary mb-2 d-inline-block">
+                                        <button type="button" class="btn btn-sm btn-outline-primary mb-2 d-inline-block me-2" (click)="openExternalFile(quest.quest_image)">
                                             {{ 'REWARDS.VIEW_FILE' | translate }}
-                                        </a>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2 d-inline-block" (click)="downloadExternalFile(quest.quest_image)">
+                                            {{ 'FORMS.DOWNLOAD' | translate }}
+                                        </button>
                                         <div>
-                                            <img [src]="fileHref(quest.quest_image)" (error)="onImgError($event)" class="img-fluid rounded border quest-thumb d-block" alt="">
+                                            <video *ngIf="isVideoFile(quest.quest_image)" [src]="fileHref(quest.quest_image)" controls playsinline class="img-fluid rounded border quest-thumb d-block"></video>
+                                            <img *ngIf="!isVideoFile(quest.quest_image)" [src]="fileHref(quest.quest_image)" (error)="onImgError($event)" class="img-fluid rounded border quest-thumb d-block" alt="">
                                         </div>
                                     </div>
                                     <div *ngIf="hasFileLink(quest.reward_file)">
                                         <div class="small text-muted mb-1">{{ 'REWARDS.REWARD_FILE' | translate }}</div>
-                                        <a [href]="fileHref(quest.reward_file)" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                        <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="openExternalFile(quest.reward_file)">
                                             <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'REWARDS.VIEW_FILE' | translate }}
-                                        </a>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(quest.reward_file)">
+                                            <i class="bi bi-download me-1"></i>{{ 'FORMS.DOWNLOAD' | translate }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -154,11 +161,15 @@
                                             <div *ngIf="hasTextContent(a.answer)" class="quest-multiline">{{ formatMultiline(a.answer) }}</div>
                                             <div *ngIf="!hasTextContent(a.answer)" class="text-muted fst-italic small">{{ 'QUEST_GROUP.EMPTY_ANSWER' | translate }}</div>
                                             <div *ngIf="hasFileLink(a.answer_image)" class="mt-2">
-                                                <a [href]="fileHref(a.answer_image)" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary mb-1">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-1 me-2" (click)="openExternalFile(a.answer_image)">
                                                     {{ 'REWARDS.VIEW_FILE' | translate }}
-                                                </a>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-1" (click)="downloadExternalFile(a.answer_image)">
+                                                    {{ 'FORMS.DOWNLOAD' | translate }}
+                                                </button>
                                                 <div>
-                                                    <img [src]="fileHref(a.answer_image)" (error)="onImgError($event)" class="img-fluid rounded border answer-thumb d-block" alt="">
+                                                    <video *ngIf="isVideoFile(a.answer_image)" [src]="fileHref(a.answer_image)" controls playsinline class="img-fluid rounded border answer-thumb d-block"></video>
+                                                    <img *ngIf="!isVideoFile(a.answer_image)" [src]="fileHref(a.answer_image)" (error)="onImgError($event)" class="img-fluid rounded border answer-thumb d-block" alt="">
                                                 </div>
                                             </div>
                                         </div>

@@ -40,7 +40,9 @@
                                     (change)="onFileSelected($event, 'questionPicture')"
                                     [ngClass]="{ 'is-invalid': submitted && f['picture_mystery_question_url'].errors }">
                                 <small class="text-muted" *ngIf="existingQuestionPicture">
-                                    {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingQuestionPicture" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
+                                    {{ 'COMMON.CURRENT' | translate }}:
+                                    <button type="button" class="btn btn-sm btn-outline-primary ms-1 me-1" (click)="openExternalFile(existingQuestionPicture)">{{ 'COMMON.VIEW_FILE' | translate }}</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(existingQuestionPicture)">{{ 'FORMS.DOWNLOAD' | translate }}</button>
                                 </small>
                             </div>
                             
@@ -145,16 +147,24 @@
                                                         {{ 'VALIDATION.REQUIRED' | translate }}
                                                     </div>
                                                     <small class="text-muted" *ngIf="i === 0 && existingOption1">
-                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption1" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}:
+                                                        <button type="button" class="btn btn-sm btn-outline-primary ms-1 me-1" (click)="openExternalFile(existingOption1)">{{ 'COMMON.VIEW_FILE' | translate }}</button>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(existingOption1)">{{ 'FORMS.DOWNLOAD' | translate }}</button>
                                                     </small>
                                                     <small class="text-muted" *ngIf="i === 1 && existingOption2">
-                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption2" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}:
+                                                        <button type="button" class="btn btn-sm btn-outline-primary ms-1 me-1" (click)="openExternalFile(existingOption2)">{{ 'COMMON.VIEW_FILE' | translate }}</button>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(existingOption2)">{{ 'FORMS.DOWNLOAD' | translate }}</button>
                                                     </small>
                                                     <small class="text-muted" *ngIf="i === 2 && existingOption3">
-                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption3" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}:
+                                                        <button type="button" class="btn btn-sm btn-outline-primary ms-1 me-1" (click)="openExternalFile(existingOption3)">{{ 'COMMON.VIEW_FILE' | translate }}</button>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(existingOption3)">{{ 'FORMS.DOWNLOAD' | translate }}</button>
                                                     </small>
                                                     <small class="text-muted" *ngIf="i === 3 && existingOption4">
-                                                        {{ 'COMMON.CURRENT' | translate }}: <a [href]="existingOption4" target="_blank">{{ 'COMMON.VIEW_FILE' | translate }}</a>
+                                                        {{ 'COMMON.CURRENT' | translate }}:
+                                                        <button type="button" class="btn btn-sm btn-outline-primary ms-1 me-1" (click)="openExternalFile(existingOption4)">{{ 'COMMON.VIEW_FILE' | translate }}</button>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(existingOption4)">{{ 'FORMS.DOWNLOAD' | translate }}</button>
                                                     </small>
                                                 </div>
                                                 <div class="col-lg-4 mb-2">

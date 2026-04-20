@@ -25,7 +25,12 @@
 
                         <td>{{q.reward_name}}</td>
                         
-                        <td><a href="{{q.reward_file}}" target="_blank">{{ 'REWARDS.VIEW_FILE' | translate }}</a></td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary" (click)="openExternalFile(q.reward_file)">{{ 'REWARDS.VIEW_FILE' | translate }}</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(q.reward_file)">{{ 'FORMS.DOWNLOAD' | translate }}</button>
+                            </div>
+                        </td>
                         <td>{{q.reward_crypes}}</td>
                         <td>
     

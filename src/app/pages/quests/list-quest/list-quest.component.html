@@ -138,7 +138,11 @@
                 </div>
                 <div class="col-md-5">
                     <label class="form-label">Quest Image</label> <br />
-                    <a href="{{quest_image}}" target="_blank">View File</a>
+                    <div class="d-flex gap-2 mb-2" *ngIf="quest_image">
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="openExternalFile(quest_image)">View File</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(quest_image)">Download</button>
+                    </div>
+                    <video *ngIf="quest_image && isVideoFile(quest_image)" [src]="quest_image" controls playsinline class="img-fluid rounded border"></video>
                 </div>
 
                </div>
