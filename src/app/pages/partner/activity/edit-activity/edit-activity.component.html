@@ -84,7 +84,7 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <label class="form-label">{{ 'FORMS.ACTIVITY_DURATION' | translate }} <span class="text-danger">*</span></label>
+                        <label class="form-label">{{ 'FORMS.ACTIVITY_DURATION' | translate }} <span class="text-muted small">({{ 'COMMON.OPTIONAL' | translate }})</span></label>
                         <input type="number" class="form-control" placeholder="10" min="10"
                                formControlName="duration"
                                [ngClass]="{ 'is-invalid': (submitted || f['duration'].touched) && f['duration'].errors }">
@@ -124,7 +124,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <label class="form-label">{{ 'FORMS.LATITUDE' | translate }} <span class="text-danger">*</span></label>
+                        <label class="form-label">{{ 'FORMS.LATITUDE' | translate }} <span class="text-muted small">({{ 'COMMON.OPTIONAL' | translate }})</span></label>
                         <input type="number" class="form-control" placeholder="40.7128" step="any"
                                formControlName="latitude"
                                (input)="onLatitudeInput($event)"
@@ -137,7 +137,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <label class="form-label">{{ 'FORMS.LONGITUDE' | translate }} <span class="text-danger">*</span></label>
+                        <label class="form-label">{{ 'FORMS.LONGITUDE' | translate }} <span class="text-muted small">({{ 'COMMON.OPTIONAL' | translate }})</span></label>
                         <input type="number" class="form-control" placeholder="-74.0060" step="any"
                                formControlName="longitude"
                                (input)="onLongitudeInput($event)"

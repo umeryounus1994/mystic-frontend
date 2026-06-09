@@ -136,11 +136,6 @@ export class CreateQuestComponent implements OnInit {
     this.questions().push(this.newQuestion());
   }
   removeQuestion(i:number) {
-    // Keep at least one row so quest creation stays valid.
-    if (this.questions().length <= 1) {
-      this.helper.infoToast('At least one answer is required');
-      return;
-    }
     const optionIndex = i + 1;
     if (optionIndex === 1) this.option1 = undefined;
     if (optionIndex === 2) this.option2 = undefined;
@@ -192,11 +187,6 @@ export class CreateQuestComponent implements OnInit {
       this.questForm.patchValue({ level_increase: Math.floor(formValue.level_increase) });
     }
     
-    if (!this.hasAtLeastOneValidAnswer(formValue.questions)) {
-      Swal.fire('Validation Error!', 'Please add at least one valid answer option', 'error');
-      return;
-    }
-
     if (this.questForm?.valid) {
       this._sendSaveRequest(this.questForm.value);
     } else {
@@ -241,15 +231,10 @@ export class CreateQuestComponent implements OnInit {
     // Filter out empty or invalid questions before sending
     const validQuestions = (formData.questions || []).filter((q: any) => {
       const answer = (q?.answer || '').toString().trim();
-      return q && (answer.length > 0 || q.correct_option === true || q.correct_option === 'true');
+      const hasImage = !!(q?.answer_image && String(q.answer_image).trim());
+      return q && (answer.length > 0 || hasImage || q.correct_option === true || q.correct_option === 'true');
     });
 
-    if (validQuestions.length === 0) {
-      this.sp.hide();
-      Swal.fire('Validation Error!', 'Please add at least one valid answer option', 'error');
-      return;
-    }
-    
     // Only append files for questions that still exist
     if(validQuestions.length >= 1 && this.option1){
       fD.append('option1', this.option1!, this.option1?.name);
@@ -361,13 +346,5 @@ export class CreateQuestComponent implements OnInit {
 
   trackByIndex(index: number, item: any): any {
     return index;
-  }
-
-  private hasAtLeastOneValidAnswer(questions: any[]): boolean {
-    if (!Array.isArray(questions) || questions.length === 0) return false;
-    return questions.some((q: any) => {
-      const answer = (q?.answer || '').toString().trim();
-      return answer.length > 0 || q?.correct_option === true || q?.correct_option === 'true';
-    });
   }
 }

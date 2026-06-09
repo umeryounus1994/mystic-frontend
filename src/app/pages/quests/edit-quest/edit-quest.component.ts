@@ -160,7 +160,11 @@ export class EditQuestComponent implements OnInit {
   }
   _sendSaveRequest(formData: any) {
     this.sp.show();
-    let questions = formData.questions;
+    const validQuestions = (formData.questions || []).filter((q: any) => {
+      const answer = (q?.answer || '').toString().trim();
+      const hasImage = !!(q?.answer_image && String(q.answer_image).trim());
+      return q && (answer.length > 0 || hasImage || q.correct_option === true || q.correct_option === 'true');
+    });
     const fD = new FormData();
     fD.append('quest_question', formData?.quest_question);
     fD.append('quest_title', formData?.quest_title);
@@ -197,7 +201,7 @@ export class EditQuestComponent implements OnInit {
     if(this.quest_file){
       fD.append('quest_file', this.quest_file!, this.quest_file?.name);
     }
-    fD.append('questions', JSON.stringify(formData.questions));
+    fD.append('questions', JSON.stringify(validQuestions));
     this.api.postImageData('quest/updateQuest/'+this.Id, fD)
       .then((response: any) => {
           this.sp.hide();

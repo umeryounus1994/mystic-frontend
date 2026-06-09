@@ -12,6 +12,8 @@ import { FamilyRegistrationComponent } from './family-registration/family-regist
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
+import { TermsComponent } from './terms/terms.component';
+import { AuthLanguageSwitcherComponent } from './auth-language-switcher/auth-language-switcher.component';
 
 
 @NgModule({
@@ -21,7 +23,8 @@ import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
     ResetUserPasswordComponent,
     PartnerRegistrationComponent,
     FamilyRegistrationComponent,
-    ConfirmEmailComponent
+    ConfirmEmailComponent,
+    TermsComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +33,8 @@ import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
     ReactiveFormsModule,
     NgxSpinnerModule,
     TranslateModule,
-    RouterModule
+    RouterModule,
+    AuthLanguageSwitcherComponent
   ]
 })
 export class AuthModule { }
