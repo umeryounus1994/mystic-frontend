@@ -1,0 +1,10 @@
+<div class="auth-lang-switcher">
+  <button
+    type="button"
+    class="btn btn-sm btn-outline-secondary auth-lang-btn"
+    (click)="toggleLanguage()"
+    [attr.title]="'AUTH.SWITCH_LANGUAGE' | translate">
+    <i class="bi bi-translate me-1"></i>
+    <span>{{ languageDisplay }}</span>
+  </button>
+</div>

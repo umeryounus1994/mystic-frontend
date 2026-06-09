@@ -41,10 +41,10 @@ export class CreateActivityComponent implements OnInit {
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       category: ['', Validators.required],
       price: [1, [Validators.required, Validators.min(1)]],
-      latitude: ['', [Validators.required, this.validateLatitude.bind(this)]],
-      longitude: ['', [Validators.required, this.validateLongitude.bind(this)]],
+      latitude: ['', [this.validateLatitude.bind(this)]],
+      longitude: ['', [this.validateLongitude.bind(this)]],
       address: ['', [Validators.required, Validators.maxLength(200)]],
-      duration: ['', [Validators.required, Validators.min(10)]],
+      duration: ['', [this.validateDurationOptional.bind(this)]],
       max_participants: ['', [Validators.required, Validators.min(1)]],
       slots: this.fb.array([])
     });
@@ -54,7 +54,7 @@ export class CreateActivityComponent implements OnInit {
 
   validateLatitude(control: AbstractControl): ValidationErrors | null {
     if (!control.value || control.value === '') {
-      return { required: true };
+      return null;
     }
     const latStr = String(control.value).trim();
     // Check for zero variations
@@ -70,7 +70,7 @@ export class CreateActivityComponent implements OnInit {
 
   validateLongitude(control: AbstractControl): ValidationErrors | null {
     if (!control.value || control.value === '') {
-      return { required: true };
+      return null;
     }
     const lngStr = String(control.value).trim();
     // Check for zero variations
@@ -84,8 +84,24 @@ export class CreateActivityComponent implements OnInit {
     return null;
   }
 
+  validateDurationOptional(control: AbstractControl): ValidationErrors | null {
+    const value = String(control.value ?? '').trim();
+    if (value === '') {
+      return null;
+    }
+    const duration = parseInt(value, 10);
+    if (isNaN(duration) || duration < 10) {
+      return { min: true };
+    }
+    return null;
+  }
+
   onLatitudeInput(event: any) {
     const value = String(event.target.value).trim();
+    if (value === '') {
+      this.activityForm.get('latitude')?.setErrors(null);
+      return;
+    }
     if (value === '0' || value === '0000' || value === '00000' || /^0+$/.test(value)) {
       event.target.value = '';
       this.activityForm.patchValue({ latitude: '' });
@@ -96,6 +112,10 @@ export class CreateActivityComponent implements OnInit {
 
   onLongitudeInput(event: any) {
     const value = String(event.target.value).trim();
+    if (value === '') {
+      this.activityForm.get('longitude')?.setErrors(null);
+      return;
+    }
     if (value === '0' || value === '0000' || value === '00000' || /^0+$/.test(value)) {
       event.target.value = '';
       this.activityForm.patchValue({ longitude: '' });
@@ -328,13 +348,15 @@ export class CreateActivityComponent implements OnInit {
       return;
     }
     
-    // Validate duration - must be at least 10 minutes
-    const duration = parseInt(formValue.duration, 10);
-    if (isNaN(duration) || duration < 10) {
-      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.DURATION_MIN'), "error");
-      this.activityForm.get('duration')?.setErrors({ min: true });
-      this.activityForm.get('duration')?.markAsTouched();
-      return;
+    const durationStr = String(formValue.duration ?? '').trim();
+    if (durationStr !== '') {
+      const duration = parseInt(durationStr, 10);
+      if (isNaN(duration) || duration < 10) {
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.DURATION_MIN'), "error");
+        this.activityForm.get('duration')?.setErrors({ min: true });
+        this.activityForm.get('duration')?.markAsTouched();
+        return;
+      }
     }
     
     // Validate max_participants - must be at least 1
@@ -346,40 +368,39 @@ export class CreateActivityComponent implements OnInit {
       return;
     }
     
-    // Validate latitude and longitude for "0" and "0000" values BEFORE form validation
     const latStr = String(formValue.latitude || '').trim();
     const lngStr = String(formValue.longitude || '').trim();
-    
-    if (!latStr || latStr === '' || latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
-      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_VALID_NOT_ZERO'), "error");
-      this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
-      this.activityForm.get('latitude')?.markAsTouched();
-      return;
+
+    if (latStr) {
+      if (latStr === '0' || latStr === '0000' || latStr === '00000' || /^0+$/.test(latStr)) {
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_VALID_NOT_ZERO'), "error");
+        this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
+        this.activityForm.get('latitude')?.markAsTouched();
+        return;
+      }
+      const lat = parseFloat(latStr);
+      if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0 || Math.abs(lat) < 0.0001) {
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
+        this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
+        this.activityForm.get('latitude')?.markAsTouched();
+        return;
+      }
     }
-    
-    if (!lngStr || lngStr === '' || lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
-      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_VALID_NOT_ZERO'), "error");
-      this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
-      this.activityForm.get('longitude')?.markAsTouched();
-      return;
-    }
-    
-    // Validate latitude and longitude ranges
-    const lat = parseFloat(latStr);
-    const lng = parseFloat(lngStr);
-    
-    if (isNaN(lat) || lat < -90 || lat > 90 || lat === 0 || Math.abs(lat) < 0.0001) {
-      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LATITUDE_REQUIRED_VALID'), "error");
-      this.activityForm.get('latitude')?.setErrors({ invalidLatitude: true });
-      this.activityForm.get('latitude')?.markAsTouched();
-      return;
-    }
-    
-    if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0 || Math.abs(lng) < 0.0001) {
-      Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
-      this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
-      this.activityForm.get('longitude')?.markAsTouched();
-      return;
+
+    if (lngStr) {
+      if (lngStr === '0' || lngStr === '0000' || lngStr === '00000' || /^0+$/.test(lngStr)) {
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_VALID_NOT_ZERO'), "error");
+        this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
+        this.activityForm.get('longitude')?.markAsTouched();
+        return;
+      }
+      const lng = parseFloat(lngStr);
+      if (isNaN(lng) || lng < -180 || lng > 180 || lng === 0 || Math.abs(lng) < 0.0001) {
+        Swal.fire(this.translate.instant('VALIDATION.VALIDATION_ERROR'), this.translate.instant('VALIDATION.LONGITUDE_REQUIRED_VALID'), "error");
+        this.activityForm.get('longitude')?.setErrors({ invalidLongitude: true });
+        this.activityForm.get('longitude')?.markAsTouched();
+        return;
+      }
     }
     
     // Validate all time slots (build datetime from start_date, start_time, end_date, end_time)
@@ -496,10 +517,16 @@ export class CreateActivityComponent implements OnInit {
     fD.append('description', formData?.description);
     fD.append('category', formData?.category);
     fD.append('price', formData?.price);
-    fD.append('latitude', formData?.latitude);
-    fD.append('longitude', formData?.longitude);
+    if (formData?.latitude != null && String(formData.latitude).trim() !== '') {
+      fD.append('latitude', formData.latitude);
+    }
+    if (formData?.longitude != null && String(formData.longitude).trim() !== '') {
+      fD.append('longitude', formData.longitude);
+    }
     fD.append('address', formData?.address);
-    fD.append('duration', formData?.duration);
+    if (formData?.duration != null && String(formData.duration).trim() !== '') {
+      fD.append('duration', formData.duration);
+    }
     fD.append('max_participants', formData?.max_participants);
     const slotsPayload = (formData?.slots || []).map((s: any) => ({
       start_time: new Date(s.start_date + 'T' + s.start_time).toISOString(),

@@ -1,0 +1,43 @@
+<app-auth-language-switcher></app-auth-language-switcher>
+
+<div class="terms-page min-vh-100 bg-light py-4">
+  <div class="container" style="max-width: 820px;">
+    <div class="mb-4">
+      <button type="button" class="btn btn-light btn-sm" (click)="router.navigate(['/auth/login'])">
+        <i class="bi bi-arrow-left me-1"></i>{{ 'AUTH.BACK_TO_SIGN_IN' | translate }}
+      </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4 p-md-5">
+        <h1 class="h3 mb-2">{{ 'LEGAL.TERMS_TITLE' | translate }}</h1>
+        <p class="text-muted small mb-4">{{ 'LEGAL.TERMS_LAST_UPDATED' | translate }}</p>
+
+        <section class="mb-4">
+          <h2 class="h5">{{ 'LEGAL.TERMS_SECTION_1_TITLE' | translate }}</h2>
+          <p class="mb-0">{{ 'LEGAL.TERMS_SECTION_1_BODY' | translate }}</p>
+        </section>
+
+        <section class="mb-4">
+          <h2 class="h5">{{ 'LEGAL.TERMS_SECTION_2_TITLE' | translate }}</h2>
+          <p class="mb-0">{{ 'LEGAL.TERMS_SECTION_2_BODY' | translate }}</p>
+        </section>
+
+        <section class="mb-4">
+          <h2 class="h5">{{ 'LEGAL.TERMS_SECTION_3_TITLE' | translate }}</h2>
+          <p class="mb-0">{{ 'LEGAL.TERMS_SECTION_3_BODY' | translate }}</p>
+        </section>
+
+        <section class="mb-4">
+          <h2 class="h5">{{ 'LEGAL.TERMS_SECTION_4_TITLE' | translate }}</h2>
+          <p class="mb-0">{{ 'LEGAL.TERMS_SECTION_4_BODY' | translate }}</p>
+        </section>
+
+        <section class="mb-0">
+          <h2 class="h5">{{ 'LEGAL.TERMS_SECTION_5_TITLE' | translate }}</h2>
+          <p class="mb-0">{{ 'LEGAL.TERMS_SECTION_5_BODY' | translate }}</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

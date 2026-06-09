@@ -6,11 +6,16 @@ import { ResetUserPasswordComponent } from './reset-user-password/reset-user-pas
 import { PartnerRegistrationComponent } from './partner-registration/partner-registration.component';
 import { FamilyRegistrationComponent } from './family-registration/family-registration.component';
 import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
+import { TermsComponent } from './terms/terms.component';
 
 const routes: Routes = [
   {
     path: '',
     children: [
+      {
+        path: 'terms',
+        component: TermsComponent
+      },
       {
         path: 'confirm-email',
         component: ConfirmEmailComponent

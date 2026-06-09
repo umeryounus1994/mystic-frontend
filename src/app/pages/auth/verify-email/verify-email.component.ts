@@ -4,10 +4,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../services/auth/auth.service';
 
+import { AuthLanguageSwitcherComponent } from '../auth-language-switcher/auth-language-switcher.component';
+
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, AuthLanguageSwitcherComponent],
   templateUrl: './verify-email.component.html',
   styleUrl: './verify-email.component.scss'
 })
