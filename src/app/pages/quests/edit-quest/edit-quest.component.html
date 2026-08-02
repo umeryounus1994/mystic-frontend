@@ -43,10 +43,12 @@
                                 accept="image/*, video/*"
                                 (change)="onFileSelectedQuest($event)"
                                     placeholder="Answer">
+                                <small class="text-muted">{{ 'FORMS.VIDEO_MAX_SIZE_HINT' | translate }}</small>
                                     <span class="d-flex gap-2 mt-2" *ngIf="questimg">
                                         <button type="button" class="btn btn-sm btn-outline-primary" (click)="openExternalFile(questimg)">View File</button>
                                         <button type="button" class="btn btn-sm btn-outline-secondary" (click)="downloadExternalFile(questimg)">Download</button>
                                     </span>
+                                    <video *ngIf="questimg && isVideoFile(questimg)" [src]="questimg" controls playsinline class="img-fluid rounded border mt-2"></video>
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">No of XP</label>

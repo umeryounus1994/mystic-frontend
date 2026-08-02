@@ -8,6 +8,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+import { QuestUploadService } from '../../../services/quest/quest-upload.service';
 
 @Component({
   selector: 'app-create-quest',
@@ -36,7 +37,8 @@ export class CreateQuestComponent implements OnInit {
     private fb: FormBuilder, 
     public auth: AuthService, 
     private cdr: ChangeDetectorRef,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private questUpload: QuestUploadService
   ) {
       this.QrCode = Math.floor(new Date().valueOf() * Math.random()).toString()+(new Date().getTime()).toString(36);
   }
@@ -188,6 +190,11 @@ export class CreateQuestComponent implements OnInit {
     }
     
     if (this.questForm?.valid) {
+      const questType = this.questForm.value?.quest_type;
+      if (['image', 'video'].includes(questType) && !this.quest_file) {
+        Swal.fire("Validation Error!", this.translate.instant('MESSAGES.QUEST_FILE_REQUIRED'), "error");
+        return;
+      }
       this._sendSaveRequest(this.questForm.value);
     } else {
       // Show specific field errors
@@ -205,82 +212,119 @@ export class CreateQuestComponent implements OnInit {
       }
     }
   }
-  _sendSaveRequest(formData: any) {
+  async _sendSaveRequest(formData: any) {
     this.sp.show();
-    const fD = new FormData();
-    fD.append('quest_question', formData?.quest_question);
-    fD.append('quest_title', formData?.quest_title);
-    if(formData?.quest_password) {
-      fD.append('quest_password', formData?.quest_password);
-    }
-    if(formData?.activity_id) {
-      fD.append('activity_id', formData?.activity_id);
-    }
-    fD.append('quest_context', formData?.quest_context);
-    fD.append('no_of_xp', formData?.no_of_xp);
-    fD.append('no_of_crypes', formData?.no_of_crypes);
-    fD.append('level_increase', formData?.level_increase);
-    fD.append('mythica_ID', formData?.mythica_ID);
-    fD.append('qr_code', formData?.qr_code);
-    fD.append('quest_type', formData?.quest_type);
-    
-    if(this.reward){
-      fD.append('reward', this.reward!, this.reward?.name);
-    }
-    
-    // Filter out empty or invalid questions before sending
-    const validQuestions = (formData.questions || []).filter((q: any) => {
-      const answer = (q?.answer || '').toString().trim();
-      const hasImage = !!(q?.answer_image && String(q.answer_image).trim());
-      return q && (answer.length > 0 || hasImage || q.correct_option === true || q.correct_option === 'true');
-    });
 
-    // Only append files for questions that still exist
-    if(validQuestions.length >= 1 && this.option1){
-      fD.append('option1', this.option1!, this.option1?.name);
-    }
-    if(validQuestions.length >= 2 && this.option2){
-      fD.append('option2', this.option2!, this.option2?.name);
-    }
-    if(validQuestions.length >= 3 && this.option3){
-      fD.append('option3', this.option3!, this.option3?.name);
-    }
-    if(validQuestions.length >= 4 && this.option4){
-      fD.append('option4', this.option4!, this.option4?.name);
-    }
-    if(validQuestions.length >= 5 && this.option5){
-      fD.append('option5', this.option5!, this.option5?.name);
-    }
-    
-    if(this.quest_file){
-      fD.append('quest_file', this.quest_file!, this.quest_file?.name);
-    }
-    
-    // Only send valid questions
-    fD.append('questions', JSON.stringify(validQuestions));
-    
-    this.api.postImageData('quest/createQuest', fD)
-      .then((response: any) => {
-          this.sp.hide();
-          setTimeout(() => {
-            this.helper.successToast("Quest Created Successfully");
-          }, 1000);
-          setTimeout(() => {
-            this.router.navigate(['quest/list-quest']);
-          }, 2000);
-      })
-      .catch((error) => {
-        this.sp.hide();
-        Swal.fire("Quest!", "There is an error, please try again", "error");
+    try {
+      const questTitle = formData?.quest_title || '';
+      const validQuestions = (formData.questions || []).filter((q: any) => {
+        const answer = (q?.answer || '').toString().trim();
+        const hasImage = !!(q?.answer_image && String(q.answer_image).trim());
+        return q && (answer.length > 0 || hasImage || q.correct_option === true || q.correct_option === 'true');
       });
+
+      const optionFiles = [this.option1, this.option2, this.option3, this.option4, this.option5];
+      for (let i = 0; i < validQuestions.length; i += 1) {
+        const file = optionFiles[i];
+        if (file) {
+          validQuestions[i].answer_image = await this.questUpload.uploadFile(
+            file,
+            `option${i + 1}` as any,
+            questTitle
+          );
+        }
+      }
+
+      const fD = new FormData();
+      fD.append('quest_question', formData?.quest_question);
+      fD.append('quest_title', formData?.quest_title);
+      if (formData?.quest_password) {
+        fD.append('quest_password', formData?.quest_password);
+      }
+      if (formData?.activity_id) {
+        fD.append('activity_id', formData?.activity_id);
+      }
+      fD.append('quest_context', formData?.quest_context);
+      fD.append('no_of_xp', formData?.no_of_xp);
+      fD.append('no_of_crypes', formData?.no_of_crypes);
+      fD.append('level_increase', formData?.level_increase);
+      fD.append('mythica_ID', formData?.mythica_ID);
+      fD.append('qr_code', formData?.qr_code);
+      fD.append('quest_type', formData?.quest_type);
+
+      if (this.reward) {
+        const rewardUrl = await this.questUpload.uploadFile(this.reward, 'reward', questTitle);
+        fD.append('reward_file_url', rewardUrl);
+      }
+
+      if (this.quest_file) {
+        const questImageUrl = await this.questUpload.uploadFile(this.quest_file, 'quest_file', questTitle);
+        fD.append('quest_image_url', questImageUrl);
+      }
+
+      fD.append('questions', JSON.stringify(validQuestions));
+
+      await this.api.postImageData('quest/createQuest', fD);
+
+      this.sp.hide();
+      setTimeout(() => {
+        this.helper.successToast("Quest Created Successfully");
+      }, 1000);
+      setTimeout(() => {
+        this.router.navigate(['quest/list-quest']);
+      }, 2000);
+    } catch (error: any) {
+      this.sp.hide();
+      const errorMessage =
+        error?.error?.message ||
+        error?.error?.error ||
+        error?.message ||
+        this.translate.instant('MESSAGES.UPLOAD_TO_STORAGE_FAILED');
+      Swal.fire("Quest!", errorMessage, "error");
+    }
+  }
+
+  private validateQuestUploadFile(file: File, questType: string): boolean {
+    const isVideo = questType === 'video' || file.type.startsWith('video/');
+    const maxSize = isVideo ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      Swal.fire(
+        "Validation Error!",
+        isVideo
+          ? this.translate.instant('MESSAGES.VIDEO_FILE_TOO_LARGE')
+          : this.translate.instant('MESSAGES.QUEST_FILE_TOO_LARGE'),
+        "error"
+      );
+      return false;
+    }
+
+    return true;
   }
   onFileSelected(event: any, type: string) {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+    if (!this.validateQuestUploadFile(file, 'pdf')) {
+      event.target.value = '';
+      return;
+    }
     if(type == 'reward'){
-      this.reward = event.target.files[0];
+      this.reward = file;
     }
   }
   onFileSelectedQuest(event: any) {
-      this.quest_file = event.target.files[0];
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+    const questType = this.questForm?.value?.quest_type;
+    if (!this.validateQuestUploadFile(file, questType)) {
+      event.target.value = '';
+      return;
+    }
+    this.quest_file = file;
   }
   onFileSelectedOptions(event: any, type: string) {
     // Extract the index from type (e.g., 'option1' -> 1)
@@ -288,20 +332,28 @@ export class CreateQuestComponent implements OnInit {
     
     // Check if this question still exists in the form
     if (optionIndex <= this.questions().length) {
+      const file = event.target.files[0];
+      if (!file) {
+        return;
+      }
+      if (!this.validateQuestUploadFile(file, 'image')) {
+        event.target.value = '';
+        return;
+      }
       if(type == 'option1'){
-        this.option1 = event.target.files[0];
+        this.option1 = file;
       }
       if(type == 'option2'){
-        this.option2 = event.target.files[0];
+        this.option2 = file;
       }
       if(type == 'option3'){
-        this.option3 = event.target.files[0];
+        this.option3 = file;
       }
       if(type == 'option4'){
-        this.option4 = event.target.files[0];
+        this.option4 = file;
       } 
       if(type == 'option5'){
-        this.option5 = event.target.files[0];
+        this.option5 = file;
       }
     } else {
       // Question was deleted, clear the file

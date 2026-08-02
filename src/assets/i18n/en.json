@@ -142,6 +142,7 @@
     "QUEST_PASSWORD": "Quest Password",
     "QUEST_PASSWORD_OPTIONAL": "Quest Password (Optional)",
     "QUEST_FILE": "Quest File",
+    "VIDEO_MAX_SIZE_HINT": "Maximum video size: 100 MB. Images and PDFs: 10 MB.",
     "LINK_TO_ACTIVITY": "Link to Activity (Optional)",
     "REWARD_PDF": "Reward PDF",
     "NO_OF_XP": "No of XP",
@@ -358,6 +359,10 @@
     "NETWORK_ERROR": "Network error. Please check your connection",
     "VALIDATION_ERROR": "Please fix the validation errors",
     "FILE_TOO_LARGE": "File size is too large",
+    "VIDEO_FILE_TOO_LARGE": "Video file is too large. Maximum size is 100 MB.",
+    "QUEST_FILE_TOO_LARGE": "Quest file is too large. Images/PDFs max 10 MB, videos max 100 MB.",
+    "QUEST_FILE_REQUIRED": "Please upload a quest file for image or video quests.",
+    "UPLOAD_TO_STORAGE_FAILED": "Failed to upload file to storage. Please try again.",
     "INVALID_FILE_TYPE": "Invalid file type",
     "SKY_GIFT_UPDATED_SUCCESS": "Sky Gift Updated Successfully",
     "FAILED_TO_LOAD": "Failed to load sky gift details"

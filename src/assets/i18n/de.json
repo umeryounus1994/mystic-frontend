@@ -128,6 +128,7 @@
     "QUEST_PASSWORD": "Quest-Passwort",
     "QUEST_PASSWORD_OPTIONAL": "Quest-Passwort (Optional)",
     "QUEST_FILE": "Quest-Datei",
+    "VIDEO_MAX_SIZE_HINT": "Maximale Videogröße: 100 MB. Bilder und PDFs: 10 MB.",
     "LINK_TO_ACTIVITY": "Link zur Aktivität (Optional)",
     "REWARD_PDF": "Belohnungs-PDF",
     "NO_OF_XP": "Anzahl XP",
@@ -328,6 +329,10 @@
     "NETWORK_ERROR": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung",
     "VALIDATION_ERROR": "Bitte beheben Sie die Validierungsfehler",
     "FILE_TOO_LARGE": "Dateigröße ist zu groß",
+    "VIDEO_FILE_TOO_LARGE": "Videodatei ist zu groß. Maximale Größe: 100 MB.",
+    "QUEST_FILE_TOO_LARGE": "Quest-Datei ist zu groß. Bilder/PDFs max. 10 MB, Videos max. 100 MB.",
+    "QUEST_FILE_REQUIRED": "Bitte laden Sie eine Quest-Datei für Bild- oder Video-Quests hoch.",
+    "UPLOAD_TO_STORAGE_FAILED": "Datei konnte nicht gespeichert werden. Bitte erneut versuchen.",
     "INVALID_FILE_TYPE": "Ungültiger Dateityp",
     "SKY_GIFT_UPDATED_SUCCESS": "Himmelsgeschenk erfolgreich aktualisiert",
     "FAILED_TO_LOAD": "Himmelsgeschenk-Details konnten nicht geladen werden"

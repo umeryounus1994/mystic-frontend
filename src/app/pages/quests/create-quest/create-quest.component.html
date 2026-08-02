@@ -49,6 +49,7 @@
                                 <label class="form-label">{{ 'FORMS.QUEST_FILE' | translate }}</label>
                                 <input type="file" class="form-control" accept="image/*, video/*"
                                     (change)="onFileSelectedQuest($event)" placeholder="Answer">
+                                <small class="text-muted">{{ 'FORMS.VIDEO_MAX_SIZE_HINT' | translate }}</small>
                             </div>
                             <div class="col-lg-3" *ngIf="auth.isAdmin">
                                 <label class="form-label">{{ 'FORMS.NO_OF_XP' | translate }} <span class="text-danger">*</span></label>
