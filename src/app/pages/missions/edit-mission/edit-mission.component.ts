@@ -18,9 +18,7 @@ export class EditMissionComponent implements OnInit {
   questForm: FormGroup | any;
   submitted = false;
   allCreatures: any = [];
-  option1: File | undefined = undefined;
-  option2: File | undefined = undefined;
-  option3: File | undefined = undefined;
+  optionFiles: (File | undefined)[] = [];
   reward: File | undefined = undefined;
   Id="";
   rewardFile ='';
@@ -186,9 +184,7 @@ export class EditMissionComponent implements OnInit {
             this.questions.push(questionGroup);
           });
         } else {
-          this.addQuestion(1);
-          this.addQuestion(2);
-          this.addQuestion(3);
+          this.addQuestion();
         }
 
       }).catch((error) => {
@@ -240,12 +236,19 @@ export class EditMissionComponent implements OnInit {
     });
   }
 
-  addQuestion(sort: any) {
-    this.questions.push(this.newQuestion(sort));
+  addQuestion() {
+    this.questions.push(this.newQuestion(this.questions.length + 1));
   }
 
   removeQuestion(i: number) {
+    if (this.questions.length <= 1) {
+      return;
+    }
     this.questions.removeAt(i);
+    this.optionFiles.splice(i, 1);
+    this.questions.controls.forEach((ctrl, idx) => {
+      ctrl.get('sort')?.setValue(idx + 1);
+    });
   }
 
   clearQuestionValidators() {
@@ -371,15 +374,17 @@ export class EditMissionComponent implements OnInit {
     }
     
     // Validate quiz questions
+    if (!formValue.questions?.length) {
+      Swal.fire("Validation Error!", "Please add at least one question", "error");
+      return;
+    }
     const result = this.findEmptyFields(this.questForm?.value?.questions);
-    if(result.length > 0){
-      if(result[0]?.emptyFields.length > 0 || result[1]?.emptyFields.length > 0 || result[2]?.emptyFields.length > 0) {
-        this.clearQuestionValidators();
-        let message = result.map((question:any) => 
-          `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
-        Swal.fire("Validation Error!", message, "error");
-        return;
-      }
+    if (result.some((question: any) => question.emptyFields.length > 0)) {
+      this.clearQuestionValidators();
+      const message = result.map((question: any) =>
+        `Question ${question.questionNumber} is missing: ${question.emptyFields.join(', ')}.`).join('\n');
+      Swal.fire("Validation Error!", message, "error");
+      return;
     }
     
     // Validate quiz latitudes and longitudes
@@ -430,15 +435,11 @@ export class EditMissionComponent implements OnInit {
     fD.append('mission_end_date', formData?.mission_end_date);
     fD.append('rewardFile', this.rewardFile);
     fD.append('questions', JSON.stringify(formData?.questions));
-    if(this.option1){
-      fD.append('option1', this.option1!, this.option1?.name);
-    }
-    if(this.option2){
-      fD.append('option2', this.option2!, this.option2?.name);
-    }
-    if(this.option3){
-      fD.append('option3', this.option3!, this.option3?.name);
-    }
+    this.optionFiles.forEach((file, index) => {
+      if (file) {
+        fD.append(`option${index + 1}`, file, file.name);
+      }
+    });
     if(this.reward){
       fD.append('reward', this.reward!, this.reward?.name);
     }
@@ -460,18 +461,14 @@ export class EditMissionComponent implements OnInit {
       });
   }
 
-  onFileSelected(event: any, type: string) {
-    if(type == 'option1'){
-      this.option1 = event.target.files[0];
-    }
-    if(type == 'option2'){
-      this.option2 = event.target.files[0];
-    }
-    if(type == 'option3'){
-      this.option3 = event.target.files[0];
-    }
-    if(type == 'reward'){
+  onFileSelected(event: any, type: string | number) {
+    if (type === 'reward') {
       this.reward = event.target.files[0];
+      return;
+    }
+    const index = typeof type === 'number' ? type : parseInt(String(type).replace('option', ''), 10) - 1;
+    if (!Number.isNaN(index) && index >= 0) {
+      this.optionFiles[index] = event.target.files[0];
     }
   }
 
