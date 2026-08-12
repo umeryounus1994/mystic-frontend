@@ -172,8 +172,9 @@
                             <div formArrayName="questions">
                                 <div class="card mb-4" *ngFor="let questionGroup of questForm.get('questions').controls; let i=index"
                                     [formGroupName]="i">
-                                    <div class="card-header">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
                                         <h5 class="mb-0">Quiz {{i+1}}</h5>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" *ngIf="questions.length > 1" (click)="removeQuestion(i)">Remove</button>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -227,7 +228,7 @@
                                                 <label class="form-label">Attach File</label>
                                                 <input type="file" class="form-control" placeholder=""
                                                 accept="image/*, video/mp4"
-                                                    (change)="onFileSelected($event, 'option'+(i+1))">
+                                                    (change)="onFileSelected($event, i)">
                                             </div>
                                             
                                             <div class="col-12">
@@ -256,6 +257,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <button type="button" class="btn btn-outline-primary" (click)="addQuestion()">Add Question</button>
                             </div>
                             <div>
                                 <qrcode (qrCodeURL)="onChangeURL($event)" [qrdata]="QrCode" [width]="256"
