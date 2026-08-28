@@ -218,7 +218,7 @@ export class EditSkygiftsComponent implements OnInit {
     fD.append('longitude', formData?.longitude);
 
     if(this.reward){
-      fD.append('reward_file', this.reward!, this.reward?.name);
+      fD.append('reward', this.reward!, this.reward?.name);
     }
 
     this.sp.show();
