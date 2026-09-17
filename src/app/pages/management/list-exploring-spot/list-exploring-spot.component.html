@@ -1,0 +1,55 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
+</ngx-spinner>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'EXPLORING_SPOTS.TITLE' | translate }}</h1>
+        <div class="d-flex gap-2">
+            <input class="form-control" style="max-width: 220px" [(ngModel)]="cityFilter"
+                [placeholder]="'EXPLORING_SPOTS.CITY' | translate">
+            <button class="btn btn-outline-primary" type="button" (click)="getAll()">{{ 'COMMON.FILTER' | translate }}</button>
+            <button class="btn btn-outline-secondary" type="button" (click)="clearCityFilter()" *ngIf="cityFilter">{{ 'COMMON.RESET' | translate }}</button>
+            <a class="btn btn-primary" [routerLink]="['/management/add-exploring-spot']">{{ 'EXPLORING_SPOTS.ADD' | translate }}</a>
+        </div>
+    </div>
+</div>
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="allSpots.length > 0">
+            <ng-container *ngFor="let _ of [tableKey]">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover" id="dtable">
+                <thead>
+                    <tr>
+                        <th class="border-0">{{ 'EXPLORING_SPOTS.SPOT_NAME' | translate }}</th>
+                        <th class="border-0">{{ 'EXPLORING_SPOTS.CITY' | translate }}</th>
+                        <th class="border-0">{{ 'EXPLORING_SPOTS.POINTS' | translate }}</th>
+                        <th class="border-0">{{ 'EXPLORING_SPOTS.RADIUS_METERS' | translate }}</th>
+                        <th class="border-0">{{ 'FORMS.LATITUDE' | translate }}</th>
+                        <th class="border-0">{{ 'FORMS.LONGITUDE' | translate }}</th>
+                        <th class="border-0">{{ 'COMMON.ACTIONS' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let q of allSpots">
+                        <td>{{ q.spot_name }}</td>
+                        <td>{{ q.city }}</td>
+                        <td>{{ q.no_of_points }}</td>
+                        <td>{{ q.radius_meters }}</td>
+                        <td>{{ q.latitude }}</td>
+                        <td>{{ q.longitude }}</td>
+                        <td>
+                            <button class="btn btn-info-soft btn-round me-1" (click)="edit(q.id)">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-danger-soft btn-round" (click)="deletee(q.id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </ng-container>
+        </div>
+        <p class="text-muted" *ngIf="allSpots.length === 0">{{ 'EXPLORING_SPOTS.NONE' | translate }}</p>
+    </div>
+</div>

@@ -10,6 +10,9 @@ import { ListDropComponent } from './list-drop/list-drop.component';
 import { RewardsComponent } from './rewards/rewards.component';
 import { ListPayoutsComponent } from './payouts/list-payouts/list-payouts.component';
 import { CommissionRateComponent } from './commission-rate/commission-rate.component';
+import { ListExploringSpotComponent } from './list-exploring-spot/list-exploring-spot.component';
+import { AddExploringSpotComponent } from './add-exploring-spot/add-exploring-spot.component';
+import { EditExploringSpotComponent } from './edit-exploring-spot/edit-exploring-spot.component';
 
 const routes: Routes = [{
   path: '',
@@ -60,6 +63,24 @@ const routes: Routes = [{
       component: CommissionRateComponent,
       canActivate: [AuthGuard, PermissionGuard],
       data: { permission: 'Commission Rate' }
+    },
+    {
+      path: 'list-exploring-spots',
+      component: ListExploringSpotComponent,
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Exploring Spots' }
+    },
+    {
+      path: 'add-exploring-spot',
+      component: AddExploringSpotComponent,
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Exploring Spots' }
+    },
+    {
+      path: 'edit-exploring-spot',
+      component: EditExploringSpotComponent,
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Exploring Spots' }
     }
   ]
 }];

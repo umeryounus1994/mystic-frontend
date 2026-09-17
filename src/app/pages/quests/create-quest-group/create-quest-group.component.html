@@ -53,6 +53,7 @@
                             </div>
                 
                             <div>
+                                <p class="text-muted small mb-2">{{ 'QUEST_GROUP.PAYMENT_QR_HINT' | translate }}</p>
                                 <qrcode (qrCodeURL)="onChangeURL($event)" [qrdata]="QrCode" [width]="256"
                                     [errorCorrectionLevel]="'M'"></qrcode>
                                 <a [href]="qrCodeDownloadLink" download="qrcode">{{ 'FORMS.DOWNLOAD' | translate }}</a>

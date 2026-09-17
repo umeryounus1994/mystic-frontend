@@ -59,10 +59,12 @@ export class ListUserComponent implements OnInit {
   // Permissions: label = translation key, value = string sent to backend (must match sidebar permission checks)
   permissionList = [
     { id: 'perm1', label: 'SIDEBAR.DIGITAL_QUESTS', value: 'Quest' },
+    { id: 'perm1b', label: 'SIDEBAR.QUEST_QR', value: 'Quest QR' },
     { id: 'perm2', label: 'SIDEBAR.MISSIONS', value: 'Missions' },
     { id: 'perm3', label: 'SIDEBAR.TREASURE_HUNTS', value: 'Hunts' },
     { id: 'perm4', label: 'SIDEBAR.PICTURE_MYSTERIES', value: 'Picture Mysteries' },
     { id: 'perm5', label: 'SIDEBAR.DROPS', value: 'Drops' },
+    { id: 'perm5b', label: 'SIDEBAR.EXPLORING_SPOTS', value: 'Exploring Spots' },
     { id: 'perm6', label: 'SIDEBAR.SKY_DROPPED_GIFTS', value: 'Sky Gifts' },
     { id: 'perm7', label: 'SIDEBAR.BOOKINGS', value: 'Bookings' },
     { id: 'perm8', label: 'SIDEBAR.USERS', value: 'Users' },

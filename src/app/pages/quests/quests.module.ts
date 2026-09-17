@@ -11,11 +11,12 @@ import { ListQuestComponent } from './list-quest/list-quest.component';
 import { EditQuestComponent } from './edit-quest/edit-quest.component';
 import { CreateQuestGroupComponent } from './create-quest-group/create-quest-group.component';
 import { ListQuestGroupComponent } from './list-quest-group/list-quest-group.component';
+import { EditQuestGroupComponent } from './edit-quest-group/edit-quest-group.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
-  declarations: [CreateQuestComponent, ListQuestComponent, EditQuestComponent, CreateQuestGroupComponent, ListQuestGroupComponent],
+  declarations: [CreateQuestComponent, ListQuestComponent, EditQuestComponent, CreateQuestGroupComponent, ListQuestGroupComponent, EditQuestGroupComponent],
   imports: [
     CommonModule,
     QuestsRoutingModule,

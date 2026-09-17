@@ -1,0 +1,61 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">{{ 'QUEST_GROUP.UPDATING_QUEST_GROUP' | translate }}</p>
+</ngx-spinner>
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-light btn-sm me-3" (click)="router.navigate(['quest/list-quest-group'])">
+                <i class="bi bi-arrow-left me-2"></i>{{ 'COMMON.BACK' | translate }}
+            </button>
+            <h1 class="h3 mb-0 d-inline">{{ 'QUEST_GROUP.EDIT_QUEST_GROUP' | translate }}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-12">
+        <div class="card shadow">
+            <div class="card-body">
+                <form class="row g-4 align-items-center" [formGroup]="questForm" *ngIf="questForm"
+                    (ngSubmit)="onSubmit()">
+                    <div class="col-lg-5">
+                        <label class="form-label">{{ 'QUEST_GROUP.QUEST_GROUP_NAME' | translate }}</label>
+                        <input type="text" class="form-control"
+                            formControlName="quest_group_name"
+                            [ngClass]="{ 'is-invalid': submitted && f['quest_group_name'].errors }">
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="form-label">{{ 'FORMS.NO_OF_CRYPES' | translate }}</label>
+                        <input type="text" class="form-control" formControlName="no_of_crypes"
+                            [ngClass]="{ 'is-invalid': submitted && f['no_of_crypes'].errors }">
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="form-label">{{ 'QUEST_GROUP.PACKAGE' | translate }}</label>
+                        <select class="form-select" formControlName="group_package"
+                            [ngClass]="{ 'is-invalid': submitted && f['group_package']?.errors }">
+                            <option value="" disabled>{{ 'QUEST_GROUP.SELECT_PACKAGE' | translate }}</option>
+                            <option value='Bronze'>{{ 'QUEST_GROUP.BRONZE' | translate }}</option>
+                            <option value='Gold'>{{ 'QUEST_GROUP.GOLD' | translate }}</option>
+                            <option value='Silver'>{{ 'QUEST_GROUP.SILVER' | translate }}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="form-label">{{ 'FORMS.REWARD_PDF' | translate }}</label>
+                        <input type="file" class="form-control" accept="application/pdf"
+                            (change)="onFileSelected($event, 'reward')">
+                        <small class="text-muted" *ngIf="existingRewardFile">{{ existingRewardFile }}</small>
+                    </div>
+                    <div>
+                        <p class="text-muted small mb-2">{{ 'QUEST_GROUP.PAYMENT_QR_HINT' | translate }}</p>
+                        <qrcode *ngIf="QrCode" (qrCodeURL)="onChangeURL($event)" [qrdata]="QrCode" [width]="256"
+                            [errorCorrectionLevel]="'M'"></qrcode>
+                        <a *ngIf="qrCodeDownloadLink" [href]="qrCodeDownloadLink" download="quest-group-qrcode">{{ 'FORMS.DOWNLOAD' | translate }}</a>
+                    </div>
+                    <div class="d-sm-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary mb-0">{{ 'COMMON.UPDATE' | translate }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

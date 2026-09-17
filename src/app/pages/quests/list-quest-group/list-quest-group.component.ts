@@ -35,6 +35,8 @@ export class ListQuestGroupComponent implements OnInit {
   groupQuests: any[] = [];
   groupQuestsMessage = '';
   selectedGroupName = '';
+  selectedGroup: any = null;
+  groupPurchases: any[] = [];
 
   constructor(private sp: NgxSpinnerService, private api: RestApiService, private helper: HelperService,
     private router: Router, public auth: AuthService, private translate: TranslateService) {
@@ -72,6 +74,57 @@ export class ListQuestGroupComponent implements OnInit {
     return id != null ? String(id) : undefined;
   }
 
+  editGroup(group: any) {
+    const gid = this.getQuestGroupId(group);
+    if (!gid) {
+      return;
+    }
+    this.router.navigate(['/quest/edit-quest-group'], { queryParams: { groupId: gid } });
+  }
+
+  deleteGroup(group: any) {
+    const gid = this.getQuestGroupId(group);
+    if (!gid) {
+      return;
+    }
+    Swal.fire({
+      title: this.translate.instant('COMMON.DELETE'),
+      text: this.translate.instant('QUEST_GROUP.DELETE_CONFIRM'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.sp.show();
+        this.api.delete('quest/deleteQuestGroup/' + gid)
+          .then(() => {
+            this.sp.hide();
+            Swal.fire(this.translate.instant('QUEST_GROUP.QUEST_GROUP'), this.translate.instant('QUEST_GROUP.DELETED'), 'success');
+            this.getAllUsers();
+          }, (err) => {
+            this.sp.hide();
+            this.helper.failureToast(err?.error?.message || this.translate.instant('MESSAGES.ERROR_TRY_AGAIN'));
+          });
+      }
+    });
+  }
+
+  loadGroupPurchases(gid: string) {
+    this.api
+      .get(`quest/group_purchases/${gid}`)
+      .then((res: any) => {
+        this.groupPurchases = Array.isArray(res?.data) ? res.data : [];
+      })
+      .catch(() => {
+        this.groupPurchases = [];
+      });
+  }
+
+  paymentQr(group: any): string {
+    return group?.qr_code || group?.payment_qr_code || '';
+  }
+
   viewQuestsInGroup(group: any) {
     const gid = this.getQuestGroupId(group);
     if (!gid) {
@@ -83,6 +136,8 @@ export class ListQuestGroupComponent implements OnInit {
       return;
     }
     this.selectedGroupName = group.quest_group_name ?? '';
+    this.selectedGroup = group;
+    this.groupPurchases = [];
     this.groupQuests = [];
     this.groupQuestsMessage = '';
     this.sp.show();
@@ -94,6 +149,7 @@ export class ListQuestGroupComponent implements OnInit {
         const data = res?.data;
         const raw = Array.isArray(data) ? data : [];
         this.groupQuests = this.sortQuestsChronological(raw);
+        this.loadGroupPurchases(gid);
         setTimeout(() => {
           $('#viewQuestsInGroup').modal('show');
         }, 0);

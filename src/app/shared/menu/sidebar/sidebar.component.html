@@ -47,7 +47,7 @@
         </li>
 
         <!-- Quests -->
-        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Quest')">
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Quest') || auth.user?.permissions?.includes('Quest QR')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapsequest')">
             <i class="bi bi-puzzle fa-fw me-2"></i>{{ 'SIDEBAR.DIGITAL_QUESTS' | translate }}
             <i class="bi bi-chevron-down ms-auto"></i>
@@ -59,10 +59,10 @@
             <li class="nav-item">
               <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest'" [routerLink]="['/quest/create-quest']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_QUEST' | translate }}</a>
             </li>
-            <li class="nav-item" *ngIf="auth.isAdmin">
+            <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Quest') || auth.user?.permissions?.includes('Quest QR')">
               <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/list-quest-group'" [routerLink]="['/quest/list-quest-group']" (click)="closeSidebar()">{{ 'SIDEBAR.LIST_QUEST_GROUPS' | translate }}</a>
             </li>
-            <li class="nav-item" *ngIf="auth.isAdmin">
+            <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Quest') || auth.user?.permissions?.includes('Quest QR')">
               <a class="nav-link text-white-50" [class.active]="routeURL === '/quest/create-quest-group'" [routerLink]="['/quest/create-quest-group']" (click)="closeSidebar()">{{ 'SIDEBAR.CREATE_QUEST_GROUPS' | translate }}</a>
             </li>
           </ul>
@@ -212,6 +212,22 @@
           <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapsemanagement']">
             <li class="nav-item">
               <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-user'" [routerLink]="['/management/list-user']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_USERS' | translate }}</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Exploring Spots -->
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Exploring Spots')">
+          <a class="nav-link text-white" (click)="toggleCollapse('collapseexploringspots')">
+            <i class="bi bi-geo-alt fa-fw me-2"></i>{{ 'SIDEBAR.EXPLORING_SPOTS' | translate }}
+            <i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul class="nav flex-column ms-3" [class.show]="collapseStates['collapseexploringspots']">
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/list-exploring-spots'" [routerLink]="['/management/list-exploring-spots']" (click)="closeSidebar()">{{ 'SIDEBAR.ALL_EXPLORING_SPOTS' | translate }}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50" [class.active]="routeURL === '/management/add-exploring-spot'" [routerLink]="['/management/add-exploring-spot']" (click)="closeSidebar()">{{ 'SIDEBAR.ADD_EXPLORING_SPOT' | translate }}</a>
             </li>
           </ul>
         </li>

@@ -29,13 +29,14 @@ export class PermissionGuard implements CanActivate {
     }
 
     const permission = route.data?.['permission'] as string | undefined;
+    const allowed = (route.data?.['permissions'] as string[] | undefined) || [];
     // No permission required for this route
-    if (!permission) {
+    if (!permission && allowed.length === 0) {
       return true;
     }
 
     const perms = this.auth.user?.permissions || [];
-    if (perms.includes('All') || perms.includes(permission)) {
+    if (perms.includes('All') || (permission && perms.includes(permission)) || allowed.some((p) => perms.includes(p))) {
       return true;
     }
 

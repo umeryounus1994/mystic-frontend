@@ -7,6 +7,7 @@ import { CreateQuestComponent } from './create-quest/create-quest.component';
 import { EditQuestComponent } from './edit-quest/edit-quest.component';
 import { ListQuestGroupComponent } from './list-quest-group/list-quest-group.component';
 import { CreateQuestGroupComponent } from './create-quest-group/create-quest-group.component';
+import { EditQuestGroupComponent } from './edit-quest-group/edit-quest-group.component';
 
 const routes: Routes = [{
   path: '',
@@ -15,31 +16,37 @@ const routes: Routes = [{
       path: 'list-quest',
       component: ListQuestComponent,
       canActivate: [AuthGuard, PermissionGuard],
-      data: { permission: 'Quest' }
+      data: { permission: 'Quest', permissions: ['Quest', 'Quest QR'] }
     },
     {
       path: 'create-quest',
       component: CreateQuestComponent,
       canActivate: [AuthGuard, PermissionGuard],
-      data: { permission: 'Quest' }
+      data: { permission: 'Quest', permissions: ['Quest', 'Quest QR'] }
     },
     {
       path: 'edit-quest',
       component: EditQuestComponent,
       canActivate: [AuthGuard, PermissionGuard],
-      data: { permission: 'Quest' }
+      data: { permission: 'Quest', permissions: ['Quest', 'Quest QR'] }
     },
     {
       path: 'list-quest-group',
       component: ListQuestGroupComponent,
       canActivate: [AuthGuard, PermissionGuard],
-      data: { permission: 'Quest' }
+      data: { permission: 'Quest', permissions: ['Quest', 'Quest QR'] }
     },
     {
       path: 'create-quest-group',
       component: CreateQuestGroupComponent,
       canActivate: [AuthGuard, PermissionGuard],
-      data: { permission: 'Quest' }
+      data: { permission: 'Quest', permissions: ['Quest', 'Quest QR'] }
+    },
+    {
+      path: 'edit-quest-group',
+      component: EditQuestGroupComponent,
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Quest', permissions: ['Quest', 'Quest QR'] }
     },
   ]
 }];
