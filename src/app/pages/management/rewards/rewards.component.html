@@ -3,7 +3,7 @@
 </ngx-spinner>
 <div class="row mb-3">
     <div class="col-12 d-sm-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.REWARDS' | translate }}</h1>
+        <h1 class="h3 mb-2 mb-sm-0">{{ pageTitleKey | translate }}</h1>
         <button class="btn btn-primary" (click)="showRewardDialog()">{{ 'REWARDS.ADD_REWARD' | translate }}</button>
     </div>
 </div>
@@ -14,7 +14,7 @@
                 id="dtable">
                 <thead>
                     <tr>
-                        <th scope="col" class="border-0">{{ 'REWARDS.REWARD_LIMIT' | translate }}</th>
+                        <th scope="col" class="border-0">{{ limitLabelKey | translate }}</th>
                         <th scope="col" class="border-0">{{ 'REWARDS.REWARD_FILE' | translate }}</th>
                         <th scope="col" class="border-0">{{ 'FORMS.NO_OF_CRYPES' | translate }}</th>
                         <th scope="col" class="border-0">{{ 'COMMON.ACTIONS' | translate }}</th>
@@ -23,7 +23,7 @@
                 <tbody>
                     <tr *ngFor="let q of allUsers; let i = index">
 
-                        <td>{{q.reward_name}}</td>
+                        <td>{{ isExploring ? (q.points_required || q.reward_name) : q.reward_name }}</td>
                         
                         <td>
                             <div class="d-flex gap-2">
@@ -56,8 +56,8 @@
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">
-                <span class="small">{{ 'REWARDS.LIMIT' | translate }} <span class="error-message"></span></span>
-                <input type="text" class="form-control" id="reward_limit" [placeholder]="'REWARDS.LIMIT' | translate" required>
+                <span class="small">{{ limitPlaceholderKey | translate }} <span class="error-message"></span></span>
+                <input type="text" class="form-control" id="reward_limit" [placeholder]="limitPlaceholderKey | translate" required>
                 <br />
                 <span class="small">{{ 'FORMS.NO_OF_CRYPES' | translate }} <span class="error-message"></span></span>
                 <input type="text" class="form-control" id="reward_crypes" [placeholder]="'FORMS.NO_OF_CRYPES' | translate" required>

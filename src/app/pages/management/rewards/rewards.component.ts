@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RestApiService } from '../../../services/api/rest-api.service';
 import { HelperService } from '../../../services/helper/helper.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 declare var $: any;
@@ -20,6 +20,14 @@ export class RewardsComponent implements OnInit {
 
   allUsers : any = [];
   reward: File | undefined = undefined;
+  isExploring = false;
+  pageTitleKey = 'SIDEBAR.REWARDS';
+  limitLabelKey = 'REWARDS.REWARD_LIMIT';
+  limitPlaceholderKey = 'REWARDS.LIMIT';
+  addedSuccessKey = 'REWARDS.ADDED_SUCCESSFULLY';
+  private listEndpoint = 'drop/get_all_rewards';
+  private createEndpoint = 'drop/createDropReward/';
+  private updateEndpoint = 'drop/updateReward/';
 
 
   constructor(
@@ -27,6 +35,7 @@ export class RewardsComponent implements OnInit {
     private api: RestApiService, 
     private helper: HelperService,
     private router: Router,
+    private route: ActivatedRoute,
     public translate: TranslateService
   ) {
     setTimeout(function () {
@@ -34,6 +43,16 @@ export class RewardsComponent implements OnInit {
   }, 1000);
   }
   async ngOnInit() {
+    this.isExploring = this.route.snapshot.data?.rewardType === 'exploring';
+    if (this.isExploring) {
+      this.pageTitleKey = 'EXPLORING_SPOTS.REWARDS';
+      this.limitLabelKey = 'EXPLORING_SPOTS.POINTS_REQUIRED';
+      this.limitPlaceholderKey = 'EXPLORING_SPOTS.POINTS_REQUIRED';
+      this.addedSuccessKey = 'EXPLORING_SPOTS.REWARD_ADDED';
+      this.listEndpoint = 'exploringSpot/rewards';
+      this.createEndpoint = 'exploringSpot/createReward';
+      this.updateEndpoint = 'exploringSpot/updateReward/';
+    }
     this.sp.show()
     await this.getAllUsers();
     setTimeout(function () {
@@ -43,7 +62,7 @@ export class RewardsComponent implements OnInit {
 
   async getAllUsers() {
     this.allUsers = [];
-    this.api.get('drop/get_all_rewards')
+    this.api.get(this.listEndpoint)
     .then((response: any) => {
         this.sp.hide();
         this.allUsers = response?.data;
@@ -75,7 +94,7 @@ export class RewardsComponent implements OnInit {
       let data = {
         status: 'deleted'
       };
-        this.api.patch('drop/updateReward/'+userId, data)
+        this.api.patch(this.updateEndpoint + userId, data)
         .then((response: any) => {
           this.sp.hide();
           Swal.fire(this.translate.instant('SIDEBAR.REWARDS'), this.translate.instant('MESSAGES.DELETED_SUCCESS'), "success");
@@ -103,11 +122,11 @@ export class RewardsComponent implements OnInit {
       fd.append('reward_file', this.reward!, this.reward?.name);
     }
     
-    this.api.postImageData('drop/createDropReward/', fd)
+    this.api.postImageData(this.createEndpoint, fd)
       .then((response: any) => {
           this.sp.hide();
           setTimeout(() => {
-            this.helper.successToast(this.translate.instant('REWARDS.ADDED_SUCCESSFULLY'));
+            this.helper.successToast(this.translate.instant(this.addedSuccessKey));
             $("#addProfession").modal("hide");
             $('#reward_limit').val('')
             $('#reward_crypes').val('')

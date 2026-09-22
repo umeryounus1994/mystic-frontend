@@ -81,6 +81,12 @@ const routes: Routes = [{
       component: EditExploringSpotComponent,
       canActivate: [AuthGuard, PermissionGuard],
       data: { permission: 'Exploring Spots' }
+    },
+    {
+      path: 'list-exploring-rewards',
+      component: RewardsComponent,
+      canActivate: [AuthGuard, PermissionGuard],
+      data: { permission: 'Exploring Spots', rewardType: 'exploring' }
     }
   ]
 }];

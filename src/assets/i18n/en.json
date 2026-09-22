@@ -100,6 +100,7 @@
     "EXPLORING_SPOTS": "Exploring Spots",
     "ALL_EXPLORING_SPOTS": "All Exploring Spots",
     "ADD_EXPLORING_SPOT": "Add Exploring Spot",
+    "EXPLORING_REWARDS": "Exploring Rewards",
     "MISSIONS": "Missions",
     "ALL_MISSION": "All Mission",
     "CREATE_MISSION": "Create Mission",
@@ -906,7 +907,10 @@
     "UPDATED_SUCCESSFULLY": "Exploring spot updated",
     "DELETE_CONFIRM": "Delete this exploring spot?",
     "DELETED": "Exploring spot deleted",
-    "NONE": "No exploring spots yet."
+    "NONE": "No exploring spots yet.",
+    "REWARDS": "Exploring Rewards",
+    "POINTS_REQUIRED": "Points required",
+    "REWARD_ADDED": "Exploring reward added"
   },
   "DROPS": {
     "MYTHICA_REWARD": "Mythica Reward",
@@ -918,7 +922,8 @@
     "REWARD_LIMIT": "Reward Limit",
     "REWARD_FILE": "Reward File",
     "VIEW_FILE": "View File",
-    "LIMIT": "Limit"
+    "LIMIT": "Limit",
+    "ADDED_SUCCESSFULLY": "Reward added"
   },
   "SKY_GIFTS": {
     "GIFT_NAME": "Gift Name",
