@@ -46,6 +46,13 @@
                 <label class="form-label">{{ 'EXPLORING_SPOTS.RADIUS_METERS' | translate }}</label>
                 <input type="number" class="form-control" formControlName="radius_meters" min="10">
             </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="is_ar" formControlName="is_ar">
+                    <label class="form-check-label" for="is_ar">{{ 'EXPLORING_SPOTS.AR_OPTIONAL' | translate }}</label>
+                </div>
+                <small class="text-muted">{{ 'EXPLORING_SPOTS.AR_HINT' | translate }}</small>
+            </div>
             <div class="col-12 d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">{{ 'COMMON.UPDATE' | translate }}</button>
             </div>

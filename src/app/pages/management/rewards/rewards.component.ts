@@ -25,6 +25,8 @@ export class RewardsComponent implements OnInit {
   limitLabelKey = 'REWARDS.REWARD_LIMIT';
   limitPlaceholderKey = 'REWARDS.LIMIT';
   addedSuccessKey = 'REWARDS.ADDED_SUCCESSFULLY';
+  exploringCities: string[] = [];
+  selectedCity = '';
   private listEndpoint = 'drop/get_all_rewards';
   private createEndpoint = 'drop/createDropReward/';
   private updateEndpoint = 'drop/updateReward/';
@@ -43,11 +45,11 @@ export class RewardsComponent implements OnInit {
   }, 1000);
   }
   async ngOnInit() {
-    this.isExploring = this.route.snapshot.data?.rewardType === 'exploring';
+    this.isExploring = this.route.snapshot.data?.['rewardType'] === 'exploring';
     if (this.isExploring) {
       this.pageTitleKey = 'EXPLORING_SPOTS.REWARDS';
-      this.limitLabelKey = 'EXPLORING_SPOTS.POINTS_REQUIRED';
-      this.limitPlaceholderKey = 'EXPLORING_SPOTS.POINTS_REQUIRED';
+      this.limitLabelKey = 'EXPLORING_SPOTS.SPOTS_REQUIRED';
+      this.limitPlaceholderKey = 'EXPLORING_SPOTS.SPOTS_REQUIRED';
       this.addedSuccessKey = 'EXPLORING_SPOTS.REWARD_ADDED';
       this.listEndpoint = 'exploringSpot/rewards';
       this.createEndpoint = 'exploringSpot/createReward';
@@ -55,20 +57,32 @@ export class RewardsComponent implements OnInit {
     }
     this.sp.show()
     await this.getAllUsers();
+    if (this.isExploring) {
+      await this.loadCities();
+    }
     setTimeout(function () {
       $('#dtable').removeClass('dataTable');
   }, 1000);
   }
 
+  async loadCities() {
+    try {
+      const response: any = await this.api.get('exploringSpot/cities');
+      this.exploringCities = response?.data || [];
+    } catch {
+      this.exploringCities = [];
+    }
+  }
+
   async getAllUsers() {
     this.allUsers = [];
-    this.api.get(this.listEndpoint)
-    .then((response: any) => {
-        this.sp.hide();
-        this.allUsers = response?.data;
-    }).catch((error: any) => {
+    try {
+      const response: any = await this.api.get(this.listEndpoint);
       this.sp.hide();
-    });
+      this.allUsers = response?.data;
+    } catch {
+      this.sp.hide();
+    }
   }
 
   getFormatedDate(date: any) {
@@ -109,15 +123,27 @@ export class RewardsComponent implements OnInit {
     });
   }
   showRewardDialog(){
+    this.selectedCity = '';
+    if (this.isExploring) {
+      this.loadCities();
+    }
     $("#addProfession").modal("show");
     $('#reward_limit').val('')
     $('#reward_crypes').val('')
   }
     _SaveRequest() {
+    if (this.isExploring && !this.selectedCity) {
+      this.helper.failureToast(this.translate.instant('EXPLORING_SPOTS.SELECT_CITY'));
+      return;
+    }
     this.sp.show();
     let fd= new FormData();
     fd.append('reward_limit', $('#reward_limit').val())
-    fd.append('reward_crypes', $('#reward_crypes').val())
+    fd.append('reward_crypes', $('#reward_crypes').val() || '0')
+    if (this.isExploring) {
+      fd.append('city', this.selectedCity)
+      fd.append('spots_required', $('#reward_limit').val())
+    }
     if(this.reward){
       fd.append('reward_file', this.reward!, this.reward?.name);
     }
@@ -130,6 +156,7 @@ export class RewardsComponent implements OnInit {
             $("#addProfession").modal("hide");
             $('#reward_limit').val('')
             $('#reward_crypes').val('')
+            this.selectedCity = '';
             this.getAllUsers();
           }, 1000);
       })

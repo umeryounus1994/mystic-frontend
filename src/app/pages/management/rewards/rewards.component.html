@@ -14,6 +14,7 @@
                 id="dtable">
                 <thead>
                     <tr>
+                        <th scope="col" class="border-0" *ngIf="isExploring">{{ 'EXPLORING_SPOTS.CITY' | translate }}</th>
                         <th scope="col" class="border-0">{{ limitLabelKey | translate }}</th>
                         <th scope="col" class="border-0">{{ 'REWARDS.REWARD_FILE' | translate }}</th>
                         <th scope="col" class="border-0">{{ 'FORMS.NO_OF_CRYPES' | translate }}</th>
@@ -23,7 +24,8 @@
                 <tbody>
                     <tr *ngFor="let q of allUsers; let i = index">
 
-                        <td>{{ isExploring ? (q.points_required || q.reward_name) : q.reward_name }}</td>
+                        <td *ngIf="isExploring">{{ q.city }}</td>
+                        <td>{{ isExploring ? (q.spots_required || q.reward_name) : q.reward_name }}</td>
                         
                         <td>
                             <div class="d-flex gap-2">
@@ -56,14 +58,23 @@
                 <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body p-5">
+                <ng-container *ngIf="isExploring">
+                    <span class="small">{{ 'EXPLORING_SPOTS.CITY' | translate }} <span class="error-message"></span></span>
+                    <select class="form-control" [(ngModel)]="selectedCity" [ngModelOptions]="{standalone: true}">
+                        <option value="">{{ 'EXPLORING_SPOTS.SELECT_CITY' | translate }}</option>
+                        <option *ngFor="let city of exploringCities" [value]="city">{{ city }}</option>
+                    </select>
+                    <small class="text-muted" *ngIf="exploringCities.length === 0">{{ 'EXPLORING_SPOTS.NO_CITIES_YET' | translate }}</small>
+                    <br />
+                </ng-container>
                 <span class="small">{{ limitPlaceholderKey | translate }} <span class="error-message"></span></span>
                 <input type="text" class="form-control" id="reward_limit" [placeholder]="limitPlaceholderKey | translate" required>
                 <br />
                 <span class="small">{{ 'FORMS.NO_OF_CRYPES' | translate }} <span class="error-message"></span></span>
-                <input type="text" class="form-control" id="reward_crypes" [placeholder]="'FORMS.NO_OF_CRYPES' | translate" required>
+                <input type="text" class="form-control" id="reward_crypes" [placeholder]="'FORMS.NO_OF_CRYPES' | translate">
                 <br />
                 <span class="small">{{ 'REWARDS.REWARD_FILE' | translate }} <span class="error-message"></span></span>
-                <input type="file" class="form-control" id="reward_limit" [placeholder]="'REWARDS.LIMIT' | translate" 
+                <input type="file" class="form-control"
                 (change)="onFileSelected($event, 'reward')" accept="application/pdf">
             </div>
             <div class="modal-footer">

@@ -40,6 +40,7 @@ export class EditExploringSpotComponent implements OnInit {
       longitude: ['', [Validators.required, this.validateLongitude.bind(this)]],
       radius_meters: [100, [Validators.required, Validators.min(10)]],
       no_of_points: [1, [Validators.required, Validators.min(1)]],
+      is_ar: [false],
     });
     if (this.spotId) {
       this.loadSpot();
@@ -76,6 +77,7 @@ export class EditExploringSpotComponent implements OnInit {
           longitude: s?.longitude,
           radius_meters: s?.radius_meters,
           no_of_points: s?.no_of_points,
+          is_ar: !!s?.is_ar,
         });
       })
       .catch(() => {

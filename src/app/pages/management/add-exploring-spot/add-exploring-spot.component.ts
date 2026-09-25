@@ -34,6 +34,7 @@ export class AddExploringSpotComponent implements OnInit {
       longitude: ['', [Validators.required, this.validateLongitude.bind(this)]],
       radius_meters: [100, [Validators.required, Validators.min(10)]],
       no_of_points: [1, [Validators.required, Validators.min(1)]],
+      is_ar: [false],
     });
   }
 

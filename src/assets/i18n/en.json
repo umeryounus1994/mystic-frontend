@@ -910,7 +910,13 @@
     "NONE": "No exploring spots yet.",
     "REWARDS": "Exploring Rewards",
     "POINTS_REQUIRED": "Points required",
-    "REWARD_ADDED": "Exploring reward added"
+    "SPOTS_REQUIRED": "Spots to collect",
+    "REWARD_ADDED": "Exploring reward added",
+    "AR": "AR",
+    "AR_OPTIONAL": "Enable AR at this spot (optional)",
+    "AR_HINT": "If checked, the app shows this exploring spot in AR mode. Leave unchecked for the simple view.",
+    "SELECT_CITY": "Select a city from exploring spots",
+    "NO_CITIES_YET": "Add an exploring spot first. Cities are taken from those spots so the name always matches."
   },
   "DROPS": {
     "MYTHICA_REWARD": "Mythica Reward",
