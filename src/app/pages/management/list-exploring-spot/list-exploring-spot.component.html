@@ -22,6 +22,7 @@
                     <tr>
                         <th class="border-0">{{ 'EXPLORING_SPOTS.SPOT_NAME' | translate }}</th>
                         <th class="border-0">{{ 'EXPLORING_SPOTS.CITY' | translate }}</th>
+                        <th class="border-0">{{ 'EXPLORING_SPOTS.AR' | translate }}</th>
                         <th class="border-0">{{ 'EXPLORING_SPOTS.POINTS' | translate }}</th>
                         <th class="border-0">{{ 'EXPLORING_SPOTS.RADIUS_METERS' | translate }}</th>
                         <th class="border-0">{{ 'FORMS.LATITUDE' | translate }}</th>
@@ -33,6 +34,7 @@
                     <tr *ngFor="let q of allSpots">
                         <td>{{ q.spot_name }}</td>
                         <td>{{ q.city }}</td>
+                        <td>{{ q.is_ar ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}</td>
                         <td>{{ q.no_of_points }}</td>
                         <td>{{ q.radius_meters }}</td>
                         <td>{{ q.latitude }}</td>
