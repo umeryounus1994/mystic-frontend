@@ -254,6 +254,18 @@
           </ul>
         </li>
 
+        <!-- Player Map Content (MCU-7) -->
+        <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops')">
+          <a
+            [routerLink]="['/mysterybag/player-map-content']"
+            class="nav-link text-white"
+            [class.active]="routeURL === '/mysterybag/player-map-content'"
+            (click)="closeSidebar()"
+          >
+            <i class="bi bi-map fa-fw me-2"></i>{{ 'SIDEBAR.PLAYER_MAP_CONTENT' | translate }}
+          </a>
+        </li>
+
         <!-- Sky Dropped Gifts -->
         <li class="nav-item" *ngIf="auth.isAdmin || auth.user?.permissions?.includes('Drops') || auth.user?.permissions?.includes('Sky Gifts')">
           <a class="nav-link text-white" (click)="toggleCollapse('collapseskygifts')">

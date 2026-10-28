@@ -5,6 +5,7 @@ import { MysterybagsRoutingModule } from './mysterybags-routing.module';
 import { CreateMysterybagComponent } from './create-mysterybag/create-mysterybag.component';
 import { EditMysterybagComponent } from './edit-mysterybag/edit-mysterybag.component';
 import { ListMysterybagsComponent } from './list-mysterybags/list-mysterybags.component';
+import { ListPlayerMapContentComponent } from './list-player-map-content/list-player-map-content.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,12 +13,17 @@ import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
-  declarations: [CreateMysterybagComponent, EditMysterybagComponent, ListMysterybagsComponent],
+  declarations: [
+    CreateMysterybagComponent,
+    EditMysterybagComponent,
+    ListMysterybagsComponent,
+    ListPlayerMapContentComponent
+  ],
   imports: [
     CommonModule,
     MysterybagsRoutingModule,
         NgxSpinnerModule,
-        DataTablesModule,
+    DataTablesModule,
         FormsModule,
         ReactiveFormsModule,
         TranslateModule

@@ -4,6 +4,7 @@ import { ListMysterybagsComponent } from './list-mysterybags/list-mysterybags.co
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { CreateMysterybagComponent } from './create-mysterybag/create-mysterybag.component';
 import { EditMysterybagComponent } from './edit-mysterybag/edit-mysterybag.component';
+import { ListPlayerMapContentComponent } from './list-player-map-content/list-player-map-content.component';
 
 const routes: Routes = [{
   path: '',
@@ -21,6 +22,11 @@ const routes: Routes = [{
     {
       path: 'edit-mysterybag',
       component: EditMysterybagComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'player-map-content',
+      component: ListPlayerMapContentComponent,
       canActivate: [AuthGuard]
     }
   ]

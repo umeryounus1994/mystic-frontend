@@ -1,0 +1,165 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+    <p style="font-size: 30px; color: white">{{ 'COMMON.FETCHING_DATA' | translate }}</p>
+</ngx-spinner>
+
+<div class="row mb-3">
+    <div class="col-12 d-sm-flex justify-content-between align-items-center gap-2">
+        <h1 class="h3 mb-2 mb-sm-0">{{ 'SIDEBAR.PLAYER_MAP_CONTENT' | translate }}</h1>
+        <div class="d-flex gap-2 align-items-center">
+            <input
+                type="text"
+                class="form-control"
+                style="min-width: 220px;"
+                [(ngModel)]="usernameSearch"
+                (ngModelChange)="applyUsernameFilter()"
+                [placeholder]="'PLAYER_MAP_CONTENT.SEARCH_USERNAME' | translate"
+            />
+            <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()" *ngIf="usernameSearch">
+                {{ 'COMMON.RESET_SEARCH' | translate }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-transparent border">
+    <div class="card-body mt-2">
+        <div class="table-responsive border-0 rounded-3" *ngIf="filteredItems.length > 0; else emptyState">
+            <table datatable [dtOptions]="dtOptions" class="table table-dark-gray align-middle p-4 mb-0 table-hover"
+                id="dtable">
+                <thead>
+                    <tr>
+                        <th scope="col" class="border-0 rounded-start">{{ 'PLAYER_MAP_CONTENT.PREVIEW' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'PLAYER_MAP_CONTENT.TYPE' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'PLAYER_MAP_CONTENT.CREATED_BY' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'PLAYER_MAP_CONTENT.CREATED_ON' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'PLAYER_MAP_CONTENT.LOCATION' | translate }}</th>
+                        <th scope="col" class="border-0">{{ 'PLAYER_MAP_CONTENT.COLLECTED' | translate }}</th>
+                        <th scope="col" class="border-0 rounded-end">{{ 'COMMON.ACTIONS' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of filteredItems">
+                        <td>
+                            <img
+                                *ngIf="item.preview_url"
+                                [src]="item.preview_url"
+                                alt="preview"
+                                class="preview-thumb"
+                            />
+                            <span *ngIf="!item.preview_url" class="text-muted">{{ 'COMMON.NA' | translate }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info bg-opacity-10 text-info" *ngIf="item.content_type === 'magic_art_view'">
+                                {{ getContentTypeLabelKey(item.content_type) | translate }}
+                            </span>
+                            <span class="badge bg-success bg-opacity-10 text-success" *ngIf="item.content_type === 'magic_art_collect'">
+                                {{ getContentTypeLabelKey(item.content_type) | translate }}
+                            </span>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary" *ngIf="item.content_type === 'map_bag_old'">
+                                {{ getContentTypeLabelKey(item.content_type) | translate }}
+                            </span>
+                            <span class="badge bg-warning bg-opacity-10 text-warning" *ngIf="item.content_type !== 'magic_art_view' && item.content_type !== 'magic_art_collect' && item.content_type !== 'map_bag_old'">
+                                {{ getContentTypeLabelKey(item.content_type) | translate }}
+                            </span>
+                        </td>
+                        <td>{{ item.created_by?.username || ('COMMON.NA' | translate) }}</td>
+                        <td>{{ getFormatedDate(item.created_at) }}</td>
+                        <td>
+                            <small *ngIf="item.location?.latitude != null && item.location?.longitude != null">
+                                {{ item.location.latitude }}, {{ item.location.longitude }}
+                            </small>
+                            <span *ngIf="item.location?.latitude == null || item.location?.longitude == null">
+                                {{ 'COMMON.NA' | translate }}
+                            </span>
+                        </td>
+                        <td>
+                            <span *ngIf="item.content_type === 'magic_art_collect'">{{ item.collected_count }}</span>
+                            <span *ngIf="item.content_type !== 'magic_art_collect'" class="text-muted">—</span>
+                        </td>
+                        <td>
+                            <button
+                                class="btn btn-info-soft btn-round me-1 mb-1 mb-md-0"
+                                (click)="viewItem(item)"
+                                [title]="'COMMON.VIEW' | translate"
+                            >
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                                class="btn btn-danger-soft btn-round me-1 mb-1 mb-md-0"
+                                (click)="deleteItem(item)"
+                                [title]="'COMMON.DELETE' | translate"
+                            >
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #emptyState>
+            <div class="text-center py-5 text-muted">
+                {{ 'PLAYER_MAP_CONTENT.NO_CONTENT' | translate }}
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<!-- View full picture / details -->
+<div class="modal fade" id="viewPlayerMapContent" tabindex="-1" aria-labelledby="viewPlayerMapContentLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="viewPlayerMapContentLabel">
+                    {{ 'PLAYER_MAP_CONTENT.VIEW_TITLE' | translate }}
+                </h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4" *ngIf="selectedItem?.drawing_file || selectedItem?.preview_url">
+                    <img
+                        [src]="selectedItem?.drawing_file || selectedItem?.preview_url"
+                        alt="full"
+                        class="img-fluid rounded preview-full"
+                    />
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">{{ 'PLAYER_MAP_CONTENT.TYPE' | translate }}</label>
+                        <p>{{ getContentTypeLabelKey(selectedItem?.content_type) | translate }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ 'PLAYER_MAP_CONTENT.CREATED_BY' | translate }}</label>
+                        <p>{{ selectedItem?.created_by?.username || ('COMMON.NA' | translate) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ 'PLAYER_MAP_CONTENT.CREATED_ON' | translate }}</label>
+                        <p>{{ getFormatedDate(selectedItem?.created_at) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ 'PLAYER_MAP_CONTENT.COLLECTED' | translate }}</label>
+                        <p>{{ selectedItem?.collected_count ?? 0 }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ 'FORMS.LATITUDE' | translate }}</label>
+                        <p>{{ selectedItem?.location?.latitude ?? ('COMMON.NA' | translate) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ 'FORMS.LONGITUDE' | translate }}</label>
+                        <p>{{ selectedItem?.location?.longitude ?? ('COMMON.NA' | translate) }}</p>
+                    </div>
+                    <div class="col-12" *ngIf="selectedItem?.bag_title">
+                        <label class="form-label">{{ 'COMMON.TITLE' | translate }}</label>
+                        <p>{{ selectedItem?.bag_title }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">
+                    {{ 'COMMON.CLOSE' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
