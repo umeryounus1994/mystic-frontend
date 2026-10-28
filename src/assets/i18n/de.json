@@ -113,6 +113,7 @@
     "ALL_DROPS": "Alle Drops",
     "ADD_DROP": "Drop hinzufügen",
     "DROP_REWARDS": "Drop-Belohnungen",
+    "PLAYER_MAP_CONTENT": "Spieler-Inhalte auf der Karte",
     "REWARDS": "Belohnungen",
     "SKY_GIFTS": "Himmelsgeschenke",
     "SKY_DROPPED_GIFTS": "Himmelsgeschenke",
@@ -671,6 +672,7 @@
     "DELETE_HUNT_TITLE": "Sind Sie sicher, dass Sie diese Schatzsuche löschen möchten?",
     "DELETE_MISSION_TITLE": "Sind Sie sicher, dass Sie diese Mission löschen möchten?",
     "DELETE_MYSTERY_TITLE": "Sind Sie sicher, dass Sie dieses Rätsel löschen möchten?",
+    "DELETE_PLAYER_MAP_CONTENT_TITLE": "Diesen Inhalt wirklich löschen? Er verschwindet von der Karte und aus allen Galerien.",
     "INVALID_AMOUNT": "Ungültiger Betrag",
     "AMOUNT_BELOW_MINIMUM": "Der Gesamtbetrag (${{amount}}) liegt unter dem Mindestzahlungsbetrag von ${{minimum}}. Bitte kontaktieren Sie den Aktivitätsanbieter.",
     "AMOUNT_BELOW_STRIPE_MINIMUM": "Der Gesamtbetrag (${{amount}}) liegt unter Stripe's Mindestzahlungsbetrag von ${{minimum}}.",
@@ -764,6 +766,21 @@
     "FAILED_TO_LOAD_ACTIVITY": "Aktivitätsdetails konnten nicht geladen werden",
     "ACTIVITY_DROP_CREATED_SUCCESS": "Aktivitäts-Drop erfolgreich erstellt",
     "INVALID_IMAGE_FILE": "Bitte wählen Sie eine gültige Bilddatei (JPEG, PNG, GIF)"
+  },
+  "PLAYER_MAP_CONTENT": {
+    "PREVIEW": "Vorschau",
+    "TYPE": "Typ",
+    "CREATED_BY": "Erstellt von",
+    "CREATED_ON": "Erstellt am",
+    "LOCATION": "Ort",
+    "COLLECTED": "Eingesammelt",
+    "SEARCH_USERNAME": "Nach Benutzername suchen",
+    "NO_CONTENT": "Keine Spieler-Inhalte auf der Karte gefunden",
+    "VIEW_TITLE": "Spieler-Inhalte auf der Karte",
+    "TYPE_MAGIC_ART_VIEW": "Magic Art – zum Anschauen",
+    "TYPE_MAGIC_ART_COLLECT": "Magic Art – zum Einsammeln",
+    "TYPE_MAP_BAG_OLD": "Kartentasche (alt)",
+    "TYPE_OTHER": "Sonstiges"
   },
   "PROFILE": {
     "UPDATED_SUCCESSFULLY": "Profil erfolgreich aktualisiert",
@@ -896,7 +913,8 @@
     "AR_OPTIONAL": "AR an diesem Spot aktivieren (optional)",
     "AR_HINT": "Wenn aktiv, zeigt die App diesen Exploring Spot im AR-Modus. Sonst die einfache Ansicht.",
     "SELECT_CITY": "Stadt aus Exploring Spots wählen",
-    "NO_CITIES_YET": "Zuerst einen Exploring Spot anlegen. Städte kommen von dort, damit der Name immer übereinstimmt."
+    "NO_CITIES_YET": "Zuerst einen Exploring Spot anlegen. Städte kommen von dort, damit der Name immer übereinstimmt.",
+    "PICTURE": "Bild"
   },
   "DROPS": {
     "MYTHICA_REWARD": "Mythica-Belohnung",

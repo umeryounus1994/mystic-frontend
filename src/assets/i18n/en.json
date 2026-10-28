@@ -127,6 +127,7 @@
     "ALL_DROPS": "All Drops",
     "ADD_DROP": "Add Drop",
     "DROP_REWARDS": "Drop Rewards",
+    "PLAYER_MAP_CONTENT": "Player Map Content",
     "REWARDS": "Rewards",
     "SKY_GIFTS": "Sky Gifts",
     "SKY_DROPPED_GIFTS": "Sky Dropped Gifts",
@@ -659,6 +660,7 @@
     "DELETE_HUNT_TITLE": "Are you sure You want to delete this Hunt?",
     "DELETE_MISSION_TITLE": "Are you sure You want to delete this Mission?",
     "DELETE_MYSTERY_TITLE": "Are you sure You want to delete this Mystery?",
+    "DELETE_PLAYER_MAP_CONTENT_TITLE": "Delete this content? It will disappear from the map and from all galleries.",
     "INVALID_AMOUNT": "Invalid Amount",
     "AMOUNT_BELOW_MINIMUM": "The total amount (${{amount}}) is below the minimum payment amount of ${{minimum}}. Please contact the activity provider.",
     "AMOUNT_BELOW_STRIPE_MINIMUM": "The total amount (${{amount}}) is below Stripe's minimum payment amount of ${{minimum}}.",
@@ -748,6 +750,21 @@
     "PAYMENT_CANCELLED": "Payment Cancelled",
     "PAYPAL_PAYMENT_CANCELLED": "Your PayPal payment was cancelled. You can try again.",
     "GO_BACK_TO_ACTIVITIES": "Go Back to Activities"
+  },
+  "PLAYER_MAP_CONTENT": {
+    "PREVIEW": "Preview",
+    "TYPE": "Type",
+    "CREATED_BY": "Created by",
+    "CREATED_ON": "Created on",
+    "LOCATION": "Location",
+    "COLLECTED": "Collected",
+    "SEARCH_USERNAME": "Search by username",
+    "NO_CONTENT": "No player map content found",
+    "VIEW_TITLE": "Player Map Content",
+    "TYPE_MAGIC_ART_VIEW": "Magic Art – to look at",
+    "TYPE_MAGIC_ART_COLLECT": "Magic Art – to collect",
+    "TYPE_MAP_BAG_OLD": "Map bag (old)",
+    "TYPE_OTHER": "Other"
   },
   "MESSAGES": {
     "FAILED_TO_DELETE_USER": "Failed to delete user",
@@ -916,7 +933,8 @@
     "AR_OPTIONAL": "Enable AR at this spot (optional)",
     "AR_HINT": "If checked, the app shows this exploring spot in AR mode. Leave unchecked for the simple view.",
     "SELECT_CITY": "Select a city from exploring spots",
-    "NO_CITIES_YET": "Add an exploring spot first. Cities are taken from those spots so the name always matches."
+    "NO_CITIES_YET": "Add an exploring spot first. Cities are taken from those spots so the name always matches.",
+    "PICTURE": "Picture"
   },
   "DROPS": {
     "MYTHICA_REWARD": "Mythica Reward",

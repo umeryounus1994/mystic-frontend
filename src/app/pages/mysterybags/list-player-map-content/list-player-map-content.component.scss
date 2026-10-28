@@ -1,0 +1,31 @@
+.table-responsive {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+.card-body {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.preview-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.preview-full {
+  max-height: 420px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    white-space: nowrap;
+    padding: 0.5rem !important;
+    font-size: 0.875rem;
+  }
+}
